@@ -22,6 +22,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Font Awesome para íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
 </head>
 </head>
 <body> 
@@ -32,12 +33,15 @@
     <div class="nav-container">
         
         <!-- 1. Logo a la izquierda -->
-        <a href="#inicio" class="nav-brand">
-            <div class="brand-icon">
-                <i class="fas fa-brain"></i>
-            </div>
-            <span class="brand-title">Daryeli Romero</span>
-        </a>
+       <a href="#inicio" class="nav-brand">
+    <div class="brand-icon">
+        <i class="fas fa-brain"></i>
+    </div>
+    <div class="brand-text-container">
+        <span class="brand-title">Daryeli Romero</span>
+        <span class="brand-subtitle">Psicóloga Clínica</span>
+    </div>
+</a>
 
         <!-- 2. Categorías al centro (Clase corregida a nav-menu) -->
         <nav class="nav-menu" id="navMenu">
@@ -52,9 +56,13 @@
 
         <!-- 3. Acciones a la derecha (Botón de cita y tu botón hamburguesa con spans) -->
         <div class="nav-right-actions">
-            <a href="https://wa.me/584126724351" target="_blank" rel="noopener noreferrer" class="btn-nav-cita">
-                Agenda tu cita
-            </a>
+            <a href="https://wa.me/584126724351" class="btn-nav-cita" target="_blank" rel="noopener noreferrer">
+    <!-- Icono de mensaje SVG integrado -->
+    <svg class="chat-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+    <span>Agenda tu cita</span>
+</a>
             
             <!-- Botón Hamburguesa con tus estilos de líneas -->
             <button class="menu-toggle" id="navToggle" aria-label="Abrir menú">

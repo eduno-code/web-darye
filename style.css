@@ -16,7 +16,7 @@
     --radius-sm: 12px;
     --radius-md: 20px;
     --radius-lg: 30px;
-    --radius-full: 60px;
+    --radius-full: 50px;
     
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -80,9 +80,16 @@ h1, h2, h3, h4, .logo {
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.5rem;
     text-decoration: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Contenedor que apila el nombre y el subtítulo en columna */
+.brand-text-container {
+    display: flex;
+    flex-direction: column; /* CLAVE: Pone un texto debajo del otro */
+    line-height: 1.2;
 }
 
 .nav-brand:hover {
@@ -112,11 +119,26 @@ h1, h2, h3, h4, .logo {
 
 .brand-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: var(--text-dark);
     transition: color 0.2s ease;
 }
+
+.brand-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem; /* Texto pequeño y elegante */
+    font-weight: 500;
+    color: var(--text-soft);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Efecto hover general */
+.nav-brand:hover .brand-title {
+    color: var(--primary);
+}
+
 
 /* El texto del título también toma un acento sutil al hacer hover */
 .nav-brand:hover .brand-title {
@@ -161,15 +183,16 @@ h1, h2, h3, h4, .logo {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     background-color: var(--primary);
     color: var(--white);
-    padding: 0.65rem 1.6rem;
+    padding: 0.6rem 1.2rem;
     border-radius: var(--radius-full);
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 0.85rem;
     text-decoration: none;
-    box-shadow: 0 8px 20px rgba(166, 123, 91, 0.25);
+    box-shadow: 0 4px 15px rgba(166, 123, 91, 0.25);
     transition: var(--transition);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -179,6 +202,12 @@ h1, h2, h3, h4, .logo {
     background-color: var(--primary-light);
     transform: translateY(-2px);
     box-shadow: 0 12px 25px rgba(166, 123, 91, 0.35);
+}
+
+.btn-nav-cita .chat-icon {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
 }
 
 /* Estilos de tu Botón Toggle con los 3 spans */
@@ -207,52 +236,55 @@ h1, h2, h3, h4, .logo {
     border-radius: 2px;
 }
 
+/* Ajuste específico para que en celulares pequeños se vea idéntico a tu referencia */
+@media (max-width: 768px) {
+    .btn-nav-cita {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.75rem; /* Letra compacta pero legible */
+        gap: 6px;
+    }
+    
+    .btn-nav-cita .chat-icon {
+        width: 13px;
+        height: 13px;
+    }
+}
 
 /* --- RESPONSIVE PARA MÓVILES Y TABLETS (<= 968px) --- */
 @media (max-width: 968px) {
     .nav-container {
-        grid-template-columns: auto 1fr;
-        padding: 1rem 1.5rem;
+        /* Reducimos el padding lateral para ganar espacio valioso en pantallas chicas */
+        padding: 0.75rem 1rem;
+        gap: 1rem;
     }
 
-    /* Mostramos el botón hamburguesa en pantallas pequeñas */
+    /* 1. Achicamos proporcionalmente el logo para que no acapare la pantalla */
+    .brand-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+
+    .brand-title {
+        font-size: 1.25rem; /* Baja de 1.5rem a un tamaño más prudente en móvil */
+    }
+
+    /* 2. Escalamos el botón de la cita para que no quede gigante */
+    .btn-nav-cita {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem; /* Letra más compacta */
+        letter-spacing: 0.3px;
+    }
+
+    /* 3. Ajustamos el botón hamburguesa para que sea compacto y estético */
     .menu-toggle {
-        display: flex;
+        padding: 8px;
+        border-radius: 50%; /* Se ve más moderno tipo icono circular */
     }
 
-    /* Panel desplegable del menú */
-    .nav-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background-color: rgba(253, 250, 247, 0.98);
-        backdrop-filter: blur(15px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
-        border-bottom: 1px solid rgba(166, 123, 91, 0.15);
-        
-        /* Oculto inicialmente */
-        max-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    }
-
-    /* Clase que activa la apertura del menú mediante JS */
-    .nav-menu.active {
-        max-height: 350px;
-        opacity: 1;
-    }
-
-    .nav-list {
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem 0;
-        gap: 1.5rem;
-    }
-
-    .nav-list a {
-        font-size: 1rem;
+    .menu-toggle span {
+        width: 20px; /* Barras ligeramente más cortas para que entren bien */
+        height: 2px;
     }
 }
 
