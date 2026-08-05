@@ -1,0 +1,1648 @@
+/* ===== VARIABLES Y ROOT (Paleta Cálida Original) ===== */
+:root {
+    --primary: #A67B5B;
+    --primary-light: #C4A484;
+    --primary-soft: #F3E9DE;
+    --bg-main: #FDFAF7;
+    --bg-secondary: #FAF4EE;
+    --text-dark: #2C3E50;
+    --text-soft: #6B7F8F;
+    --white: #FFFFFF;
+    
+    --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.02);
+    --shadow-md: 0 12px 30px rgba(166, 123, 91, 0.08);
+    --shadow-lg: 0 20px 40px rgba(166, 123, 91, 0.12);
+    
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 30px;
+    --radius-full: 60px;
+    
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+    background-color: var(--primary-soft);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ============================================
+   ESTILOS DE LA NAVBAR (Centrada, Minimalista y Responsiva)
+   ============================================ */
+.site-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(253, 250, 247, 0.95); /* Fondo marfil translúcido elegante */
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(166, 123, 91, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+/* Contenedor principal en 3 columnas: Izquierda (Logo), Centro (Menú), Derecha (Cita + Toggle) */
+.nav-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* --- 1. LOGO (Izquierda) --- */
+/* ============================================
+   EFECTO HOVER PARA EL LOGO
+   ============================================ */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.nav-brand:hover {
+    opacity: 0.9;
+    transform: translateY(-1px); /* Sutil elevación */
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    background-color: var(--primary);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(166, 123, 91, 0.2);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* El icono gira levemente y cambia al color claro al pasar el mouse */
+.nav-brand:hover .brand-icon {
+    background-color: var(--primary-light);
+    transform: scale(1.05);
+}
+
+.brand-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    transition: color 0.2s ease;
+}
+
+/* El texto del título también toma un acento sutil al hacer hover */
+.nav-brand:hover .brand-title {
+    color: var(--primary);
+}
+/* --- 2. MENÚ DE CATEGORÍAS (Centro) --- */
+.nav-menu {
+    justify-self: center;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: 2.2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-list a {
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.88rem; /* Letras más finas y estilizadas */
+    font-weight: 500;
+    color: var(--text-soft);
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+}
+
+.nav-list a:hover {
+    color: var(--primary);
+}
+
+/* --- 3. ACCIONES DERECHA (Botón Cita + Toggle Hamburguesa) --- */
+.nav-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-self: end;
+}
+
+.btn-nav-cita {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 0.65rem 1.6rem;
+    border-radius: var(--radius-full);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(166, 123, 91, 0.25);
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-nav-cita:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(166, 123, 91, 0.35);
+}
+
+/* Estilos de tu Botón Toggle con los 3 spans */
+.menu-toggle {
+    display: none; /* Oculto por defecto en escritorio */
+    flex-direction: column;
+    gap: 5px;
+    background: var(--primary-soft, rgba(166, 123, 91, 0.1));
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 30px;
+    transition: var(--transition);
+}
+
+.menu-toggle:hover {
+    background: var(--primary-light);
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 2px;
+    background-color: var(--text-dark);
+    display: block;
+    transition: var(--transition);
+    border-radius: 2px;
+}
+
+
+/* --- RESPONSIVE PARA MÓVILES Y TABLETS (<= 968px) --- */
+@media (max-width: 968px) {
+    .nav-container {
+        grid-template-columns: auto 1fr;
+        padding: 1rem 1.5rem;
+    }
+
+    /* Mostramos el botón hamburguesa en pantallas pequeñas */
+    .menu-toggle {
+        display: flex;
+    }
+
+    /* Panel desplegable del menú */
+    .nav-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: rgba(253, 250, 247, 0.98);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        border-bottom: 1px solid rgba(166, 123, 91, 0.15);
+        
+        /* Oculto inicialmente */
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    /* Clase que activa la apertura del menú mediante JS */
+    .nav-menu.active {
+        max-height: 350px;
+        opacity: 1;
+    }
+
+    .nav-list {
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 0;
+        gap: 1.5rem;
+    }
+
+    .nav-list a {
+        font-size: 1rem;
+    }
+}
+
+/* ===== HERO SECTION CON HOVER EN IMAGEN ===== */
+.hero {
+    padding: 4rem 0 4rem;
+    background-color: var(--bg-main);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: flex-start;
+    
+}
+
+.hero-supra {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.hero-text h1 span:first-child {
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: var(--text-dark);
+}
+
+.highlight {
+    font-size: 5.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+    display: block;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-soft);
+    margin: 2rem 0 2.5rem;
+    border-left: 3px solid var(--primary-soft);
+    padding-left: 1.5rem;
+}
+
+.hero-image {
+    position: relative;
+    border-radius: 120px 120px 30px 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 40px -15px rgba(166, 123, 91, 0.3);
+}
+
+.hero-image img {
+    width: 100%;
+    height: 550px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+}
+
+.hero-image:hover img {
+    transform: scale(1.02);
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* BOTONES CON HOVER ANIMADO */
+.btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    transition: var(--transition);
+    border: none;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: width 0.3s ease;
+    z-index: -1;
+    border-radius: var(--radius-full);
+}
+
+.btn:hover::before {
+    width: 100%;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+    box-shadow: 0 8px 20px rgba(166, 123, 91, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(166, 123, 91, 0.4);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-dark);
+    border: 2px solid var(--primary-soft);
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(166, 123, 91, 0.05);
+}
+
+/* ===== STORY SECTION ===== */
+.story {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-secondary) 100%);
+}
+
+.story-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.story-image {
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 40px -15px rgba(166, 123, 91, 0.3);
+}
+
+.story-image img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    display: block;
+}
+
+.story-image:hover img {
+    transform: scale(1.02);
+}
+
+.story-text h2 {
+    font-size: 2.8rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+}
+
+.story-text p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--text-soft);
+    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--primary-soft);
+    padding-left: 1.5rem;
+}
+
+/* ============================================
+   BANNER DE ESTADÍSTICAS INTEGRADO (Estilo Pie de Sección)
+   ============================================ */
+.stats-banner-section {
+    padding: 0 0 3rem 0; /* Eliminamos el espacio superior para que se una a la historia */
+    background-color: var(--bg-main);
+    margin-top: -1.5rem; /* Sube sutilmente para abrazar la sección anterior si es necesario */
+}
+
+.stats-banner {
+    background-color: var(--primary); /* Usa el color exacto de tu barra de navegación/botones */
+    color: var(--white);
+    /* Bordes: Arriba rectos (0px), Abajo redondeados (40px) */
+    border-radius: 0px 0px 50px 50px; 
+    padding: 1.8rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(124, 82, 149, 0.15);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    color: #FFFFFF;
+}
+
+.stat-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 180px;
+}
+
+/* Responsivo para celulares y tablets */
+@media (max-width: 968px) {
+    .stats-banner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        border-radius: 0px 0px 30px 30px;
+        padding: 1.8rem 1rem;
+    }
+}
+
+/* ============================================
+   ESTILOS PARA LOS ICONOS SVG EN EL BANNER
+   ============================================ */
+.stats-banner-section {
+    padding: 0 0 3rem 0;
+    background-color: var(--bg-main);
+    margin-top: -1.5rem; 
+}
+
+.stats-banner {
+    background-color: var(--primary);
+    color: var(--white);
+    border-radius: 0px 0px 40px 40px; 
+    padding: 1.8rem 2rem; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(124, 82, 149, 0.12);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9); /* Blanco suave muy elegante */
+    margin-bottom: 0.3rem;
+    transition: transform 0.3s ease;
+}
+
+/* Micro-interacción opcional: el icono sube sutilmente al pasar el mouse por la caja */
+.stat-box:hover .stat-icon {
+    transform: translateY(-3px);
+    color: #FFFFFF;
+}
+
+.stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.2rem;
+    color: #FFFFFF;
+}
+
+.stat-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 180px;
+}
+
+/* Responsivo para celulares */
+@media (max-width: 968px) {
+    .stats-banner {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        border-radius: 0px 0px 25px 25px;
+        padding: 1.8rem 1rem;
+    }
+}
+
+/* ============================================
+   ESTILOS SECCIÓN DE PROPÓSITO (Transición)
+   ============================================ */
+.quote-section {
+    padding: 4rem 0;
+    background-color: var(--bg-main);
+    text-align: center;
+}
+
+.quote-box {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 30px rgba(166, 123, 91, 0.05);
+    border: 1px solid rgba(166, 123, 91, 0.1);
+}
+
+.quote-eyebrow {
+    color: var(--primary);
+    font-size: 0.9rem;
+    letter-spacing: 6px;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    color: var(--text-dark);
+    line-height: 1.4;
+    margin-bottom: 1.2rem;
+    font-weight: 500;
+}
+
+.highlight-quote {
+    color: var(--primary);
+    font-style: normal;
+    font-weight: 600;
+}
+
+.quote-author {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-soft);
+    font-weight: 500;
+}
+
+/* ============================================
+   ESTILOS SECCIÓN ESPECIALIDADES Y FIGURA (Corregidos)
+   ============================================ */
+.areas-especialidades {
+    padding: 6rem 0;
+    background-color: var(--bg-main);
+}
+
+.areas-editorial {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.area-row {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-radius: 0px 32px 0px 32px; 
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(166, 123, 91, 0.08);
+    border: 1px solid rgba(166, 123, 91, 0.12);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.area-row.reverse {
+    border-radius: 32px 0px 32px 0px;
+}
+
+.area-row:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(166, 123, 91, 0.15);
+}
+
+@media (min-width: 768px) {
+    .area-row {
+        flex-direction: row;
+        align-items: stretch;
+    }
+    .area-row.reverse {
+        flex-direction: row-reverse;
+    }
+}
+
+.area-content {
+    flex: 1.2;
+    padding: 2.8rem 2.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.area-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+    transition: letter-spacing 0.3s ease;
+}
+
+.area-row:hover .area-tag {
+    letter-spacing: 2px;
+    color: var(--text-dark);
+}
+
+.area-content h3 {
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    margin-bottom: 0.8rem;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.area-content p {
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.8rem;
+}
+
+.area-content p strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Contenedor visual limpio sin conflictos de altura */
+.area-visual {
+    flex: 1;
+    background: var(--bg-secondary);
+    min-height: 320px;
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Estilos limpios para la figura de la imagen */
+.area-figure {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+}
+
+.area-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Llena todo el espacio perfectamente sin deformarse */
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.7, 1);
+}
+
+.area-row:hover .area-figure img {
+    transform: scale(1.04);
+}
+
+/* ============================================
+   ESTILOS PARA LAS IMÁGENES DE LAS ESPECIALIDADES
+   ============================================ */
+.area-figure {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    height: 280px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(166, 123, 91, 0.12);
+}
+
+.area-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que la foto cubra todo el espacio sin deformarse */
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.7, 1);
+}
+
+/* Efecto de zoom suave y elegante al pasar el cursor por encima de la tarjeta */
+.area-row:hover .area-figure img {
+    transform: scale(1.04);
+}
+
+/* ============================================
+   MEJORAS INTERACTIVAS EN LAS TARJETAS (UX Writing & Tipografía)
+   ============================================ */
+.text-serif-italic {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: normal;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Micro-interacción: al pasar el mouse por la tarjeta, el tag cobra relieve y la tarjeta respira */
+.area-row {
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.area-row:hover .area-tag {
+    letter-spacing: 2px; /* Efecto dinámico de expansión tipográfica */
+    color: var(--text-dark);
+}
+
+.area-row:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(166, 123, 91, 0.15);
+}
+
+.area-content p strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* ============================================
+   ESTILOS DEL CINTILLO CTA (Agenda tu cita)
+   ============================================ */
+.cta-banner-section {
+    padding: 3rem 0;
+    background-color: var(--bg-secondary);
+    border-top: 1px solid rgba(166, 123, 91, 0.1);
+    border-bottom: 1px solid rgba(166, 123, 91, 0.1);
+    margin: 3rem 0;
+}
+
+.cta-banner-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.cta-supra {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-soft);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cta-supra i {
+    color: #25D366; /* Verde WhatsApp sutil */
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.cta-banner-text h2 {
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    color: var(--text-dark);
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.cta-banner-text h2 span {
+    color: var(--primary);
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* Botón estilo píldora terracota de la referencia */
+.btn-cta-directo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 1rem 2.2rem;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(166, 123, 91, 0.3);
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-cta-directo:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(166, 123, 91, 0.4);
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+    .cta-banner-grid {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+    
+    .cta-supra {
+        justify-content: center;
+    }
+
+    .btn-cta-directo {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   ESTILOS DE FAQ CON FONDO DE IMAGEN TRANSLÚCIDO
+   ============================================ */
+.faq-section-bg {
+    padding: 6rem 0;
+    position: relative;
+    background-image: url('faq1.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.faq-section-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(253, 250, 247, 0.88);
+    z-index: 1;
+}
+
+.faq-section-bg .container {
+    position: relative;
+    z-index: 2;
+}
+
+.faq-glass-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 40px 100px 40px 40px;
+    padding: 4rem 3rem;
+    box-shadow: 0 25px 50px rgba(166, 123, 91, 0.12);
+    border: 1px solid rgba(166, 123, 91, 0.15);
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    align-items: start;
+    
+    /* Fondo limpio de base */
+    background-color: var(--bg-main);
+}
+
+.faq-glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/img/faq1.webp'); 
+    background-size: cover;
+    background-position: center;
+    opacity: 0.07; /* <--- AQUÍ CONTROLAS QUÉ TAN TRANSPARENTE SE VE LA FOTO (0.10 es muy tenue, 0.25 es más visible) */
+    z-index: 1;
+}
+
+/* Hacemos que todo el contenido (texto y preguntas) esté por encima de la capa blanca */
+.faq-intro, 
+.faq-list-modern {
+    position: relative;
+    z-index: 2;
+}
+
+.faq-intro h2 {
+    font-size: clamp(2.5rem, 4vw, 3.2rem);
+    color: var(--text-dark);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.faq-intro h2 span {
+    color: var(--primary);
+    font-style: normal;
+    font-weight: 500;
+}
+
+.faq-intro p {
+    color: var(--text-dark);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.btn-faq-contacto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 0.9rem 2.5rem;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(166, 123, 91, 0.3);
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-faq-contacto:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+.faq-list-modern {
+    display: flex;
+    flex-direction: column;
+}
+
+.faq-item-modern {
+    border-bottom: 1px solid rgba(166, 123, 91, 0.15);
+    transition: var(--transition);
+    color: var(--text-dark);
+}
+
+faq-item-modern p {
+    padding: 0 0 1.5rem 0;
+    margin: 0;
+    color: var(--text-dark); /* Cambiamos del gris suave (text-soft) al color principal oscuro del sitio */
+    font-size: 0.98rem;
+    line-height: 1.7;
+    font-weight: 400; /* Subimos un nivel el peso para que gane cuerpo y nitidez */
+}
+
+.faq-item-modern summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1.4rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    transition: color 0.2s ease;
+}
+
+.faq-item-modern summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item-modern summary:hover {
+    color: var(--primary);
+}
+
+.faq-chevron {
+    color: var(--primary);
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.faq-item-modern[open] .faq-chevron {
+    transform: rotate(180deg);
+}
+
+.faq-item-modern p {
+    padding: 0 0 1.5rem 0;
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+@media (max-width: 968px) {
+    .faq-glass-card {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 2.5rem 1.5rem;
+        border-radius: 30px;
+    }
+}
+
+/* ============================================
+   ESTILOS DE LA SECCIÓN DE TESTIMONIOS (Cálidos y Armoniosos)
+   ============================================ */
+.testimonials-section {
+    padding: 7rem 0;
+    background-color: var(--bg-secondary); /* Mantiene la sintonía del fondo suave de tu web */
+}
+
+.testimonials-section .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.testimonials-section .section-header h2 {
+    font-size: clamp(2.2rem, 3.5vw, 3rem);
+    color: var(--text-dark);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+}
+
+.testimonials-section .section-header h2 span {
+    color: var(--primary);
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* Grilla de 3 columnas para las tarjetas */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ===== CARRUSEL DE TESTIMONIOS ===== */
+.testimonials-slider {
+    max-width: 700px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.testimonials-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonials-track .testimonial-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin: 0 0.5rem;
+}
+
+.testimonial-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 2rem;
+}
+
+.testimonial-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: var(--transition);
+}
+
+.testimonial-dots .dot.active {
+    background: var(--primary);
+    transform: scale(1.2);
+}
+
+/* Tarjeta individual con estilo limpio y sombra sutil */
+.testimonial-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: 0 15px 35px rgba(166, 123, 91, 0.08);
+    border: 1px solid rgba(166, 123, 91, 0.12);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(166, 123, 91, 0.15);
+}
+
+/* Estrellas en tono cálido/dorado */
+.testimonial-stars {
+    color: #D4A373; /* Tono dorado/terracota suave */
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 0.2rem;
+}
+
+/* Texto de la reseña */
+.testimonial-text {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-dark);
+    font-size: 0.98rem;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+/* Bloque del autor de la reseña */
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid rgba(166, 123, 91, 0.1);
+    padding-top: 1.2rem;
+}
+
+/* Círculo con iniciales de la referencia */
+.author-avatar {
+    width: 42px;
+    height: 42px;
+    background-color: var(--primary);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 10px rgba(166, 123, 91, 0.3);
+}
+
+.author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-info strong {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.author-info span {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+}
+
+/* Adaptabilidad en dispositivos móviles */
+@media (max-width: 768px) {
+    .testimonials-section {
+        padding: 4rem 1.5rem;
+    }
+}
+
+/* ============================================
+   ESTILOS DE LA SECCIÓN CTA FINAL (Empática y Limpia)
+   ============================================ */
+.final-cta-section {
+    padding: 6rem 0 8rem 0;
+    background-color: var(--bg-main);
+}
+
+/* Tarjeta contenedora con la paleta cálida y bordes orgánicos */
+.cta-warm-card {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: 40px 100px 40px 40px; /* Misma línea de diseño fluida de tu sitio */
+    padding: 4.5rem 3rem;
+    text-align: center;
+    box-shadow: 0 20px 45px rgba(166, 123, 91, 0.1);
+    border: 1px solid rgba(166, 123, 91, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Etiqueta superior suave */
+.cta-badge {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.cta-warm-card h2 {
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    color: var(--text-dark);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+    max-width: 700px;
+}
+
+.cta-warm-card h2 span {
+    color: var(--primary);
+    font-style: normal;
+    font-weight: 500;
+}
+
+.cta-warm-card p {
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Botón principal de WhatsApp con los colores de tu marca */
+.btn-cta-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 1rem 2.8rem;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(166, 123, 91, 0.3);
+    transition: var(--transition);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-cta-whatsapp i {
+    font-size: 1.2rem;
+}
+
+.btn-cta-whatsapp:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(166, 123, 91, 0.4);
+}
+
+/* Microtexto de seguridad debajo del botón */
+.cta-note {
+    margin-top: 1.2rem;
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    letter-spacing: 0.5px;
+    font-weight: 300;
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .cta-warm-card {
+        padding: 3rem 1.5rem;
+        border-radius: 30px;
+    }
+}
+
+/* ============================================
+   ESTILOS DEL FOOTER 
+   ============================================ */
+.site-footer {
+    background-color: var(--primary); /* Color terracota principal */
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Divide el ancho en bloque izquierdo oscuro y derecho claro */
+    width: 100%;
+}
+
+/* --- BLOQUE IZQUIERDO Y CENTRAL (Terracota) --- */
+.footer-main-content {
+    background-color: var(--primary);
+    padding: 5rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* Marca y Logo */
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.footer-logo-icon {
+    font-size: 2rem;
+    color: var(--white);
+}
+
+.footer-logo-text h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1;
+    color: var(--white);
+}
+
+.footer-logo-text p {
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    margin: 0.3rem 0 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+
+/* Redes Sociales con enlaces funcionales */
+.footer-socials {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-socials a {
+    width: 38px;
+    height: 38px;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.footer-socials a:hover {
+    background-color: var(--white);
+    color: var(--primary);
+    transform: translateY(-3px);
+}
+
+/* Columna de Enlaces (Explora) */
+.footer-links-col h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+}
+
+.footer-links-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.footer-links-grid ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.footer-links-grid a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.footer-links-grid a:hover {
+    color: var(--white);
+    text-decoration: underline;
+}
+
+/* --- BLOQUE DERECHO (Blanco / Contacto) --- */
+.footer-contact-col {
+    background-color: var(--white);
+    color: var(--text-dark);
+    padding: 5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.footer-contact-col h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--text-dark);
+}
+
+.footer-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.footer-contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.95rem;
+    color: var(--text-soft);
+    border-bottom: 1px solid rgba(166, 123, 91, 0.15);
+    padding-bottom: 1.2rem;
+}
+
+.footer-contact-list li:last-child {
+    border-bottom: none;
+}
+
+.footer-contact-list i {
+    color: var(--primary);
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* --- FRANJA INFERIOR --- */
+.footer-bottom {
+    background-color: #8C6246; /* Tono terracota un poco más oscuro para la base */
+    text-align: center;
+    padding: 1.2rem;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+
+/* --- RESPONSIVE PARA MÓVILES Y TABLETS --- */
+@media (max-width: 968px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-main-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 4rem 2rem;
+    }
+    
+    .footer-contact-col {
+        padding: 4rem 2rem;
+    }
+}
+
+/* ===== WHATSAPP FLOATING BUTTON CON HOVER ===== */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #25D366;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+    z-index: 99;
+    transition: var(--transition);
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 20px 40px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-text {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+@media (max-width: 968px) {
+    .hero-content, 
+    .story-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .footer-ref-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        top: 0;
+    }
+    
+    .nav {
+        padding: 0.8rem 1.5rem;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-main);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.2rem;
+        box-shadow: var(--shadow-lg);
+        border-bottom: 1px solid rgba(166, 123, 91, 0.15);
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .hero-text h1 span:first-child {
+        font-size: 2.5rem;
+    }
+    
+    .highlight {
+        font-size: 4rem;
+    }
+
+    .hero-image img,
+    .story-image img {
+        height: 400px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-form {
+        padding: 2rem 1.5rem;
+    }
+
+    .whatsapp-float {
+        bottom: 20px;
+        right: 20px;
+        padding: 0.7rem 1.2rem;
+    }
+}
