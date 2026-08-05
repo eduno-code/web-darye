@@ -81,77 +81,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===== VALIDACIÓN DE FORMULARIO CON FEEDBACK VISUAL =====
-const contactForm = document.querySelector('.contact-form');
 
-if (contactForm) {
-    // Validación en tiempo real
-    const inputs = contactForm.querySelectorAll('input, textarea');
-    
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            if (this.value.trim() === '') {
-                this.style.borderColor = '#ff6b6b';
-                this.style.backgroundColor = '#fff8f8';
-            } else {
-                this.style.borderColor = '#A67B5B';
-                this.style.backgroundColor = '#ffffff';
-            }
-        });
-        
-        input.addEventListener('focus', function() {
-            this.style.borderColor = '#A67B5B';
-            this.style.backgroundColor = '#ffffff';
-        });
-    });
-    
-    // Envío del formulario
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const message = formData.get('message');
-        
-        // Validar todos los campos
-        let isValid = true;
-        inputs.forEach(input => {
-            if (input.value.trim() === '') {
-                isValid = false;
-                input.style.borderColor = '#ff6b6b';
-                input.style.backgroundColor = '#fff8f8';
-            }
-        });
-        
-        if (!isValid) {
-            alert('Por favor, completa todos los campos');
-            return;
-        }
-        
-        // Simular envío exitoso con animación
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        
-        submitBtn.textContent = '✓ Enviado';
-        submitBtn.style.backgroundColor = '#4CAF50';
-        submitBtn.style.transform = 'scale(0.95)';
-        
-        setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.style.backgroundColor = '';
-            submitBtn.style.transform = '';
-        }, 2000);
-        
-        // Reset del formulario
-        this.reset();
-        
-        // Feedback al usuario
-        setTimeout(() => {
-            alert(`✨ Gracias ${name}, tu mensaje ha sido enviado. Te responderé a la brevedad.`);
-        }, 100);
-    });
-}
 
 // ===== RESALTAR ENLACE ACTIVO CON OBSERVADOR =====
 const sections = document.querySelectorAll('section[id]');

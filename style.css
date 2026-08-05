@@ -251,41 +251,49 @@ h1, h2, h3, h4, .logo {
 }
 
 /* --- RESPONSIVE PARA MÓVILES Y TABLETS (<= 968px) --- */
-@media (max-width: 968px) {
+@media (max-width: 1024px) {
     .nav-container {
-        /* Reducimos el padding lateral para ganar espacio valioso en pantallas chicas */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 0.75rem 1rem;
-        gap: 1rem;
+        gap: 15px;
     }
 
     /* 1. Achicamos proporcionalmente el logo para que no acapare la pantalla */
     .brand-icon {
         width: 32px;
         height: 32px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     .brand-title {
-        font-size: 1.25rem; /* Baja de 1.5rem a un tamaño más prudente en móvil */
+        font-size: 1rem; /* Baja de 1.5rem a un tamaño más prudente en móvil */
+    }
+
+    .brand-subtitle {
+        font-size: 0.6rem;
     }
 
     /* 2. Escalamos el botón de la cita para que no quede gigante */
     .btn-nav-cita {
-        padding: 0.5rem 1rem;
-        font-size: 0.75rem; /* Letra más compacta */
-        letter-spacing: 0.3px;
+       padding: 0.45rem 0.8rem;
+        font-size: 0.7rem; /* Letra más compacta para que respire */
+        gap: 5px;
+        flex-shrink: 0;
     }
 
-    /* 3. Ajustamos el botón hamburguesa para que sea compacto y estético */
-    .menu-toggle {
-        padding: 8px;
-        border-radius: 50%; /* Se ve más moderno tipo icono circular */
+    /* 2. LA CLAVE: Reducimos el espacio y tamaño de los enlaces del menú central */
+    .nav-list {
+        gap: 1rem; /* Reducimos el espacio entre cada palabra del menú (antes era más grande) */
     }
 
-    .menu-toggle span {
-        width: 20px; /* Barras ligeramente más cortas para que entren bien */
-        height: 2px;
+    .nav-list a {
+        font-size: 0.78rem; /* Letra un poquito más compacta para que entren holgados */
+        white-space: nowrap; /* Evita que las palabras de dos líneas se partan */
     }
+
+
 }
 
 /* ===== HERO SECTION CON HOVER EN IMAGEN ===== */
@@ -1366,8 +1374,9 @@ faq-item-modern p {
 }
 
 /* ============================================
-   ESTILOS DEL FOOTER 
+   ESTILOS DEL FOOTER (Compacto y Elegante)
    ============================================ */
+
 .site-footer {
     background-color: var(--primary); /* Color terracota principal */
     color: var(--white);
@@ -1383,10 +1392,10 @@ faq-item-modern p {
 /* --- BLOQUE IZQUIERDO Y CENTRAL (Terracota) --- */
 .footer-main-content {
     background-color: var(--primary);
-    padding: 5rem 4rem;
+    padding: 3rem 2.5rem; /* REDUCIDO: Mucho más compacto vertical y horizontalmente */
     display: grid;
     grid-template-columns: 1fr 1.5fr;
-    gap: 3rem;
+    gap: 2rem; /* Reducimos el espacio entre columnas */
     align-items: start;
 }
 
@@ -1395,17 +1404,17 @@ faq-item-modern p {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem; /* Reducido */
 }
 
 .footer-logo-icon {
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: var(--white);
 }
 
 .footer-logo-text h3 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 600;
     margin: 0;
     line-height: 1;
@@ -1413,22 +1422,22 @@ faq-item-modern p {
 }
 
 .footer-logo-text p {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     letter-spacing: 1.5px;
-    margin: 0.3rem 0 0 0;
+    margin: 0.2rem 0 0 0;
     color: rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
 }
 
-/* Redes Sociales con enlaces funcionales */
+/* Redes Sociales */
 .footer-socials {
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
 }
 
 .footer-socials a {
-    width: 38px;
-    height: 38px;
+    width: 34px; /* Ligeramente más compacto */
+    height: 34px;
     background-color: rgba(255, 255, 255, 0.15);
     color: var(--white);
     border-radius: 50%;
@@ -1437,28 +1446,28 @@ faq-item-modern p {
     justify-content: center;
     text-decoration: none;
     transition: var(--transition);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .footer-socials a:hover {
     background-color: var(--white);
     color: var(--primary);
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
 /* Columna de Enlaces (Explora) */
 .footer-links-col h4 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.8rem;
+    font-size: 1.5rem; /* Reducido */
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem; /* Reducido */
     color: var(--white);
 }
 
 .footer-links-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .footer-links-grid ul {
@@ -1467,13 +1476,13 @@ faq-item-modern p {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.5rem; /* Enlaces más juntos */
 }
 
 .footer-links-grid a {
     color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     transition: color 0.2s ease;
 }
 
@@ -1486,7 +1495,7 @@ faq-item-modern p {
 .footer-contact-col {
     background-color: var(--white);
     color: var(--text-dark);
-    padding: 5rem 3rem;
+    padding: 3rem 2.5rem; /* REDUCIDO: Igual que el bloque izquierdo para mantener simetría */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1494,9 +1503,9 @@ faq-item-modern p {
 
 .footer-contact-col h4 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.8rem;
+    font-size: 1.5rem; /* Reducido */
     font-weight: 600;
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem; /* Reducido */
     color: var(--text-dark);
 }
 
@@ -1506,17 +1515,17 @@ faq-item-modern p {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.9rem; /* Elementos más compactos */
 }
 
 .footer-contact-list li {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-size: 0.95rem;
+    gap: 0.8rem;
+    font-size: 0.9rem;
     color: var(--text-soft);
     border-bottom: 1px solid rgba(166, 123, 91, 0.15);
-    padding-bottom: 1.2rem;
+    padding-bottom: 0.8rem; /* Reducido */
 }
 
 .footer-contact-list li:last-child {
@@ -1525,16 +1534,16 @@ faq-item-modern p {
 
 .footer-contact-list i {
     color: var(--primary);
-    font-size: 1.1rem;
+    font-size: 1rem;
     width: 20px;
     text-align: center;
 }
 
 /* --- FRANJA INFERIOR --- */
 .footer-bottom {
-    background-color: #8C6246; /* Tono terracota un poco más oscuro para la base */
+    background-color: #8C6246;
     text-align: center;
-    padding: 1.2rem;
+    padding: 1rem;
     font-size: 0.75rem;
     letter-spacing: 2px;
     color: rgba(255, 255, 255, 0.8);
@@ -1549,15 +1558,14 @@ faq-item-modern p {
     
     .footer-main-content {
         grid-template-columns: 1fr;
-        gap: 3rem;
-        padding: 4rem 2rem;
+        gap: 2rem;
+        padding: 2.5rem 1.5rem;
     }
     
     .footer-contact-col {
-        padding: 4rem 2rem;
+        padding: 2.5rem 1.5rem;
     }
 }
-
 /* ===== WHATSAPP FLOATING BUTTON CON HOVER ===== */
 .whatsapp-float {
     position: fixed;
