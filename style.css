@@ -296,9 +296,9 @@ h1, h2, h3, h4, .logo {
 
 }
 
-/* ===== HERO SECTION CON HOVER EN IMAGEN ===== */
+/* ===== HERO SECTION OPTIMIZADO (UX/UI & WHITESPACE) ===== */
 .hero {
-    padding: 4rem 0 4rem;
+    padding: 4rem 0; /* Más aire superior e inferior para separar de la navbar */
     background-color: var(--bg-main);
     position: relative;
     overflow: hidden;
@@ -307,40 +307,54 @@ h1, h2, h3, h4, .logo {
 .hero-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: flex-start;
+    gap: 6rem;
+    align-items: center; /* Alineado verticalmente al centro para mejor balance */
+}
+
+/* Contenedor principal de texto: Usamos Flexbox con gap controlado para separar los elementos ordenadamente */
+.hero-text {
+    display: flex;
+    flex-direction: column;
     
 }
 
-.hero-supra {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 8px;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-}
 
-.hero-text h1 span:first-child {
-    font-size: 3.5rem;
+
+/* Título principal con escala tipográfica limpia y moderna */
+.hero-text h1 {
+    font-size: clamp(2.2rem, 3.8vw, 3.5rem);
     font-weight: 300;
     color: var(--text-dark);
+    line-height: 1.2; /* Altura de línea esencial para que las líneas no se amontonen */
+    margin: 0;
 }
 
-.highlight {
-    font-size: 5.5rem;
+.hero-text h1 span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2em; /* Hace que la parte destacada luzca elegante y proporcionada */
     font-weight: 600;
     color: var(--primary);
-    font-family: 'Cormorant Garamond', serif;
-    line-height: 1;
-    display: block;
+    display: inline-block;
 }
 
+/* Subtítulo con lectura cómoda (anchura de línea y espacios optimizados) */
 .hero-subtitle {
     font-size: 1.1rem;
     color: var(--text-soft);
-    margin: 2rem 0 2.5rem;
+    line-height: 1.7; /* Permite que los ojos descansen al leer el párrafo */
+    margin-top: 4rem;
+    margin-bottom: 4rem;
     border-left: 3px solid var(--primary-soft);
     padding-left: 1.5rem;
+}
+
+/* Botones con separación correcta respecto al texto de arriba */
+.hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    margin-right: 6rem;
 }
 
 .hero-image {
@@ -1684,5 +1698,56 @@ faq-item-modern p {
         bottom: 20px;
         right: 20px;
         padding: 0.7rem 1.2rem;
+    }
+}
+
+/* ==========================================
+   CORRECCIONES RESPONSIVE FINALES PARA MÓVILES
+   ========================================== */
+
+@media (max-width: 968px) {
+    /* Forzar que el Hero pase a una columna de forma limpia */
+    .hero-content {
+        grid-template-columns: 1fr !important;
+        gap: 3rem !important;
+    }
+
+    /* Limpiar márgenes fijos que tapan la pantalla en celulares */
+    .hero-cta {
+        margin-right: 0 !important;
+        justify-content: center;
+    }
+
+    .hero-subtitle {
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Asegurar contenedores con padding cómodo en pantallas chicas */
+    .container {
+        padding: 0 1.2rem;
+    }
+
+    /* Títulos adaptados para que no desborden en celulares pequeños */
+    .hero-text h1 {
+        font-size: 2.3rem !important;
+    }
+
+    /* Imagen del hero adaptada a celular */
+    .hero-image img {
+        height: 380px !important;
+    }
+
+    /* Forzar que los botones ocupen el ancho adecuado o se centren */
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-cta .btn {
+        width: 100%;
+        text-align: center;
     }
 }

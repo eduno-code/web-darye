@@ -162,3 +162,29 @@ document.querySelectorAll('.service-card, .story-content, .hero-content').forEac
     el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
     observer.observe(el);
 });
+// animacion de hero redondos
+
+document.addEventListener("DOMContentLoaded", () => {
+    const heroSection = document.querySelector(".hero");
+    
+    if (heroSection) {
+        // Efecto Parallax interactivo: mueve las burbujas SVG de forma fluida según la posición del cursor
+        heroSection.addEventListener("mousemove", (e) => {
+            const rect = heroSection.getBoundingClientRect();
+            // Calcula las coordenadas relativas del mouse dentro de la sección hero (valores entre -0.5 y 0.5)
+            const x = (e.clientX - rect.left) / heroSection.offsetWidth - 0.5;
+            const y = (e.clientY - rect.top) / heroSection.offsetHeight - 0.5;
+
+            const b1 = document.getElementById("burbuja-1");
+            const b2 = document.getElementById("burbuja-2");
+            const b3 = document.getElementById("burbuja-3");
+
+            if (b1 && b2 && b3) {
+                // Aplica un desplazamiento diferenciado a cada círculo para generar profundidad tridimensional
+                b1.style.transform = `translate(${x * 25}px, ${y * 25}px)`;
+                b2.style.transform = `translate(${x * 35}px, ${y * -25}px)`. /* Ajustado para el círculo derecho */
+                b3.style.transform = `translate(${x * 15}px, ${y * -20}px)`;
+            }
+        });
+    }
+});
