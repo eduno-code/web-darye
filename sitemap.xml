@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PENDIENTE AL PUBLICAR
+  Un sitemap EXIGE URLs absolutas: hay que sustituir TU-DOMINIO.com por el
+  dominio real antes de subirlo o Google lo rechazará entero. Mientras tanto
+  este archivo no hace daño, pero tampoco sirve de nada.
+  Actualiza también <lastmod> cuando cambies el contenido de la página.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://TU-DOMINIO.com/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

@@ -1,0 +1,21 @@
+# Imágenes originales que se retiraron del sitio. Se conservan en el disco por
+# si hicieran falta, y siguen recuperables del historial de git, pero no deben
+# volver a subirse: son 9,8 MB que el repo ya pagó una vez.
+_sin-usar/
+
+# Herramientas instaladas en el proyecto, no código del sitio.
+# La skill ui-ux-pro-max ocupa 3,7 MB; skills-lock.json ya deja constancia
+# de qué versión está instalada, así que se puede reinstalar.
+.agents/
+.claude/
+
+# Borradores de la herramienta de diseño.
+.superdesign/
+
+# Basura del sistema
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Servidores locales y dependencias, por si algún día se usan aquí
+node_modules/

@@ -1,190 +1,154 @@
-// ===== MENÚ MÓVIL CON MEJORAS UX =====
-const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-link');
-const header = document.querySelector('.header');
+/* ============================================================
+   PSICONCIENTE — comportamiento de la página
+   El scroll suave y el desplazamiento por el header sticky los
+   resuelve el CSS (scroll-behavior + scroll-padding-top).
+   ============================================================ */
+(function () {
+  'use strict';
 
-// Función para abrir/cerrar menú
-function toggleMenu() {
-    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-    menuToggle.setAttribute('aria-expanded', !isExpanded);
-    navMenu.classList.toggle('active');
-    
-    // Animación del botón hamburguesa mejorada
-    const spans = menuToggle.querySelectorAll('span');
-    if (!isExpanded) {
-        spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
-        spans[0].style.width = '25px';
-        spans[1].style.opacity = '0';
-        spans[1].style.transform = 'translateX(-10px)';
-        spans[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
-        spans[2].style.width = '25px';
-        
-        // Prevenir scroll cuando el menú está abierto
-        document.body.style.overflow = 'hidden';
-    } else {
-        spans[0].style.transform = 'none';
-        spans[0].style.width = '25px';
-        spans[1].style.opacity = '1';
-        spans[1].style.transform = 'none';
-        spans[2].style.transform = 'none';
-        spans[2].style.width = '25px';
-        
-        // Restaurar scroll
-        document.body.style.overflow = '';
+  // Marca que hay JS: sin esta clase el CSS nunca oculta contenido.
+  document.documentElement.classList.add('js');
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 1. MENÚ MÓVIL ---------- */
+  var toggle = document.getElementById('menuToggle');
+  var panel = document.getElementById('navPanel');
+  var scrim = document.getElementById('navScrim');
+
+  if (toggle && panel && scrim) {
+    var lastFocused = null;
+
+    function focusables() {
+      return Array.prototype.slice.call(panel.querySelectorAll('a[href]'));
     }
-}
 
-// Event listener para menú móvil
-if (menuToggle) {
-    menuToggle.addEventListener('click', toggleMenu);
-}
-
-// Cerrar menú al hacer clic en un enlace
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        if (navMenu && navMenu.classList.contains('active')) {
-            toggleMenu();
-        }
-        
-        // Remover active de todos los links
-        navLinks.forEach(l => l.removeAttribute('aria-current'));
-        
-        // Agregar active al link clickeado
-        e.target.setAttribute('aria-current', 'page');
-    });
-});
-
-// ===== SMOOTH SCROLL MEJORADO =====
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        
-        if (targetId === '#') return;
-        
-        const target = document.querySelector(targetId);
-        
-        if (target) {
-            const headerOffset = 100;
-            const elementPosition = target.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-            
-            // Actualizar URL sin recargar
-            history.pushState(null, null, targetId);
-        }
-    });
-});
-
-
-
-// ===== RESALTAR ENLACE ACTIVO CON OBSERVADOR =====
-const sections = document.querySelectorAll('section[id]');
-
-function highlightNavLink() {
-    const scrollY = window.pageYOffset;
-    
-    sections.forEach(section => {
-        const sectionHeight = section.offsetHeight;
-        const sectionTop = section.offsetTop - 120;
-        const sectionId = section.getAttribute('id');
-        const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
-        
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            navLink?.setAttribute('aria-current', 'page');
-        } else {
-            navLink?.removeAttribute('aria-current');
-        }
-    });
-}
-
-window.addEventListener('scroll', highlightNavLink);
-
-// ===== HEADER SCROLL EFFECT =====
-let lastScroll = 0;
-
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-    
-    if (currentScroll <= 0) {
-        header.style.transform = 'translateY(0)';
-        return;
-    }
-    
-    if (currentScroll > lastScroll && currentScroll > 100) {
-        // Scroll hacia abajo - ocultar header
-        header.style.transform = 'translateY(-100%)';
-    } else {
-        // Scroll hacia arriba - mostrar header
-        header.style.transform = 'translateY(0)';
-    }
-    
-    lastScroll = currentScroll;
-});
-
-// ===== LAZY LOADING PARA IMÁGENES =====
-if ('loading' in HTMLImageElement.prototype) {
-    const images = document.querySelectorAll('img[loading="lazy"]');
-    images.forEach(img => {
-        img.loading = 'lazy';
-    });
-} else {
-    // Fallback para navegadores antiguos
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
-    document.body.appendChild(script);
-}
-
-// ===== ANIMACIÓN DE ENTRADA CON INTERSECTION OBSERVER =====
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observar elementos para animación
-document.querySelectorAll('.service-card, .story-content, .hero-content').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-    observer.observe(el);
-});
-// animacion de hero redondos
-
-document.addEventListener("DOMContentLoaded", () => {
-    const heroSection = document.querySelector(".hero");
-    
-    if (heroSection) {
-        // Efecto Parallax interactivo: mueve las burbujas SVG de forma fluida según la posición del cursor
-        heroSection.addEventListener("mousemove", (e) => {
-            const rect = heroSection.getBoundingClientRect();
-            // Calcula las coordenadas relativas del mouse dentro de la sección hero (valores entre -0.5 y 0.5)
-            const x = (e.clientX - rect.left) / heroSection.offsetWidth - 0.5;
-            const y = (e.clientY - rect.top) / heroSection.offsetHeight - 0.5;
-
-            const b1 = document.getElementById("burbuja-1");
-            const b2 = document.getElementById("burbuja-2");
-            const b3 = document.getElementById("burbuja-3");
-
-            if (b1 && b2 && b3) {
-                // Aplica un desplazamiento diferenciado a cada círculo para generar profundidad tridimensional
-                b1.style.transform = `translate(${x * 25}px, ${y * 25}px)`;
-                b2.style.transform = `translate(${x * 35}px, ${y * -25}px)`. /* Ajustado para el círculo derecho */
-                b3.style.transform = `translate(${x * 15}px, ${y * -20}px)`;
-            }
+    function openMenu() {
+      lastFocused = document.activeElement;
+      panel.setAttribute('data-open', 'true');
+      scrim.setAttribute('data-open', 'true');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Cerrar menú');
+      document.body.setAttribute('data-menu-open', 'true');
+      // El panel pasa de visibility:hidden a visible; hay que esperar a que el
+      // navegador recalcule el estilo antes de poder enfocar nada dentro.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          var first = focusables()[0];
+          if (first) first.focus();
         });
+      });
     }
-});
+
+    function closeMenu(returnFocus) {
+      panel.setAttribute('data-open', 'false');
+      scrim.removeAttribute('data-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú');
+      document.body.removeAttribute('data-menu-open');
+      if (returnFocus === false) return;
+      // body no es enfocable: si no hay origen válido, el foco vuelve al botón.
+      var back = (lastFocused && lastFocused !== document.body) ? lastFocused : toggle;
+      back.focus();
+    }
+
+    function isOpen() {
+      return toggle.getAttribute('aria-expanded') === 'true';
+    }
+
+    toggle.addEventListener('click', function () {
+      if (isOpen()) closeMenu(); else openMenu();
+    });
+
+    scrim.addEventListener('click', function () { closeMenu(); });
+
+    // Al elegir un destino, cerrar sin robar el foco al ancla
+    panel.addEventListener('click', function (e) {
+      if (e.target.closest('a[href]')) closeMenu(false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (!isOpen()) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMenu();
+        return;
+      }
+
+      // Foco atrapado dentro del panel mientras está abierto
+      if (e.key === 'Tab') {
+        var items = focusables();
+        if (!items.length) return;
+        var first = items[0];
+        var last = items[items.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    // Si se pasa a escritorio con el menú abierto, reponer el estado.
+    // Este 1060 debe coincidir con el media query del nav en style.css: por
+    // debajo de ese ancho el panel sigue siendo la única navegación, así que
+    // cerrarlo antes dejaría al usuario sin menú.
+    window.matchMedia('(min-width: 1060px)').addEventListener('change', function (ev) {
+      if (ev.matches && isOpen()) closeMenu(false);
+    });
+  }
+
+  /* ---------- 2. SECCIÓN ACTIVA EN LA NAVEGACIÓN ---------- */
+  var navLinks = Array.prototype.slice.call(
+    document.querySelectorAll('.nav-list a[href^="#"]')
+  );
+
+  if (navLinks.length && 'IntersectionObserver' in window) {
+    var linkFor = {};
+    navLinks.forEach(function (a) {
+      linkFor[a.getAttribute('href').slice(1)] = a;
+    });
+
+    var watched = Object.keys(linkFor)
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var link = linkFor[entry.target.id];
+        if (!link) return;
+        if (entry.isIntersecting) {
+          navLinks.forEach(function (a) { a.removeAttribute('aria-current'); });
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+    watched.forEach(function (section) { spy.observe(section); });
+  }
+
+  /* ---------- 3. REVELADO AL SCROLL ---------- */
+  var revealables = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+  if (!revealables.length) return;
+
+  // Sin observador o con movimiento reducido, todo visible desde el principio
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealables.forEach(function (el) { el.classList.add('is-visible'); });
+    return;
+  }
+
+  var revealer = new IntersectionObserver(function (entries, observer) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  revealables.forEach(function (el) { revealer.observe(el); });
+})();

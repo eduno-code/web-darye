@@ -1,0 +1,11 @@
+# Psicconsciente — Daryeli Romero
+# Sitio de una sola página: todo es indexable.
+
+User-agent: *
+Allow: /
+
+# Carpeta de trabajo, no forma parte del sitio publicado.
+Disallow: /_sin-usar/
+
+# PENDIENTE AL PUBLICAR: descomenta esta línea con tu dominio real.
+# Sitemap: https://TU-DOMINIO.com/sitemap.xml
