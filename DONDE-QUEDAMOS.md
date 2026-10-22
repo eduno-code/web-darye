@@ -26,6 +26,8 @@ Etapa 3 (22/10): carga con el bombillo, variante A, en línea en el <head> de in
 Animaciones aplicadas: FAQ que se despliega (`::details-content`, 0,24 s; en Safari abre sin animar), entrada escalonada del inicio (60 ms; tras el bombillo si sale), pasos uno tras otro (70 ms). Título y texto del inicio solo suben, sin fundido: con fundido el LCP pasaba de 1,9 a 2,5 s. LCP final 1,9 s. Descartadas: hover en tarjetas de terapias, contador en cifras. Testimonios: con el carrusel.
 Sin librerías ni Tailwind: todo CSS.
 
+Barra: solo «Psicconsciente» (1,25 rem en escritorio), sin «Daryeli Romero». Ícono de WhatsApp oficial (Simple Icons) en el botón flotante y en «Hablemos».
+
 Pendiente de Daryeli: los testimonios (se pondrán en carrusel uno por uno) y si hay permiso para publicarlos.
 Inicio: solo «Psicóloga clínica» y «Terapia cognitivo-conductual». Sesiones de 60 min; pareja «un poco más», sin cifra.
 **Ojo reserva:** la base dice 50 min individual y 60 pareja (`supabase/migrations/20260825120000_base.sql:44`, tabla `services`). Hay que pasarlo a 60 y fijar la de pareja con Daryeli.

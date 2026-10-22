@@ -298,10 +298,6 @@ summary:focus-visible{
   display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   font-family:var(--font-display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em;
 }
-.brand-subtitle{
-  display:none;font-size:var(--text-xs);letter-spacing:.1em;white-space:nowrap;
-  text-transform:uppercase;color:var(--text-soft);
-}
 
 .nav-menu{display:none}
 .nav-list{display:flex;gap:var(--space-6);list-style:none}
@@ -870,7 +866,7 @@ html:not(.sin-carga) .hero-grid > div:first-child > :nth-child(5){animation-dela
    acorta un enlace, este numero se puede bajar, pero hay que volver a medirlo.
    OJO: main.js repite este 1060 para cerrar el panel al pasar a escritorio. */
 @media (min-width:1060px){
-  .brand-subtitle{display:block}
+  .brand-title{font-size:1.25rem}
   /* Las columnas laterales miden igual para centrar los enlaces, pero nunca
      menos que su contenido: así la marca no puede montarse sobre ellos. */
   .nav{
