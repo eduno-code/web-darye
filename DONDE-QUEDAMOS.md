@@ -28,6 +28,8 @@ Sin librerías ni Tailwind: todo CSS.
 
 Barra: solo «Psicconsciente» (1,25 rem en escritorio), sin «Daryeli Romero». Ícono de WhatsApp oficial (Simple Icons) en el botón flotante y en «Hablemos».
 
+GitHub (22/10): el repo sigue PÚBLICO por decisión de Edgar (cuenta Free; GitHub Pages no publica desde repos privados en Free).
+
 Pendiente de Daryeli: los testimonios (se pondrán en carrusel uno por uno) y si hay permiso para publicarlos.
 Inicio: solo «Psicóloga clínica» y «Terapia cognitivo-conductual». Sesiones de 60 min; pareja «un poco más», sin cifra.
 **Ojo reserva:** la base dice 50 min individual y 60 pareja (`supabase/migrations/20260825120000_base.sql:44`, tabla `services`). Hay que pasarlo a 60 y fijar la de pareja con Daryeli.
