@@ -30,3 +30,8 @@ supabase/datos-privados.sql
 
 # Caché local de la CLI de Supabase
 supabase/.temp/
+
+# Notas de trabajo (solo locales)
+DONDE-QUEDAMOS.md
+archivo/auditorias/ESTADO-VISTA1.md
+.impeccable/
