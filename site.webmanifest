@@ -1,0 +1,12 @@
+{
+  "name": "Psicconsciente · Daryeli Romero",
+  "short_name": "Psicconsciente",
+  "icons": [
+    { "src": "icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icono-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#8C6246",
+  "background_color": "#FFFFFF",
+  "display": "browser",
+  "lang": "es-VE"
+}

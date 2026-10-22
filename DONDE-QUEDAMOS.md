@@ -1,3 +1,34 @@
+# Dónde quedamos · 22 de octubre de 2026 (landing)
+
+Plan: `~/.claude/plans/hola-te-explico-daryeli-vivid-giraffe.md`. Etapas 0 y 1 hechas (limpieza, commit `71804af`). **Lo siguiente: Etapa 2, auditoría** (Lighthouse y medidas antes/después, luego la lista B).
+
+Hecho hoy en la landing (sin commit todavía):
+- Todos los botones de agendar van a WhatsApp con mensaje ya escrito según la terapia. Fuera «Mi cuenta» y «Mis consultas» hasta que exista la reserva.
+- Barra de navegación a todo el ancho (ya no es cápsula). Columnas con `minmax(max-content,1fr)`: no se monta ni con el zoom de Windows al 125 %.
+- Pie: raya bajo cada título (blanco 35 %) y línea sobre el aviso final; marca «Psicconsciente / Daryeli Romero»; horario en `dl` por días.
+- Textos sin tono de IA y en neutro (sin «espacio seguro», sin listas de tres). La historia NO se tocó: se reescribirá entera.
+
+Etapa 2 · medición «antes» (22/10, ya con los cambios de hoy), informes en `archivo/auditorias/2026-10-22-antes*`:
+- Lighthouse móvil: accesibilidad 100, buenas prácticas 100, SEO 100. Escritorio: accesibilidad 96 (contraste del botón flotante de WhatsApp, 1,98:1).
+- Rendimiento móvil (Slow 4G, CPU ×4): LCP 1,9 s, CLS 0. Bloqueo de render ~450 ms (fuentes de Google), ~80 kB de imágenes de más.
+- Preguntas frecuentes: ahora solo una abierta a la vez (`<details name="faq">` + respaldo en main.js).
+
+Etapa 2 · lista B aplicada (22/10). Después: Lighthouse 100/100/100 en móvil y escritorio (informes `archivo/auditorias/2026-10-22-despues*`). LCP móvil ~2,0 s, CLS 0.
+- Botón flotante WhatsApp en verde oscuro `#0E7A5F` (5,29:1), hover `#0A5E49`. Foco blanco en el pie.
+- Fotos de terapias: versiones 640 y 1000 px con srcset (los originales de 1600 quedan en la raíz como fuente, ya sin uso).
+- Sin parpadeo de las cifras (clase `js` puesta en el head). Redes sin parámetros de seguimiento. Todos los WhatsApp con mensaje.
+- og:locale es_VE, og:site_name, fuera «Psychiatric» del JSON-LD. apple-touch-icon, favicon.ico, icono-192/512 y site.webmanifest.
+- Unsplash: no hace falta permiso ni crédito; las fotos de terapias se quedan.
+- NO tocado a propósito: fotos de Daryeli (hero, historia, og-image) hasta la sesión de fotos; historia (se reescribe); publicar (dominio).
+- Queda de la Etapa 2: lo que depende de Daryeli (testimonios, privacidad, correo) y la parte D (publicar). Luego Etapa 3: animaciones y carga del bombillo.
+
+Pendiente de Daryeli: los testimonios (se pondrán en carrusel uno por uno) y si hay permiso para publicarlos.
+Inicio: solo «Psicóloga clínica» y «Terapia cognitivo-conductual». Sesiones de 60 min; pareja «un poco más», sin cifra.
+**Ojo reserva:** la base dice 50 min individual y 60 pareja (`supabase/migrations/20260825120000_base.sql:44`, tabla `services`). Hay que pasarlo a 60 y fijar la de pareja con Daryeli.
+Cifras: 500+ pacientes (real), 3.000+ horas (estimado: 500 × ~6 sesiones; que Daryeli lo confirme), 6 años de experiencia.
+
+---
+
 # Dónde quedamos · 19 de octubre de 2026
 
 ## Lo hecho el 19/10

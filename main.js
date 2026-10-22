@@ -152,3 +152,14 @@
 
   revealables.forEach(function (el) { revealer.observe(el); });
 })();
+
+(function () {
+  if ('name' in HTMLDetailsElement.prototype) return;
+  var items = document.querySelectorAll('details[name="faq"]');
+  items.forEach(function (item) {
+    item.addEventListener('toggle', function () {
+      if (!item.open) return;
+      items.forEach(function (otro) { if (otro !== item) otro.open = false; });
+    });
+  });
+})();
