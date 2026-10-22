@@ -2,183 +2,222 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mis consultas · Psicconsciente</title>
 <meta name="description" content="Tus consultas con Daryeli Romero: la próxima cita, tu historial y tus paquetes de sesiones.">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#5E442C">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
-
-<link rel="stylesheet" href="../style.css?v=42">
-<link rel="stylesheet" href="../panel.css?v=6">
-<link rel="stylesheet" href="cuenta.css?v=5">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="cuenta.css?v=8">
 </head>
 <body class="cuenta">
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-bombillo" viewBox="0 0 24 24"><path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/><path d="M9 20h6M10.2 22.2h3.6"/><path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/></symbol>
+  <symbol id="i-casa" viewBox="0 0 24 24"><path d="M5 12h-2l9 -9l9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></symbol>
+  <symbol id="i-cal-mas" viewBox="0 0 24 24"><path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M16 19h6"/><path d="M19 16v6"/></symbol>
+  <symbol id="i-duda" viewBox="0 0 24 24"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293z"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276z"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10"/></symbol>
+  <symbol id="i-paquete" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9z"/><path d="M12 12l8 -4.5"/><path d="M12 12v9"/><path d="M12 12l-8 -4.5"/></symbol>
+  <symbol id="i-historial" viewBox="0 0 24 24"><path d="M12 8v4l2 2"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></symbol>
+  <symbol id="i-sig" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></symbol>
+  <symbol id="i-abajo" viewBox="0 0 24 24"><path d="M6 9l6 6l6 -6"/></symbol>
+  <symbol id="i-salir" viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></symbol>
 </svg>
 
-<!-- Lo que cambia sin recargar se anuncia aparte: un lector de pantalla no lee
-     un texto que se sustituye en silencio. -->
+<a class="skip-link" href="#principal">Saltar al contenido</a>
 <p class="sr-only" id="anuncio" role="status" aria-live="polite"></p>
 
-<div class="pnl">
+<header class="top">
+  <div class="cont top-in">
+    <a class="logo" href="../index.html"><svg class="ic" aria-hidden="true"><use href="#i-bombillo"/></svg>Psicconsciente</a>
+    <nav class="menu-top" aria-label="Tu cuenta">
+      <ul>
+        <li><a href="#consultas" data-vista="consultas"><svg class="ic" aria-hidden="true"><use href="#i-casa"/></svg>Mis consultas</a></li>
+        <li><a href="#datos" data-vista="datos"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Mis datos</a></li>
+      </ul>
+    </nav>
+    <div class="top-der">
+      <a class="duda" href="https://wa.me/584126724351" target="_blank" rel="noopener noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-duda"/></svg><span class="duda-txt">Tengo una duda</span><span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span></a>
+      <a class="btn btn-top" href="../reservar/"><svg class="ic" aria-hidden="true"><use href="#i-cal-mas"/></svg>Reservar cita</a>
+      <a class="avatar" id="avatar" href="#datos" aria-label="Tus datos">·</a>
+    </div>
+  </div>
+</header>
 
-  <!-- El menú lo dibuja ../panel.js: lo comparten esta página y el
-       asistente de reserva, y escribirlo en los dos archivos significaría
-       que cambiar una entrada obliga a acordarse del otro. -->
-  <div id="panelMenu"></div>
+<main id="principal">
+  <section class="banda">
+    <div class="cont">
+      <div class="barra-movil">
+        <span class="logo"><svg class="ic" aria-hidden="true"><use href="#i-bombillo"/></svg>Psicconsciente</span>
+        <a class="avatar" id="avatarMovil" href="#datos" aria-label="Tus datos">·</a>
+      </div>
+      <h1 id="saludo">Tus consultas</h1>
+      <p id="hoy"></p>
+    </div>
+  </section>
 
-  <!-- ============ EL CONTENIDO ============ -->
-  <main class="pnl-lienzo">
+  <div class="cont cuerpo">
+    <p class="cargando" id="cargando">Buscando tus consultas…</p>
 
-    <p class="cta-cargando" id="cargando">Buscando tus consultas…</p>
-
-    <!-- ---- NO HAY NADA TODAVÍA ---- -->
-    <section class="cta-vacio" id="vacio" aria-labelledby="tVacio" hidden>
-      <h1 id="tVacio">Todavía no has reservado ninguna consulta</h1>
-      <p>Cuando reserves, aquí verás tu próxima cita, podrás cambiarla de horario y consultar tu historial.</p>
-      <a href="../reservar/" class="btn btn-primary">Reservar mi primera consulta</a>
+    <section class="tarjeta vacio" id="vacio" aria-labelledby="tVacio" hidden>
+      <span class="vacio-ic" aria-hidden="true"><svg class="ic"><use href="#i-cal-mas"/></svg></span>
+      <h2 id="tVacio">Todavía no has reservado ninguna consulta</h2>
+      <p>Cuando reserves, aquí verás tu próxima cita, podrás cambiarla de horario y ver tu historial.</p>
+      <a href="../reservar/" class="btn">Reservar mi primera consulta</a>
     </section>
 
-    <div class="cta-contenido" id="contenido" hidden>
+    <div id="contenido" hidden>
+      <div class="vista" id="vConsultas" role="region" aria-label="Mis consultas">
+        <div class="rejilla">
+          <div class="col-principal">
+            <article class="tarjeta proxima" id="bloqueProxima" aria-labelledby="tProxima" hidden>
+              <h2 id="tProxima">Tu próxima consulta</h2>
+              <div id="proxima"></div>
+            </article>
 
-      <!-- ---- VISTA · MIS CONSULTAS ---- -->
-      <div class="pnl-panel" id="vConsultas" role="region" aria-label="Mis consultas">
-        <h1 class="cta-saludo" id="saludo">Tus consultas</h1>
+            <article class="tarjeta proxima sin-proxima" id="sinProxima" aria-labelledby="tSinProxima" hidden>
+              <h2 id="tSinProxima">No tienes consultas próximas</h2>
+              <p>Cuando quieras, reserva tu siguiente sesión.</p>
+              <a class="btn" href="../reservar/"><svg class="ic" aria-hidden="true"><use href="#i-cal-mas"/></svg>Reservar cita</a>
+            </article>
 
-        <section class="cta-bloque" id="bloqueProxima" aria-labelledby="tProxima" hidden>
-          <h2 class="cta-rotulo" id="tProxima">Tu próxima consulta</h2>
-          <div id="proxima"></div>
-        </section>
+            <nav class="atajos" aria-label="Accesos rápidos">
+              <a class="atajo" href="../reservar/"><span class="burbuja"><svg class="ic" aria-hidden="true"><use href="#i-cal-mas"/></svg></span>Reservar cita</a>
+              <a class="atajo" href="#datos"><span class="burbuja"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg></span>Mis datos</a>
+            </nav>
 
-        <section class="cta-bloque" id="bloqueOtras" aria-labelledby="tOtras" hidden>
-          <h2 class="cta-rotulo" id="tOtras">También tienes</h2>
-          <ul class="cta-filas" id="otras"></ul>
-        </section>
-
-        <section class="cta-bloque" id="bloquePaquetes" aria-labelledby="tPaquetes" hidden>
-          <h2 class="cta-rotulo" id="tPaquetes">Tus paquetes</h2>
-          <div class="cta-bonos">
-            <ul class="cta-filas" id="paquetes"></ul>
+            <section class="tarjeta" id="bloqueOtras" aria-labelledby="tOtras" hidden>
+              <h2 id="tOtras">También tienes</h2>
+              <ul class="filas" id="otras"></ul>
+            </section>
           </div>
-        </section>
 
-        <section class="cta-bloque" id="bloqueHistorial" aria-labelledby="tHistorial" hidden>
-          <h2 class="cta-rotulo" id="tHistorial">Historial</h2>
-          <!-- Sin acciones a propósito: una consulta pasada no se puede mover
-               ni cancelar, y ofrecer un botón que va a fallar es peor. -->
-          <ul class="cta-filas cta-filas-quietas" id="historial"></ul>
-        </section>
+          <div class="col-lado" id="bloquePaquetes" hidden>
+            <h2 class="rotulo-movil">Tu resumen</h2>
+            <ul class="paquetes" id="paquetes"></ul>
+          </div>
+        </div>
+
+        <details class="tarjeta historial" id="bloqueHistorial" hidden>
+          <summary>
+            <span class="burbuja burbuja-piz" aria-hidden="true"><svg class="ic"><use href="#i-historial"/></svg></span>
+            <span class="hist-txt"><strong>Historial</strong><small id="histUltima"></small></span>
+            <span class="cifra" id="histCuantas"></span>
+            <svg class="ic hist-flecha" aria-hidden="true"><use href="#i-abajo"/></svg>
+          </summary>
+          <ul class="filas filas-quietas" id="historial"></ul>
+        </details>
       </div>
 
-      <!-- ---- VISTA · MIS DATOS ---- -->
-      <div class="pnl-panel" id="vDatos" role="region" aria-label="Mis datos" hidden>
-        <h1 class="cta-saludo">Tus datos</h1>
-
-        <section class="cta-bloque">
-          <div class="cta-ficha" id="fichaResumen">
-            <p class="cta-ficha-nombre" id="fNombre"></p>
-            <!-- Una lista de descripción y no dos párrafos: son pares de
-                 etiqueta y valor, que es para lo que existe dl. -->
-            <dl class="cta-ficha-datos">
-              <dt>Correo</dt>   <dd id="fCorreo"></dd>
-              <dt>Teléfono</dt> <dd id="fTel"></dd>
+      <div class="vista" id="vDatos" role="region" aria-label="Mis datos" hidden>
+        <section class="tarjeta datos-tarjeta" aria-labelledby="tDatos">
+          <h2 id="tDatos">Tus datos</h2>
+          <div id="fichaResumen">
+            <p class="ficha-nombre" id="fNombre"></p>
+            <dl class="ficha-datos">
+              <div><dt>Correo</dt><dd id="fCorreo"></dd></div>
+              <div><dt>Teléfono</dt><dd id="fTel"></dd></div>
             </dl>
-            <button type="button" class="cta-enlace" id="corregir">¿Algo no está bien? Corregir</button>
+            <button type="button" class="btn btn-sec" id="corregir">Corregir mis datos</button>
           </div>
 
-          <form class="cta-edicion" id="camposDatos" novalidate hidden>
-            <p class="cta-campo">
+          <form class="edicion" id="camposDatos" novalidate hidden>
+            <p class="campo">
               <label for="nombre">Nombre y apellido</label>
-              <input type="text" id="nombre" name="nombre" autocomplete="name" required
-                     aria-describedby="errNombre" enterkeyhint="next">
-              <span class="cta-error" id="errNombre" role="alert" hidden></span>
+              <input type="text" id="nombre" name="nombre" autocomplete="name" required aria-describedby="errNombre" enterkeyhint="next">
+              <span class="error" id="errNombre" role="alert" hidden></span>
             </p>
-
-            <!-- Un solo campo con el número completo, prefijo incluido, y no el
-                 desplegable partido del registro: allí se compone desde cero,
-                 aquí lo tienes delante y solo cambias un dígito. -->
-            <p class="cta-campo">
+            <p class="campo">
               <label for="telefono">Teléfono</label>
-              <input type="tel" id="telefono" name="telefono" autocomplete="tel"
-                     inputmode="tel" required aria-describedby="ayudaTel errTelefono" enterkeyhint="done">
-              <span class="cta-ayuda" id="ayudaTel">Con el código de país delante, así: +58 412 123 4567</span>
-              <span class="cta-error" id="errTelefono" role="alert" hidden></span>
+              <input type="tel" id="telefono" name="telefono" autocomplete="tel" inputmode="tel" required aria-describedby="ayudaTel errTelefono" enterkeyhint="done">
+              <span class="ayuda" id="ayudaTel">Con el código de país delante, así: +58 412 123 4567</span>
+              <span class="error" id="errTelefono" role="alert" hidden></span>
             </p>
-
-            <p class="cta-ayuda">El correo no se cambia aquí: es el de tu cuenta.</p>
-
-            <p class="cta-acciones">
-              <button type="button" class="btn btn-secondary" id="cancelarDatos">Cancelar</button>
-              <button type="submit" class="btn btn-primary" id="guardarDatos">Guardar</button>
+            <p class="ayuda">El correo no se cambia aquí: es el de tu cuenta.</p>
+            <p class="acciones-form">
+              <button type="button" class="btn btn-sec" id="cancelarDatos">Cancelar</button>
+              <button type="submit" class="btn" id="guardarDatos">Guardar</button>
             </p>
-            <p class="cta-error" id="errGuardar" role="alert" hidden></p>
+            <p class="error" id="errGuardar" role="alert" hidden></p>
           </form>
         </section>
+
+        <button type="button" class="salir" id="salir"><svg class="ic" aria-hidden="true"><use href="#i-salir"/></svg>Cerrar sesión</button>
       </div>
-
     </div>
-  </main>
-</div>
+  </div>
+</main>
 
-<!-- ============ PLANTILLAS ============
-     El marcado vive aquí y no dentro de cadenas en el JavaScript: así se puede
-     leer, indentar y revisar como marcado, que es lo que es. -->
+<nav class="nav-movil" aria-label="Principal">
+  <a href="#consultas" data-vista="consultas"><svg class="ic" aria-hidden="true"><use href="#i-casa"/></svg>Consultas</a>
+  <a href="../reservar/" class="central"><svg class="ic" aria-hidden="true"><use href="#i-cal-mas"/></svg>Reservar</a>
+  <a href="#datos" data-vista="datos"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Mis datos</a>
+</nav>
 
 <template id="pProxima">
-  <article class="cta-destacada">
-    <p class="cta-destacada-dia"><time class="js-dia"></time></p>
-    <p class="cta-destacada-otra js-caracas" hidden></p>
-    <p class="cta-destacada-que"><span class="js-servicio"></span> <span class="cta-punto" aria-hidden="true">·</span> <span class="js-detalle"></span></p>
-    <p class="cta-destacada-estado"><span class="cta-marca js-estado"></span></p>
-    <p class="cta-destacada-acciones">
-      <a class="btn btn-primary js-mover" href="#">Cambiar de horario</a>
-      <a class="cta-enlace js-gestionar" href="#">Ver o cancelar</a>
-    </p>
-  </article>
+  <div>
+    <div class="proxima-cuerpo">
+      <p class="fecha-bloque" aria-hidden="true"><span class="mes js-mes"></span><span class="num js-num"></span><span class="sem js-sem"></span></p>
+      <div class="proxima-que">
+        <p class="prox-serv js-servicio"></p>
+        <p class="prox-hora"><svg class="ic" aria-hidden="true"><use href="#i-reloj"/></svg><time class="hora js-hora"></time><span class="sr-only js-cuando"></span></p>
+      </div>
+    </div>
+    <ul class="datos">
+      <li class="js-modo"></li>
+      <li class="js-falta"><svg class="ic" aria-hidden="true"><use href="#i-reloj"/></svg><span></span></li>
+      <li><span class="marca js-estado"></span></li>
+    </ul>
+    <div class="acciones">
+      <a class="btn js-mover" href="#">Cambiar de horario</a>
+      <a class="enlace js-gestionar" href="#">Ver o cancelar</a>
+    </div>
+  </div>
 </template>
 
 <template id="pFila">
-  <li class="cta-fila">
-    <a class="cta-fila-enlace" href="#">
-      <span class="cta-fila-cuando"><time class="js-dia"></time></span>
-      <span class="cta-fila-que js-servicio"></span>
-      <span class="cta-marca js-estado"></span>
-      <span class="cta-fila-flecha" aria-hidden="true"><svg><use href="#i-flecha"/></svg></span>
+  <li>
+    <a class="fila" href="#">
+      <time class="fila-cuando js-dia"></time>
+      <span class="fila-que js-servicio"></span>
+      <span class="marca js-estado"></span>
+      <svg class="ic fila-flecha" aria-hidden="true"><use href="#i-sig"/></svg>
     </a>
   </li>
 </template>
 
 <template id="pFilaQuieta">
-  <li class="cta-fila">
-    <span class="cta-fila-enlace">
-      <span class="cta-fila-cuando"><time class="js-dia"></time></span>
-      <span class="cta-fila-que js-servicio"></span>
-      <span class="cta-marca js-estado"></span>
+  <li>
+    <span class="fila">
+      <time class="fila-cuando js-dia"></time>
+      <span class="fila-que js-servicio"></span>
+      <span class="marca js-estado"></span>
     </span>
   </li>
 </template>
 
 <template id="pPaquete">
-  <li class="cta-fila cta-fila-bono">
-    <span class="cta-fila-enlace">
-      <span class="cta-bono-txt">
-        <strong class="js-nombre"></strong>
-        <small class="js-saldo"></small>
-      </span>
-      <span class="cta-marca js-estado"></span>
-      <a class="cta-enlace js-usar" href="../reservar/">Usar una sesión</a>
-    </span>
+  <li class="tarjeta paquete">
+    <h2 class="paq-tit"><svg class="ic" aria-hidden="true"><use href="#i-paquete"/></svg><span class="js-nombre"></span></h2>
+    <div class="paq-fila">
+      <span class="paq-cifra"><b class="js-libres"></b><small class="js-libres-txt">por agendar</small></span>
+      <span class="marca js-estado"></span>
+    </div>
+    <div class="medidor" aria-hidden="true"><span class="js-medidor"></span></div>
+    <p class="paq-pie"><span class="js-saldo"></span><a class="enlace js-usar" href="../reservar/">Usar una sesión</a></p>
   </li>
 </template>
 
 <script src="../fechas.js?v=42"></script>
 <script src="../supabase.js?v=44"></script>
-<script src="../panel.js?v=1"></script>
-<script src="cuenta.js?v=4"></script>
+<script src="cuenta.js?v=6"></script>
 </body>
 </html>

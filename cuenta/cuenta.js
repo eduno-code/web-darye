@@ -39,13 +39,13 @@
   function pintarVista(avisar) {
     var v = cual();
     Object.keys(VISTAS).forEach(function (k) { $(VISTAS[k]).hidden = (k !== v); });
-    document.querySelectorAll('.pnl-vista').forEach(function (a) {
+    document.querySelectorAll('[data-vista]').forEach(function (a) {
       if (a.dataset.vista === v) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
     /* Solo al cambiar, no al cargar: anunciar la vista inicial seria ruido
        encima de lo que ya se anuncia al terminar de cargar. */
-    if (avisar) anuncio.textContent = (v === 'datos') ? 'Tus datos.' : 'Mis consultas.';
+    if (avisar) { anuncio.textContent = (v === 'datos') ? 'Tus datos.' : 'Mis consultas.'; window.scrollTo(0, 0); }
   }
 
   addEventListener('hashchange', function () { pintarVista(true); });
@@ -59,10 +59,16 @@
     return;
   }
 
-  /* El menú se dibuja antes de pintar la vista, porque pintarVista marca en él
-     cuál está activa y no puede marcar lo que todavía no existe. */
-  PANEL.montar('consultas');
   pintarVista(false);
+
+  (function () {
+    var t = new Intl.DateTimeFormat('es', { weekday: 'long', day: 'numeric', month: 'long', timeZone: zona }).format(new Date());
+    $('hoy').textContent = t.charAt(0).toUpperCase() + t.slice(1);
+  })();
+
+  $('salir').addEventListener('click', function () {
+    PSI.sesion.salir().then(function () { location.href = '/index.html'; });
+  });
 
 
   /* ---------- COMO SE LLAMA CADA ESTADO ----------
@@ -109,11 +115,6 @@
     if (par[1]) el.dataset.tono = par[1];
   }
 
-  function modalidad(c) {
-    return (c.modalidad === 'presencial' ? 'Presencial' : 'Online') +
-           (c.duracion ? ' · ' + c.duracion + ' min' : '');
-  }
-
   function gestionar(token) {
     return '../reservar/?cita=' + encodeURIComponent(token);
   }
@@ -123,31 +124,34 @@
 
   function clonar(id) { return $(id).content.firstElementChild.cloneNode(true); }
 
-  /* La cita que toca. Es el dato por el que se entra en esta pagina, asi que es
-     lo unico que se pinta entero y con superficie propia. */
   function pintarProxima(c) {
     var n = clonar('pProxima');
     var dia = FECHAS.diaEnZona(c.starts_at, zona);
+    var fecha = FECHAS.desdeYmd(dia);
 
-    var t = n.querySelector('.js-dia');
-    t.textContent = FECHAS.fechaLarga(dia) + ' · ' + FECHAS.hora(c.starts_at, zona);
-    t.setAttribute('datetime', c.starts_at);
-
-    /* La hora de Caracas solo cuando NO coincide con la de quien mira. Ponerla
-       siempre seria ruido para quien ya esta en Venezuela, que es la mayoria. */
-    if (zona !== FECHAS.ZONA_DARYELI) {
-      var otra = n.querySelector('.js-caracas');
-      otra.textContent = FECHAS.hora(c.starts_at, FECHAS.ZONA_DARYELI) + ' en Caracas';
-      otra.hidden = false;
-    }
-
+    n.querySelector('.js-mes').textContent = new Intl.DateTimeFormat('es', { month: 'short' }).format(fecha).replace('.', '');
+    n.querySelector('.js-num').textContent = fecha.getDate();
+    n.querySelector('.js-sem').textContent = new Intl.DateTimeFormat('es', { weekday: 'long' }).format(fecha);
     n.querySelector('.js-servicio').textContent = c.servicio;
-    n.querySelector('.js-detalle').textContent  = modalidad(c);
-    ponerMarca(n.querySelector('.js-estado'), etiqueta(c));
 
-    /* Los dos botones van al mismo sitio: reservar/?cita= abre la cita con sus
-       opciones de mover y cancelar. Se separan porque son dos intenciones
-       distintas, y quien viene a mover no deberia tener que buscar. */
+    var h = n.querySelector('.js-hora');
+    h.textContent = FECHAS.hora(c.starts_at, zona);
+    h.setAttribute('datetime', c.starts_at);
+    var largo = FECHAS.fechaLarga(dia);
+    n.querySelector('.js-cuando').textContent = ' · ' + largo.charAt(0).toUpperCase() + largo.slice(1);
+
+    var presencial = c.modalidad === 'presencial';
+    n.querySelector('.js-modo').innerHTML =
+      '<svg class="ic" aria-hidden="true"><use href="#i-' + (presencial ? 'pin' : 'video') + '"/></svg>' +
+      (presencial ? 'Presencial · Barquisimeto' : 'Online · videollamada') +
+      (zona !== FECHAS.ZONA_DARYELI ? ' · ' + FECHAS.hora(c.starts_at, FECHAS.ZONA_DARYELI) + ' en Caracas' : '');
+
+    var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    var dias = Math.round((fecha - hoy) / 86400000);
+    var falta = dias <= 0 ? 'es hoy' : dias === 1 ? 'es mañana' : 'faltan ' + dias + ' días';
+    n.querySelector('.js-falta span').textContent = (c.duracion ? c.duracion + ' minutos · ' : '') + falta;
+
+    ponerMarca(n.querySelector('.js-estado'), etiqueta(c));
     n.querySelector('.js-mover').href     = gestionar(c.token);
     n.querySelector('.js-gestionar').href = gestionar(c.token);
 
@@ -160,15 +164,12 @@
     lista.forEach(function (c) {
       var n = clonar(conEnlace ? 'pFila' : 'pFilaQuieta');
       var t = n.querySelector('.js-dia');
-      /* Con el ano: sin el no se distingue la sesion del agosto pasado de la de
-         este, y un historial sin anos deja de servir justo cuando se alarga. */
       t.textContent = FECHAS.fechaConAno(c.starts_at, zona) + ' · ' + FECHAS.hora(c.starts_at, zona);
       t.setAttribute('datetime', c.starts_at);
-
-      n.querySelector('.js-servicio').textContent = c.servicio;
+      n.querySelector('.js-servicio').textContent = c.servicio +
+        (c.modalidad ? ' · ' + (c.modalidad === 'presencial' ? 'Presencial' : 'Online') : '');
       ponerMarca(n.querySelector('.js-estado'), etiqueta(c));
-
-      if (conEnlace) n.querySelector('.cta-fila-enlace').href = gestionar(c.token);
+      if (conEnlace) n.querySelector('.fila').href = gestionar(c.token);
       frag.appendChild(n);
     });
     ul.appendChild(frag);
@@ -178,19 +179,23 @@
     var ul = $('paquetes'), frag = document.createDocumentFragment();
     lista.forEach(function (p) {
       var n = clonar('pPaquete');
-      n.querySelector('.js-nombre').textContent =
-        p.nombre + ' · ' + (p.modalidad === 'pareja' ? 'Pareja' : 'Individual');
+      n.querySelector('.js-nombre').textContent = p.nombre + (p.modalidad === 'pareja' ? ' · Pareja' : '');
+      n.querySelector('.js-libres').textContent = p.sesiones_libres;
+      n.querySelector('.js-libres-txt').textContent = ' de ' + p.sesiones_total + ' por agendar';
+      var usadas = p.sesiones_total ? (p.sesiones_total - p.sesiones_libres) / p.sesiones_total : 0;
+      n.querySelector('.js-medidor').style.width = Math.round(usadas * 100) + '%';
 
-      var saldo = 'Te quedan ' + p.sesiones_libres + ' de ' + p.sesiones_total;
+      var saldo = '';
       if (p.caduca) {
-        saldo += ' · ' + (new Date(p.caduca) < new Date() ? 'caducó el ' : 'caduca el ') +
-                 FECHAS.fechaConAno(p.caduca, zona);
+        var cad = new Date(p.caduca), hoy = new Date();
+        var dias = Math.ceil((cad - hoy) / 86400000);
+        saldo = dias < 0 ? 'Caducó el ' + FECHAS.fechaConAno(p.caduca, zona)
+              : dias <= 60 ? 'Vence en ' + dias + (dias === 1 ? ' día' : ' días')
+              : 'Vence el ' + FECHAS.fechaConAno(p.caduca, zona);
       }
       n.querySelector('.js-saldo').textContent = saldo;
       ponerMarca(n.querySelector('.js-estado'), etiquetaBono(p));
 
-      /* Solo se ofrece usarlo si de verdad se puede: un enlace que lleva a una
-         reserva que va a fallar es peor que no ponerlo. */
       if (!(p.estado === 'active' && p.sesiones_libres > 0)) {
         n.querySelector('.js-usar').remove();
       }
@@ -205,6 +210,11 @@
     $('fCorreo').textContent = perfil.correo;
     $('fTel').textContent    = perfil.telefono;
     $('saludo').textContent  = 'Hola, ' + perfil.nombre.split(' ')[0];
+    var ini = perfil.nombre.trim().split(/\s+/).slice(0, 2).map(function (x) { return x.charAt(0); }).join('').toUpperCase();
+    ['avatar', 'avatarMovil'].forEach(function (id) {
+      $(id).textContent = ini;
+      $(id).setAttribute('aria-label', 'Tus datos: ' + perfil.nombre);
+    });
   }
 
 
@@ -274,6 +284,7 @@
       $('contenido').hidden = false;
       pintarFicha();
 
+      if (!proximas.length) $('sinProxima').hidden = false;
       if (proximas.length) {
         pintarProxima(proximas[0]);
         if (proximas.length > 1) {
@@ -286,7 +297,10 @@
 
       if (pasadas.length) {
         pintarFilas(pasadas, 'historial', false);
+        $('histCuantas').innerHTML = pasadas.length + '<small>' + (pasadas.length === 1 ? 'consulta' : 'consultas') + '</small>';
+        $('histUltima').textContent = 'Última: ' + FECHAS.fechaConAno(pasadas[0].starts_at, zona);
         $('bloqueHistorial').hidden = false;
+        if (window.matchMedia('(min-width:44rem)').matches) $('bloqueHistorial').open = true;
       }
 
       anuncio.textContent = proximas.length
@@ -378,8 +392,6 @@
     });
   });
 
-
-  /* Cerrar sesión lo lleva panel.js, que es quien dibuja el botón. */
 
   arrancar();
 })();

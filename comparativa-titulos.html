@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letra de los títulos · comparativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,600&family=Newsreader:opsz,wght@6..72,600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root{color-scheme:only light}
+body{margin:0;background:#FBF7F2;color:#2C3E50;font:400 1rem/1.5 "Source Sans 3",system-ui,sans-serif;padding:2rem 1rem 4rem}
+h1{font:600 1.2rem "Source Sans 3",sans-serif;margin:0 auto 1.5rem;max-width:62rem}
+.rejilla{display:grid;gap:1rem;max-width:62rem;margin:0 auto;grid-template-columns:repeat(auto-fit,minmax(28rem,1fr))}
+@media (max-width:640px){.rejilla{grid-template-columns:1fr}}
+article{background:#fff;border:1px solid rgba(166,123,91,.24);border-radius:18px;padding:1.25rem 1.4rem}
+.et{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin:0 0 .9rem;font-size:.85rem;color:#55697A}
+.et b{color:#2C3E50;font-size:.95rem}
+.rec{background:#E7EDF1;color:#2F4455;border-radius:999px;padding:.1rem .6rem;font-weight:600;font-size:.8rem}
+.t1{margin:0;font-size:2.1rem;line-height:1.1}
+.t2{margin:.6rem 0 0;font-size:1.75rem;line-height:1.15}
+.t3{margin:.6rem 0 0;font-size:1.15rem}
+.sub{margin:.25rem 0 0;color:#55697A}
+.a{font-family:Fraunces,serif;font-weight:600}
+.b{font-family:Fraunces,serif;font-weight:500;font-variation-settings:"opsz" 144}
+.c{font-family:"Source Serif 4",serif;font-weight:600}
+.d{font-family:Newsreader,serif;font-weight:600}
+</style>
+</head>
+<body>
+<h1>Misma frase, cuatro letras para los títulos (el texto normal sigue en Source Sans 3)</h1>
+<div class="rejilla">
+  <article>
+    <p class="et"><b>A · Fraunces 600</b><span>la de ahora</span></p>
+    <p class="t1 a">Nueva reserva</p>
+    <p class="t2 a">Tu cita está confirmada</p>
+    <p class="sub">Daryeli ya revisó tu pago. Nos vemos el jueves.</p>
+    <p class="t3 a">Jueves, 22 de octubre · Qué quieres trabajar</p>
+  </article>
+  <article>
+    <p class="et"><b>B · Fraunces 500, tamaño óptico grande</b><span>misma letra, más fina y limpia</span></p>
+    <p class="t1 b">Nueva reserva</p>
+    <p class="t2 b">Tu cita está confirmada</p>
+    <p class="sub">Daryeli ya revisó tu pago. Nos vemos el jueves.</p>
+    <p class="t3 b">Jueves, 22 de octubre · Qué quieres trabajar</p>
+  </article>
+  <article>
+    <p class="et"><b>C · Source Serif 4</b><span class="rec">Recomendada</span></p>
+    <p class="t1 c">Nueva reserva</p>
+    <p class="t2 c">Tu cita está confirmada</p>
+    <p class="sub">Daryeli ya revisó tu pago. Nos vemos el jueves.</p>
+    <p class="t3 c">Jueves, 22 de octubre · Qué quieres trabajar</p>
+  </article>
+  <article>
+    <p class="et"><b>D · Newsreader</b><span>editorial, más cálida</span></p>
+    <p class="t1 d">Nueva reserva</p>
+    <p class="t2 d">Tu cita está confirmada</p>
+    <p class="sub">Daryeli ya revisó tu pago. Nos vemos el jueves.</p>
+    <p class="t3 d">Jueves, 22 de octubre · Qué quieres trabajar</p>
+  </article>
+</div>
+</body>
+</html>

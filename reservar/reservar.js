@@ -18,37 +18,7 @@
 (function () {
   'use strict';
 
-  /* ---------- EL MENU DEL PANEL ----------
-
-     Si hay sesion, el asistente deja de ser una pagina suelta y pasa a estar
-     DENTRO de la cuenta, con el mismo menu a la izquierda. Antes, pulsar
-     "Reservar cita" desde el panel te dejaba en una pantalla sin menu y con
-     otra cabecera: se sentia como salir del sitio en el paso mas importante.
-
-     Y entonces la cabecera propia -la foto de Daryeli y "Tengo una duda"- se
-     esconde: ya estas dentro de tu cuenta, no te estan presentando a nadie, y
-     dos barras apiladas se roban la altura del primer paso.
-
-     Sin sesion no se toca nada. Ese es el caso de quien abre el enlace de su
-     cita desde el correo en otro dispositivo, y ahi esa cabecera es su unica
-     marca y su unica salida de vuelta al sitio. */
-  if (window.PANEL && PANEL.montar('reservar')) {
-    var cab = document.querySelector('header.top');
-    if (cab) cab.hidden = true;
-    /* Y el pie por lo mismo: repite la marca que ya esta arriba a la izquierda
-       en el menu. Sin sesion se queda, porque entonces es la unica firma de la
-       pagina y donde vive el enlace a privacidad. */
-    var pie = document.querySelector('footer.wz-pie');
-    if (pie) pie.hidden = true;
-
-  } else {
-    /* RED DE SEGURIDAD. El script del <head> marco `data-sesion="si"` leyendo
-       localStorage, pero el menu no ha montado: o no hay sesion valida de
-       verdad, o algo fallo. Se retira la marca para que la cabecera y el pie
-       vuelvan, porque si no, quien tenga una sesion guardada y un fallo al
-       montar se queda sin navegacion ninguna. */
-    delete document.documentElement.dataset.sesion;
-  }
+  if (!(window.PSI && PSI.sesion.hay())) delete document.documentElement.dataset.sesion;
 
   var CLAVE = 'psi_reserva_v2';
   var ZONA_DARYELI = FECHAS.ZONA_DARYELI;
@@ -145,21 +115,14 @@
       if (v) v.hidden = String(k) !== String(paso);
     });
     estado.paso = paso;
-    /* La barra fija del movil es del PASO 1: lleva "Ver horarios". Sin esta
-       marca se quedaba pegada abajo en los pasos 2, 3 y 4 con un boton muerto,
-       tapando ademas el ultimo renglon de cada pantalla. El CSS la muestra solo
-       cuando este atributo vale 1. */
     document.body.dataset.paso = paso;
+    if (paso !== 'fin') { delete document.body.dataset.fin; if ($('t1')) $('t1').textContent = 'Nueva reserva'; }
     guardar();
 
     sincronizarPestanas();
+    refrescarAtras();
 
-    /* El titular del paso 1 ya no esta DENTRO de su vista: subio a la cabeza
-       de la pantalla, encima de las pestañas. Los pasos 2 y 3 aun tienen el
-       suyo dentro porque se rediseñan aparte, asi que se busca primero ahi y
-       se cae al titular de la pantalla cuando la vista no trae ninguno. Sin
-       esta caida, el paso 1 se quedaba sin mover el foco ni anunciarse. */
-    var h = document.querySelector('#' + VISTAS[paso] + ' h1') || $('t1');
+    var h = document.querySelector('#' + VISTAS[paso] + ' [data-titulo]') || $('t1');
     if (h) {
       $('anuncio').textContent = h.textContent;
       // El foco va al titular para que el lector de pantalla lea el paso nuevo
@@ -171,24 +134,6 @@
     if (empujar !== false) history.pushState({ paso: paso }, '', '?paso=' + paso);
   }
 
-  /* ---------- LAS PESTANAS ----------
-
-     QUIEN SE ABRE Y CUANDO. Las reglas no son de diseno, salen del flujo:
-
-       · "Reserva" siempre, mientras no exista la cita.
-       · "Fecha" cuando hay motivo Y consultas elegidas. Es la misma condicion
-         que ya gobernaba el boton "Ver horarios" (`refrescarBoton`), asi que no
-         se inventa una segunda verdad: se lee la misma.
-       · "Pago" solo cuando la cita EXISTE, porque el paso 3 no es alcanzable
-         antes —se llega a el despues de `create_booking`.
-
-     Y EN CUANTO EXISTE LA CITA, los dos primeros se cierran. El cupo esta
-     tomado: volver atras ya no es editar, es reprogramar o cancelar, que son
-     otras dos cosas con su propia pantalla. Es la misma guarda que `popstate`
-     tenia desde antes; aqui solo se hace visible.
-
-     `data-hecha` marca los pasos contestados —ensena el visto— y es
-     independiente de si se pueden pulsar: un paso puede estar hecho y cerrado. */
   function estadoPestanas() {
     /* UNA SOLA VERDAD para "el paso 1 esta contestado": la usan las pestanas,
        el boton de seguir y el aviso de lo que falta. Si estuviera escrita en
@@ -206,52 +151,20 @@
   }
 
   function sincronizarPestanas() {
-    var st = estadoPestanas();
-    var n = estado.paso === 'fin' ? 3 : Number(estado.paso);
-
+    var n = estado.paso === 'fin' ? 4 : Number(estado.paso);
     [1, 2, 3].forEach(function (i) {
-      var b = $('pest' + i); if (!b) return;
-      b.setAttribute('aria-selected', String(i === n));
-      /* `aria-disabled` y no `disabled`: un boton desactivado de verdad sale
-         del orden de tabulacion, y en un tablist se espera poder recorrer las
-         tres con las flechas aunque alguna no se pueda abrir. */
-      if (st[i].abre) b.removeAttribute('aria-disabled');
-      else b.setAttribute('aria-disabled', 'true');
-      if (st[i].hecha) b.dataset.hecha = 'si'; else delete b.dataset.hecha;
-      b.tabIndex = i === n ? 0 : -1;
+      var li = $('pest' + i); if (!li) return;
+      if (i === n) li.setAttribute('aria-current', 'step');
+      else li.removeAttribute('aria-current');
+      li.classList.toggle('hecho', i < n);
     });
   }
 
-  function irAPestana(i) {
-    if (!estadoPestanas()[i].abre) return;
-    if (String(i) === String(estado.paso)) return;
-    mostrar(i);
+  function refrescarAtras() {
+    var b = $('rvAtras'); if (!b) return;
+    b.setAttribute('aria-label', String(estado.paso) === '2' ? 'Volver al paso 1'
+      : PSI.sesion.hay() ? 'Volver a mis consultas' : 'Volver al inicio');
   }
-
-  document.addEventListener('click', function (ev) {
-    if (!ev.target.closest) return;
-    var b = ev.target.closest('.pest');
-    if (b) irAPestana(Number(b.dataset.p));
-  });
-
-  /* Flechas, Inicio y Fin: es lo que pide el patron de tablist y lo que espera
-     quien navega con teclado. Solo se mueve entre las que se pueden abrir. */
-  document.addEventListener('keydown', function (ev) {
-    if (!ev.target.closest) return;
-    var b = ev.target.closest('.pest'); if (!b) return;
-    var abiertas = [1, 2, 3].filter(function (i) { return estadoPestanas()[i].abre; });
-    if (!abiertas.length) return;
-    var aqui = abiertas.indexOf(Number(b.dataset.p));
-    var i = null;
-    if (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') i = abiertas[(aqui + 1 + abiertas.length) % abiertas.length];
-    else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowUp') i = abiertas[(aqui - 1 + abiertas.length) % abiertas.length];
-    else if (ev.key === 'Home') i = abiertas[0];
-    else if (ev.key === 'End') i = abiertas[abiertas.length - 1];
-    if (i === null) return;
-    ev.preventDefault();
-    irAPestana(i);
-    var d = $('pest' + i); if (d) d.focus();
-  });
 
   window.addEventListener('popstate', function (ev) {
     var p = (ev.state && ev.state.paso) || 1;
@@ -386,14 +299,15 @@
   /* Los nombres de los motivos vienen de la base y se pintan como texto, no
      como marcado. Escapar no es paranoia de manual: es lo que separa "meter un
      dato" de "dejar que un dato escriba HTML". */
+  function mayuscula(t) {
+    t = String(t || '');
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+
   function escapar(t) {
     return String(t).replace(/[&<>"']/g, function (c) {
       return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
     });
-  }
-
-  function ico(n) {
-    return '<svg class="ico" aria-hidden="true"><use href="#i-' + n + '"/></svg>';
   }
 
   /* ---------- CUANDO EL CATÁLOGO NO LLEGA ----------
@@ -431,55 +345,42 @@
       pintarModos();
       pintarServicios();
       pintarLugar();
-      if (estado.servicio) pintarPlanes();
+      pintarPlanes();
       refrescarBoton();
     });
   });
 
-  /* ---------- LA FILA DE UNA OPCION ----------
-
-     Es la misma forma para las tres preguntas, asi que se escribe una vez: un
-     `label` con el radio NATIVO dentro, el punto que lo dibuja, y el nombre.
-
-     EL RADIO ESTA ESCONDIDO PERO PRESENTE -un pixel y opacidad cero, nunca
-     `display:none`-, porque asi sigue recibiendo el foco y el teclado. El punto
-     que se ve es un `span` vacio que el CSS pinta segun `:checked`.
-
-     Esto es lo que borro las 45 lineas de la version anterior: las flechas, el
-     Inicio y el Fin, el tabulador unico del grupo, el estado y el nombre
-     accesible los da el navegador. Antes se hacian a mano con
-     `button role="radio"`, `aria-checked` y un roving tabindex.               */
-
-  function fila(grupo, valor, nombre, elegido) {
-    return '<label class="op">' +
+  function fila(grupo, valor, o) {
+    return '<label class="rv-op">' +
              '<input type="radio" name="' + grupo + '" value="' + escapar(valor) + '"' +
-               (elegido ? ' checked' : '') + '>' +
-             '<span class="dot" aria-hidden="true"></span>' +
-             '<span>' + escapar(nombre) + '</span>' +
+               (o.elegido ? ' checked' : '') + '>' +
+             (o.icono ? '<span class="rv-burbuja" aria-hidden="true"><svg class="ic"><use href="#i-' + o.icono + '"/></svg></span>' : '') +
+             '<span class="rv-op-txt"><strong>' + escapar(o.nombre) + '</strong>' +
+               (o.sub ? '<small>' + escapar(o.sub) + '</small>' : '') +
+               (o.ahorro ? '<span class="rv-ahorro">' + escapar(o.ahorro) + '</span>' : '') +
+             '</span>' +
+             (o.precio ? '<span class="rv-precio">' + escapar(o.precio) + '</span>' : '') +
+             '<span class="rv-marca" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></span>' +
            '</label>';
   }
 
-  /* ---------- COMO QUIERES TU CONSULTA ---------- */
-
   var MODOS = [
-    { v: 'online',     n: 'En línea',   nota: 'notaOnline' },
-    { v: 'presencial', n: 'Presencial', nota: 'lugar' }
+    { v: 'online',     n: 'Online',     lugar: 'Desde donde estés', icono: 'video', nota: 'notaOnline' },
+    { v: 'presencial', n: 'Presencial', lugar: 'Barquisimeto',      icono: 'pin',   nota: 'lugar' }
   ];
 
   function pintarModos() {
     var g = $('gModos'); if (!g) return;
+    var min = duracionComun() || 60;
     g.innerHTML = MODOS.map(function (m) {
-      return fila('modo', m.v, m.n, estado.modo === m.v);
+      return fila('modo', m.v, {
+        nombre: m.n, sub: m.lugar + ' · ' + min + ' min',
+        icono: m.icono, elegido: estado.modo === m.v
+      });
     }).join('');
     pintarNotaModo();
   }
 
-  /* La duracion sale de `duration_min` en `services`, y SOLO se escribe si las
-     cuatro terapias coinciden. El motivo es de orden: la modalidad se elige
-     ANTES que la terapia, asi que en ese momento no hay una duracion concreta
-     que decir. Hoy las cuatro son de 60 minutos; si algun dia dejan de serlo,
-     se queda lo escrito en el HTML en vez de dar un numero que puede no ser el
-     de la sesion que la persona acabe eligiendo. */
   function duracionComun() {
     var ds = (catalogo.servicios || [])
       .map(function (x) { return Number(x.duration_min); })
@@ -489,25 +390,7 @@
     return ds[0];
   }
 
-  /* LAS DOS NOTAS VIVEN EN EL HTML y aqui solo se decide cual se ve. Se podrian
-     construir enteras en JavaScript, pero entonces un fallo de la llamada a la
-     base dejaria la direccion en blanco. Escritas en el marcado, si la llamada
-     falla se queda lo que hay puesto, y una direccion algo desactualizada sirve
-     mas que ninguna. */
   function pintarNotaModo() {
-    /* La duracion se escribe en LOS DOS paneles. Antes solo la decia el de en
-       linea, siendo el mismo dato y necesitandolo igual quien va a desplazarse
-       hasta el consultorio. Se marcan con `data-min` en el marcado en vez de
-       con un id cada uno: son el mismo dato en dos sitios, y un dia podrian ser
-       tres. */
-    var d = duracionComun();
-    if (d) {
-      var minutos = document.querySelectorAll('#vista1 [data-min]');
-      for (var i = 0; i < minutos.length; i++) {
-        minutos[i].textContent = d + ' minutos';
-      }
-    }
-
     MODOS.forEach(function (m) {
       var caja = $(m.nota);
       if (caja) caja.hidden = estado.modo !== m.v;
@@ -536,7 +419,7 @@
     }
 
     g.innerHTML = (catalogo.servicios || []).map(function (x) {
-      return fila('servicio', x.slug, x.name, estado.servicio === x.slug);
+      return fila('servicio', x.slug, { nombre: x.name, elegido: estado.servicio === x.slug });
     }).join('');
   }
 
@@ -580,136 +463,25 @@
     return lista;
   }
 
-  /* La etiqueta "Sugerida" se retiro. Marcaba el primer paquete por ser donde
-     el ahorro aparece por primera vez, pero el badge del ahorro ya dice eso con
-     la cifra exacta: "Ahorras 15 $" informa, "Sugerida" solo empuja. */
   function pintarPlanes() {
     var g = $('gPlanes'); if (!g) return;
     var lista = opcionesPlan();
-    if (!lista.length) { abrir('bloquePlanes', false); return; }
+    if (!lista.length) {
+      g.innerHTML = '<p class="rv-vacio">Elige primero qué quieres trabajar.</p>';
+      return;
+    }
 
-    /* AQUI EL AVISO ACOMPAÑA A LA LISTA en vez de sustituirla. La consulta
-       suelta sale del servicio, asi que esa si se puede ofrecer; lo que no se
-       puede es dejar creer que es la unica opcion que existe. */
     var aviso = (fallo('packages') && lista.length === 1) ? avisoFallo('los paquetes') : '';
 
     g.innerHTML = aviso + lista.map(function (x) {
-      /* TRES PIEZAS: la cabecera con la marca y el nombre, la linea, y la fila
-         del dinero con el precio a la izquierda y el ahorro al canto derecho.
-
-         El `span` del ahorro SE PINTA SIEMPRE, vacio incluido: es el segundo
-         hijo que necesita el `space-between` de la fila para repartir. Vacio no
-         se ve, porque su estilo va en `.plan-ahorro:not(:empty)`. */
-      return '<label class="plan">' +
-               '<input type="radio" name="plan" value="' + escapar(x.slug) + '"' +
-                 (estado.plan === x.slug ? ' checked' : '') + '>' +
-
-               '<span class="plan-cab">' +
-                 '<span class="dot" aria-hidden="true"></span>' +
-                 '<span class="plan-nom">' + x.cifra + ' ' + x.nom + '</span>' +
-               '</span>' +
-
-               '<span class="plan-sep" aria-hidden="true"></span>' +
-
-               '<span class="plan-dinero">' +
-                 '<span class="plan-precio">' + dinero(x.precio) + ' $</span>' +
-                 '<span class="plan-ahorro">' +
-                   (x.ahorro > 0 ? 'Ahorras ' + dinero(x.ahorro) + ' $' : '') +
-                 '</span>' +
-               '</span>' +
-             '</label>';
+      return fila('plan', x.slug, {
+        nombre: x.cifra + ' ' + (x.cifra === '1' ? 'consulta' : 'consultas'),
+        precio: dinero(x.precio) + ' $',
+        ahorro: x.ahorro > 0 ? 'Ahorras ' + dinero(x.ahorro) + ' $' : '',
+        elegido: estado.plan === x.slug
+      });
     }).join('');
   }
-
-  /* ---------- LA APERTURA PROGRESIVA ----------
-
-     Cada pregunta aparece cuando se contesta la anterior. La razon no es el
-     efecto: quien llega a pedir cita de psicologia no siempre llega con la
-     cabeza para tres decisiones apiladas, y una sola pregunta en pantalla pide
-     mucho menos.
-
-     `inert` y `aria-hidden` van junto a la clase y no son opcionales: cerrado,
-     el bloque mide cero, pero sus radios seguirian en el orden de tabulacion y
-     el teclado caeria dentro de algo invisible.
-
-     VOLVER ATRAS NO CIERRA NADA -decision de Edgar-. Nada llama a esta funcion
-     con `false` sobre un bloque ya abierto, salvo cuando no hay opciones que
-     enseñar. Cambiar la modalidad con todo contestado deja los bloques de
-     despues como estaban, porque hacer desaparecer contenido debajo del cursor
-     de alguien es peor que dejar a la vista una pregunta que ya no aplica.    */
-
-  function abrir(id, abre) {
-    var caja = $(id); if (!caja) return;
-
-    /* Se anuncia SOLO al abrirse, no en cada cambio. Esta funcion se llama
-       tambien con bloques que ya estaban abiertos -pasa cada vez que se cambia
-       de terapia-, y repetir el anuncio seria ruido. */
-    var yaEstaba = caja.classList.contains('abierto');
-
-    caja.classList.toggle('abierto', abre);
-    caja.setAttribute('aria-hidden', String(!abre));
-    if (abre) caja.removeAttribute('inert');
-    else caja.setAttribute('inert', '');
-
-    if (abre && !yaEstaba) anunciar(caja);
-  }
-
-  /* El anuncio dice QUE ha aparecido y CUANTAS opciones trae. El numero importa
-     mas de lo que parece: quien no ve la pantalla necesita saber si le esperan
-     dos decisiones o diez antes de empezar a recorrerlas con el teclado.
-
-     Es el criterio 4.1.3 de WCAG, nivel AA: al elegir modalidad aparece una
-     pregunta entera, y sin esto no hay forma de enterarse. */
-  function anunciar(caja) {
-    var leyenda = caja.querySelector('legend');
-    var cuantas = caja.querySelectorAll('input[type="radio"]').length;
-    var region = $('anuncio');
-    if (!leyenda || !region) return;
-
-    /* El eco lleva `aria-hidden`, pero `textContent` no lo respeta: hay que
-       quitarlo a mano o el anuncio saldria como "Que quieres trabajar sin
-       elegir, 4 opciones". */
-    var eco = leyenda.querySelector('.eco');
-    var titulo = leyenda.textContent;
-    if (eco) titulo = titulo.replace(eco.textContent, '');
-
-    region.textContent = titulo.trim() + ', ' + cuantas + ' opciones';
-  }
-
-  /* ---------- LOS ECOS ----------
-
-     Lo que llevas elegido, al lado de cada rotulo. `data-vacio` es lo que le
-     quita la caja cuando no hay respuesta: se marca con un atributo y no con
-     una clase porque es un estado del dato, no una variante de estilo.        */
-
-  function eco(id, texto) {
-    var e = $(id); if (!e) return;
-    if (texto) {
-      e.textContent = texto;
-      e.removeAttribute('data-vacio');
-    } else {
-      e.textContent = 'sin elegir';
-      e.setAttribute('data-vacio', '');
-    }
-  }
-
-  function refrescarEcos() {
-    var m = MODOS.filter(function (x) { return x.v === estado.modo; })[0];
-    var sv = servicio();
-    var pl = estado.plan
-      ? opcionesPlan().filter(function (x) { return x.slug === estado.plan; })[0]
-      : null;
-
-    eco('ecoModo', m ? m.n : '');
-    eco('ecoServ', sv ? sv.name : '');
-    eco('ecoPlan', pl ? pl.cifra + ' ' + pl.nom : '');
-  }
-
-  /* ---------- EL PLAZO ----------
-
-     Solo sale con un plan elegido, y el texto sigue al plan. En singular con la
-     consulta suelta y en plural con los paquetes: "tus consultas" cuando hay
-     una sola es el tipo de descuido que delata una plantilla.                 */
 
   function refrescarPlazo() {
     var caja = $('notaPlan'); if (!caja) return;
@@ -720,27 +492,14 @@
     if (!pl || !pl.dias) { caja.hidden = true; return; }
     caja.hidden = false;
     caja.innerHTML =
-      '<svg class="ico ico-trazo" viewBox="0 0 24 24" aria-hidden="true">' +
-      '<use href="#i-plazo"/></svg><span>' + pl.dias +
-      ' días para agendar ' + (pl.cifra === '1' ? 'tu consulta' : 'tus consultas') +
-      '</span>';
+      '<svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg><span>Tienes ' + pl.dias +
+      ' días para agendar ' + (pl.cifra === '1' ? 'tu consulta' : 'tus consultas') + '.</span>';
   }
-
-  /* ---------- EL PIE ----------
-
-     SIN TOTAL. Esta linea llevaba "Total 75 $" y era el mismo numero que el
-     precio del plan elegido tres centimetros mas arriba, que ahora esta
-     resaltado, en negrita y con su canto en salvia. No era un dato nuevo.     */
 
   function refrescarBoton() {
     var listo = estadoPestanas()[2].abre || !!estado.token;
+    var b = $('ir2Escritorio'); if (b) b.disabled = !listo;
 
-    ['ir2Escritorio', 'ir2Movil'].forEach(function (id) {
-      var b = $(id); if (b) b.disabled = !listo;
-    });
-
-    /* El aviso dice QUE falta, en concreto. "Completa el formulario" no sirve:
-       la persona ya sabe que falta algo, lo que no sabe es que. */
     var falta = $('falta');
     if (falta) {
       falta.hidden = listo;
@@ -752,30 +511,9 @@
       }
     }
 
-    refrescarEcos();
     refrescarPlazo();
-
-    /* Los bloques que ya tienen respuesta se abren. Hace falta en el arranque:
-       quien vuelve con la reserva a medias la tiene guardada en sessionStorage,
-       y la pantalla debe reaparecer como la dejo, no cerrada. */
-    if (estado.modo) abrir('abreServ', true);
-    if (estado.servicio && opcionesPlan().length) abrir('bloquePlanes', true);
-
-    /* Las pestanas leen la MISMA condicion, asi que se enteran aqui. Y es
-       simetrico: cambiar de motivo tira el plan elegido, con lo que "Fecha"
-       vuelve a cerrarse. Una pestana que solo sabe abrirse deja pasar al paso
-       siguiente con la pregunta anterior sin contestar. */
     sincronizarPestanas();
   }
-
-  /* ---------- CUANDO SE ELIGE ALGO ----------
-
-     Un solo listener para las tres preguntas, delegado en el paso 1, y escucha
-     `change` en vez de `click`: asi recoge igual el raton y el teclado sin
-     distinguirlos. Anadir una pregunta nueva no pide tocar esto.
-
-     Va acotado a `#vista1` a proposito. Los pasos 2 y 3 tienen sus propios
-     controles y un listener a nivel de documento se los comeria tambien.      */
 
   document.addEventListener('change', function (ev) {
     var i = ev.target;
@@ -784,15 +522,11 @@
     if (i.name === 'modo') {
       estado.modo = i.value;
       pintarNotaModo();
-      abrir('abreServ', true);
 
     } else if (i.name === 'servicio') {
-      /* Cambiar de motivo tira el plan y la hora: los precios son otros y el
-         paquete que estaba elegido puede no existir en la modalidad nueva. */
       if (estado.servicio !== i.value) { estado.plan = null; estado.hora = null; }
       estado.servicio = i.value;
       pintarPlanes();
-      abrir('bloquePlanes', true);
 
     } else if (i.name === 'plan') {
       estado.plan = i.value;
@@ -1077,9 +811,7 @@
        `getDay()` devuelve 0 para domingo, asi que se rota. */
     var hueco = (primero.getDay() + 6) % 7;
 
-    $('calMes').textContent = new Intl.DateTimeFormat('es', {
-      month: 'long', year: 'numeric'
-    }).format(primero);
+    $('calMes').textContent = mayuscula(new Intl.DateTimeFormat('es', { month: 'long' }).format(primero)) + ' ' + anio;
 
     cont.innerHTML = '';
     var fila = null;
@@ -1186,6 +918,9 @@
        debajo "15:00 Ccs". */
     var zona = $('horasZona');
     if (zona) zona.hidden = estado.zona === ZONA_DARYELI;
+    var sub = $('horasSub');
+    if (sub) sub.hidden = estado.zona !== ZONA_DARYELI;
+    refrescarReservar();
 
     if (!diaElegido) {
       cab.textContent = 'Sin días libres este mes';
@@ -1193,7 +928,7 @@
       return;
     }
 
-    cab.textContent = fechaLarga(diaElegido);
+    cab.textContent = mayuscula(fechaLarga(diaElegido));
 
     var libres = huecos[diaElegido] || [];
     var mismaZona = estado.zona === ZONA_DARYELI;
@@ -1247,9 +982,49 @@
       if (estado.reprogramando) { moverCita(iso); return; }
       estado.hora = iso; guardar();
       pintarHoras();
-      $('ir4').disabled = false;
     });
     return b;
+  }
+
+  function refrescarReservar() {
+    var b = $('ir4'); if (!b) return;
+    b.disabled = !estado.hora;
+    if (!estado.hora) { b.textContent = 'Elige una hora'; return; }
+    var dia = new Intl.DateTimeFormat('es', {
+      weekday: 'long', day: 'numeric', timeZone: estado.zona
+    }).format(new Date(estado.hora)).replace(',', '');
+    b.textContent = 'Reservar ' + dia + ' · ' + hora(estado.hora, estado.zona);
+  }
+
+  function pintarResumen2() {
+    var caja = $('resumen2'); if (!caja) return;
+    var m = MODOS.filter(function (x) { return x.v === estado.modo; })[0];
+    var sv = servicio();
+    var pl = opcionesPlan().filter(function (x) { return x.slug === estado.plan; })[0];
+    var partes = [];
+    if (m) partes.push('<span class="rv-resumen-modo"><svg class="ic" aria-hidden="true"><use href="#i-' + m.icono + '"/></svg>' + m.n + '</span>');
+    if (sv) partes.push('<span>' + escapar(sv.name) + '</span>');
+    if (pl) partes.push('<span>' + pl.cifra + ' ' + (pl.cifra === '1' ? 'consulta' : 'consultas') + '</span>');
+    caja.innerHTML = '<span class="rv-resumen-txt">' + partes.join('<i class="rv-sep" aria-hidden="true"></i>') + '</span>' +
+      '<button type="button" class="rv-cambiar" data-cambiar="1">Cambiar<span class="sr-only"> la consulta</span></button>';
+  }
+
+  function pintarResumen3() {
+    var caja = $('resumen3'); if (!caja) return;
+    var m = MODOS.filter(function (x) { return x.v === estado.modo; })[0];
+    var sv = servicio();
+    var pl = opcionesPlan().filter(function (x) { return x.slug === estado.plan; })[0];
+    var partes = [];
+    if (estado.hora) {
+      partes.push('<span class="rv-resumen-modo"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg>' +
+        mayuscula(fechaLarga(diaEnZona(estado.hora, estado.zona)).replace(',', '')) +
+        ' · ' + hora(estado.hora, estado.zona) + '</span>');
+    }
+    if (m) partes.push('<span>' + m.n + '</span>');
+    if (sv) partes.push('<span>' + escapar(sv.name) + '</span>');
+    if (pl) partes.push('<span>' + pl.cifra + ' ' + (pl.cifra === '1' ? 'consulta' : 'consultas') + '</span>');
+    caja.hidden = !partes.length;
+    caja.innerHTML = '<span class="rv-resumen-txt">' + partes.join('<i class="rv-sep" aria-hidden="true"></i>') + '</span>';
   }
 
   /* ---------- PASO 3 ---------- */
@@ -1326,7 +1101,7 @@
            Se manda a entrar en vez de ensenar un error: el fallo tiene arreglo
            y ensenarselo sin el arreglo al lado no ayuda a nadie. */
         if (r && r.error === 'not_signed_in') { aEntrar(); return; }
-        alerta('formDatos', (r && r.message) || 'No pudimos crear la reserva.', 'error');
+        alerta('vista2', (r && r.message) || 'No pudimos crear la reserva.', 'error');
         if (r && (r.error === 'slot_taken' || r.error === 'slot_unavailable')) {
           estado.hora = null; guardar();
           setTimeout(function () { mostrar(2); cargarMes(); }, 1800);
@@ -1352,6 +1127,7 @@
   /* ---------- PASO 4 ---------- */
   function prepararPago(cuentas) {
     pintarContexto();
+    pintarResumen3();
     pintarMomento();
     pintarImporte();
     pintarCuentas(cuentas || []);
@@ -1380,16 +1156,15 @@
   }
 
   function marcarMomento() {
-    document.querySelectorAll('.wz-momento-op').forEach(function (b) {
+    document.querySelectorAll('.rv-momento-op').forEach(function (b) {
       b.setAttribute('aria-checked', b.dataset.momento === estado.momento ? 'true' : 'false');
     });
     var despues = estado.momento === 'despues';
     /* Pagar despues no es un formulario mas corto: es no tener formulario. Se
        oculta todo lo que solo sirve para pagar ahora. */
-    ['importe', 'cuentas', 'formPago'].forEach(function (id) {
+    ['pagoAhora', 'piePago'].forEach(function (id) {
       var el = $(id); if (el) el.hidden = despues;
     });
-    document.querySelectorAll('.wz-paso-titulo').forEach(function (t) { t.hidden = despues; });
     $('pagoDespues').hidden = !despues;
     /* La retencion solo existe para el prepago obligatorio; en cualquier otro
        caso el horario ya es suyo y ensenar un plazo seria mentir. */
@@ -1499,36 +1274,45 @@
 
   function pintarCuentas(cuentas) {
     var c = $('cuentas');
-    c.innerHTML = '';
     if (!cuentas.length) {
-      c.innerHTML = '<p class="wz-vacio">Escríbele a Daryeli por WhatsApp para recibir los datos de pago.</p>';
+      c.innerHTML = '<p class="rv-vacio">Escríbele a Daryeli por WhatsApp para recibir los datos de pago.</p>';
       return;
     }
-    cuentas.forEach(function (x) {
-      var m = marcaBanco(x.bank_code, x.bank_name);
-      var caja = document.createElement('div');
-      caja.className = 'wz-cuenta';
-      caja.style.setProperty('--banco', m.color);
-      caja.style.setProperty('--banco-tinta', tintaSobre(m.color));
 
-      var html =
-        '<div class="wz-cuenta-cab">' +
-          '<span class="wz-cuenta-sello" aria-hidden="true">' + m.sigla + '</span>' +
-          '<p class="wz-cuenta-banco">' + x.bank_name + '</p>' +
-        '</div>';
-
+    function detalle(i) {
+      var x = cuentas[i];
+      var html = '<p class="rv-titular">Pago móvil a nombre de <strong>' + escapar(x.holder_name || 'Daryeli Romero') + '</strong></p>';
+      if (cuentas.length === 1) {
+        html = '<p class="rv-titular rv-titular-banco"><strong>' + escapar(x.bank_name) + '</strong>' +
+          '<small>Pago móvil a nombre de ' + escapar(x.holder_name || 'Daryeli Romero') + '</small></p>';
+      }
       [['Cédula', x.id_number], ['Teléfono', x.phone]].forEach(function (d) {
         if (!d[1]) return;
-        html += '<div class="wz-dato">' +
-          '<span class="wz-dato-txt">' +
-            '<span class="wz-dato-etq">' + d[0] + '</span>' +
-            '<span class="wz-dato-val">' + d[1] + '</span></span>' +
-          '<button type="button" class="wz-copiar" data-copiar="' + d[1] + '" aria-label="Copiar ' + d[0].toLowerCase() + '">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>' +
-          '<span>Copiar</span></button></div>';
+        html += '<div class="rv-dato"><span><small>' + d[0] + '</small><b>' + escapar(d[1]) + '</b></span>' +
+          '<button type="button" class="rv-copiar" data-copiar="' + escapar(String(d[1]).replace(/[^0-9VEJGve-]/g, '')) + '" aria-label="Copiar ' + d[0].toLowerCase() + '">' +
+          '<svg class="ic" aria-hidden="true"><use href="#i-copiar"/></svg><span>Copiar</span></button></div>';
       });
-      caja.innerHTML = html;
-      c.appendChild(caja);
+      c.querySelector('.rv-cuenta').innerHTML = html;
+    }
+
+    var html = '';
+    if (cuentas.length > 1) {
+      html += '<span class="rv-lbl" id="lblCuenta">Elige la cuenta</span>' +
+        '<div class="rv-bancos" role="radiogroup" aria-labelledby="lblCuenta">' +
+        cuentas.map(function (x, i) {
+          return '<button type="button" class="rv-banco-op" role="radio" aria-checked="' + (i === 0) + '" data-i="' + i + '">' +
+            escapar(x.bank_name) + '</button>';
+        }).join('') + '</div>';
+    }
+    html += '<div class="rv-cuenta"></div>';
+    c.innerHTML = html;
+    detalle(0);
+
+    var g = c.querySelector('.rv-bancos');
+    if (g) g.addEventListener('click', function (ev) {
+      var o = ev.target.closest('.rv-banco-op'); if (!o) return;
+      g.querySelectorAll('.rv-banco-op').forEach(function (x) { x.setAttribute('aria-checked', String(x === o)); });
+      detalle(Number(o.dataset.i));
     });
   }
 
@@ -1570,6 +1354,102 @@
       var o = document.createElement('option');
       o.value = b.code; o.textContent = b.code + ' — ' + b.name;
       s.appendChild(o);
+    });
+    filtrarBancos('');
+    refrescarComboBanco();
+  }
+
+  function sinAcentos(t) {
+    return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function refrescarComboBanco() {
+    var b = catalogo.bancos.filter(function (x) { return x.code === $('banco').value; })[0];
+    var txt = $('bancoBtnTxt');
+    $('comboBanco').classList.toggle('lleno', !!b);
+    txt.textContent = b ? b.name : 'Selecciona tu banco';
+  }
+
+  function filtrarBancos(q) {
+    var t = sinAcentos(q).trim();
+    var lista = catalogo.bancos.filter(function (b) {
+      return !t || sinAcentos(b.name).indexOf(t) >= 0 || b.code.indexOf(t) >= 0;
+    });
+    var actual = $('banco').value;
+    $('bancoLista').innerHTML = lista.map(function (b, i) {
+      return '<li role="option" id="banco-op-' + b.code + '" data-code="' + escapar(b.code) + '" aria-selected="' + (b.code === actual) + '"' +
+        (i === 0 ? ' data-activa="si"' : '') + '>' +
+        '<span class="rv-combo-nom">' + escapar(b.name) + '</span><span class="rv-combo-cod">' + escapar(b.code) + '</span>' +
+        '<svg class="ic rv-combo-ok" aria-hidden="true"><use href="#i-check"/></svg></li>';
+    }).join('');
+    var vacio = $('bancoVacio');
+    vacio.hidden = !!lista.length;
+    if (!lista.length) vacio.textContent = 'No encontramos «' + q.trim() + '». Prueba con una parte del nombre, como «Venezuela» o «Banesco».';
+    marcarActiva($('bancoLista').querySelector('[data-activa]'));
+  }
+
+  function marcarActiva(li) {
+    $('bancoLista').querySelectorAll('[data-activa]').forEach(function (x) { delete x.dataset.activa; });
+    var input = $('bancoBuscar');
+    if (!li) { input.removeAttribute('aria-activedescendant'); return; }
+    li.dataset.activa = 'si';
+    input.setAttribute('aria-activedescendant', li.id);
+    li.scrollIntoView({ block: 'nearest' });
+  }
+
+  function abrirComboBanco() {
+    var btn = $('bancoBtn');
+    $('bancoPanel').hidden = false;
+    $('bancoFondo').hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    $('bancoBuscar').value = '';
+    filtrarBancos('');
+    var elegida = $('bancoLista').querySelector('[aria-selected="true"]');
+    if (elegida) marcarActiva(elegida);
+    $('bancoBuscar').focus();
+  }
+
+  function cerrarComboBanco(devolverFoco) {
+    if ($('bancoPanel').hidden) return;
+    $('bancoPanel').hidden = true;
+    $('bancoFondo').hidden = true;
+    $('bancoBtn').setAttribute('aria-expanded', 'false');
+    if (devolverFoco) $('bancoBtn').focus();
+  }
+
+  function elegirBanco(code) {
+    var sel = $('banco');
+    sel.value = code;
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    error('banco', 'errBanco', null);
+    refrescarComboBanco();
+    cerrarComboBanco(true);
+  }
+
+  function prepararComboBanco() {
+    $('bancoBtn').addEventListener('click', function () {
+      if ($('bancoPanel').hidden) abrirComboBanco(); else cerrarComboBanco(true);
+    });
+    $('bancoCerrar').addEventListener('click', function () { cerrarComboBanco(true); });
+    $('bancoFondo').addEventListener('click', function () { cerrarComboBanco(true); });
+    $('bancoBuscar').addEventListener('input', function () { filtrarBancos(this.value); });
+    $('bancoLista').addEventListener('click', function (ev) {
+      var li = ev.target.closest('[role="option"]');
+      if (li) elegirBanco(li.dataset.code);
+    });
+    $('bancoBuscar').addEventListener('keydown', function (ev) {
+      var ops = Array.prototype.slice.call($('bancoLista').querySelectorAll('[role="option"]'));
+      var i = ops.indexOf($('bancoLista').querySelector('[data-activa]'));
+      if (ev.key === 'ArrowDown') { ev.preventDefault(); marcarActiva(ops[Math.min(i + 1, ops.length - 1)]); }
+      else if (ev.key === 'ArrowUp') { ev.preventDefault(); marcarActiva(ops[Math.max(i - 1, 0)]); }
+      else if (ev.key === 'Home') { ev.preventDefault(); marcarActiva(ops[0]); }
+      else if (ev.key === 'End') { ev.preventDefault(); marcarActiva(ops[ops.length - 1]); }
+      else if (ev.key === 'Enter') { ev.preventDefault(); if (ops[i]) elegirBanco(ops[i].dataset.code); }
+      else if (ev.key === 'Escape') { ev.preventDefault(); cerrarComboBanco(true); }
+      else if (ev.key === 'Tab') { cerrarComboBanco(false); }
+    });
+    document.addEventListener('mousedown', function (ev) {
+      if (!$('bancoPanel').hidden && !$('comboBanco').contains(ev.target)) cerrarComboBanco(false);
     });
   }
 
@@ -1627,6 +1507,38 @@
      o el siguiente, asi que dos botones resuelven la practica totalidad de los
      casos sin abrir ningun calendario. El calendario nativo queda para la
      excepcion de verdad, que era lo unico que habia antes. */
+  var mesPago = null;
+
+  function pintarCalPago() {
+    var campo = $('fechaPago');
+    var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    var hoyStr = ymd(hoy);
+    var elegida = campo.value || hoyStr;
+    if (!mesPago) { var e = desdeYmd(elegida); mesPago = new Date(e.getFullYear(), e.getMonth(), 1); }
+    var anio = mesPago.getFullYear(), mes = mesPago.getMonth();
+    var minimo = new Date(hoy.getFullYear(), hoy.getMonth() - 2, 1);
+
+    $('calPagoMes').textContent = mayuscula(new Intl.DateTimeFormat('es', { month: 'long' }).format(mesPago)) + ' ' + anio;
+    $('calPagoAtras').disabled = mesPago <= minimo;
+    $('calPagoAdelante').disabled = anio === hoy.getFullYear() && mes === hoy.getMonth();
+
+    var hueco = (new Date(anio, mes, 1).getDay() + 6) % 7;
+    var cuantos = new Date(anio, mes + 1, 0).getDate();
+    var enEsteMes = elegida.slice(0, 7) === ymd(mesPago).slice(0, 7);
+    var html = '';
+    for (var i = 0; i < hueco; i++) html += '<span></span>';
+    for (var n = 1; n <= cuantos; n++) {
+      var clave = ymd(new Date(anio, mes, n));
+      var futuro = clave > hoyStr;
+      var foco = enEsteMes ? clave === elegida : n === 1;
+      html += '<button type="button" class="rv-calpago-dia' + (clave === hoyStr ? ' hoy' : '') + '" data-dia="' + clave + '"' +
+        ' aria-pressed="' + (clave === elegida) + '"' + (futuro ? ' aria-disabled="true"' : '') +
+        ' tabindex="' + (foco ? 0 : -1) + '"' +
+        ' aria-label="' + fechaLarga(clave) + (futuro ? ', todavía no ha llegado' : '') + '">' + n + '</button>';
+    }
+    $('calPagoDias').innerHTML = html;
+  }
+
   function prepararFecha() {
     var chips = document.querySelectorAll('.wz-cuando .wz-chip');
     var caja = $('cajaFecha'), campo = $('fechaPago');
@@ -1642,7 +1554,10 @@
         campo.value = ymd(sumaDias(hoy, -1)); caja.hidden = true;
       } else {
         caja.hidden = false;
-        campo.focus();
+        mesPago = null;
+        pintarCalPago();
+        var d = $('calPagoDias').querySelector('[aria-pressed="true"]');
+        if (d) d.focus();
       }
       error('fechaPago', 'errFecha', null);
     }
@@ -1650,11 +1565,44 @@
     chips.forEach(function (c) {
       c.addEventListener('click', function () { elegir(c.dataset.cuando); });
     });
+
+    $('calPagoAtras').addEventListener('click', function () {
+      mesPago = new Date(mesPago.getFullYear(), mesPago.getMonth() - 1, 1); pintarCalPago();
+    });
+    $('calPagoAdelante').addEventListener('click', function () {
+      mesPago = new Date(mesPago.getFullYear(), mesPago.getMonth() + 1, 1); pintarCalPago();
+    });
+    $('calPagoDias').addEventListener('click', function (ev) {
+      var b = ev.target.closest('.rv-calpago-dia');
+      if (!b || b.getAttribute('aria-disabled')) return;
+      campo.value = b.dataset.dia;
+      pintarCalPago();
+      var n = $('calPagoDias').querySelector('[data-dia="' + b.dataset.dia + '"]');
+      if (n) n.focus();
+    });
+    $('calPagoDias').addEventListener('keydown', function (ev) {
+      var b = ev.target.closest('.rv-calpago-dia'); if (!b) return;
+      if ((ev.key === 'Enter' || ev.key === ' ') && b.getAttribute('aria-disabled')) { ev.preventDefault(); return; }
+      var salto = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[ev.key];
+      if (salto === undefined) return;
+      ev.preventDefault();
+      var destino = $('calPagoDias').querySelector('[data-dia="' + ymd(sumaDias(desdeYmd(b.dataset.dia), salto)) + '"]');
+      if (!destino) return;
+      $('calPagoDias').querySelectorAll('.rv-calpago-dia').forEach(function (x) { x.tabIndex = -1; });
+      destino.tabIndex = 0; destino.focus();
+    });
+
     elegir('hoy');
   }
 
   function prepararSubida() {
-    $('captura').addEventListener('change', function () {
+    var input = $('captura'), caja = $('subirCaja'), prev = $('vistaPrevia');
+
+    function tam(n) {
+      return n < 1048576 ? Math.round(n / 1024) + ' KB' : (n / 1048576).toFixed(1).replace('.', ',') + ' MB';
+    }
+
+    input.addEventListener('change', function () {
       var f = this.files && this.files[0];
       error('captura', 'errCaptura', null);
       if (!f) return;
@@ -1663,26 +1611,26 @@
         this.value = ''; archivo = null; return;
       }
       archivo = f;
-      $('subirCaja').dataset.lleno = 'si';
-      $('subirTxt').textContent = f.name;
-      $('subirPista').textContent = (f.size / 1024 < 1024)
-        ? Math.round(f.size / 1024) + ' KB · toca para cambiarla'
-        : (f.size / 1048576).toFixed(1) + ' MB · toca para cambiarla';
-
-      var prev = $('vistaPrevia');
-      prev.innerHTML = ''; prev.hidden = true;
-      if (f.type.indexOf('image/') === 0) {
-        /* Ver la captura antes de enviarla evita el error mas comun: mandar la
-           foto equivocada del carrete y tener que rehacer el tramite por chat. */
-        var img = document.createElement('img');
-        img.alt = 'Vista previa del comprobante';
+      var esImagen = f.type.indexOf('image/') === 0;
+      prev.innerHTML = (esImagen ? '<img alt="Vista previa del comprobante">' : '<span class="rv-pdf" aria-hidden="true">PDF</span>') +
+        '<span class="rv-previa-txt"><strong><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span></span></strong><small>' + tam(f.size) + ' · lista para enviar</small></span>' +
+        '<button type="button" class="rv-cambiar-cap">Cambiar<span class="sr-only"> la captura</span></button>';
+      prev.querySelector('strong span').textContent = f.name;
+      if (esImagen) {
+        var img = prev.querySelector('img');
         img.src = URL.createObjectURL(f);
         img.onload = function () { URL.revokeObjectURL(img.src); };
-        prev.appendChild(img); prev.hidden = false;
-      } else {
-        prev.innerHTML = '<p class="wz-previa-pdf">Documento PDF adjunto</p>';
-        prev.hidden = false;
       }
+      prev.querySelector('.rv-cambiar-cap').addEventListener('click', function () { input.click(); });
+      prev.hidden = false;
+      caja.hidden = true;
+    });
+
+    ['dragenter', 'dragover'].forEach(function (t) {
+      caja.addEventListener(t, function () { caja.dataset.encima = 'si'; });
+    });
+    ['dragleave', 'drop'].forEach(function (t) {
+      caja.addEventListener(t, function () { delete caja.dataset.encima; });
     });
   }
 
@@ -1737,7 +1685,7 @@
     if (!monto || monto <= 0) { error('montoBs', 'errMonto', 'Escribe el monto en bolívares del comprobante.'); ok = false; primero = primero || 'montoBs'; }
     else error('montoBs', 'errMonto', null);
 
-    if (!ok && primero) $(primero).focus();
+    if (!ok && primero) $(primero === 'banco' ? 'bancoBtn' : primero).focus();
     return ok ? monto : null;
   }
 
@@ -1788,6 +1736,7 @@
   /* Vuelta a una cita desde el enlace guardado. Reconstruye lo justo del estado
      para reutilizar la misma pantalla de cierre en lugar de mantener dos. */
   function mostrarCitaGuardada(token) {
+    modoFin = 'gestion';
     PSI.rpc('get_booking', { p_token: token }).then(function (r) {
       if (!r || !r.ok || !r.appointment) {
         mostrar(1, false);
@@ -1825,92 +1774,176 @@
     if ($('waFin'))  $('waFin').href  = enlaceWhatsapp('fin');
   }
 
+  var modoFin = 'nueva';
+
   function pintarCierre(r) {
     var res = estado.resumen || {};
     var cita = r && r.appointment ? r.appointment : null;
-    var servicio = (cita && cita.service) || res.servicio || 'Tu sesión';
+    var sv = servicio();
+    var nombreServ = (cita && cita.service) || res.servicio || (sv && sv.name) || 'Tu sesión';
     var presencial = estado.modo === 'presencial';
-    var token = estado.tokenPaquete || estado.token;
-
-    /* Estado del pago. Al recien terminar siempre es "por verificar"; volviendo
-       por el enlace puede que Daryeli ya lo haya revisado, y eso es justo lo que
-       la persona viene a mirar. */
-    /* Sin respuesta del servidor, el estado sale de lo que la persona acaba de
-       elegir: quien dijo "pago en la consulta" no tiene nada que verificar, y
-       ensenarle "Por verificar" seria inventarse un pago que no existe. */
+    var gestion = modoFin === 'gestion';
     var pago = r && r.payment ? r.payment.status
              : (estado.momento === 'despues' ? 'pendiente' : 'declared');
     var confirmada = cita && cita.status === 'confirmed';
-    var etiquetas = {
-      verified:  ['Pago verificado', 'wz-ok'],
-      rejected:  ['Pago rechazado', 'wz-mal'],
-      declared:  ['Por verificar', 'wz-pendiente'],
-      pendiente: ['En la consulta', 'wz-pendiente']
-    };
-    var etq = etiquetas[pago] || etiquetas.declared;
+    if (pago === 'verified') confirmada = true;
 
-    document.getElementById('tFin').textContent = confirmada
-      ? 'Tu cita está confirmada'
-      : 'Listo, tu cita está reservada';
+    document.body.dataset.fin = modoFin;
+    $('t1').textContent = gestion ? 'Tu cita' : 'Reserva lista';
 
-    if (pago === 'pendiente') {
-      $('finTexto').textContent = 'Tu horario está reservado. Le pagas a Daryeli cuando termine la sesión.';
-    } else
+    var estadoUi = confirmada ? ['ok', 'i-check', 'Pago verificado']
+      : pago === 'pendiente' ? ['pend', 'i-pago', 'En la consulta']
+      : pago === 'rejected' ? ['mal', 'i-cerrar', 'Pago rechazado']
+      : ['pend', 'i-reloj', 'Por verificar'];
+    $('finEstado').className = 'rv-estado ' + estadoUi[0];
+    $('finEstado').innerHTML = '<svg class="ic" aria-hidden="true"><use href="#' + estadoUi[1] + '"/></svg>' + estadoUi[2];
+
+    $('finExito').dataset.estado = confirmada ? 'ok' : 'pendiente';
+    $('finExitoIc').setAttribute('href', gestion && !confirmada ? '#i-reloj' : '#i-check');
+
+    $('tFin').textContent = confirmada ? 'Tu cita está confirmada'
+      : gestion ? 'Tu cita está reservada' : 'Listo, tu cita está reservada';
     $('finTexto').textContent = confirmada
       ? 'Daryeli ya revisó tu pago. Nos vemos el día de la sesión.'
-      : (archivo || (r && r.payment)
-          ? 'Daryeli revisa tu comprobante y te confirma por correo. Suele tardar unas horas.'
-          : 'Registramos tu pago. Daryeli lo verifica y te confirma por correo; si hace falta la captura, te la pedirá por WhatsApp.');
+      : pago === 'pendiente' ? 'Tu horario es tuyo. Le pagas a Daryeli cuando termine la sesión.'
+      : pago === 'rejected' ? 'Daryeli no pudo verificar tu pago. Escríbele para resolverlo.'
+      : (archivo || (r && r.payment))
+        ? 'Daryeli revisa tu comprobante y te confirma por correo. Suele tardar unas horas.'
+        : 'Registramos tu pago. Daryeli lo verifica y te confirma por correo; si hace falta la captura, te la pedirá por WhatsApp.';
 
-    var datos = filaResumen('dia',
-      fechaLarga(diaEnZona(estado.hora, estado.zona)) + ' · ' + hora(estado.hora, estado.zona) +
-      (estado.zona !== ZONA_DARYELI ? ' <small>(' + hora(estado.hora, ZONA_DARYELI) + ' en Caracas)</small>' : ''));
-    datos += presencial
-      ? filaResumen('lugar', 'Presencial · Barquisimeto')
-      : filaResumen('modo', 'Online · por videollamada');
+    var dia = diaEnZona(estado.hora, estado.zona);
+    var fecha = desdeYmd(dia);
+    $('finMes').textContent = new Intl.DateTimeFormat('es', { month: 'short' }).format(fecha).replace('.', '');
+    $('finDia').textContent = fecha.getDate();
+    $('finSem').textContent = new Intl.DateTimeFormat('es', { weekday: 'long' }).format(fecha);
+    $('finServ').textContent = nombreServ;
+    $('finHora').textContent = hora(estado.hora, estado.zona);
+    var min = (sv && Number(sv.duration_min)) || duracionComun() || 60;
+    $('finDur').textContent = min + ' min';
+    $('finCuando').textContent = mayuscula(fechaLarga(dia)) + ' a las ' + hora(estado.hora, estado.zona) +
+      (estado.zona !== ZONA_DARYELI ? ' (' + hora(estado.hora, ZONA_DARYELI) + ' en Caracas)' : '');
 
-    $('finCita').innerHTML =
-      '<p class="wz-resumen-etq">Tu cita</p>' +
-      '<h2 class="wz-resumen-titulo">' + servicio + '</h2>' +
-      '<ul class="wz-resumen-datos">' + datos + '</ul>' +
-      '<p class="wz-resumen-total"><span>Pago</span>' +
-      '<b class="wz-marca-estado ' + etq[1] + '">' + etq[0] + '</b></p>';
-
-    /* Lo que faltaba entero: decir que pasa ahora. Sin esto la persona no sabe
-       si tiene que hacer algo mas, y acaba preguntando por WhatsApp. */
-    var pasos = [];
-    if (pago === 'pendiente') {
-      pasos.push('Le pagas a Daryeli cuando termine la sesión. Si prefieres dejarlo hecho antes, entra por el enlace de abajo.');
-    } else if (!confirmada) {
-      pasos.push('Daryeli revisa tu pago y te confirma la cita por correo.');
+    var datos = presencial
+      ? '<li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Presencial · Barquisimeto</li>'
+      : '<li><svg class="ic" aria-hidden="true"><use href="#i-video"/></svg>Online · el enlace llega a tu correo</li>';
+    if (estado.zona !== ZONA_DARYELI) {
+      datos += '<li><svg class="ic" aria-hidden="true"><use href="#i-reloj"/></svg>' + hora(estado.hora, ZONA_DARYELI) + ' en Caracas</li>';
     }
-    pasos.push(presencial
-      ? 'El día de la cita, acércate al consultorio unos minutos antes.'
-      : 'El enlace de la videollamada llega a tu correo.');
-    pasos.push('Si necesitas cambiarla o cancelarla, escríbele por WhatsApp.');
-    $('finPasos').innerHTML = pasos.map(function (t) { return '<li>' + t + '</li>'; }).join('');
+    var pl = !gestion && estado.plan ? opcionesPlan().filter(function (x) { return x.slug === estado.plan; })[0] : null;
+    var monto = Number(estado.importe) || (cita && Number(cita.price_usd)) || 0;
+    if (pl || monto) {
+      datos += '<li><svg class="ic" aria-hidden="true"><use href="#i-pago"/></svg>' +
+        (pl ? pl.cifra + ' ' + (pl.cifra === '1' ? 'consulta' : 'consultas') + (monto ? ' · ' : '') : '') +
+        (monto ? dinero(monto) + ' $' : '') + '</li>';
+    }
+    $('finDatos').innerHTML = datos;
 
     var caja = $('lugarFin');
-    if (presencial && consultorio) {
-      caja.innerHTML = tarjetaLugar(); caja.hidden = false;
-    } else {
-      caja.innerHTML = ''; caja.hidden = true;
-    }
+    if (presencial && consultorio) { caja.innerHTML = tarjetaLugar(); caja.hidden = false; }
+    else { caja.innerHTML = ''; caja.hidden = true; }
 
-    if (token) {
-      var url = location.origin + location.pathname + '?cita=' + encodeURIComponent(token);
-      $('finUrl').textContent = url;
-      $('copiarEnlace').dataset.copiar = url;
-      $('finEnlace').hidden = false;
+    var cuandoCorto = mayuscula(fechaLarga(dia).replace(',', '')) + ' a las ' + hora(estado.hora, estado.zona) + '.';
+    var enlace = presencial ? ['Ve al consultorio', 'Llega unos minutos antes de tu hora.']
+                            : ['Recibes el enlace de la videollamada', 'Por correo, antes de la sesión.'];
+    var pasos;
+    if (confirmada) {
+      pasos = [['hecho', 'Reservaste tu horario', cuandoCorto], ['hecho', 'Daryeli confirmó tu cita', 'Todo listo por tu parte.'], ['ahora'].concat(enlace)];
+    } else if (pago === 'pendiente') {
+      pasos = [['hecho', 'Reservaste tu horario', cuandoCorto], ['ahora'].concat(enlace),
+               ['', 'Pagas al terminar', 'Si prefieres dejarlo hecho antes, escríbele a Daryeli.']];
     } else {
-      $('finEnlace').hidden = true;
+      pasos = [['hecho', 'Reservaste tu horario', cuandoCorto],
+               ['ahora', 'Daryeli revisa tu pago', 'Te llega un correo cuando la cita quede confirmada.'], [''].concat(enlace)];
     }
+    $('finPasos').innerHTML = pasos.map(function (x, i) {
+      return '<li class="' + x[0] + '"><span class="p" aria-hidden="true">' +
+        (x[0] === 'hecho' ? '<svg class="ic"><use href="#i-check"/></svg>' : (i + 1)) + '</span>' +
+        '<span><strong>' + x[1] + '</strong><small>' + x[2] + '</small>' +
+        '<span class="sr-only">' + (x[0] === 'hecho' ? ' (hecho)' : x[0] === 'ahora' ? ' (en curso)' : '') + '</span></span></li>';
+    }).join('');
 
+    prepararCalendario(nombreServ, min, presencial);
     refrescarWhatsapp();
     mostrar('fin');
   }
 
+  function fechaIcs(d) {
+    return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  }
+
+  function prepararCalendario(nombreServ, min, presencial) {
+    var inicio = new Date(estado.hora);
+    var fin = new Date(inicio.getTime() + min * 60000);
+    var titulo = 'Consulta con Daryeli Romero · ' + nombreServ;
+    var lugar = presencial && consultorio
+      ? [consultorio.name, consultorio.address, consultorio.city].filter(Boolean).join(', ')
+      : (presencial ? 'Barquisimeto' : 'Online · el enlace llega a tu correo');
+    var notas = 'Psicconsciente. Si necesitas cambiarla, entra en Mis consultas.';
+
+    $('calGoogle').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent(titulo) +
+      '&dates=' + fechaIcs(inicio) + '/' + fechaIcs(fin) +
+      '&details=' + encodeURIComponent(notas) +
+      '&location=' + encodeURIComponent(lugar);
+
+    var esc = function (t) { return String(t).replace(/[\\,;]/g, function (c) { return '\\' + c; }); };
+    var ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Psicconsciente//Reserva//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      'UID:' + fechaIcs(inicio) + '-' + (estado.token || 'cita') + '@psicconsciente',
+      'DTSTAMP:' + fechaIcs(new Date()),
+      'DTSTART:' + fechaIcs(inicio),
+      'DTEND:' + fechaIcs(fin),
+      'SUMMARY:' + esc(titulo),
+      'LOCATION:' + esc(lugar),
+      'DESCRIPTION:' + esc(notas),
+      'BEGIN:VALARM', 'TRIGGER:-PT1H', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(titulo), 'END:VALARM',
+      'END:VEVENT', 'END:VCALENDAR'
+    ].join('\r\n');
+    $('calArchivo').href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+    $('calendarioCuando').textContent = $('finCuando').textContent + ' · ' + min + ' min';
+  }
+
+  var dialogoAbierto = null, focoAntes = null;
+
+  function abrirDialogo(id) {
+    focoAntes = document.activeElement;
+    dialogoAbierto = $(id);
+    $('velo').hidden = false;
+    dialogoAbierto.hidden = false;
+    var primero = id === 'hojaBaja' ? $('noBaja') : dialogoAbierto.querySelector('.rv-cal-op');
+    if (primero) primero.focus();
+  }
+
+  function cerrarDialogo() {
+    if (!dialogoAbierto) return;
+    dialogoAbierto.hidden = true;
+    $('velo').hidden = true;
+    dialogoAbierto = null;
+    if (focoAntes && focoAntes.focus) focoAntes.focus();
+  }
+
+  function prepararDialogos() {
+    $('abrirCalendario').addEventListener('click', function () { abrirDialogo('hojaCalendario'); });
+    $('velo').addEventListener('click', cerrarDialogo);
+    document.querySelectorAll('.rv-dialogo [data-cerrar]').forEach(function (b) { b.addEventListener('click', cerrarDialogo); });
+    ['calGoogle', 'calArchivo'].forEach(function (id) {
+      $(id).addEventListener('click', function () { setTimeout(cerrarDialogo, 0); });
+    });
+    $('siBaja').addEventListener('click', function () { cerrarDialogo(); cancelarCita(); });
+    document.addEventListener('keydown', function (ev) {
+      if (!dialogoAbierto) return;
+      if (ev.key === 'Escape') { ev.preventDefault(); cerrarDialogo(); return; }
+      if (ev.key !== 'Tab') return;
+      var f = Array.prototype.filter.call(dialogoAbierto.querySelectorAll('a[href], button'), function (x) { return !x.hidden; });
+      if (!f.length) return;
+      if (ev.shiftKey && document.activeElement === f[0]) { ev.preventDefault(); f[f.length - 1].focus(); }
+      else if (!ev.shiftKey && document.activeElement === f[f.length - 1]) { ev.preventDefault(); f[0].focus(); }
+    });
+  }
+
   function terminar() {
+    modoFin = 'nueva';
     if (reloj) clearInterval(reloj);
     var guardado = estado.tokenPaquete || estado.token;
     pintarCierre(null);
@@ -1936,6 +1969,12 @@
     if (!PSI.sesion.hay()) return Promise.resolve(null);
     return PSI.rpc('mi_perfil').then(function (r) {
       if (r && r.ok) perfil = r;
+      var av = $('avatar');
+      if (av && perfil && perfil.nombre) {
+        var ini = perfil.nombre.trim().split(/\s+/).slice(0, 2).map(function (x) { return x.charAt(0); }).join('');
+        av.textContent = ini.toUpperCase();
+        av.setAttribute('aria-label', 'Tu cuenta: ' + perfil.nombre);
+      }
       return perfil;
     });
   }
@@ -1951,6 +1990,7 @@
       'Ahora es el ' + fechaLarga(diaEnZona(estado.hora, estado.zona)) +
       ' a las ' + hora(estado.hora, estado.zona) + '.';
     $('gestionCita').hidden = true;
+    $('formDatos').hidden = true;
     irA2();
   }
 
@@ -1959,6 +1999,7 @@
     guardar();
     $('bandaRepro').hidden = true;
     $('gestionCita').hidden = false;
+    $('formDatos').hidden = false;
     pintarCierre(null);
   }
 
@@ -1979,17 +2020,15 @@
       guardar();
       $('bandaRepro').hidden = true;
       $('gestionCita').hidden = false;
+      $('formDatos').hidden = false;
       pintarCierre(null);
     });
   }
 
   function cancelarCita() {
-    /* Confirmacion antes de una accion que no se deshace. El texto dice lo que
-       va a pasar de verdad —el horario se libera— y no un "estas seguro". */
-    if (!window.confirm('Se cancelará tu cita y el horario quedará libre para otra persona. ¿Seguimos?')) return;
     PSI.rpc('cancel_booking', {
       p_token: estado.token,
-      p_reason: 'Cancelada por el paciente desde su enlace'
+      p_reason: 'Cancelada por el paciente desde su cita'
     }).then(function (r) {
       if (!r || !r.ok) {
         alerta('vistaFin', (r && r.message) || 'No pudimos cancelar la cita.', 'error');
@@ -1997,11 +2036,9 @@
       }
       $('tFin').textContent = 'Tu cita quedó cancelada';
       $('finTexto').textContent = 'El horario volvió a quedar libre. Cuando quieras, puedes reservar otro.';
-      $('gestionCita').hidden = true;
-      $('finEnlace').hidden = true;
-      $('finPasos').innerHTML = '';
-      $('finCita').innerHTML = '';
-      $('lugarFin').hidden = true;
+      $('finExitoIc').setAttribute('href', '#i-cerrar');
+      $('finExito').dataset.estado = 'baja';
+      document.querySelector('#vistaFin .rv-fin-dos').hidden = true;
       limpiar();
     });
   }
@@ -2094,7 +2131,8 @@
       { bank_code: '0172', bank_name: 'Bancamiga',          id_number: 'V-00.000.000', phone: '0412-0000000' }
     ];
     if (cual === '3') { prepararPago(cuentas); mostrar(3, false); return true; }
-    if (cual === 'fin') { pintarCierre(null); return true; }
+    if (cual === 'fin') { modoFin = 'nueva'; pintarCierre(null); return true; }
+    if (cual === 'gestion') { modoFin = 'gestion'; pintarCierre(null); return true; }
     return false;
   }
 
@@ -2102,15 +2140,19 @@
   function irA2() {
     pintarZonas();
     pintarContexto();
+    pintarResumen2();
     mostrar(2);
-    cargarMes().then(function () { $('ir4').disabled = !estado.hora; });
+    refrescarReservar();
+    cargarMes();
   }
 
   function enlazar() {
     /* Los modos ya no se enlazan uno a uno: el paso 1 entero va por delegacion
        en #vista1, asi que un boton repintado sigue respondiendo. */
-    ['ir2Escritorio', 'ir2Movil'].forEach(function (id) {
-      var x = $(id); if (x) x.addEventListener('click', irA2);
+    $('ir2Escritorio').addEventListener('click', irA2);
+    $('rvAtras').addEventListener('click', function () {
+      if (String(estado.paso) === '2' && !estado.reprogramando) { mostrar(1); return; }
+      location.href = PSI.sesion.hay() ? '../cuenta/' : '../index.html';
     });
     /* Delegado: el resumen se vuelve a pintar entero en cada cambio, asi que
        un listener atado al boton concreto se perderia en el primer repintado. */
@@ -2229,19 +2271,21 @@
     // Validar al salir del campo, no en cada tecla: corregir a alguien
     // mientras todavía escribe es hostil.
     prepararSubida();
+    prepararComboBanco();
     prepararFecha();
     prepararReferencia();
     cargarPerfil();
     prepararCopiar();
-    document.querySelectorAll('.wz-momento-op').forEach(function (b) {
+    document.querySelectorAll('.rv-momento-op').forEach(function (b) {
       b.addEventListener('click', function () {
         estado.momento = b.dataset.momento; guardar(); marcarMomento();
       });
     });
-    $('confirmarDespues').addEventListener('click', function () { pintarCierre(null); });
+    $('confirmarDespues').addEventListener('click', function () { modoFin = 'nueva'; pintarCierre(null); });
+    prepararDialogos();
     $('btnReprogramar').addEventListener('click', entrarReprogramar);
     $('salirRepro').addEventListener('click', salirReprogramar);
-    $('btnCancelar').addEventListener('click', cancelarCita);
+    $('btnCancelar').addEventListener('click', function () { abrirDialogo('hojaBaja'); });
   }
 
   function arrancar() {
@@ -2254,7 +2298,7 @@
       pintarModos();
       pintarServicios();
       pintarLugar();
-      if (estado.servicio) pintarPlanes();
+      pintarPlanes();
       refrescarBoton();
       enlazar();
 

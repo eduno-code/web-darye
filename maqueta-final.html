@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pantalla final · maqueta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:only light;
+  --blanco:#FFFFFF;--fondo-suave:#FBF7F2;--txt:#2C3E50;--txt-suave:#55697A;
+  --marron:#5E442C;--marron-txt:#FAF3EA;--marron-txt-sv:#E2D5C4;
+  --terra:#A87453;--terra-dp:#8C6246;--terra-sv:#F3E9DE;--linea:rgba(166,123,91,.24);
+  --piz:#3D5568;--piz-dp:#2F4455;--piz-sv:#E7EDF1;--piz-borde:rgba(61,85,104,.35);
+  --display:"Source Serif 4",Georgia,serif;--texto:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --degradado:linear-gradient(155deg,#7A5638 0%,#5E442C 46%,#3F2C1C 100%);
+  --celosia:repeating-linear-gradient(38deg,rgba(255,246,232,.075) 0 16px,rgba(255,246,232,0) 30px 74px),repeating-linear-gradient(-49deg,rgba(255,246,232,.055) 0 12px,rgba(255,246,232,0) 26px 66px);
+  --paso:180ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#E6DACB;color:var(--txt);font:400 1rem/1.5 var(--texto);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+svg.ic{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:2px solid var(--piz);outline-offset:2px}
+[hidden]{display:none !important}
+
+.mando{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center}
+.mando div{display:flex;gap:.25rem;padding:.3rem;background:#2A211A;border-radius:999px;box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}
+.mando button{border:0;background:none;color:#E2D5C4;border-radius:999px;padding:.45rem 1rem;cursor:pointer;font-weight:600;font-size:.9rem}
+.mando button[aria-pressed="true"]{background:#FAF3EA;color:#2A211A}
+
+.marco{margin:0 auto;background:var(--blanco);container-type:inline-size;min-height:100vh;padding-bottom:6rem}
+body.movil .telefono{position:relative;width:390px;height:844px;margin:2rem auto 6rem;border-radius:40px;overflow:hidden;box-shadow:0 0 0 10px #2A211A,0 30px 60px -20px rgba(42,33,26,.5);background:var(--blanco)}
+body.movil .marco{height:100%;min-height:0;overflow-y:auto;padding-bottom:0;scrollbar-width:none}
+
+.top{position:relative;overflow:hidden;isolation:isolate;background:var(--degradado);color:var(--marron-txt)}
+.top::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--celosia);-webkit-mask-image:radial-gradient(60% 260% at 100% 0%,#000 0%,rgba(0,0,0,.55) 40%,transparent 80%);mask-image:radial-gradient(60% 260% at 100% 0%,#000 0%,rgba(0,0,0,.55) 40%,transparent 80%)}
+.cont{max-width:1280px;margin:0 auto;padding:0 2.5rem}
+.top .cont{display:flex;align-items:center;gap:2.5rem;height:72px}
+.logo{display:flex;align-items:center;gap:.55rem;font:600 1.2rem var(--display);color:var(--marron-txt);text-decoration:none}
+.logo svg{color:#D9B796;stroke-width:1.5}
+.menu{display:flex;gap:.5rem;list-style:none;margin:0;padding:0}
+.menu a{display:flex;align-items:center;gap:.5rem;padding:0 .75rem;height:72px;color:var(--marron-txt-sv);text-decoration:none;font-weight:600}
+.top-der{margin-left:auto;display:flex;align-items:center;gap:1.25rem}
+.duda{display:inline-flex;align-items:center;gap:.45rem;color:var(--marron-txt-sv);font-weight:600;text-decoration:none}
+.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--terra-sv);color:var(--marron);font-weight:700}
+
+.cab{display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:2.25rem 0 1.5rem}
+.cab h1{margin:0;font:600 2.1rem/1.1 var(--display);letter-spacing:-.01em}
+.pasos ol{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:.6rem}
+.pasos li{display:flex;align-items:center;gap:.55rem;color:var(--txt-suave);font-weight:600;font-size:.95rem}
+.pasos li + li::before{content:"";width:56px;height:2px;border-radius:2px;background:var(--terra)}
+.pasos .n{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--terra-sv);color:var(--terra-dp)}
+.pasos .n svg{width:16px;height:16px;stroke-width:2.5}
+.appbar,.movil-pasos{display:none}
+
+.hoja{border:1px solid var(--linea);border-radius:22px;overflow:hidden;background:var(--blanco);margin-bottom:3rem}
+.hoja-cuerpo{padding:2rem 2.25rem}
+
+.exito{display:flex;align-items:center;gap:1.1rem;margin-bottom:1.75rem}
+.exito-ic{position:relative;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--piz);color:#fff;box-shadow:0 0 0 8px var(--piz-sv)}
+.exito-ic svg{width:30px;height:30px;stroke-width:2.4}
+.exito[data-estado="pendiente"] .exito-ic,.exito[data-estado="consulta"] .exito-ic{background:var(--terra-dp);box-shadow:0 0 0 8px var(--terra-sv)}
+.exito h2{margin:0;font:600 1.75rem/1.15 var(--display)}
+.exito p{margin:.3rem 0 0;color:var(--txt-suave);max-width:58ch}
+
+.dos{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1.5rem;align-items:start}
+
+.caja{border:1px solid var(--linea);border-radius:18px;overflow:hidden;background:var(--blanco)}
+.caja-cab{position:relative;display:flex;align-items:center;gap:.75rem;padding:.9rem 1.1rem;border-bottom:1px solid var(--linea)}
+.caja-cab::after{content:"";position:absolute;top:0;right:0;bottom:0;width:46%;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 70%);mask-image:linear-gradient(90deg,transparent,#000 70%)}
+.caja-cab h3{margin:0;font:600 1.1rem/1.2 var(--display);position:relative;z-index:1}
+.caja-cita .caja-cab{background:var(--terra-sv)}
+.caja-cita .caja-cab::after{background-image:radial-gradient(circle,rgba(140,98,70,.32) 1.3px,transparent 1.8px);background-size:11px 11px}
+.caja-cita .caja-cab h3{color:var(--marron)}
+.caja-ahora .caja-cab{background:var(--piz-sv)}
+.caja-ahora .caja-cab::after{background-image:repeating-linear-gradient(135deg,rgba(61,85,104,.2) 0 1px,transparent 1px 8px)}
+.caja-ahora .caja-cab h3{color:var(--piz-dp)}
+.caja-cuerpo{padding:1.25rem}
+
+.cita{display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:center}
+.fecha-bloque{width:96px;border-radius:16px;background:var(--terra-sv);text-align:center;padding:.75rem .4rem .85rem;margin:0}
+.fecha-bloque .mes{display:block;font-weight:700;font-size:.8rem;color:var(--marron);letter-spacing:.06em;text-transform:uppercase}
+.fecha-bloque .num{display:block;font:600 2.6rem/1 var(--display);margin:.15rem 0}
+.fecha-bloque .sem{display:block;color:var(--txt-suave);font-size:.9rem}
+.cita-serv{margin:0;font:600 1.3rem/1.25 var(--display);text-wrap:balance}
+.cita-hora{display:flex;align-items:center;gap:.5rem;margin:.55rem 0 0}
+.cita-hora svg{width:20px;height:20px;color:var(--terra)}
+.cita-hora .hora{font:700 1.6rem/1 var(--texto);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.cita-hora .dur{padding:.15rem .6rem;border-radius:999px;background:var(--fondo-suave);border:1px solid var(--linea);font-size:.85rem;font-weight:600;color:var(--txt-suave);white-space:nowrap}
+.datos{list-style:none;margin:1.1rem 0 0;padding:1rem 0 0;border-top:1px solid var(--linea);display:grid;gap:.6rem}
+.datos li{display:flex;align-items:center;gap:.6rem;color:var(--txt-suave)}
+.datos svg{color:var(--terra)}
+.datos a{color:var(--piz);font-weight:600;text-underline-offset:3px;text-decoration-color:var(--piz-borde)}
+.estado{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.35rem;border-radius:999px;padding:.2rem .75rem;font-size:.875rem;font-weight:600;margin-left:auto;white-space:nowrap;box-shadow:0 0 0 1px rgba(255,255,255,.7)}
+.estado svg{width:16px;height:16px}
+.estado.ok{background:var(--piz);color:#fff}
+.estado.pend{background:var(--blanco);color:var(--marron)}
+.estado.pend svg{color:var(--terra-dp)}
+
+.linea-t{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.linea-t li{position:relative;display:grid;grid-template-columns:32px 1fr;gap:.85rem;padding-bottom:1.1rem}
+.linea-t li:last-child{padding-bottom:0}
+.linea-t li:not(:last-child)::before{content:"";position:absolute;left:15px;top:34px;bottom:2px;width:2px;border-radius:2px;background:var(--linea)}
+.linea-t .p{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;background:var(--blanco);box-shadow:inset 0 0 0 1.5px var(--linea);color:var(--txt-suave)}
+.linea-t .p svg{width:16px;height:16px;stroke-width:2.5}
+.linea-t li.hecho .p{background:var(--terra-sv);box-shadow:none;color:var(--terra-dp)}
+.linea-t li.hecho:not(:last-child)::before{background:var(--terra)}
+.linea-t li.ahora .p{background:var(--piz);box-shadow:0 0 0 4px var(--piz-sv);color:#fff}
+.linea-t strong{display:block;font-weight:600;padding-top:.25rem}
+.linea-t small{display:block;color:var(--txt-suave);font-size:.92rem}
+
+.acciones{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.5rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:0 1.3rem;white-space:nowrap;border:0;border-radius:999px;cursor:pointer;background:var(--piz);color:#fff;font-weight:600;text-decoration:none;transition:background var(--paso)}
+.btn:hover{background:var(--piz-dp)}
+.btn svg{width:18px;height:18px}
+.btn-sec{background:var(--blanco);color:var(--piz);box-shadow:inset 0 0 0 1px var(--piz-borde)}
+.btn-sec:hover{background:var(--piz-sv)}
+.btn-baja{background:none;color:#8A3B2E;box-shadow:none;padding:0 .75rem}
+.btn-baja:hover{background:#F6E3DC}
+
+.hoja-pie{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1rem 2.25rem;border-top:1px solid var(--linea);background:var(--fondo-suave)}
+.hoja-pie p{margin:0;font-size:.9rem;color:var(--txt-suave)}
+.hoja-pie p a{color:var(--piz);font-weight:600;text-underline-offset:2px}
+
+
+.velo{position:fixed;inset:0;z-index:60;background:rgba(42,33,26,.45)}
+.hoja-cal{
+  position:fixed;z-index:61;left:50%;top:50%;transform:translate(-50%,-50%);width:min(26rem,calc(100% - 2rem));
+  background:var(--blanco);border-radius:22px;padding:1.25rem 1.25rem 1.1rem;box-shadow:0 30px 60px -20px rgba(42,33,26,.5);
+}
+body.movil .velo,body.movil .hoja-cal{position:absolute}
+.hoja-cal-cab{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1rem}
+.hoja-cal-cab h4{margin:0;font:600 1.2rem/1.2 var(--display)}
+.hoja-cal-cab p{margin:.2rem 0 0;color:var(--txt-suave);font-size:.95rem}
+.hoja-cal-cab button{margin-left:auto;width:44px;height:44px;margin-top:-.5rem;margin-right:-.5rem;border:0;border-radius:50%;background:none;color:var(--txt-suave);display:grid;place-items:center;cursor:pointer;flex:none}
+.cal-op{display:flex;align-items:center;gap:.85rem;width:100%;min-height:64px;padding:.75rem 1rem;margin-top:.6rem;border:1px solid var(--linea);border-radius:14px;background:var(--blanco);text-align:left;cursor:pointer;transition:border-color var(--paso),background var(--paso)}
+.cal-op:hover{border-color:var(--piz-borde);background:var(--fondo-suave)}
+.cal-op .burbuja{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--piz-sv);color:var(--piz);flex:none}
+.cal-op:last-of-type .burbuja{background:var(--terra-sv);color:var(--terra-dp)}
+.cal-op strong{display:block;font-weight:600}
+.cal-op small{display:block;color:var(--txt-suave);font-size:.9rem}
+.cal-op .flecha{margin-left:auto;color:var(--piz)}
+.baja{margin:1rem 0 0;padding-top:.9rem;border-top:1px solid var(--linea);font-size:.92rem;color:var(--txt-suave)}
+.baja button{min-height:44px;padding:0 .25rem;border:0;background:none;cursor:pointer;color:#8A3B2E;font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(138,59,46,.35)}
+.baja button:hover{text-decoration-color:#8A3B2E}
+.hoja-baja{text-align:center;padding:1.75rem 1.5rem 1.25rem}
+.baja-ic{width:52px;height:52px;margin:0 auto .85rem;border-radius:50%;display:grid;place-items:center;background:#F6E3DC;color:#8A3B2E}
+.hoja-baja h4{margin:0;font:600 1.25rem/1.25 var(--display)}
+.hoja-baja p{margin:.5rem auto 0;color:var(--txt-suave);max-width:34ch}
+.baja-btns{display:grid;gap:.5rem;margin-top:1.25rem}
+.btn-peligro{background:#8A3B2E}
+.btn-peligro:hover{background:#6F2E24}
+body.modo-nueva .solo-gestion,body.modo-gestion .solo-nueva{display:none !important}
+.hoja-cal-nota{margin:1rem 0 0;font-size:.875rem;color:var(--txt-suave);display:flex;gap:.5rem}
+.hoja-cal-nota svg{width:18px;height:18px;color:var(--terra);margin-top:.1rem}
+
+@container (max-width:700px){
+  .top{display:none}
+  .cont{padding:0}
+  .cab{display:none}
+  .cabeza{position:relative;overflow:hidden;isolation:isolate;background:var(--degradado);color:var(--marron-txt);padding:3rem .5rem calc(1.1rem + 10px)}
+  .cabeza::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--celosia);-webkit-mask-image:radial-gradient(80% 120% at 100% 0%,#000 0%,rgba(0,0,0,.55) 40%,transparent 80%);mask-image:radial-gradient(80% 120% at 100% 0%,#000 0%,rgba(0,0,0,.55) 40%,transparent 80%)}
+  .appbar{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:.25rem}
+  .appbar h1{margin:0 0 0 .25rem;font:600 1.2rem var(--display)}
+  .icono-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--marron-txt)}
+  .movil-pasos{display:block;padding:.6rem .75rem 0}
+  .movil-pasos ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);position:relative}
+  .movil-pasos ol::before{content:"";position:absolute;top:14px;left:16.66%;right:16.66%;height:2px;background:#C4A484}
+  .movil-pasos li{position:relative;display:flex;flex-direction:column;align-items:center;gap:.3rem;font-size:.85rem;color:var(--marron-txt-sv)}
+  .movil-pasos .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--terra-sv);color:var(--terra-dp)}
+  .movil-pasos .n svg{width:16px;height:16px;stroke-width:2.5}
+  .hoja{position:relative;margin:-10px 0 0;border:0;border-radius:22px 22px 0 0;overflow:visible}
+  .hoja-cuerpo{padding:1.5rem 1rem 1.5rem}
+  .exito{flex-direction:column;text-align:center;gap:.9rem;margin-bottom:1.5rem}
+  .exito h2{font-size:1.5rem}
+  .exito p{margin-inline:auto}
+  .dos{grid-template-columns:1fr;gap:1rem}
+  .cita{grid-template-columns:auto 1fr;gap:1rem}
+  .fecha-bloque{width:84px}
+  .fecha-bloque .num{font-size:2.2rem}
+  .cita-serv{font-size:1.15rem}
+  .cita-hora .hora{font-size:1.45rem}
+  .datos li{flex-wrap:wrap}
+  .acciones{display:grid;grid-template-columns:1fr;gap:.5rem}
+  .acciones .btn{width:100%}
+  .hoja-pie{flex-direction:column;align-items:stretch;gap:.6rem;padding:1rem 1rem 1.5rem}
+  .hoja-pie .btn{width:100%}
+  .hoja-pie p{text-align:center;order:1}
+}
+body.movil .hoja-cal{top:auto;bottom:0;left:0;transform:none;width:100%;border-radius:22px 22px 0 0;padding:1.6rem 1rem 1.6rem}
+body.movil .hoja-cal::before{content:"";position:absolute;top:8px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:4px;background:rgba(94,68,44,.2)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-bombillo" viewBox="0 0 24 24"><path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/><path d="M9 20h6M10.2 22.2h3.6"/><path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276z"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></symbol>
+  <symbol id="i-pago" viewBox="0 0 24 24"><path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h2"/></symbol>
+  <symbol id="i-cal-mas" viewBox="0 0 24 24"><path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M16 19h6"/><path d="M19 16v6"/></symbol>
+  <symbol id="i-mover" viewBox="0 0 24 24"><path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"/><path d="M18 18m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496v1.504l1 1"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></symbol>
+  <symbol id="i-duda" viewBox="0 0 24 24"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293z"/></symbol>
+  <symbol id="i-casa" viewBox="0 0 24 24"><path d="M5 12h-2l9 -9l9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></symbol>
+  <symbol id="i-atras" viewBox="0 0 24 24"><path d="M15 6l-6 6l6 6"/></symbol>
+  <symbol id="i-sig" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></symbol>
+  <symbol id="i-cerrar" viewBox="0 0 24 24"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></symbol>
+</svg>
+
+<div class="mando" aria-label="Opciones de la maqueta">
+  <div role="group" aria-label="Caso">
+    <button type="button" data-caso="pendiente" aria-pressed="true">Pagó · por verificar</button>
+    <button type="button" data-caso="consulta" aria-pressed="false">Paga en la consulta</button>
+    <button type="button" data-caso="confirmada" aria-pressed="false">Confirmada</button>
+  </div>
+  <div role="group" aria-label="Modo">
+    <button type="button" data-modo="nueva" aria-pressed="true">Recién reservada</button>
+    <button type="button" data-modo="gestion" aria-pressed="false">Desde Mis consultas</button>
+  </div>
+  <div role="group" aria-label="Tamaño">
+    <button type="button" data-tam="escritorio" aria-pressed="true">Escritorio</button>
+    <button type="button" data-tam="movil" aria-pressed="false">Móvil</button>
+  </div>
+</div>
+
+<div class="telefono">
+<div class="marco">
+  <header class="top">
+    <div class="cont">
+      <a class="logo" href="#"><svg class="ic"><use href="#i-bombillo"/></svg>Psicconsciente</a>
+      <ul class="menu">
+        <li><a href="#"><svg class="ic"><use href="#i-casa"/></svg>Mis consultas</a></li>
+        <li><a href="#"><svg class="ic"><use href="#i-user"/></svg>Mis datos</a></li>
+      </ul>
+      <div class="top-der">
+        <a class="duda" href="#"><svg class="ic"><use href="#i-duda"/></svg>Tengo una duda</a>
+        <span class="avatar">ED</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="cabeza">
+    <div class="appbar">
+      <span class="icono-btn" aria-hidden="true"><svg class="ic"><use href="#i-cerrar" class="solo-nueva"/><use href="#i-atras" class="solo-gestion"/></svg></span>
+      <h1 class="titulo-pantalla">Reserva lista</h1>
+      <span class="icono-btn" aria-hidden="true"><svg class="ic"><use href="#i-duda"/></svg></span>
+    </div>
+    <nav class="movil-pasos solo-nueva" aria-label="Pasos de la reserva"><ol>
+      <li><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Reserva</li>
+      <li><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Fecha</li>
+      <li><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Pago</li>
+    </ol></nav>
+  </div>
+
+  <main class="cont">
+    <div class="cab">
+      <h1 class="titulo-pantalla">Reserva lista</h1>
+      <nav class="pasos solo-nueva" aria-label="Pasos de la reserva"><ol>
+        <li><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Reserva</li>
+        <li><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Fecha</li>
+        <li><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Pago</li>
+      </ol></nav>
+    </div>
+
+    <section class="hoja" aria-labelledby="tFin">
+      <div class="hoja-cuerpo">
+        <div class="exito" id="exito" data-estado="pendiente">
+          <span class="exito-ic" aria-hidden="true"><svg class="ic"><use href="#i-check" id="exitoIc"/></svg></span>
+          <div>
+            <h2 id="tFin">Listo, tu cita está reservada</h2>
+            <p id="finTexto">Daryeli revisa tu comprobante y te confirma por correo. Suele tardar unas horas.</p>
+          </div>
+        </div>
+
+        <div class="dos">
+          <section class="caja caja-cita" aria-labelledby="tCita">
+            <header class="caja-cab"><h3 id="tCita">Tu cita</h3><span class="estado pend" id="estadoPago"><svg class="ic"><use href="#i-reloj"/></svg>Por verificar</span></header>
+            <div class="caja-cuerpo">
+              <div class="cita">
+                <p class="fecha-bloque" aria-hidden="true"><span class="mes">Oct</span><span class="num">22</span><span class="sem">jueves</span></p>
+                <div>
+                  <p class="cita-serv">Superar la Ansiedad</p>
+                  <p class="cita-hora"><svg class="ic" aria-hidden="true"><use href="#i-reloj"/></svg><span class="hora">17:00</span><span class="dur">60 min</span></p>
+                </div>
+              </div>
+              <ul class="datos">
+                <li><svg class="ic"><use href="#i-video"/></svg>Online · el enlace llega a tu correo</li>
+                <li id="filaPago"><svg class="ic"><use href="#i-pago"/></svg>3 consultas · 75 $</li>
+              </ul>
+              <div class="acciones">
+                <a class="btn solo-gestion" href="#"><svg class="ic"><use href="#i-mover"/></svg>Cambiar horario</a>
+                <button class="btn btn-sec" type="button" id="abrirCal" aria-haspopup="dialog"><svg class="ic"><use href="#i-cal-mas"/></svg>Añadir al calendario</button>
+              </div>
+              <p class="baja solo-gestion">¿No puedes ir? <button type="button" id="abrirBaja" aria-haspopup="dialog">Cancelar la cita</button></p>
+            </div>
+          </section>
+
+          <section class="caja caja-ahora" aria-labelledby="tAhora">
+            <header class="caja-cab"><h3 id="tAhora">Qué pasa ahora</h3></header>
+            <div class="caja-cuerpo">
+              <ol class="linea-t" id="pasosFin"></ol>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="hoja-pie">
+        <p>¿Algo no cuadra? <a href="#">Escríbele a Daryeli</a></p>
+        <a class="btn solo-nueva" href="#">Ver mis consultas<svg class="ic"><use href="#i-sig"/></svg></a>
+        <a class="btn btn-sec solo-gestion" href="#"><svg class="ic"><use href="#i-atras"/></svg>Volver a mis consultas</a>
+      </div>
+    </section>
+  </main>
+</div>
+
+  <div class="velo" id="velo" hidden></div>
+  <div class="hoja-cal" id="hojaCal" role="dialog" aria-modal="true" aria-labelledby="tCal" hidden>
+    <div class="hoja-cal-cab">
+      <div>
+        <h4 id="tCal">Añadir a tu calendario</h4>
+        <p>Jueves 22 de octubre · 17:00 · 60 min</p>
+      </div>
+      <button type="button" id="cerrarCal" aria-label="Cerrar"><svg class="ic"><use href="#i-cerrar"/></svg></button>
+    </div>
+    <button class="cal-op" type="button">
+      <span class="burbuja"><svg class="ic"><use href="#i-cal-mas"/></svg></span>
+      <span><strong>Google Calendar</strong><small>Para Android o tu cuenta de Gmail</small></span>
+      <svg class="ic flecha"><use href="#i-sig"/></svg>
+    </button>
+    <button class="cal-op" type="button">
+      <span class="burbuja"><svg class="ic"><use href="#i-cal-mas"/></svg></span>
+      <span><strong>Calendario del iPhone u Outlook</strong><small>Tu teléfono te pregunta si quieres guardarla</small></span>
+      <svg class="ic flecha"><use href="#i-sig"/></svg>
+    </button>
+    <p class="hoja-cal-nota"><svg class="ic"><use href="#i-reloj"/></svg>Si no lo usas no pasa nada: tu cita queda guardada en Mis consultas.</p>
+  </div>
+
+  <div class="hoja-cal hoja-baja" id="hojaBaja" role="alertdialog" aria-modal="true" aria-labelledby="tBaja" aria-describedby="dBaja" hidden>
+    <span class="baja-ic" aria-hidden="true"><svg class="ic"><use href="#i-x"/></svg></span>
+    <h4 id="tBaja">¿Cancelar tu cita del jueves 22?</h4>
+    <p id="dBaja">El horario de las 17:00 quedará libre para otra persona. Si solo necesitas otro día, mejor cámbiala de horario.</p>
+    <div class="baja-btns">
+      <button type="button" class="btn btn-peligro" id="siBaja">Sí, cancelar la cita</button>
+      <button type="button" class="btn btn-sec" id="noBaja">Mantener mi cita</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var CASOS = {
+    pendiente: {
+      titulo: 'Listo, tu cita está reservada',
+      texto: 'Daryeli revisa tu comprobante y te confirma por correo. Suele tardar unas horas.',
+      estado: ['pend', 'i-reloj', 'Por verificar'],
+      pasos: [
+        ['hecho', 'Reservaste tu horario', 'Jueves 22 de octubre a las 17:00.'],
+        ['ahora', 'Daryeli revisa tu pago', 'Te llega un correo cuando la cita quede confirmada.'],
+        ['', 'Recibes el enlace de la videollamada', 'Por correo, antes de la sesión.']
+      ]
+    },
+    consulta: {
+      titulo: 'Listo, tu cita está reservada',
+      texto: 'Tu horario es tuyo. Le pagas a Daryeli cuando termine la sesión.',
+      estado: ['pend', 'i-pago', 'En la consulta'],
+      pasos: [
+        ['hecho', 'Reservaste tu horario', 'Jueves 22 de octubre a las 17:00.'],
+        ['ahora', 'Recibes el enlace de la videollamada', 'Por correo, antes de la sesión.'],
+        ['', 'Pagas al terminar', 'Si prefieres dejarlo hecho antes, puedes hacerlo desde Mis consultas.']
+      ]
+    },
+    confirmada: {
+      titulo: 'Tu cita está confirmada',
+      texto: 'Daryeli ya revisó tu pago. Nos vemos el jueves.',
+      estado: ['ok', 'i-check', 'Pago verificado'],
+      pasos: [
+        ['hecho', 'Reservaste tu horario', 'Jueves 22 de octubre a las 17:00.'],
+        ['hecho', 'Daryeli confirmó tu pago', 'Todo listo por tu parte.'],
+        ['ahora', 'Recibes el enlace de la videollamada', 'Por correo, antes de la sesión.']
+      ]
+    }
+  };
+
+  var modo = 'nueva', casoActual = 'pendiente';
+  var TEXTO_GESTION = {
+    pendiente: 'Daryeli está revisando tu comprobante. Te llega un correo cuando la confirme.',
+    consulta: 'Tu horario está reservado. Le pagas a Daryeli cuando termine la sesión.',
+    confirmada: 'Todo listo. Nos vemos el jueves.'
+  };
+  function caso(c) {
+    casoActual = c;
+    var d = CASOS[c];
+    var gestion = modo === 'gestion';
+    document.getElementById('exito').dataset.estado = c;
+    document.getElementById('exitoIc').setAttribute('href', gestion && c !== 'confirmada' ? '#i-reloj' : '#i-check');
+    document.querySelectorAll('.titulo-pantalla').forEach(function (h) { h.textContent = gestion ? 'Tu cita' : 'Reserva lista'; });
+    document.getElementById('tFin').textContent = gestion
+      ? (c === 'confirmada' ? 'Tu cita está confirmada' : 'Tu cita está reservada')
+      : d.titulo;
+    if (gestion) { document.getElementById('finTexto').textContent = TEXTO_GESTION[c]; }
+    if (!gestion) document.getElementById('finTexto').textContent = d.texto;
+    var e = document.getElementById('estadoPago');
+    e.className = 'estado ' + d.estado[0];
+    e.innerHTML = '<svg class="ic"><use href="#' + d.estado[1] + '"/></svg>' + d.estado[2];
+    document.getElementById('pasosFin').innerHTML = d.pasos.map(function (p, i) {
+      return '<li class="' + p[0] + '"><span class="p">' + (p[0] === 'hecho' ? '<svg class="ic"><use href="#i-check"/></svg>' : (i + 1)) + '</span>' +
+        '<span><strong>' + p[1] + '</strong><small>' + p[2] + '</small></span></li>';
+    }).join('');
+  }
+
+  document.querySelectorAll('[data-caso]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('[data-caso]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      caso(b.dataset.caso);
+    });
+  });
+  document.querySelectorAll('[data-tam]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('[data-tam]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      document.body.classList.toggle('movil', b.dataset.tam === 'movil');
+    });
+  });
+  var velo = document.getElementById('velo'), hoja = document.getElementById('hojaCal'), abrir = document.getElementById('abrirCal');
+  function cal(ver) {
+    velo.hidden = !ver; hoja.hidden = !ver;
+    if (ver) hoja.querySelector('.cal-op').focus(); else abrir.focus();
+  }
+  abrir.addEventListener('click', function () { cal(true); });
+  document.getElementById('cerrarCal').addEventListener('click', function () { cal(false); });
+  velo.addEventListener('click', function () { cal(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !hoja.hidden) cal(false); });
+  hoja.querySelectorAll('.cal-op').forEach(function (b) { b.addEventListener('click', function () { cal(false); }); });
+
+  if (/[?&]movil/.test(location.search)) document.querySelector('[data-tam="movil"]').click();
+  if (/[?&]calendario/.test(location.search)) cal(true);
+  document.querySelectorAll('[data-modo]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('[data-modo]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      modo = b.dataset.modo;
+      document.body.classList.toggle('modo-nueva', modo === 'nueva');
+      document.body.classList.toggle('modo-gestion', modo === 'gestion');
+      caso(casoActual);
+    });
+  });
+  document.body.classList.add('modo-nueva');
+
+  var baja = document.getElementById('hojaBaja'), abrirBaja = document.getElementById('abrirBaja');
+  function verBaja(ver) {
+    velo.hidden = !ver; baja.hidden = !ver;
+    if (ver) document.getElementById('noBaja').focus(); else abrirBaja.focus();
+  }
+  abrirBaja.addEventListener('click', function () { verBaja(true); });
+  document.getElementById('noBaja').addEventListener('click', function () { verBaja(false); });
+  document.getElementById('siBaja').addEventListener('click', function () { verBaja(false); });
+  velo.addEventListener('click', function () { if (!baja.hidden) verBaja(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !baja.hidden) verBaja(false); });
+  if (/[?&]gestion/.test(location.search)) document.querySelector('[data-modo="gestion"]').click();
+  if (/[?&]cancelar/.test(location.search)) verBaja(true);
+
+  caso('pendiente');
+})();
+</script>
+</body>
+</html>
