@@ -22,6 +22,10 @@ Etapa 2 · lista B aplicada (22/10). Después: Lighthouse 100/100/100 en móvil 
 - NO tocado a propósito: fotos de Daryeli (hero, historia, og-image) hasta la sesión de fotos; historia (se reescribe); publicar (dominio).
 - Queda de la Etapa 2: lo que depende de Daryeli (testimonios, privacidad, correo) y la parte D (publicar). Luego Etapa 3: animaciones y carga del bombillo.
 
+Etapa 3 (22/10): carga con el bombillo, variante A, en línea en el <head> de index.html. Trazo terracota que se dibuja → círculo que se llena → bombillo blanco; sale a 0,8 s. Solo la primera visita de la sesión (sessionStorage `psic-carga`), nunca con movimiento reducido. Usa el bombillo de la barra (dos líneas en la base); favicon.svg y los íconos PNG ya pasados también a dos líneas.
+Animaciones aplicadas: FAQ que se despliega (`::details-content`, 0,24 s; en Safari abre sin animar), entrada escalonada del inicio (60 ms; tras el bombillo si sale), pasos uno tras otro (70 ms). Título y texto del inicio solo suben, sin fundido: con fundido el LCP pasaba de 1,9 a 2,5 s. LCP final 1,9 s. Descartadas: hover en tarjetas de terapias, contador en cifras. Testimonios: con el carrusel.
+Sin librerías ni Tailwind: todo CSS.
+
 Pendiente de Daryeli: los testimonios (se pondrán en carrusel uno por uno) y si hay permiso para publicarlos.
 Inicio: solo «Psicóloga clínica» y «Terapia cognitivo-conductual». Sesiones de 60 min; pareja «un poco más», sin cifra.
 **Ojo reserva:** la base dice 50 min individual y 60 pareja (`supabase/migrations/20260825120000_base.sql:44`, tabla `services`). Hay que pasarlo a 60 y fijar la de pareja con Daryeli.
