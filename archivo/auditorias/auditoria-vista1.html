@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auditoría · Vista 1</title>
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --papel:#FDFAF7; --papel-2:#FAF4EE; --tinta:#2C3E50; --suave:#55697A;
+  --arcilla:#A67B5B; --arcilla-cl:#C6A783; --arcilla-sv:#F3E9DE; --arcilla-dp:#8C6246;
+  --salvia:#5A7060; --salvia-dp:#3E4F44; --salvia-sv:#E8EDE6;
+  --alto:#9A2F2F; --medio:#8A6A1F; --bajo:#4A6B5A;
+  --linea:rgba(166,123,91,.20); --linea-f:rgba(166,123,91,.42);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font:400 16px/1.65 var(--texto);-webkit-text-size-adjust:100%}
+code{font:500 .9em/1 ui-monospace,"Cascadia Mono",Consolas,monospace;
+  background:var(--arcilla-sv);padding:.12em .35em;border-radius:4px}
+
+/* ============ CABECERA ============ */
+.cab{border-bottom:1px solid var(--linea);background:var(--papel-2)}
+.cab-in{max-width:64rem;margin:0 auto;padding:3.5rem 1.5rem 2.75rem}
+.rotulo{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--arcilla-dp);font-weight:500;margin:0 0 1rem}
+.cab h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,3rem);
+  line-height:1.06;letter-spacing:-.02em;margin:0 0 1.1rem;max-width:20ch}
+.lectura{max-width:54ch;margin:0;color:var(--suave);line-height:1.7}
+.lectura b{color:var(--tinta);font-weight:600}
+
+.diales{display:flex;flex-wrap:wrap;gap:2.5rem;margin:2.25rem 0 0;padding:0}
+.diales dt{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--suave);margin-bottom:.4rem}
+.diales .cifra{font-family:var(--display);font-size:1.9rem;font-weight:600;line-height:1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:block}
+.diales dd{margin:.35rem 0 0;font-size:.8rem;color:var(--suave);max-width:17ch;line-height:1.5}
+
+/* ============ ÍNDICE ============ */
+.indice{max-width:64rem;margin:0 auto;padding:2.75rem 1.5rem 0}
+.indice h2{font-family:var(--display);font-size:1.15rem;font-weight:600;margin:0 0 1.1rem;
+  letter-spacing:-.01em}
+.indice ol{margin:0;padding:0;list-style:none;border-top:1px solid var(--linea)}
+@media(min-width:820px){.indice ol{display:grid;grid-template-columns:1fr 1fr;column-gap:2.75rem}}
+.indice li{border-bottom:1px solid var(--linea)}
+.indice a{display:flex;align-items:baseline;gap:.9rem;padding:.7rem 0;
+  text-decoration:none;color:inherit;font-size:.92rem;line-height:1.4}
+.indice a:hover .nom{color:var(--arcilla-dp)}
+.indice .num{font-family:var(--display);font-weight:600;font-size:.88rem;color:var(--arcilla);
+  flex:none;width:1.5rem;font-variant-numeric:tabular-nums}
+.indice .nom{flex:1}
+
+.sev{flex:none;font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  padding:.16rem .5rem;border-radius:999px;line-height:1.5;white-space:nowrap}
+.sev-alto{background:rgba(154,47,47,.10);color:var(--alto)}
+.sev-medio{background:rgba(138,106,31,.13);color:var(--medio)}
+.sev-bajo{background:rgba(74,107,90,.13);color:var(--bajo)}
+.sev-preg{background:var(--arcilla-sv);color:var(--arcilla-dp)}
+
+/* ============ HALLAZGOS ============ */
+.cuerpo{max-width:64rem;margin:0 auto;padding:1rem 1.5rem 4rem}
+.hallazgo{padding:3.25rem 0;border-bottom:1px solid var(--linea)}
+.hallazgo:last-of-type{border-bottom:0}
+.h-cab{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.h-num{font-family:var(--display);font-size:2.5rem;font-weight:600;line-height:1;
+  color:var(--arcilla-cl);letter-spacing:-.03em;flex:none}
+.hallazgo h2{font-family:var(--display);font-size:1.5rem;font-weight:600;line-height:1.2;
+  letter-spacing:-.018em;margin:0;flex:1 1 16rem;min-width:0}
+.hallazgo p{max-width:64ch;line-height:1.75}
+.hallazgo > p:first-of-type{margin-top:0}
+
+.medido{margin:0 0 1.6rem;padding:1rem 1.15rem;background:#fff;
+  border:1px solid var(--linea);border-left:3px solid var(--arcilla-cl);
+  border-radius:0 10px 10px 0;
+  font:400 .84rem/1.8 ui-monospace,"Cascadia Mono",Consolas,monospace;color:var(--suave)}
+.medido b{color:var(--tinta);font-weight:600}
+.medido i{font-style:normal;color:var(--arcilla-dp);font-weight:600}
+
+.hago{margin:1.75rem 0 0;padding:1.15rem 1.3rem;background:var(--salvia-sv);
+  border-radius:12px;max-width:64ch}
+.hago > strong{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--salvia-dp);margin-bottom:.5rem;font-weight:600}
+.hago p{margin:0;font-size:.95rem;max-width:none;line-height:1.7}
+.hago p + p{margin-top:.7rem}
+
+/* ============ PANELES DE MUESTRA ============ */
+.par{display:grid;gap:1.1rem;margin:1.75rem 0 0;grid-template-columns:1fr}
+@media(min-width:760px){
+  .par{grid-template-columns:1fr 1fr}
+  .par-3{grid-template-columns:repeat(3,1fr)}
+}
+.panel{border:1px solid var(--linea);border-radius:14px;overflow:hidden;background:#fff;margin:0}
+.panel figcaption{padding:.6rem .9rem;font-size:.74rem;font-weight:600;letter-spacing:.03em;
+  border-bottom:1px solid var(--linea);color:var(--suave);background:var(--papel-2)}
+.panel .dentro{padding:1.4rem 1.25rem}
+.panel.malo figcaption{color:var(--alto);background:rgba(154,47,47,.06)}
+.panel.bueno figcaption{color:var(--bajo);background:rgba(74,107,90,.08)}
+
+.muestra h3{font-size:1.65rem;line-height:1.15;letter-spacing:-.022em;margin:0 0 .5rem;
+  font-weight:600}
+.muestra p{font-size:.92rem;color:var(--suave);margin:0 0 1.15rem;line-height:1.6;max-width:none}
+.muestra h4{font-size:1.02rem;margin:0;font-weight:600;letter-spacing:-.012em}
+.tipo-sis{font-family:system-ui,"Segoe UI",sans-serif}
+.tipo-marca h3,.tipo-marca h4{font-family:var(--display)}
+
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.mot{border:1px solid var(--arcilla-cl);border-radius:14px;background:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;
+  min-height:108px;padding:.9rem .6rem;text-align:center;margin:0}
+.mot .nom{font-size:.82rem;font-weight:500;line-height:1.3;display:grid;place-items:center;
+  min-height:2.6em}
+.disco{width:38px;height:38px;border-radius:50%;background:var(--salvia);color:#fff;
+  display:grid;place-items:center;flex:none}
+.disco svg{width:18px;height:18px}
+.tinta{color:var(--suave);display:grid;place-items:center;height:38px}
+.tinta svg{width:20px;height:20px}
+.mot-foto{border:1px solid var(--arcilla-cl);border-radius:14px;background:#fff;overflow:hidden;
+  display:flex;flex-direction:column;margin:0}
+.mot-foto img{width:100%;height:76px;object-fit:cover;display:block;background:var(--arcilla-sv)}
+.mot-foto figcaption{font-size:.82rem;font-weight:500;line-height:1.3;
+  padding:.6rem .7rem .75rem;text-align:center;border:0;background:none;color:inherit;
+  letter-spacing:0}
+
+.nombres{margin:0;padding:0;list-style:none;font-size:.95rem;line-height:2.1}
+.nombres li{border-bottom:1px solid var(--linea)}
+.nombres li:last-child{border-bottom:0}
+
+.radios{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1.5rem 0 0}
+.rad{padding:.28rem .55rem;background:var(--salvia-dp);color:#fff;font-size:.74rem;font-weight:500}
+.rad-7{border-radius:7px}.rad-8{border-radius:8px}.rad-p{border-radius:999px}
+.pie-rad{font-size:.78rem;color:var(--suave);margin:.7rem 0 0}
+
+.tiras{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.5rem 0 0;padding:0;list-style:none}
+.tiras li{width:72px;height:72px;border-radius:10px;border:1px solid var(--linea);
+  display:grid;align-content:end;padding:.35rem;font:500 .6rem/1 ui-monospace,Consolas,monospace;
+  color:#fff}
+
+.cierre{max-width:64rem;margin:0 auto;padding:0 1.5rem 5rem}
+.cierre h2{font-family:var(--display);font-size:1.5rem;font-weight:600;margin:0 0 1.1rem;
+  letter-spacing:-.018em}
+.cierre ol{max-width:62ch;padding-left:1.2rem;line-height:1.9}
+.cierre li::marker{color:var(--arcilla);font-weight:600}
+</style>
+</head>
+<body>
+
+<header class="cab">
+  <div class="cab-in">
+    <p class="rotulo">Psicconsciente · vista 1 de la reserva</p>
+    <h1>Lo que todavía delata que la pantalla la maquetó una máquina</h1>
+    <p class="lectura">Auditoría de <b>maqueta-vista1-salvia.html</b> a 390 y a 1280 px con la skill
+      de taste. Todo lo que va marcado como «medido» sale de leer el DOM en el navegador, no de
+      mirar la pantalla. Diez hallazgos, ordenados por cuánto cambian el resultado.</p>
+
+    <dl class="diales">
+      <div><dt>Variación</dt><dd class="cifra">4</dd><dd>Un formulario se lee mejor si es previsible</dd></div>
+      <div><dt>Motion</dt><dd class="cifra">4</dd><dd>Solo lo que confirma que algo ha cambiado</dd></div>
+      <div><dt>Densidad</dt><dd class="cifra">5</dd><dd>Una decisión por bloque, con aire</dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav class="indice" aria-label="Índice de hallazgos">
+  <h2>Los diez</h2>
+  <ol>
+    <li><a href="#f1"><span class="num">01</span><span class="nom">La maqueta perdió la tipografía de la marca</span><span class="sev sev-alto">Alto</span></a></li>
+    <li><a href="#f2"><span class="num">02</span><span class="nom">En escritorio vuelve el patrón que se quitó en móvil</span><span class="sev sev-alto">Alto</span></a></li>
+    <li><a href="#f3"><span class="num">03</span><span class="nom">Los nueve iconos están dibujados a mano</span><span class="sev sev-alto">Alto</span></a></li>
+    <li><a href="#f4"><span class="num">04</span><span class="nom">Title Case en español</span><span class="sev sev-medio">Medio</span></a></li>
+    <li><a href="#f5"><span class="num">05</span><span class="nom">Tres preguntas seguidas con el mismo molde</span><span class="sev sev-medio">Medio</span></a></li>
+    <li><a href="#f6"><span class="num">06</span><span class="nom">«A tu ritmo, 60 días», dos veces idéntico</span><span class="sev sev-medio">Medio</span></a></li>
+    <li><a href="#f7"><span class="num">07</span><span class="nom">Cinco radios de esquina distintos</span><span class="sev sev-bajo">Bajo</span></a></li>
+    <li><a href="#f8"><span class="num">08</span><span class="nom">El punto de color antes de «Sugerida»</span><span class="sev sev-bajo">Bajo</span></a></li>
+    <li><a href="#f9"><span class="num">09</span><span class="nom">Remates de accesibilidad y estados que faltan</span><span class="sev sev-bajo">Bajo</span></a></li>
+    <li><a href="#f10"><span class="num">10</span><span class="nom">La salvia no existe en la landing</span><span class="sev sev-preg">Decides tú</span></a></li>
+  </ol>
+</nav>
+
+<main class="cuerpo">
+
+<article class="hallazgo" id="f1">
+  <header class="h-cab"><span class="h-num">01</span>
+    <h2>La maqueta perdió la tipografía de la marca</h2>
+    <span class="sev sev-alto">Alto</span></header>
+
+  <p class="medido">La maqueta declara <b>font: 400 16px/1.5 Inter, system-ui</b> y no carga Inter
+    por ningún sitio: <i>0</i> reglas @font-face, <i>0</i> enlaces a fonts.googleapis.<br>
+    Sonda en el navegador: el mismo texto mide <i>136,35 px</i> pidiendo Inter y <i>136,35 px</i>
+    pidiendo una familia inventada. Idénticos, así que Inter no está.<br>
+    Lo que se pinta en tu pantalla ahora mismo es <b>Segoe UI</b>.</p>
+
+  <p>La landing sí tiene identidad tipográfica, y está bien montada: <code>--font-display</code> es
+    Fraunces para los títulos, <code>--font-body</code> es Inter para el texto, y las dos llevan
+    familias de respaldo con las métricas ajustadas para que no salte el diseño mientras cargan. La
+    página de reserva no usa ninguna de las dos.</p>
+
+  <p>El resultado es que «Reserva tu consulta» sale en la fuente que decida el sistema operativo de
+    quien mire: Segoe UI en Windows, San Francisco en un Mac. Es la única página de la web que no
+    titula en Fraunces. Y una pantalla tipografiada por el sistema operativo es exactamente lo que
+    se ve cuando nadie eligió la tipografía, que es el reproche de fondo detrás de «esto parece
+    hecho por una IA».</p>
+
+  <div class="par">
+    <figure class="panel malo">
+      <figcaption>Ahora: lo que pinta el sistema</figcaption>
+      <div class="dentro muestra tipo-sis">
+        <h3>Reserva tu consulta</h3>
+        <p>Cuéntame qué te trae y cuántas consultas quieres. El horario lo vemos enseguida.</p>
+        <h4>¿En qué quieres trabajar?</h4>
+      </div>
+    </figure>
+    <figure class="panel bueno">
+      <figcaption>Con la tipografía de la landing</figcaption>
+      <div class="dentro muestra tipo-marca">
+        <h3>Reserva tu consulta</h3>
+        <p>Cuéntame qué te trae y cuántas consultas quieres. El horario lo vemos enseguida.</p>
+        <h4>¿En qué quieres trabajar?</h4>
+      </div>
+    </figure>
+  </div>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>Traer los tres tokens de <code>style.css</code> tal cual, sin inventar nada: Fraunces para el
+      h1 y para los títulos de bloque, Inter para todo lo demás, con los respaldos de métricas
+      ajustadas que ya tienes escritos.</p>
+    <p>Un apunte de honestidad: la skill desaconseja el serif por defecto y nombra a Fraunces entre
+      las dos que más se repiten en diseño generado. Aquí esa regla no aplica, porque no lo estoy
+      eligiendo yo. Es el activo de marca que ya existe en tu web, y en un rediseño la marca manda
+      por encima de la preferencia genérica.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f2">
+  <header class="h-cab"><span class="h-num">02</span>
+    <h2>En escritorio vuelve el patrón que se quitó en móvil</h2>
+    <span class="sev sev-alto">Alto</span></header>
+
+  <p class="medido">A 1280 px: <i>4</i> tarjetas de <b>177 × 133</b> exactamente iguales, con
+    <i>4</i> discos de salvia de <b>44 px</b>, los cuatro a <b>18,7 px</b> del borde superior.<br>
+    Justo debajo: <i>3</i> tarjetas de <b>240 × 180</b> exactamente iguales.<br>
+    Dos rejillas de tarjetas idénticas, una detrás de otra, en la misma pantalla.</p>
+
+  <p>Esto lo dice el propio archivo en un comentario, cuando explica por qué se quitó en el
+    teléfono: «icono in a circle repetido cuatro veces es el patrón de maquetación generada más
+    reconocible que hay». En móvil se quitó y quedó bien. En escritorio se restauró para arreglar
+    otro problema, el del descuadre de los discos, y con él volvió el patrón entero.</p>
+
+  <p>Tienes las cuatro fotos en la carpeta, y ya salen en la landing para estos mismos cuatro
+    motivos: <code>ansiedad.webp</code>, <code>autoestima.webp</code>, <code>pareja.webp</code> y
+    <code>duelo.webp</code>. Quien llega a reservar viene de verlas hace treinta segundos.
+    Reconocerlas aquí no es solo dejar de parecer plantilla, es continuidad.</p>
+
+  <div class="par par-3">
+    <figure class="panel malo">
+      <figcaption>Ahora: cuatro discos iguales</figcaption>
+      <div class="dentro">
+        <div class="rejilla">
+          <figure class="mot"><span class="disco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/></svg></span><figcaption class="nom">Superar la Ansiedad</figcaption></figure>
+          <figure class="mot"><span class="disco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/></svg></span><figcaption class="nom">Fortalecer tu Autoestima</figcaption></figure>
+        </div>
+      </div>
+    </figure>
+    <figure class="panel">
+      <figcaption>B · el icono en tinta</figcaption>
+      <div class="dentro">
+        <div class="rejilla">
+          <figure class="mot"><span class="tinta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/></svg></span><figcaption class="nom">Superar la ansiedad</figcaption></figure>
+          <figure class="mot"><span class="tinta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/></svg></span><figcaption class="nom">Fortalecer tu autoestima</figcaption></figure>
+        </div>
+      </div>
+    </figure>
+    <figure class="panel bueno">
+      <figcaption>C · la foto de la landing</figcaption>
+      <div class="dentro">
+        <div class="rejilla">
+          <figure class="mot-foto"><img src="ansiedad.webp" alt="" loading="lazy" decoding="async"><figcaption>Superar la ansiedad</figcaption></figure>
+          <figure class="mot-foto"><img src="autoestima.webp" alt="" loading="lazy" decoding="async"><figcaption>Fortalecer tu autoestima</figcaption></figure>
+        </div>
+      </div>
+    </figure>
+  </div>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>La <b>C</b>, y con diferencia. Es la que rompe el patrón de verdad, la que aprovecha material
+      que ya tienes elegido y encuadrado, y la única que hace que la pantalla de reserva se parezca
+      a la web de la que viene el visitante. Además resuelve el hallazgo 03 de paso, porque cuatro
+      de los nueve iconos dejan de existir.</p>
+    <p>La <b>B</b> es el arreglo barato, si prefieres no meter imágenes dentro de un formulario.
+      Quita las cuatro monedas verdes y devuelve el protagonismo al nombre, que es lo que la persona
+      lee de verdad. Pero deja la pantalla sin una sola imagen salvo la foto de Daryeli.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f3">
+  <header class="h-cab"><span class="h-num">03</span>
+    <h2>Los nueve iconos están dibujados a mano</h2>
+    <span class="sev sev-alto">Alto</span></header>
+
+  <p class="medido">El objeto <b>I</b> del script define <i>9</i> glifos como cadenas de paths SVG
+    escritas a mano: video, pin, ansiedad, autoestima, pareja, duelo, reloj, cal, check.</p>
+
+  <p>La skill lo prohíbe sin matices: los iconos salen de una librería mantenida, nunca de trazar
+    los paths uno mismo. La razón práctica se ve aquí mejor que en ningún otro sitio, y otra vez la
+    admite el propio archivo: tapando el nombre, nadie distingue el glifo de «Superar la Ansiedad»
+    del de «Acompañar un Duelo». Un icono que no se puede adivinar no informa, decora. Y decoración
+    repetida cuatro veces es justo lo que delata.</p>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>Si entra la opción C del hallazgo anterior, cuatro de los nueve desaparecen solos. Para los
+      cinco que quedan (vídeo, mapa, reloj, calendario y el check) usar <b>Phosphor</b> con un
+      grosor de trazo único para toda la vista. Es la librería que recomienda la skill, tiene los
+      cinco, y no añade peso real porque se copian los glifos sueltos.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f4">
+  <header class="h-cab"><span class="h-num">04</span>
+    <h2>Title Case en español</h2>
+    <span class="sev sev-medio">Medio</span></header>
+
+  <p class="medido">Los cuatro motivos, leídos del DOM: <b>Superar la Ansiedad</b>,
+    <b>Fortalecer tu Autoestima</b>, <b>Sanar en Pareja</b>, <b>Acompañar un Duelo</b>.</p>
+
+  <p>En español solo lleva mayúscula la primera palabra de la frase y los nombres propios. Poner en
+    mayúscula cada palabra importante es una regla del inglés, y cuando aparece en un texto en
+    español casi siempre es porque la lista se escribió mirando un ejemplo en inglés. Es de los
+    detalles que la gente no sabe nombrar pero sí nota, porque suena a rótulo importado.</p>
+
+  <div class="par">
+    <figure class="panel malo">
+      <figcaption>Ahora</figcaption>
+      <div class="dentro"><ul class="nombres">
+        <li>Superar la Ansiedad</li><li>Fortalecer tu Autoestima</li>
+        <li>Sanar en Pareja</li><li>Acompañar un Duelo</li></ul></div>
+    </figure>
+    <figure class="panel bueno">
+      <figcaption>En español</figcaption>
+      <div class="dentro"><ul class="nombres">
+        <li>Superar la ansiedad</li><li>Fortalecer tu autoestima</li>
+        <li>Sanar en pareja</li><li>Acompañar un duelo</li></ul></div>
+    </figure>
+  </div>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>Cambiar las cuatro cadenas. Es una línea de JavaScript y está entre los cambios con mejor
+      relación entre esfuerzo y resultado de toda la lista. Conviene revisar de paso la landing,
+      porque estos cuatro nombres salen también allí.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f5">
+  <header class="h-cab"><span class="h-num">05</span>
+    <h2>Tres preguntas seguidas con el mismo molde</h2>
+    <span class="sev sev-medio">Medio</span></header>
+
+  <p class="medido">Los tres títulos de bloque, en orden:<br>
+    <b>¿Cómo prefieres la consulta?</b><br><b>¿En qué quieres trabajar?</b><br>
+    <b>¿Una consulta o un proceso?</b></p>
+
+  <p>Cada una por separado está bien escrita y suena a persona. El problema es el ritmo: tres
+    interrogativas seguidas, de longitud parecida y con la misma cadencia, se leen como un molde
+    rellenado tres veces. Es el equivalente en texto de las tres tarjetas iguales.</p>
+
+  <p>La primera es además la que menos falta hace. Un interruptor de dos opciones con los rótulos
+    «Online» y «Presencial» a la vista se explica solo; nadie necesita que le pregunten qué es lo que
+    está viendo. Quitarla recupera unos 90 px de la primera pantalla del móvil, donde hoy
+    <b>la primera decisión empieza en el píxel 254</b> de 844.</p>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>Quitar la primera pregunta y dejar el interruptor suelto debajo de la entradilla. Las otras
+      dos se quedan: ahí sí hay algo que preguntar, y separadas por un bloque entero ya no riman.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f6">
+  <header class="h-cab"><span class="h-num">06</span>
+    <h2>«A tu ritmo, 60 días», dos veces idéntico</h2>
+    <span class="sev sev-medio">Medio</span></header>
+
+  <p class="medido">Cuerpo de las tres tarjetas de consulta:<br>
+    1 consulta: <b>Una cita puntual</b><br>3 consultas: <b>A tu ritmo, 60 días</b><br>
+    5 consultas: <b>A tu ritmo, 60 días</b></p>
+
+  <p>Dos de las tres dicen exactamente lo mismo. Cuando una línea se repite palabra por palabra
+    entre opciones que hay que comparar, deja de ayudar a decidir y pasa a ser relleno: el ojo la lee
+    dos veces y no saca nada nuevo. Es el mismo criterio con el que ya quitaste el «25 $ c/u» de los
+    paquetes y el «1 hora · 30 $» de los motivos.</p>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>Sacar el plazo de las tarjetas y ponerlo una sola vez debajo del bloque, como condición común
+      de los paquetes. Dentro de la tarjeta, lo que distingue la de 3 de la de 5 es el número y el
+      precio, y los dos ya están ahí.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f7">
+  <header class="h-cab"><span class="h-num">07</span>
+    <h2>Cinco radios de esquina distintos</h2>
+    <span class="sev sev-bajo">Bajo</span></header>
+
+  <p class="medido">Radios contados sobre los elementos visibles a 1280 px:
+    <b>50 %</b> (9 veces), <b>999 px</b> (11), <b>14 px</b> (8), <b>12 px</b> (1), <b>7 px</b> (2).<br>
+    La escala de la landing es otra: <b>8 / 16 / 28 / 999</b>.</p>
+
+  <p>Los círculos y las pastillas están bien, son formas con función. Los que sobran son los dos
+    valores sueltos: el <b>7 px</b> del badge «Ahorras», que no rima con nada de la pantalla, y el
+    <b>12 px</b> del aviso de maqueta, que no llegará a producción. Y por encima de eso, el 14 px de
+    las tarjetas no coincide con el 16 px que la landing usa para lo mismo.</p>
+
+  <p class="radios">
+    <span class="rad rad-7">Ahorras 15 $</span>
+    <span class="rad rad-8">Ahorras 15 $</span>
+    <span class="rad rad-p">Ahorras 15 $</span>
+  </p>
+  <p class="pie-rad">7 px (ahora) · 8 px (la escala de la landing) · pastilla completa</p>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>El badge a <b>999 px</b>: es una pastilla pequeña con dos palabras dentro, y es la forma que
+      ya usan el interruptor de modalidad, el botón y el enlace de WhatsApp. Y subir las tarjetas de
+      14 a <b>16 px</b> para que la reserva y la landing tengan el mismo canto. Con eso la pantalla
+      se queda en tres radios con regla: círculo, pastilla y tarjeta.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f8">
+  <header class="h-cab"><span class="h-num">08</span>
+    <h2>El punto de color antes de «Sugerida»</h2>
+    <span class="sev sev-bajo">Bajo</span></header>
+
+  <p class="medido">Regla <b>.plan-eti::before</b>: un círculo de <i>5 px</i> en salvia delante de la
+    palabra «Sugerida».</p>
+
+  <p>Los puntitos de color delante de las etiquetas están en la lista de patrones prohibidos, con
+    una excepción: valen cuando marcan un estado real y se usan con cuentagotas. Este cumple las dos
+    condiciones, porque «sugerida» es un estado de verdad y hay exactamente uno en toda la pantalla.
+    Se salva, pero se salva por poco, y es el tipo de adorno que se acumula sin que nadie decida
+    añadirlo.</p>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>Dejarlo, si te gusta. Es el caso límite que la regla permite. Si más adelante aparece un
+      segundo punto en otra parte de la reserva, entonces hay que quitar los dos.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f9">
+  <header class="h-cab"><span class="h-num">09</span>
+    <h2>Remates de accesibilidad y estados que faltan</h2>
+    <span class="sev sev-bajo">Bajo</span></header>
+
+  <p class="medido">Contraste del borde de arcilla <b>#C6A783</b> contra blanco: <i>2,27:1</i>.
+    La WCAG pide <b>3:1</b> para el contorno de un control.<br>
+    Tu token <b>--marca #A8825F</b> da <i>3,53:1</i> y ya está escrito en el archivo.<br>
+    Lo demás medido está bien: objetivos táctiles todos ≥ 44 px, sin desbordamiento horizontal a
+    390, texto suave <i>6,2:1</i>, badge blanco sobre salvia oscura <i>8,73:1</i>.</p>
+
+  <p>Tres cosas más, pequeñas. Hay <b>un guión largo</b> en el aria-label «Cómo llegar, se abre en el
+    mapa», y el guión largo está prohibido también en el texto que solo oye un lector de pantalla.
+    <b>No hay modo oscuro</b>, y este es un formulario de salud que se abre de noche desde la cama.
+    Y <b>no hay estados de carga ni de error</b>: la vista 1 no envía nada, así que hoy no se nota,
+    pero al portarla a <code>reservar/</code> los va a necesitar.</p>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>El borde y el guión, ahora, porque son dos líneas. El modo oscuro, cuando esté cerrado el
+      diseño en claro, definiendo los tokens en un bloque aparte en vez de tocar regla por regla.
+      Los estados, en el momento de portar a la página real, no antes.</p>
+  </div>
+</article>
+
+<article class="hallazgo" id="f10">
+  <header class="h-cab"><span class="h-num">10</span>
+    <h2>La salvia no existe en la landing</h2>
+    <span class="sev sev-preg">Decides tú</span></header>
+
+  <p class="medido">Paleta de <b>style.css</b>: terracota <b>#A67B5B</b>, pizarra <b>#2C3E50</b>,
+    pizarra suave <b>#55697A</b>, cremas. <i>Ningún verde.</i><br>
+    Paleta de la maqueta: arcilla <b>#A8825F</b> y salvia <b>#5A7060</b> como color de acción.</p>
+
+  <ul class="tiras">
+    <li style="background:#A67B5B">A67B5B</li>
+    <li style="background:#2C3E50">2C3E50</li>
+    <li style="background:#55697A">55697A</li>
+    <li style="background:#5A7060">5A7060</li>
+  </ul>
+
+  <p>Los tres primeros son la marca. El cuarto es el color con el que la reserva pinta el botón, el
+    aro de lo elegido y el foco, y es un color que el visitante no ha visto en ninguna de las
+    páginas anteriores. Esto no es un defecto de la maqueta: es una decisión que en algún momento se
+    tomó y que ahora afecta a dos páginas, así que no la toco por mi cuenta.</p>
+
+  <p>Hay un antecedente que conviene tener delante: pediste expresamente que el azul pizarra y el
+    terracota convivieran y se vieran los dos, y la salvia entró ocupando el sitio del azul.</p>
+
+  <div class="hago">
+    <strong>Qué haría</strong>
+    <p>Devolver el papel de «decide» a la <b>pizarra suave #55697A</b> y dejar la arcilla dibujando
+      las líneas, que es el reparto que ya habías acordado. La pizarra suave pesa casi lo mismo que
+      la salvia, así que la pantalla no se oscurece: solo cambia de temperatura, y pasa a estar
+      hecha con colores que ya existen en la web.</p>
+    <p>La otra salida es quedarse con la salvia y subirla a la landing como acento. Es defendible, y
+      el verde le sienta bien a una consulta de psicología, pero es trabajo en la otra página y hay
+      que hacerlo entero: media web con verde y media sin él es peor que cualquiera de las dos.</p>
+  </div>
+</article>
+
+</main>
+
+<section class="cierre">
+  <h2>Por dónde empezaría</h2>
+  <ol>
+    <li><b>La tipografía.</b> Es un bloque de tokens copiado de <code>style.css</code> y es lo que
+      más cambia la sensación de la pantalla por unidad de riesgo.</li>
+    <li><b>Las fotos en los cuatro motivos.</b> Rompe el patrón, reutiliza material que ya tienes y
+      cose la reserva con la landing.</li>
+    <li><b>Los nombres en minúscula y el plazo repetido.</b> Dos ediciones de texto, cinco minutos,
+      y quitan dos tics de golpe.</li>
+    <li><b>Los iconos que sobrevivan, a Phosphor.</b> Y los radios, a tres valores con regla.</li>
+    <li><b>El color.</b> Cuando me digas, porque afecta también a la landing.</li>
+  </ol>
+</section>
+
+</body>
+</html>

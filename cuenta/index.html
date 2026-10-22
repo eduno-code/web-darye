@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mis consultas · Psicconsciente</title>
+<meta name="description" content="Tus consultas con Daryeli Romero: la próxima cita, tu historial y tus paquetes de sesiones.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="../style.css?v=42">
+<link rel="stylesheet" href="../panel.css?v=6">
+<link rel="stylesheet" href="cuenta.css?v=5">
+</head>
+<body class="cuenta">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<!-- Lo que cambia sin recargar se anuncia aparte: un lector de pantalla no lee
+     un texto que se sustituye en silencio. -->
+<p class="sr-only" id="anuncio" role="status" aria-live="polite"></p>
+
+<div class="pnl">
+
+  <!-- El menú lo dibuja ../panel.js: lo comparten esta página y el
+       asistente de reserva, y escribirlo en los dos archivos significaría
+       que cambiar una entrada obliga a acordarse del otro. -->
+  <div id="panelMenu"></div>
+
+  <!-- ============ EL CONTENIDO ============ -->
+  <main class="pnl-lienzo">
+
+    <p class="cta-cargando" id="cargando">Buscando tus consultas…</p>
+
+    <!-- ---- NO HAY NADA TODAVÍA ---- -->
+    <section class="cta-vacio" id="vacio" aria-labelledby="tVacio" hidden>
+      <h1 id="tVacio">Todavía no has reservado ninguna consulta</h1>
+      <p>Cuando reserves, aquí verás tu próxima cita, podrás cambiarla de horario y consultar tu historial.</p>
+      <a href="../reservar/" class="btn btn-primary">Reservar mi primera consulta</a>
+    </section>
+
+    <div class="cta-contenido" id="contenido" hidden>
+
+      <!-- ---- VISTA · MIS CONSULTAS ---- -->
+      <div class="pnl-panel" id="vConsultas" role="region" aria-label="Mis consultas">
+        <h1 class="cta-saludo" id="saludo">Tus consultas</h1>
+
+        <section class="cta-bloque" id="bloqueProxima" aria-labelledby="tProxima" hidden>
+          <h2 class="cta-rotulo" id="tProxima">Tu próxima consulta</h2>
+          <div id="proxima"></div>
+        </section>
+
+        <section class="cta-bloque" id="bloqueOtras" aria-labelledby="tOtras" hidden>
+          <h2 class="cta-rotulo" id="tOtras">También tienes</h2>
+          <ul class="cta-filas" id="otras"></ul>
+        </section>
+
+        <section class="cta-bloque" id="bloquePaquetes" aria-labelledby="tPaquetes" hidden>
+          <h2 class="cta-rotulo" id="tPaquetes">Tus paquetes</h2>
+          <div class="cta-bonos">
+            <ul class="cta-filas" id="paquetes"></ul>
+          </div>
+        </section>
+
+        <section class="cta-bloque" id="bloqueHistorial" aria-labelledby="tHistorial" hidden>
+          <h2 class="cta-rotulo" id="tHistorial">Historial</h2>
+          <!-- Sin acciones a propósito: una consulta pasada no se puede mover
+               ni cancelar, y ofrecer un botón que va a fallar es peor. -->
+          <ul class="cta-filas cta-filas-quietas" id="historial"></ul>
+        </section>
+      </div>
+
+      <!-- ---- VISTA · MIS DATOS ---- -->
+      <div class="pnl-panel" id="vDatos" role="region" aria-label="Mis datos" hidden>
+        <h1 class="cta-saludo">Tus datos</h1>
+
+        <section class="cta-bloque">
+          <div class="cta-ficha" id="fichaResumen">
+            <p class="cta-ficha-nombre" id="fNombre"></p>
+            <!-- Una lista de descripción y no dos párrafos: son pares de
+                 etiqueta y valor, que es para lo que existe dl. -->
+            <dl class="cta-ficha-datos">
+              <dt>Correo</dt>   <dd id="fCorreo"></dd>
+              <dt>Teléfono</dt> <dd id="fTel"></dd>
+            </dl>
+            <button type="button" class="cta-enlace" id="corregir">¿Algo no está bien? Corregir</button>
+          </div>
+
+          <form class="cta-edicion" id="camposDatos" novalidate hidden>
+            <p class="cta-campo">
+              <label for="nombre">Nombre y apellido</label>
+              <input type="text" id="nombre" name="nombre" autocomplete="name" required
+                     aria-describedby="errNombre" enterkeyhint="next">
+              <span class="cta-error" id="errNombre" role="alert" hidden></span>
+            </p>
+
+            <!-- Un solo campo con el número completo, prefijo incluido, y no el
+                 desplegable partido del registro: allí se compone desde cero,
+                 aquí lo tienes delante y solo cambias un dígito. -->
+            <p class="cta-campo">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" name="telefono" autocomplete="tel"
+                     inputmode="tel" required aria-describedby="ayudaTel errTelefono" enterkeyhint="done">
+              <span class="cta-ayuda" id="ayudaTel">Con el código de país delante, así: +58 412 123 4567</span>
+              <span class="cta-error" id="errTelefono" role="alert" hidden></span>
+            </p>
+
+            <p class="cta-ayuda">El correo no se cambia aquí: es el de tu cuenta.</p>
+
+            <p class="cta-acciones">
+              <button type="button" class="btn btn-secondary" id="cancelarDatos">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="guardarDatos">Guardar</button>
+            </p>
+            <p class="cta-error" id="errGuardar" role="alert" hidden></p>
+          </form>
+        </section>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============ PLANTILLAS ============
+     El marcado vive aquí y no dentro de cadenas en el JavaScript: así se puede
+     leer, indentar y revisar como marcado, que es lo que es. -->
+
+<template id="pProxima">
+  <article class="cta-destacada">
+    <p class="cta-destacada-dia"><time class="js-dia"></time></p>
+    <p class="cta-destacada-otra js-caracas" hidden></p>
+    <p class="cta-destacada-que"><span class="js-servicio"></span> <span class="cta-punto" aria-hidden="true">·</span> <span class="js-detalle"></span></p>
+    <p class="cta-destacada-estado"><span class="cta-marca js-estado"></span></p>
+    <p class="cta-destacada-acciones">
+      <a class="btn btn-primary js-mover" href="#">Cambiar de horario</a>
+      <a class="cta-enlace js-gestionar" href="#">Ver o cancelar</a>
+    </p>
+  </article>
+</template>
+
+<template id="pFila">
+  <li class="cta-fila">
+    <a class="cta-fila-enlace" href="#">
+      <span class="cta-fila-cuando"><time class="js-dia"></time></span>
+      <span class="cta-fila-que js-servicio"></span>
+      <span class="cta-marca js-estado"></span>
+      <span class="cta-fila-flecha" aria-hidden="true"><svg><use href="#i-flecha"/></svg></span>
+    </a>
+  </li>
+</template>
+
+<template id="pFilaQuieta">
+  <li class="cta-fila">
+    <span class="cta-fila-enlace">
+      <span class="cta-fila-cuando"><time class="js-dia"></time></span>
+      <span class="cta-fila-que js-servicio"></span>
+      <span class="cta-marca js-estado"></span>
+    </span>
+  </li>
+</template>
+
+<template id="pPaquete">
+  <li class="cta-fila cta-fila-bono">
+    <span class="cta-fila-enlace">
+      <span class="cta-bono-txt">
+        <strong class="js-nombre"></strong>
+        <small class="js-saldo"></small>
+      </span>
+      <span class="cta-marca js-estado"></span>
+      <a class="cta-enlace js-usar" href="../reservar/">Usar una sesión</a>
+    </span>
+  </li>
+</template>
+
+<script src="../fechas.js?v=42"></script>
+<script src="../supabase.js?v=44"></script>
+<script src="../panel.js?v=1"></script>
+<script src="cuenta.js?v=4"></script>
+</body>
+</html>

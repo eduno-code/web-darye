@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Limpiar las vistas de reservar</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     LOS DOS LADOS SON LA PAGINA REAL.
+
+     El de la derecha no es una maqueta: es el MISMO asistente con una hoja de
+     estilos inyectada que esconde lo que se propone quitar. Asi la comparacion
+     no puede favorecerme sin querer, y de paso demuestra que el recorte
+     funciona de verdad en la pagina que existe.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --tinta:#2C3E50; --suave:#55697A;
+  --fondo:#EFEAE3; --carta:#FFFFFF;
+  --linea:rgba(166,123,91,.28);
+  --marca-dk:#6E4C36;
+  --quita:#A33A2E; --quita-sv:#FBEAE8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);
+     font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+
+header{
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  padding:.9rem 1.25rem;
+  background:rgba(239,234,227,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--linea);
+}
+h1{margin:0;font-size:.95rem;font-weight:600}
+h1 small{display:block;font-weight:400;font-size:.78rem;color:var(--suave)}
+
+.grupo{display:flex;gap:.3rem;background:#E4DDD3;padding:.25rem;border-radius:999px}
+.grupo button{
+  min-height:36px;padding:0 .95rem;border:0;border-radius:999px;
+  background:none;font:inherit;font-size:.83rem;color:var(--suave);cursor:pointer;
+}
+.grupo button[aria-pressed="true"]{
+  background:var(--carta);color:var(--marca-dk);font-weight:600;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+}
+
+main{display:flex;gap:1.25rem;align-items:flex-start;padding:1.25rem}
+.lado{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:.6rem}
+
+.etq{display:flex;align-items:baseline;gap:.5rem;font-size:.82rem;color:var(--suave);padding-left:.15rem}
+.etq b{font-size:.95rem;color:var(--tinta)}
+.alto{margin-left:auto;font-variant-numeric:tabular-nums;font-size:.78rem}
+
+.marco{
+  background:var(--carta);border:1px solid var(--linea);border-radius:14px;
+  overflow:hidden;box-shadow:0 2px 10px -6px rgba(46,42,36,.35);
+}
+iframe{display:block;border:0;width:1180px;height:900px;zoom:var(--z,.52);background:#FDFAF7}
+
+.quitado{
+  margin:0 1.25rem 1.25rem;padding:1rem 1.15rem;
+  background:var(--carta);border:1px solid var(--linea);border-radius:14px;
+  font-size:.87rem;line-height:1.6;
+}
+.quitado h2{margin:0 0 .6rem;font-size:.95rem}
+.quitado ul{margin:0;padding-left:1.1rem}
+.quitado li{margin-bottom:.45rem}
+.quitado li:last-child{margin-bottom:0}
+.quitado b{color:var(--quita)}
+.quitado .nada{color:var(--suave)}
+</style>
+</head>
+<body data-paso="1">
+
+<header>
+  <h1>Limpiar las vistas de reservar<small>Los dos lados son la página real; el de la derecha con lo propuesto oculto</small></h1>
+  <div class="grupo" role="group" aria-label="Paso">
+    <button type="button" data-paso="1" aria-pressed="true">Paso 1 · Tu sesión</button>
+    <button type="button" data-paso="2" aria-pressed="false">Paso 2 · Día y hora</button>
+    <button type="button" data-paso="3" aria-pressed="false">Paso 3 · Pago</button>
+  </div>
+</header>
+
+<main>
+  <div class="lado">
+    <p class="etq"><b>Como está</b> <span class="alto" id="altoA">…</span></p>
+    <div class="marco"><iframe id="fA" title="Como está"></iframe></div>
+  </div>
+  <div class="lado">
+    <p class="etq"><b>Limpia</b> <span class="alto" id="altoB">…</span></p>
+    <div class="marco"><iframe id="fB" title="Limpia"></iframe></div>
+  </div>
+</main>
+
+<div class="quitado" id="quitado"></div>
+
+<script>
+(function () {
+  var fA = document.getElementById('fA'), fB = document.getElementById('fB');
+
+  /* Lo que se propone quitar en cada paso, y el porqué de cada cosa. El CSS se
+     inyecta en el iframe de la derecha; el de la izquierda no se toca. */
+  var PLAN = {
+    1: {
+      css: '#vista1 > .wz-intro { display:none !important; }',
+      dice: [
+        ['La bajada <i>«Cuéntame qué te trae y cuántas consultas quieres. El horario lo vemos enseguida»</i>',
+         'Describe las dos preguntas que están justo debajo, y ya se explican solas. Y lo del horario lo dice la barra de progreso.']
+      ]
+    },
+    2: {
+      css: '#vista2 > .wz-intro { display:none !important; }' +
+           '#contextoDatos { display:none !important; }' +
+           '#vista2 .wz-agenda { display:block !important; }',
+      dice: [
+        ['El resumen «Tu reserva»',
+         'Lo elegiste hace un paso, y el paso 1 ya te lo enseñaba entero en su barra de acciones. Al quitarlo, la parrilla de horas se queda con todo el ancho, que es donde el ancho sí trabaja: caben más horas sin paginar.'],
+        ['La bajada <i>«Estos son los espacios disponibles de Daryeli»</i>',
+         'Una parrilla de horas con los días arriba no necesita que le expliquen que es una parrilla de horas.']
+      ]
+    },
+    3: {
+      css: '',
+      dice: []
+    }
+  };
+
+  function pintar(paso) {
+    var p = PLAN[paso];
+    fA.src = 'reservar/?demo=' + paso;
+    fB.src = 'reservar/?demo=' + paso;
+    fB.dataset.css = p.css;
+
+    var caja = document.getElementById('quitado');
+    if (!p.dice.length) {
+      caja.innerHTML = '<h2>Aquí no propongo quitar nada</h2>' +
+        '<p class="nada">El paso del pago es el más largo de los tres, pero todo lo que hay es trabajo: elegir cuándo pagas, a qué banco, y los datos del comprobante. El resumen «Tu reserva» sí se queda aquí — antes de pagar quieres ver qué estás pagando y cuánto.<br><br>Si algo te chirría, dímelo y lo miramos.</p>';
+      return;
+    }
+    caja.innerHTML = '<h2>Lo que se quita</h2><ul>' +
+      p.dice.map(function (d) { return '<li><b>' + d[0] + '</b><br>' + d[1] + '</li>'; }).join('') +
+      '</ul>';
+  }
+
+  /* El CSS se inyecta al terminar de cargar. Y se mide la altura de los dos,
+     que es la forma mas honesta de enseñar cuanto se recorta. */
+  function alCargar(marco, hueco) {
+    return function () {
+      var d = marco.contentDocument;
+      if (!d) return;
+      if (marco.dataset.css) {
+        var e = d.createElement('style');
+        e.textContent = marco.dataset.css;
+        d.head.appendChild(e);
+      }
+      /* La altura se observa, no se cronometra. Los servicios y las horas llegan
+         por red, asi que cualquier temporizador que yo elija va a estar mal en
+         alguna maquina: la primera version leia a los 900 ms y decia 289 px de
+         una vista que acabo midiendo 798. Un ResizeObserver se entera cuando
+         de verdad cambia, tarde lo que tarde. */
+      var hueco_el = document.getElementById(hueco);
+      var obs = new ResizeObserver(function () {
+        var v = d.querySelector('.wz-vista:not([hidden])');
+        if (v) hueco_el.textContent = Math.round(v.getBoundingClientRect().height) + ' px de alto';
+      });
+      obs.observe(d.body);
+    };
+  }
+  fA.addEventListener('load', alCargar(fA, 'altoA'));
+  fB.addEventListener('load', alCargar(fB, 'altoB'));
+
+  document.querySelector('.grupo').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function (o) {
+      o.setAttribute('aria-pressed', String(o === b));
+    });
+    document.body.dataset.paso = b.dataset.paso;
+    pintar(b.dataset.paso);
+  });
+
+  function ajustar() {
+    var ancho = (document.documentElement.clientWidth - 1.25 * 16 * 3) / 2;
+    document.body.style.setProperty('--z', Math.min(1, Math.max(.3, ancho / 1180)).toFixed(3));
+  }
+  addEventListener('resize', ajustar);
+  ajustar();
+  pintar('1');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paleta — reserva y landing</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="reservar/reservar.css">
+<style>
+  body{background:#F7F8F8;font-family:Inter,system-ui,sans-serif;margin:0;padding:2rem 1.25rem 5rem}
+  .env{max-width:76rem;margin:0 auto}
+  .env > h1{font-size:1.5rem;margin:0 0 .4rem;color:#1A2E24}
+  .env > p.sub{color:#5B6660;margin:0 0 1.75rem;max-width:52rem;line-height:1.65}
+
+  .bloque{background:#fff;border:1px solid #E4E8E6;border-radius:20px;padding:1.6rem;margin-bottom:1.5rem}
+  .bloque > header{display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap;
+    padding-bottom:.9rem;margin-bottom:1.5rem;border-bottom:1px solid #E4E8E6}
+  .bloque > header .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:#5B6660}
+  .bloque > header h2{font-size:1.1rem;margin:.15rem 0 0;color:#1A2E24}
+  .bloque > header .hex{margin-left:auto;display:flex;gap:.4rem;align-items:center}
+  .bloque > header .hex span{font-size:.7rem;font-family:ui-monospace,monospace;color:#5B6660}
+  .bloque p.nota{font-size:.85rem;color:#5B6660;line-height:1.65;margin:1.4rem 0 0;max-width:56rem}
+  .bloque p.nota b{color:#1A2E24}
+
+  .swatches{display:flex;gap:.35rem}
+  .sw{width:26px;height:26px;border-radius:7px;border:1px solid rgba(0,0,0,.08)}
+
+  .demo{display:grid;gap:1.75rem;grid-template-columns:1fr}
+  @media(min-width:1000px){.demo{grid-template-columns:1fr 1fr}}
+  .demo h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:#5B6660;font-weight:700;margin:0 0 .85rem}
+
+  /* ====== componentes, todos en variables locales ====== */
+  .p{--soft:#F3ECE9;--light:#DAC3BA;--main:#A34E2A;--deep:#8A4226;--dark:#6E3319;
+     --linea:#E4E8E6;--linea-f:#CFD7D3;--suave:#5B6660;--tinta:#1A2E24;
+     --libre:#E4EFE8;--libre-b:#2F6B4F;--ocupado:#EDF0EE}
+
+  .md{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.4rem}
+  .card{background:#fff;border:1.5px solid var(--linea);border-radius:14px;cursor:pointer;
+    font:inherit;color:var(--tinta);box-shadow:0 1px 2px rgba(26,46,36,.05);
+    transition:border-color 200ms,background 200ms,box-shadow 200ms}
+  .card[aria-checked="true"]{border-color:var(--deep);background:var(--soft);
+    box-shadow:0 4px 12px -4px rgba(26,46,36,.14)}
+  .md .card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
+    min-height:92px;padding:.9rem .6rem;text-align:center}
+  .circ{width:38px;height:38px;border-radius:50%;border:2.5px solid var(--main);display:grid;
+    place-items:center;color:var(--deep);transition:all 200ms}
+  .circ svg{width:19px;height:19px}
+  .card[aria-checked="true"] .circ{border-color:var(--deep);background:var(--deep);color:#fff}
+  .nom{font-weight:600;font-size:.88rem;line-height:1.3}
+
+  .sv{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.4rem}
+  @media(min-width:1200px){.sv{grid-template-columns:repeat(4,1fr)}}
+  .sv .card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;
+    min-height:104px;padding:.9rem .6rem;text-align:center}
+
+  .pl{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+  .pl .card{position:relative;display:flex;flex-direction:column;overflow:hidden;text-align:left}
+  .cab{display:flex;align-items:center;gap:.5rem;padding:1rem 0 .65rem;margin:0 1rem;
+    border-bottom:1px solid var(--linea)}
+  .card[aria-checked="true"] .cab{border-bottom-color:var(--light)}
+  .cifra{flex:none;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--main);
+    display:grid;place-items:center;font-size:.9rem;font-weight:700;color:var(--deep);transition:all 200ms}
+  .card[aria-checked="true"] .cifra{border-color:var(--deep);background:var(--deep);color:#fff}
+  .tit{font-weight:700;font-size:.97rem}
+  .eti{margin-left:auto;padding:.16rem .38rem;border-radius:5px;background:var(--deep);color:#fff;
+    font-size:.58rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+  .cue{flex:1;display:flex;align-items:center;padding:.75rem 1rem;font-size:.76rem;color:var(--suave);gap:.4rem}
+  .cue svg{width:14px;height:14px;flex:none;color:var(--main)}
+  .pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+    gap:.4rem;padding:.7rem 1rem 1rem;min-height:2.3rem}
+  .pie::before{content:"";position:absolute;top:0;left:1rem;right:1rem;height:1px;background:var(--linea)}
+  .card[aria-checked="true"] .pie::before{background:var(--light)}
+  .pre{font-size:1.42rem;font-weight:700;letter-spacing:-.025em;line-height:1;color:var(--dark)}
+  .der{display:flex;align-items:center;gap:.4rem}
+  /* El "Ahorras" y el check se quedan en VERDE: son estado, no marca. */
+  .aho{display:inline-flex;align-items:center;padding:.2rem .42rem;border-radius:6px;
+    background:var(--libre);color:var(--libre-b);font-size:.65rem;font-weight:600;white-space:nowrap}
+  .card[aria-checked="true"] .aho{background:#fff}
+  .chk{width:20px;height:20px;border-radius:50%;background:var(--deep);display:grid;place-items:center;
+    opacity:0;transform:scale(.6);transition:all 200ms}
+  .chk svg{width:12px;height:12px;color:#fff}
+  .card[aria-checked="true"] .chk{opacity:1;transform:scale(1)}
+  .cinta{position:absolute;top:0;left:0;right:0;height:3px;background:var(--deep)}
+
+  /* tira de horarios */
+  .tira{display:grid;grid-template-columns:repeat(5,1fr);gap:.45rem;margin-top:.3rem}
+  .dia{text-align:center}
+  .dia-cab{font-size:.68rem;color:var(--suave);font-weight:600;margin-bottom:.4rem;line-height:1.3}
+  .hora{display:block;width:100%;padding:.5rem .2rem;margin-bottom:.35rem;border-radius:8px;
+    border:1px solid transparent;background:var(--libre);color:var(--libre-b);
+    font:inherit;font-size:.76rem;font-weight:600;cursor:pointer;transition:all 160ms}
+  .hora:hover{border-color:var(--libre-b)}
+  .hora.sel{background:var(--deep);color:#fff}
+  .hora.no{background:var(--ocupado);color:#9AA5A0;cursor:default}
+</style>
+</head>
+<body>
+<div class="env">
+
+<h1>Tres paletas que combinan con la landing</h1>
+<p class="sub">Las tres tarjetas reales del paso 1 más la tira de horarios, en cada paleta.
+   Todas cumplen 4,5:1 con margen. Al final tienes la que hay hoy, para comparar el salto.</p>
+
+<div id="salida"></div>
+
+<section class="bloque" style="border-color:#96650E;background:#FDF8F2">
+  <header style="border-bottom-color:#EBDCC5">
+    <div><span class="et" style="color:#96650E">Lo que descubrió la base de datos de la skill</span>
+    <h2>El verde no debería ser la marca</h2></div>
+  </header>
+  <p class="nota" style="margin-top:0">Busqué en <code>ui-ux-pro-max</code> las paletas de salud y de reservas.
+     Las tres que salieron tienen la misma estructura, y no es casualidad:</p>
+  <table style="width:100%;border-collapse:collapse;font-size:.83rem;margin-top:1rem">
+    <tr style="text-align:left;color:#5B6660"><th style="padding:.4rem 0">Producto</th><th>Primario</th><th>Acento</th><th>Nota de la base</th></tr>
+    <tr style="border-top:1px solid #EBDCC5"><td style="padding:.5rem 0">Mental Health App</td><td><code>#8B5CF6</code> lavanda</td><td><code>#059669</code> verde</td><td>«Calming lavender + wellness green»</td></tr>
+    <tr style="border-top:1px solid #EBDCC5"><td style="padding:.5rem 0">Healthcare App</td><td><code>#0891B2</code> cian</td><td><code>#059669</code> verde</td><td>«Calm cyan + health green»</td></tr>
+    <tr style="border-top:1px solid #EBDCC5"><td style="padding:.5rem 0">Recipe &amp; Cooking</td><td><code>#9A3412</code> terracota</td><td><code>#059669</code> verde</td><td>«Warm terracotta + fresh green»</td></tr>
+  </table>
+  <p class="nota"><b>En las tres, el verde es el acento, nunca la marca.</b> Está reservado para
+     «disponible», «correcto», «guardado». Nuestra página lo usa como color principal, y por eso
+     chocó: <code>--ok-suave</code> y <code>--primary-soft</code> son el mismo verde, y el badge
+     «Ahorras 15 $» se disolvía sobre la tarjeta elegida. Lo parcheé pintándolo de blanco.
+     <b>Mover la marca a terracota no es solo estética: le devuelve al verde su trabajo.</b>
+     Fíjate en la tira de horarios de cada paleta: los huecos libres en verde, el elegido en el
+     color de marca. Hoy los dos son verdes.</p>
+</section>
+
+</div>
+
+<script>
+(function () {
+  var PALETAS = [
+    {id:'A', nom:'Terracota profunda', desc:'La continuación literal de la landing',
+     main:'#A34E2A', deep:'#8A4226', dark:'#6E3319', soft:'#F3ECE9', light:'#DAC3BA', ratio:'7,27:1'},
+    {id:'B', nom:'Rosa viejo', desc:'Lo que preguntaste. Más suave, menos ladrillo',
+     main:'#A85A6B', deep:'#8E4257', dark:'#733246', soft:'#F4ECEE', light:'#DBC3C9', ratio:'6,85:1'},
+    {id:'C', nom:'Vino / magenta apagado', desc:'El más contrastado y el más serio',
+     main:'#96476A', deep:'#7D3350', dark:'#65253F', soft:'#F2EBEE', light:'#D5BEC7', ratio:'8,53:1'},
+    {id:'HOY', nom:'Verde bosque', desc:'Lo que hay hoy, para comparar el salto',
+     main:'#3F8062', deep:'#2F6B4F', dark:'#245640', soft:'#E4EFE8', light:'#B9D3C5', ratio:'6,29:1'}
+  ];
+  function ico(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w||1.6) +
+           '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    video:'<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>',
+    pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+    ans:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    aut:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    par:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    due:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    check:'<path d="m4 12 5.5 5.5L20 7"/>'
+  };
+  function tarjetaModo(n, d, sel) {
+    return '<button type="button" class="card" role="radio" aria-checked="' + sel + '">' +
+      '<span class="circ">' + ico(d) + '</span><span class="nom">' + n + '</span></button>';
+  }
+  function plan(cifra, nom, det, ic, precio, ahorro, sel, destacada) {
+    return '<button type="button" class="card' + (destacada ? ' dest' : '') + '" role="radio" aria-checked="' + sel + '">' +
+      (destacada ? '<span class="cinta"></span>' : '') +
+      '<span class="cab"><span class="cifra">' + cifra + '</span><span class="tit">' + nom + '</span>' +
+      (destacada ? '<span class="eti">Sugerida</span>' : '') + '</span>' +
+      '<span class="cue">' + ico(ic, 1.7) + '<span>' + det + '</span></span>' +
+      '<span class="pie"><span class="pre">' + precio + '</span><span class="der">' +
+      (ahorro ? '<span class="aho">Ahorras ' + ahorro + '</span>' : '') +
+      '<span class="chk">' + ico(I.check, 3.5) + '</span></span></span></button>';
+  }
+  function tira() {
+    var dias = [['lun','8'],['mar','9'],['mié','10'],['jue','11'],['vie','12']];
+    var horas = [['09:00',0],['10:00',1],['11:00',0],['16:00',2]];
+    return '<div class="tira">' + dias.map(function (d, i) {
+      return '<div class="dia"><p class="dia-cab">' + d[0] + '<br><b>' + d[1] + '</b></p>' +
+        horas.map(function (h, j) {
+          var cl = (i === 2 && j === 1) ? ' sel' : ((i + j) % 4 === 3 ? ' no' : '');
+          return '<button type="button" class="hora' + cl + '">' + h[0] + '</button>';
+        }).join('') + '</div>';
+    }).join('') + '</div>';
+  }
+
+  document.getElementById('salida').innerHTML = PALETAS.map(function (p) {
+    var esHoy = p.id === 'HOY';
+    return '<section class="bloque"' + (esHoy ? ' style="opacity:.85"' : '') + '>' +
+      '<header><div><span class="et">' + (esHoy ? 'Referencia' : 'Paleta ' + p.id) + '</span>' +
+      '<h2>' + p.nom + '</h2>' +
+      '<p style="font-size:.82rem;color:#5B6660;margin:.3rem 0 0">' + p.desc +
+      ' · botón blanco sobre marca <b>' + p.ratio + '</b></p></div>' +
+      '<div class="hex"><span class="swatches">' +
+      [p.main, p.deep, p.dark, p.light, p.soft].map(function (c) {
+        return '<i class="sw" style="background:' + c + '"></i>';
+      }).join('') + '</span></div></header>' +
+
+      '<div class="p" style="--main:' + p.main + ';--deep:' + p.deep + ';--dark:' + p.dark +
+      ';--soft:' + p.soft + ';--light:' + p.light + '">' +
+        '<div class="demo"><div>' +
+          '<h3>Paso 1</h3>' +
+          '<div class="md" role="radiogroup">' + tarjetaModo('Online', I.video, true) + tarjetaModo('Presencial', I.pin, false) + '</div>' +
+          '<div class="sv" role="radiogroup">' +
+            tarjetaModo('Superar la Ansiedad', I.ans, true) + tarjetaModo('Fortalecer tu Autoestima', I.aut, false) +
+            tarjetaModo('Sanar en Pareja', I.par, false) + tarjetaModo('Acompañar un Duelo', I.due, false) + '</div>' +
+          '<div class="pl" role="radiogroup">' +
+            plan('1', 'sesión', 'Una cita puntual', I.reloj, '30 $', '', false, false) +
+            plan('3', 'sesiones', 'A tu ritmo, 90 días', I.cal, '75 $', '15 $', true, true) +
+            plan('5', 'sesiones', 'A tu ritmo, 90 días', I.cal, '125 $', '25 $', false, false) + '</div>' +
+        '</div><div>' +
+          '<h3>Paso 2 · huecos libres en verde, el elegido en la marca</h3>' + tira() +
+          '<p style="font-size:.8rem;color:#5B6660;line-height:1.6;margin:1.1rem 0 0">' +
+          (esHoy
+            ? '<b>Aquí está el problema.</b> El hueco elegido y los huecos libres son el mismo verde. La marca y el estado se pisan.'
+            : 'El verde vuelve a significar una sola cosa: <b>libre</b>. El hueco elegido se distingue solo, porque la marca ya no compite con él.') +
+          '</p>' +
+        '</div></div>' +
+      '</div></section>';
+  }).join('');
+
+  document.addEventListener('click', function (ev) {
+    var h = ev.target.closest('.hora');
+    if (h && !h.classList.contains('no')) {
+      [].forEach.call(h.closest('.tira').querySelectorAll('.hora'), function (o) { o.classList.remove('sel'); });
+      h.classList.add('sel'); return;
+    }
+    var b = ev.target.closest('.card');
+    if (!b) return;
+    [].forEach.call(b.parentElement.children, function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+    });
+  });
+})();
+</script>
+</body>
+</html>

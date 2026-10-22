@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar · Psicconsciente</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<style>
+/* ============================================================
+   PUERTA · crear cuenta y entrar
+   Misma paleta de Psicconsciente, repartida distinto: aqui mandan los
+   marrones y los beiges sobre blanco, y la salvia queda de acento —
+   el aro del foco, la barra de privacidad, la marca de elegido. En el
+   asistente de reserva es al reves. Los dos colores siguen estando.
+   ============================================================ */
+
+:root {
+  /* --- beiges y blancos --- */
+  --blanco:#FFFFFF;
+  --papel:#FAF3EA;
+  --papel-2:#F2E7D9;
+  --papel-3:#E9DAC6;
+
+  /* --- marrones, que aqui son el color principal --- */
+  --tierra:#7A5A3C;      /* la banda */
+  --tierra-cl:#8A6746;   /* el boton */
+  --tierra-dp:#5E442C;   /* boton pulsado */
+  --marca:#A8825F;
+  --marca-cl:#C6A783;
+
+  /* --- salvia, de acento --- */
+  --salvia:#5A7060;
+  --salvia-dp:#3E4F44;
+  --salvia-sv:#E8EDE6;
+
+  --txt:#2E332E;
+  --txt-suave:#5C635A;
+  --txt-tenue:#6B665D;
+
+  --linea:rgba(122,90,60,.20);
+  --linea-med:rgba(122,90,60,.38);
+  --linea-fuerte:#A8825F;
+
+  --mal:#A33A2E; --mal-sv:#FBEAE8;
+  --inerte:#E6E1D7; --inerte-txt:#625E56;
+
+  --display:"Fraunces",Georgia,serif;
+  --texto:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  --t-nota:.78rem; --t-aux:.88rem; --t-base:1rem;
+  --t-h2:1.5rem; --t-h1:2.35rem;
+
+  --r:14px; --r-sm:10px; --r-pill:999px;
+  --r-curva:clamp(28px, 4vw, 56px);   /* la esquina grande del panel */
+
+  --elev-1:0 1px 2px rgba(46,42,36,.06);
+  --elev-2:0 4px 14px -6px rgba(46,42,36,.18);
+  --elev-3:0 24px 60px -30px rgba(46,42,36,.40);
+
+  --entra:320ms cubic-bezier(.2,.8,.3,1);
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+
+  color-scheme:light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --blanco:#20241F; --papel:#191C18; --papel-2:#262A22; --papel-3:#31362B;
+    --tierra:#4A3627; --tierra-cl:#9C7A56; --tierra-dp:#B08C64;
+    --marca:#9C7A56; --marca-cl:#C6A783;
+    --salvia:#8AA891; --salvia-dp:#A8C0AE; --salvia-sv:#242A25;
+    --txt:#EDE9E1; --txt-suave:#A9AEA4; --txt-tenue:#9A958B;
+    --linea:rgba(156,122,86,.28); --linea-med:rgba(156,122,86,.50);
+    --linea-fuerte:#9C7A56;
+    --mal:#E9887A; --mal-sv:#2C1D1B;
+    --inerte:#2C2F2B; --inerte-txt:#979C93;
+    --elev-1:0 1px 2px rgba(0,0,0,.4);
+    --elev-2:0 4px 14px -6px rgba(0,0,0,.55);
+    --elev-3:0 24px 60px -30px rgba(0,0,0,.8);
+  }
+}
+
+*,*::before,*::after { box-sizing:border-box; }
+
+html, body { height:100%; }
+
+body {
+  margin:0;
+  background:var(--tierra);
+  color:var(--txt);
+  font-family:var(--texto);
+  font-size:var(--t-base);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+:focus { outline:none; }
+/* El aro del foco es salvia: es el unico sitio donde el verde tiene que
+   ganarle al marron, porque marca donde esta el teclado. */
+:focus-visible { outline:3px solid var(--salvia-dp); outline-offset:3px; border-radius:var(--r-sm); }
+.banda :focus-visible { outline-color:var(--papel); }
+
+.sr-only {
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ============ ESTRUCTURA ============ */
+
+.puerta { min-height:100dvh; display:grid; }
+
+@media (min-width:60rem) {
+  .puerta { grid-template-columns:minmax(0,38fr) minmax(0,62fr); }
+}
+
+/* ---------- BANDA DE COLOR ---------- */
+
+.banda {
+  position:relative;
+  background:var(--tierra);
+  color:var(--papel);
+  padding:clamp(1.75rem,4vw,3rem);
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+  overflow:hidden;
+  isolation:isolate;
+}
+
+/* ---------- LA MARCA ---------- */
+
+.marca {
+  margin:auto 0;
+  display:flex; flex-direction:column; align-items:flex-start; gap:1rem;
+}
+
+.marca-disco {
+  width:clamp(74px, 9vw, 104px); aspect-ratio:1;
+  display:grid; place-items:center;
+  border-radius:var(--r-pill);
+  border:1px solid rgba(250,243,234,.28);
+  background:rgba(250,243,234,.07);
+  color:var(--papel);
+}
+
+.marca-svg { width:56%; height:56%; overflow:visible; }
+
+/* La espiral se dibuja sola: es la mente desplegandose, y dura lo justo para
+   verla una vez. No se repite — un bucle infinito aqui seria un adorno que
+   pide atencion cada pocos segundos. */
+/* "both" y no "forwards": sin el relleno hacia atras, durante el retardo el
+   trazo se dibuja entero y luego la animacion no tiene de donde partir. Con
+   "both" el trazo espera oculto su turno. */
+.marca-svg path {
+  stroke-dasharray:1;
+  animation:dibuja 1.5s cubic-bezier(.35,0,.2,1) both;
+}
+.marca-svg path:nth-child(2) { animation-delay:.75s; animation-duration:.5s; }
+.marca-svg path:nth-child(3) { animation-delay:1s; animation-duration:1.9s; }
+
+@keyframes dibuja {
+  from { stroke-dashoffset:1; }
+  to   { stroke-dashoffset:0; }
+}
+
+.marca-nombre {
+  margin:0;
+  font-family:var(--display);
+  font-size:clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight:600; line-height:1.05; letter-spacing:-.03em;
+  color:var(--papel);
+}
+
+/* ---------- LAS TRES VARIANTES ---------- */
+
+/* 2 · solo la marca, sin nombre y sin la nota */
+.banda[data-var="2"] .marca-nombre,
+.banda[data-var="2"] .banda-pie { display:none; }
+.banda[data-var="2"] .marca { align-items:center; }
+
+/* 3 · solo la foto con el degradado, sin nada escrito */
+.banda[data-var="3"] .marca,
+.banda[data-var="3"] .banda-pie { display:none; }
+.banda[data-var="3"] .foto { height:100%; }
+.banda[data-var="3"] .foto img { opacity:.62; }
+
+.banda-pie {
+  margin:0;
+  display:flex; gap:.65rem; align-items:flex-start;
+  font-size:var(--t-nota);
+  color:rgba(250,243,234,.80);
+  border-left:2px solid var(--salvia);
+  padding-left:.9rem;
+  max-width:34ch;
+}
+
+.banda-pie svg { flex:none; width:15px; height:15px; margin-top:.2rem; color:var(--salvia); }
+
+/* La foto se ancla abajo y respira muy despacio. 24 segundos: si se nota
+   que se mueve, se mueve demasiado. */
+.foto {
+  position:absolute; inset:auto 0 0 0;
+  height:62%;
+  z-index:-1;
+  -webkit-mask-image:linear-gradient(to bottom, transparent, #000 22%);
+          mask-image:linear-gradient(to bottom, transparent, #000 22%);
+}
+
+.foto img {
+  width:100%; height:100%;
+  object-fit:cover;
+  opacity:.5;
+  animation:respira 24s ease-in-out infinite alternate;
+}
+
+@keyframes respira {
+  from { transform:scale(1); }
+  to   { transform:scale(1.07) translateY(-1.5%); }
+}
+
+@media (min-width:60rem) { .foto { height:58%; } }
+
+/* ---------- PANEL BLANCO ---------- */
+
+.lienzo {
+  background:var(--blanco);
+  border-radius:var(--r-curva) var(--r-curva) 0 0;
+  margin-top:-.75rem;
+  padding:clamp(1.75rem,4vw,3rem) clamp(1.25rem,4vw,3rem) clamp(2.5rem,5vw,3rem);
+  display:flex; flex-direction:column; justify-content:center;
+  position:relative;
+}
+
+@media (min-width:60rem) {
+  .lienzo {
+    border-radius:var(--r-curva) 0 0 var(--r-curva);
+    margin:0 0 0 calc(var(--r-curva) * -1);
+    padding-left:calc(var(--r-curva) + 2rem);
+  }
+}
+
+/* El contenido mide lo que pide, no lo que sobra de pantalla. */
+.panel {
+  width:min(100%, 27rem);
+  margin-inline:auto;
+  display:flex; flex-direction:column; gap:1.5rem;
+}
+
+/* ---------- CONMUTADOR ---------- */
+
+.segs {
+  display:grid; grid-template-columns:1fr 1fr;
+  background:var(--papel);
+  border:1px solid var(--linea);
+  border-radius:var(--r-pill);
+  padding:4px;
+  position:relative;
+}
+
+/* Una sola pastilla que se desplaza, no dos fondos que parpadean. */
+.segs::before {
+  content:"";
+  position:absolute; inset:4px auto 4px 4px;
+  width:calc(50% - 4px);
+  background:var(--blanco);
+  border-radius:var(--r-pill);
+  box-shadow:var(--elev-1);
+  transition:transform var(--entra);
+}
+
+.segs[data-modo="entrar"]::before { transform:translateX(100%); }
+
+.segs button {
+  position:relative; z-index:1;
+  appearance:none; border:0; background:none;
+  font:inherit; font-size:var(--t-aux); font-weight:500;
+  color:var(--txt-tenue);
+  padding:.6rem .5rem; min-height:44px;
+  border-radius:var(--r-pill);
+  cursor:pointer;
+  transition:color var(--paso);
+}
+
+.segs button[aria-selected="true"] { color:var(--txt); font-weight:600; }
+
+/* ---------- CAJA QUE CAMBIA DE ALTO ---------- */
+
+.caja { overflow:hidden; transition:height var(--entra); }
+.vista { display:flex; flex-direction:column; gap:1.2rem; }
+.vista[hidden] { display:none; }
+
+.vista h2 {
+  margin:0;
+  font-family:var(--display);
+  font-size:var(--t-h2);
+  font-weight:600;
+  line-height:1.2;
+  letter-spacing:-.02em;
+}
+
+.vista h2 + p { margin:-.7rem 0 0; color:var(--txt-suave); font-size:var(--t-aux); }
+
+.campos { display:flex; flex-direction:column; gap:.85rem; }
+
+/* ---------- ENTRADA ESCALONADA ---------- */
+
+@keyframes sube { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+.anima > * {
+  opacity:0;
+  animation:sube 320ms cubic-bezier(.2,.8,.3,1) forwards;
+  animation-delay:calc(var(--i,0) * 40ms);
+}
+
+/* ---------- CAMPOS ---------- */
+
+.campo { display:flex; flex-direction:column; gap:.32rem; }
+
+.campo > label {
+  font-size:var(--t-nota); font-weight:500;
+  color:var(--txt-tenue); letter-spacing:.01em;
+}
+
+.campo input, .campo select {
+  font:inherit; font-size:var(--t-base);
+  color:var(--txt);
+  background:var(--blanco);
+  border:1px solid var(--linea-med);
+  border-radius:var(--r-sm);
+  padding:.7rem .85rem; min-height:46px; width:100%;
+  transition:border-color var(--paso), box-shadow var(--paso), background var(--paso);
+}
+
+/* El marcador de posicion es un EJEMPLO, no la etiqueta repetida: si dice
+   lo mismo que el rotulo, desaparece al escribir y no ha servido de nada. */
+.campo input::placeholder { color:var(--inerte-txt); opacity:1; }
+
+.campo select {
+  appearance:none; padding-right:2.4rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236B665D' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6.5 8 10.5 12 6.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .85rem center; background-size:16px;
+}
+
+.campo input:hover, .campo select:hover { border-color:var(--linea-fuerte); }
+
+/* Al enfocar, la salvia. Es el acento y aparece justo donde estas. */
+.campo input:focus, .campo select:focus {
+  border-color:var(--salvia);
+  box-shadow:0 0 0 3px var(--salvia-sv);
+}
+
+.tel { display:grid; grid-template-columns:auto 1fr; gap:.5rem; }
+
+.tel .prefijo {
+  width:auto;
+  padding:0 2rem 0 .7rem;
+  background-color:var(--papel);
+  background-position:right .55rem center;
+  font-size:var(--t-aux); font-weight:600; color:var(--txt);
+  font-variant-numeric:tabular-nums;
+}
+
+.clave { position:relative; }
+.clave input { padding-right:3.35rem; }
+
+/* 44x44: el minimo para acertar con el dedo. */
+.ojo {
+  position:absolute; right:3px; top:50%; transform:translateY(-50%);
+  appearance:none; border:0; background:none;
+  width:44px; height:44px; display:grid; place-items:center;
+  border-radius:var(--r-sm); color:var(--txt-tenue); cursor:pointer;
+  transition:color var(--paso), background var(--paso);
+}
+
+.ojo:hover { color:var(--txt); background:var(--papel); }
+.ojo svg { width:19px; height:19px; }
+.ojo .tachado { display:none; }
+.ojo[aria-pressed="true"] .abierto { display:none; }
+.ojo[aria-pressed="true"] .tachado { display:block; }
+
+.ayuda { font-size:var(--t-nota); color:var(--txt-tenue); }
+
+.campo.mal input, .campo.mal select { border-color:var(--mal); background:var(--mal-sv); }
+
+.err {
+  font-size:var(--t-nota); color:var(--mal);
+  animation:sube 180ms cubic-bezier(.2,.8,.3,1);
+}
+.err:empty { display:none; }
+
+/* ---------- BOTÓN ---------- */
+
+.btn {
+  appearance:none; border:0;
+  font:inherit; font-size:var(--t-base); font-weight:600;
+  background:var(--tierra-cl); color:var(--papel);
+  border-radius:var(--r-pill);
+  padding:.85rem 1.4rem; min-height:50px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:.55rem;
+  box-shadow:var(--elev-1);
+  transition:background var(--paso), box-shadow var(--paso), transform 140ms ease;
+}
+
+.btn:hover { background:var(--tierra-dp); box-shadow:var(--elev-2); }
+.btn:active { transform:translateY(1px); }
+.btn[disabled] { background:var(--inerte); color:var(--inerte-txt); cursor:default; box-shadow:none; }
+.btn[disabled]:hover { background:var(--inerte); box-shadow:none; }
+
+.btn .flecha { width:17px; height:17px; flex:none; transition:transform var(--paso); }
+.btn:hover .flecha { transform:translateX(3px); }
+
+.rueda {
+  width:17px; height:17px; flex:none;
+  border:2px solid currentColor; border-right-color:transparent;
+  border-radius:var(--r-pill);
+  animation:gira 700ms linear infinite; display:none;
+}
+@keyframes gira { to { transform:rotate(360deg); } }
+
+.btn[data-cargando="1"] .rueda { display:block; }
+.btn[data-cargando="1"] .flecha { display:none; }
+
+.pie-panel { font-size:var(--t-nota); color:var(--txt-tenue); text-align:center; margin:0; }
+.pie-panel a { color:var(--salvia-dp); text-underline-offset:2px; }
+
+/* ---------- SELECTOR DE FOTO · SOLO MAQUETA ---------- */
+
+.elige {
+  position:absolute; left:clamp(1.75rem,4vw,3rem); bottom:1rem; z-index:2;
+  display:flex; flex-direction:column; gap:.35rem;
+  font-size:.7rem; color:rgba(250,243,234,.7);
+}
+
+.elige p { margin:0; display:flex; align-items:center; gap:.4rem; }
+.elige p span { width:4.5rem; }
+
+.elige button {
+  appearance:none; cursor:pointer;
+  width:30px; height:30px; border-radius:var(--r-pill);
+  border:1px solid rgba(250,243,234,.45);
+  background:transparent; color:rgba(250,243,234,.85);
+  font:inherit; font-size:.7rem; font-weight:600;
+  transition:background var(--paso), color var(--paso);
+}
+
+.elige button[aria-pressed="true"] { background:var(--papel); color:var(--tierra); border-color:var(--papel); }
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after {
+    animation-duration:.01ms !important; animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .anima > * { opacity:1; }
+  .foto img { animation:none; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ojo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="i-ojo-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2.5 12S6 5.5 12 5.5c1.5 0 2.8.4 4 1M21.5 12S18 18.5 12 18.5c-1.5 0-2.8-.4-4-1"/><path d="m4 4 16 16"/>
+  </symbol>
+  <symbol id="i-ir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14M13 6l6 6-6 6"/>
+  </symbol>
+  <symbol id="i-candado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>
+  </symbol>
+</svg>
+
+<div class="puerta">
+
+  <!-- ============ BANDA ============ -->
+  <section class="banda anima" id="banda" data-var="1" aria-label="Psicconsciente">
+    <div class="foto" aria-hidden="true"><img id="foto" src="puerta-b-banco.jpg" alt="" decoding="async"></div>
+
+    <!-- Fuera el nombre y el cargo de Daryeli: ya estan en la landing, en la
+         cabecera del asistente y en el pie. Un dato se dice una vez. Aqui
+         queda la MARCA, que es lo unico que este sitio no ha dicho todavia. -->
+    <div class="marca" style="--i:0">
+      <span class="marca-disco">
+        <!-- pathLength="1" normaliza el largo de cada trazo, asi la animacion
+             de dibujado no depende de cuanto mide realmente cada curva. -->
+        <svg class="marca-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path pathLength="1" d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+          <path pathLength="1" d="M9 20h6M10.2 22.2h3.6"/>
+          <path pathLength="1" d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+        </svg>
+      </span>
+      <p class="marca-nombre">Psicconsciente</p>
+    </div>
+
+    <p class="banda-pie" style="--i:1">
+      <svg aria-hidden="true"><use href="#i-candado"/></svg>
+      <span>Solo se guardan tu nombre, tu correo y tu teléfono. Nada de lo que hables en consulta se registra aquí.</span>
+    </p>
+
+    <!-- Selectores temporales para que Edgar decida. No van en la version real. -->
+    <div class="elige">
+      <p>
+        <span>Izquierda:</span>
+        <button type="button" data-var="1" aria-pressed="true">1</button>
+        <button type="button" data-var="2" aria-pressed="false">2</button>
+        <button type="button" data-var="3" aria-pressed="false">3</button>
+      </p>
+      <p>
+        <span>Foto:</span>
+        <button type="button" data-foto="puerta-a-luz.jpg" aria-pressed="false">A</button>
+        <button type="button" data-foto="puerta-b-banco.jpg" aria-pressed="true">B</button>
+        <button type="button" data-foto="puerta-c-manos.jpg" aria-pressed="false">C</button>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ PANEL ============ -->
+  <main class="lienzo">
+    <div class="panel anima">
+
+      <div class="segs" id="segs" data-modo="registro" role="tablist"
+           aria-label="Crear cuenta o entrar" style="--i:1">
+        <button type="button" role="tab" id="tabRegistro" aria-controls="vRegistro" aria-selected="true">Crear cuenta</button>
+        <button type="button" role="tab" id="tabEntrar" aria-controls="vEntrar" aria-selected="false" tabindex="-1">Entrar</button>
+      </div>
+
+      <div class="caja" id="caja" style="--i:2">
+
+        <!-- ---------- CREAR CUENTA ---------- -->
+        <form class="vista" id="vRegistro" role="tabpanel" aria-labelledby="tabRegistro" novalidate>
+          <h2>Crear cuenta</h2>
+          <p>Se hace una sola vez. Después entras con tu correo.</p>
+
+          <div class="campos anima">
+            <p class="campo" style="--i:1">
+              <label for="rNombre">Nombre y apellido</label>
+              <input type="text" id="rNombre" name="nombre" autocomplete="name"
+                     placeholder="María Fernández" required aria-describedby="eNombre">
+              <span class="err" id="eNombre" role="alert"></span>
+            </p>
+
+            <p class="campo" style="--i:2">
+              <label for="rCorreo">Correo electrónico</label>
+              <input type="email" id="rCorreo" name="correo" autocomplete="email" inputmode="email"
+                     placeholder="maria@correo.com" required aria-describedby="eCorreo">
+              <span class="err" id="eCorreo" role="alert"></span>
+            </p>
+
+            <p class="campo" style="--i:3">
+              <label for="rClave">Contraseña</label>
+              <span class="clave">
+                <!-- Sin bloquear el pegado y con autocomplete: es lo que permite
+                     que un gestor de contrasenas la rellene y la guarde. -->
+                <input type="password" id="rClave" name="clave" autocomplete="new-password"
+                       placeholder="Mínimo 8 caracteres" minlength="8" required
+                       aria-describedby="eClave">
+                <button type="button" class="ojo" data-ojo="rClave" aria-pressed="false" aria-label="Mostrar la contraseña">
+                  <svg class="abierto" aria-hidden="true"><use href="#i-ojo"/></svg>
+                  <svg class="tachado" aria-hidden="true"><use href="#i-ojo-no"/></svg>
+                </button>
+              </span>
+              <span class="err" id="eClave" role="alert"></span>
+            </p>
+
+            <p class="campo" style="--i:4">
+              <label for="rTel">Teléfono</label>
+              <span class="tel">
+                <!-- El prefijo es un control propio y no una etiqueta fija: alguien
+                     que vive en Espana puede conservar su numero venezolano, y al
+                     reves. Se propone el del pais y se puede cambiar. -->
+                <label class="sr-only" for="rPrefijo">Código de país del teléfono</label>
+                <select class="prefijo" id="rPrefijo" name="prefijo"></select>
+                <input type="tel" id="rTel" name="telefono" autocomplete="tel-national" inputmode="tel"
+                       placeholder="412 123 4567" required aria-describedby="eTel">
+              </span>
+              <span class="err" id="eTel" role="alert"></span>
+            </p>
+
+            <p class="campo" style="--i:5">
+              <label for="rNac">Nacionalidad</label>
+              <select id="rNac" name="nacionalidad" required></select>
+            </p>
+
+            <p class="campo" style="--i:6">
+              <label for="rPais">País donde vives</label>
+              <select id="rPais" name="pais" autocomplete="country-name" required></select>
+            </p>
+
+            <button type="submit" class="btn" style="--i:7">
+              <span>Crear cuenta</span>
+              <svg class="flecha" aria-hidden="true"><use href="#i-ir"/></svg>
+              <span class="rueda" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- ---------- ENTRAR ---------- -->
+        <form class="vista" id="vEntrar" role="tabpanel" aria-labelledby="tabEntrar" novalidate hidden>
+          <h2>Entrar</h2>
+          <p>Sigue donde lo dejaste.</p>
+
+          <div class="campos anima">
+            <p class="campo" style="--i:1">
+              <label for="eMail">Correo electrónico</label>
+              <input type="email" id="eMail" name="correo" autocomplete="email" inputmode="email"
+                     placeholder="maria@correo.com" required aria-describedby="eeCorreo">
+              <span class="err" id="eeCorreo" role="alert"></span>
+            </p>
+
+            <p class="campo" style="--i:2">
+              <label for="eClaveIn">Contraseña</label>
+              <span class="clave">
+                <input type="password" id="eClaveIn" name="clave" autocomplete="current-password"
+                       placeholder="Tu contraseña" required aria-describedby="eeClave">
+                <button type="button" class="ojo" data-ojo="eClaveIn" aria-pressed="false" aria-label="Mostrar la contraseña">
+                  <svg class="abierto" aria-hidden="true"><use href="#i-ojo"/></svg>
+                  <svg class="tachado" aria-hidden="true"><use href="#i-ojo-no"/></svg>
+                </button>
+              </span>
+              <span class="err" id="eeClave" role="alert"></span>
+            </p>
+
+            <button type="submit" class="btn" style="--i:3">
+              <span>Entrar</span>
+              <svg class="flecha" aria-hidden="true"><use href="#i-ir"/></svg>
+              <span class="rueda" aria-hidden="true"></span>
+            </button>
+
+            <p class="pie-panel" style="--i:4"><a href="#">No recuerdo mi contraseña</a></p>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- PAISES ----------
+     Lista corriente de recogida de datos, con su prefijo. Larga a proposito:
+     un control de dos opciones junto a los precios delataria que la
+     nacionalidad mueve la tarifa. */
+  var PAISES = [
+    ['Venezuela','58','VE'], ['España','34','ES'], ['Argentina','54','AR'],
+    ['Bolivia','591','BO'], ['Brasil','55','BR'], ['Chile','56','CL'],
+    ['Colombia','57','CO'], ['Costa Rica','506','CR'], ['Cuba','53','CU'],
+    ['Ecuador','593','EC'], ['El Salvador','503','SV'], ['Guatemala','502','GT'],
+    ['Honduras','504','HN'], ['México','52','MX'], ['Nicaragua','505','NI'],
+    ['Panamá','507','PA'], ['Paraguay','595','PY'], ['Perú','51','PE'],
+    ['República Dominicana','1','DO'], ['Uruguay','598','UY'],
+    ['Estados Unidos','1','US'], ['Canadá','1','CA'], ['Portugal','351','PT'],
+    ['Francia','33','FR'], ['Italia','39','IT'], ['Alemania','49','DE'],
+    ['Reino Unido','44','GB'], ['Países Bajos','31','NL'], ['Bélgica','32','BE'],
+    ['Suiza','41','CH'], ['Irlanda','353','IE'], ['Australia','61','AU'],
+    ['Otro país','','']
+  ];
+
+  /* La bandera se compone con los dos indicadores regionales del codigo ISO.
+     En Android, iOS y macOS sale la bandera; en Windows no hay glifo para
+     ellas y el navegador dibuja las dos letras (VE, ES), que sigue diciendo
+     lo mismo. Por eso el numero del prefijo va SIEMPRE al lado: es el dato
+     que de verdad hace falta, y no depende de la fuente del sistema. */
+  function bandera(iso) {
+    if (!iso) return '';
+    return String.fromCodePoint(
+      0x1F1E6 + iso.charCodeAt(0) - 65,
+      0x1F1E6 + iso.charCodeAt(1) - 65
+    );
+  }
+
+  function llenar(sel, marcado) {
+    var frag = document.createDocumentFragment();
+    PAISES.forEach(function (p) {
+      var o = document.createElement('option');
+      o.value = p[0]; o.textContent = p[0];
+      if (p[0] === marcado) o.selected = true;
+      frag.appendChild(o);
+    });
+    sel.appendChild(frag);
+  }
+
+  /* El pais viene ya propuesto por la zona horaria. No se adivina en
+     silencio: se propone y la persona lo cambia si no es. */
+  var ZONAS = {
+    'America/Caracas':'Venezuela', 'Europe/Madrid':'España', 'Atlantic/Canary':'España',
+    'America/Lima':'Perú', 'America/Bogota':'Colombia', 'America/Mexico_City':'México',
+    'America/Santiago':'Chile', 'America/Argentina/Buenos_Aires':'Argentina',
+    'America/Montevideo':'Uruguay', 'America/Panama':'Panamá', 'America/Guayaquil':'Ecuador',
+    'America/Sao_Paulo':'Brasil', 'Europe/Lisbon':'Portugal', 'Europe/Paris':'Francia',
+    'Europe/Rome':'Italia', 'Europe/Berlin':'Alemania', 'Europe/London':'Reino Unido'
+  };
+
+  var zona = '';
+  try { zona = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+  var sugerido = ZONAS[zona] || 'Venezuela';
+
+  llenar($('rPais'), sugerido);
+  llenar($('rNac'), sugerido);
+
+  /* Prefijos: uno por pais que tenga codigo, ordenados por nombre y sin
+     repetir el codigo (+1 lo comparten tres paises, y tres opciones que dicen
+     "+1" no ayudan a elegir). */
+  (function () {
+    var sel = $('rPrefijo'), vistos = {}, frag = document.createDocumentFragment();
+    PAISES.forEach(function (p) {
+      if (!p[1] || vistos[p[1]]) return;
+      vistos[p[1]] = true;
+      var o = document.createElement('option');
+      o.value = p[1];
+      o.textContent = bandera(p[2]) + ' +' + p[1];
+      frag.appendChild(o);
+    });
+    sel.appendChild(frag);
+  })();
+
+  /* El prefijo sigue al pais mientras nadie lo toque. En cuanto la persona
+     elige uno a mano deja de seguirlo: ha dicho que su numero no es del pais
+     donde vive, y sobrescribirselo seria pisarle la respuesta. */
+  var prefijoTocado = false;
+
+  function sincronizarPrefijo() {
+    if (prefijoTocado) return;
+    var v = $('rPais').value, p = '';
+    PAISES.some(function (x) { if (x[0] === v) { p = x[1]; return true; } });
+    if (p) $('rPrefijo').value = p;
+  }
+
+  $('rPrefijo').addEventListener('change', function () { prefijoTocado = true; });
+  $('rPais').addEventListener('change', sincronizarPrefijo);
+  sincronizarPrefijo();
+
+  /* ---------- CONMUTADOR ---------- */
+
+  var segs = $('segs'), caja = $('caja');
+  var tabs = [$('tabRegistro'), $('tabEntrar')];
+  var vistas = { tabRegistro: $('vRegistro'), tabEntrar: $('vEntrar') };
+  function alto(el) { return el.getBoundingClientRect().height; }
+
+  /* Una transicion a "auto" no existe en CSS, asi que hay que medir: se fija
+     el alto actual, se cambia el contenido, se mide el nuevo, y la transicion
+     une los dos. Al terminar se suelta, para que la caja pueda crecer sola si
+     aparece un error. */
+  function mostrar(id, animar) {
+    var desde = alto(caja);
+    tabs.forEach(function (t) {
+      var activo = t.id === id;
+      t.setAttribute('aria-selected', activo ? 'true' : 'false');
+      t.tabIndex = activo ? 0 : -1;
+      vistas[t.id].hidden = !activo;
+    });
+    segs.dataset.modo = id === 'tabRegistro' ? 'registro' : 'entrar';
+
+    var hasta = alto(vistas[id]);
+    if (!animar) { caja.style.height = ''; return; }
+
+    caja.style.height = desde + 'px';
+    void caja.offsetHeight;
+    caja.style.height = hasta + 'px';
+
+    var campos = vistas[id].querySelector('.campos');
+    if (campos) { campos.classList.remove('anima'); void campos.offsetHeight; campos.classList.add('anima'); }
+  }
+
+  caja.addEventListener('transitionend', function (ev) {
+    if (ev.propertyName === 'height') caja.style.height = '';
+  });
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      if (t.getAttribute('aria-selected') === 'true') return;
+      mostrar(t.id, true); t.focus();
+    });
+  });
+
+  segs.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'ArrowLeft' && ev.key !== 'ArrowRight') return;
+    ev.preventDefault();
+    var otro = tabs[0].getAttribute('aria-selected') === 'true' ? tabs[1] : tabs[0];
+    mostrar(otro.id, true); otro.focus();
+  });
+
+  /* ---------- OJO ---------- */
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('.ojo');
+    if (!b) return;
+    var input = $(b.dataset.ojo), ver = b.getAttribute('aria-pressed') === 'true';
+    b.setAttribute('aria-pressed', ver ? 'false' : 'true');
+    b.setAttribute('aria-label', ver ? 'Mostrar la contraseña' : 'Ocultar la contraseña');
+    input.type = ver ? 'password' : 'text';
+    input.focus();
+  });
+
+  /* ---------- SELECTOR DE FOTO (solo maqueta) ---------- */
+
+  function grupo(sel, alPulsar) {
+    var bs = document.querySelectorAll(sel);
+    bs.forEach(function (b) {
+      b.addEventListener('click', function () {
+        bs.forEach(function (o) { o.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+        alPulsar(b);
+      });
+    });
+  }
+
+  grupo('.elige button[data-foto]', function (b) { $('foto').src = b.dataset.foto; });
+
+  grupo('.elige button[data-var]', function (b) {
+    $('banda').dataset.var = b.dataset.var;
+    /* La marca se vuelve a dibujar al elegir la variante que la enseña.
+       Se rebobina con la API de animaciones y no quitando y poniendo la
+       propiedad "animation": ese truco no reinicia nada aqui —la animacion
+       conserva su reloj del arranque de la pagina y sigue en "finished". */
+    if (b.dataset.var !== '3') {
+      document.querySelectorAll('.marca-svg path').forEach(function (p) {
+        p.getAnimations().forEach(function (a) { a.cancel(); a.play(); });
+      });
+    }
+  });
+
+  /* ---------- VALIDACIÓN ---------- */
+
+  function error(campoId, huecoId, texto) {
+    var campo = $(campoId).closest('.campo');
+    campo.classList.toggle('mal', !!texto);
+    $(campoId).setAttribute('aria-invalid', texto ? 'true' : 'false');
+    var hueco = $(huecoId); if (hueco) hueco.textContent = texto || '';
+  }
+
+  var CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  var REGLAS = {
+    rNombre:  ['eNombre',  function (v) { return v.trim().length >= 2 ? '' : 'Escribe tu nombre y tu apellido.'; }],
+    rCorreo:  ['eCorreo',  function (v) { return CORREO.test(v.trim()) ? '' : 'Ese correo no parece válido.'; }],
+    rClave:   ['eClave',   function (v) { return v.length >= 8 ? '' : 'Necesita ocho caracteres o más.'; }],
+    rTel:     ['eTel',     function (v) { return v.replace(/\D/g,'').length >= 7 ? '' : 'Escribe tu número completo.'; }],
+    eMail:    ['eeCorreo', function (v) { return CORREO.test(v.trim()) ? '' : 'Ese correo no parece válido.'; }],
+    eClaveIn: ['eeClave',  function (v) { return v.length ? '' : 'Escribe tu contraseña.'; }]
+  };
+
+  Object.keys(REGLAS).forEach(function (id) {
+    var el = $(id), r = REGLAS[id];
+    /* Al salir del campo, no en cada tecla: corregir a alguien mientras aun
+       esta escribiendo su correo es hostil. */
+    el.addEventListener('blur', function () { if (el.value !== '') error(id, r[0], r[1](el.value)); });
+    el.addEventListener('input', function () {
+      if (el.closest('.campo').classList.contains('mal')) error(id, r[0], r[1](el.value));
+    });
+  });
+
+  /* ---------- ENVÍO ---------- */
+
+  function enviar(form, ids, etiqueta) {
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var primero = null;
+      ids.forEach(function (id) {
+        var r = REGLAS[id], t = r[1]($(id).value);
+        error(id, r[0], t);
+        if (t && !primero) primero = id;
+      });
+      if (primero) { $(primero).focus(); return; }
+
+      var btn = form.querySelector('.btn');
+      btn.dataset.cargando = '1'; btn.disabled = true;
+      btn.querySelector('span').textContent = 'Un momento…';
+
+      /* Maqueta: aqui entraran supabase.auth.signUp y signInWithPassword.
+         La pantalla ya tiene su estado de espera. */
+      setTimeout(function () {
+        btn.dataset.cargando = ''; btn.disabled = false;
+        btn.querySelector('span').textContent = etiqueta;
+      }, 1400);
+    });
+  }
+
+  enviar($('vRegistro'), ['rNombre','rCorreo','rClave','rTel'], 'Crear cuenta');
+  enviar($('vEntrar'),   ['eMail','eClaveIn'], 'Entrar');
+
+  mostrar('tabRegistro', false);
+})();
+</script>
+</body>
+</html>

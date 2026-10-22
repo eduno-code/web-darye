@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La costura entre la cabecera y la hoja · seis tratamientos</title>
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   SEIS FORMAS DE RESOLVER LA COSTURA
+
+   Todas llevan la misma cabecera marron, la misma marca y el mismo formulario.
+   Lo unico que cambia es el BORDE SUPERIOR de la hoja blanca y a que altura
+   empieza. Se recorta a 430 px porque la diferencia esta toda arriba: enseniar
+   el telefono entero seis veces solo hace mas dificil compararlas.
+
+   La cifra que va debajo de cada una es lo que de verdad se decide aqui:
+   cuanta pantalla se lleva el marron antes de que empiece el formulario.
+   ============================================================ */
+
+:root{
+  --papel:#EFE9E0; --tinta:#2E332E; --suave:#5C635A;
+  --arcilla:#C6A783; --arcilla-dp:#8A6746; --salvia:#5A7060;
+
+  --panel-fondo:#5E442C; --panel-txt:#FAF3EA;
+  --panel-orn-a:#7A5A3C; --panel-orn-b:#8A6746;
+  --blanco:#fff; --txt:#2E332E; --txt-tenue:#6B665D;
+  --linea-med:#A8825F;
+  color-scheme:only light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font:400 14px/1.55 Inter,"Segoe UI",system-ui,sans-serif}
+
+header.barra{padding:1.4rem 1.4rem .2rem;max-width:74rem;margin-inline:auto}
+header.barra h1{margin:0 0 .3rem;font:600 1.15rem/1.2 Fraunces,Georgia,serif;letter-spacing:-.02em}
+header.barra p{margin:0;color:var(--suave);max-width:62ch}
+
+.escena{display:flex;gap:2rem 2.5rem;flex-wrap:wrap;justify-content:center;
+  align-items:flex-start;padding:2rem 1.4rem 4rem;max-width:74rem;margin-inline:auto}
+
+figure{margin:0;width:390px;display:flex;flex-direction:column;gap:.75rem}
+figcaption b{display:block;font:600 .95rem/1.3 Inter,sans-serif}
+figcaption .que{display:block;font-size:.8rem;color:var(--suave);margin-top:.15rem}
+
+/* El recorte a 430 px: la costura esta arriba, no hace falta el telefono entero */
+.corte{width:390px;height:430px;position:relative;overflow:hidden;
+  border-radius:22px 22px 6px 6px;border:1px solid var(--arcilla);background:#fff}
+.corte::after{content:"";position:absolute;left:0;right:0;bottom:0;height:54px;
+  background:linear-gradient(180deg,rgba(255,255,255,0),#fff 82%);pointer-events:none}
+
+.cabecera{position:absolute;inset:0 0 auto;background:var(--panel-fondo);
+  background-image:
+    radial-gradient(circle at 100% 0%,var(--panel-orn-a) 0 40%,transparent 40.5%),
+    radial-gradient(circle at -40% 100%,var(--panel-orn-b) 0 45%,transparent 45.5%);
+  padding:2rem 1.5rem 0}
+.marca{display:flex;align-items:center;gap:.5rem;margin:0;color:var(--panel-txt);
+  font-size:.8rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.marca svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.1;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.hoja{position:absolute;left:0;right:0;bottom:0;background:var(--blanco);
+  padding:0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.hoja h2{margin:0;font:600 1.75rem/1.08 Fraunces,Georgia,serif;letter-spacing:-.03em}
+.hoja .lema{margin:.35rem 0 0;font-size:.9rem;color:var(--txt-tenue)}
+.grupo{display:flex;flex-direction:column;gap:.35rem}
+.grupo label{font-size:.8rem;font-weight:500;color:var(--txt-tenue)}
+.grupo input{width:100%;min-height:46px;padding:.6rem .85rem;font:inherit;font-size:1rem;
+  border-radius:10px;border:1px solid var(--linea-med);background:#fff;color:var(--txt)}
+
+.dato{margin:0;font-size:.78rem;line-height:1.5;border-left:2px solid var(--arcilla-dp);
+  padding-left:.7rem;color:var(--tinta)}
+.dato b{display:block;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--arcilla-dp)}
+
+/* ============================================================
+   LOS SEIS BORDES
+   ============================================================ */
+
+/* A · la de ahora — arco eliptico asimetrico, profundo */
+#a .cabecera{height:196px}
+#a .hoja{top:140px;border-radius:64% 36% 0 0 / 60px 42px 0 0;padding-top:3.25rem;
+  box-shadow:0 -16px 38px -18px rgba(46,42,36,.45)}
+
+/* B · el mismo arco, la mitad de profundo */
+#b .cabecera{height:172px}
+#b .hoja{top:140px;border-radius:64% 36% 0 0 / 32px 22px 0 0;padding-top:2.5rem;
+  box-shadow:0 -16px 38px -18px rgba(46,42,36,.45)}
+
+/* C · arco simetrico y ancho — mas sereno, menos "gesto" */
+#c .cabecera{height:186px}
+#c .hoja{top:140px;border-radius:50% 50% 0 0 / 46px 46px 0 0;padding-top:2.9rem;
+  box-shadow:0 -16px 38px -18px rgba(46,42,36,.45)}
+
+/* D · onda de dos crestas, como el movil de tu referencia.
+   Un radio de CSS no puede subir y bajar dos veces, asi que la onda se dibuja
+   con un SVG apoyado justo encima del borde recto de la hoja. */
+#d .cabecera{height:180px}
+#d .hoja{top:150px;padding-top:2.6rem;box-shadow:0 -16px 38px -18px rgba(46,42,36,.45)}
+/* Apoyada en el borde de arriba de la hoja y solapandola 1 px: sin ese solape,
+   el redondeo a pixel del navegador deja una raya del marron entre las dos. */
+#d .onda{position:absolute;left:0;right:0;bottom:100%;margin-bottom:-1px;
+  width:100%;height:46px;display:block}
+
+/* E · corte en diagonal — el mismo gesto sin curva ninguna */
+#e .cabecera{height:176px}
+#e .hoja{top:132px;clip-path:polygon(0 48px,100% 0,100% 100%,0 100%);padding-top:3.5rem}
+
+/* F · hoja de app, mas abajo — la cabecera se lleva mas pantalla */
+#f .cabecera{height:250px}
+#f .hoja{top:222px;border-radius:26px 26px 0 0;padding-top:2.2rem;
+  box-shadow:0 -14px 34px -16px rgba(46,42,36,.45)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bombilla" viewBox="0 0 24 24">
+    <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+    <path d="M9 20h6M10.2 22.2h3.6"/>
+    <path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+  </symbol>
+</svg>
+
+<header class="barra">
+  <h1>La costura entre la cabecera y la hoja · seis tratamientos</h1>
+  <p>Todas llevan la misma cabecera, la misma marca y el mismo formulario: lo único que cambia es el borde de arriba de la hoja blanca y a qué altura empieza. Recortadas a 430&nbsp;px porque la diferencia está toda ahí.</p>
+</header>
+
+<main class="escena">
+
+  <figure id="a">
+    <figcaption><b>A · La de ahora</b><span class="que">Arco elíptico asimétrico y profundo. Se lee como papel levantándose por un lado.</span></figcaption>
+    <div class="corte">
+      <div class="cabecera"><p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p></div>
+      <div class="hoja">
+        <div><h2>¡Hola de nuevo!</h2><p class="lema">Entra para gestionar tus consultas.</p></div>
+        <div class="grupo"><label for="a1">Correo electrónico</label><input id="a1" placeholder="maria@correo.com"></div>
+      </div>
+    </div>
+    <p class="dato"><b>Marrón antes del título</b>El título arranca a 126 px. La curva baja 60 px por la izquierda.</p>
+  </figure>
+
+  <figure id="b">
+    <figcaption><b>B · La misma, la mitad de profunda</b><span class="que">Idéntica en forma, pero baja 32&nbsp;px en vez de 60. El gesto se insinúa en vez de anunciarse.</span></figcaption>
+    <div class="corte">
+      <div class="cabecera"><p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p></div>
+      <div class="hoja">
+        <div><h2>¡Hola de nuevo!</h2><p class="lema">Entra para gestionar tus consultas.</p></div>
+        <div class="grupo"><label for="b1">Correo electrónico</label><input id="b1" placeholder="maria@correo.com"></div>
+      </div>
+    </div>
+    <p class="dato"><b>Marrón antes del título</b>El título sube a 112 px. La curva baja 32 px.</p>
+  </figure>
+
+  <figure id="c">
+    <figcaption><b>C · Arco simétrico y ancho</b><span class="que">Sin el sesgo a un lado. Más sereno y menos “gesto de diseño”; también menos memorable.</span></figcaption>
+    <div class="corte">
+      <div class="cabecera"><p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p></div>
+      <div class="hoja">
+        <div><h2>¡Hola de nuevo!</h2><p class="lema">Entra para gestionar tus consultas.</p></div>
+        <div class="grupo"><label for="c1">Correo electrónico</label><input id="c1" placeholder="maria@correo.com"></div>
+      </div>
+    </div>
+    <p class="dato"><b>Marrón antes del título</b>Igual que A, pero la curva reparte los 46 px a los dos lados.</p>
+  </figure>
+
+  <figure id="d">
+    <figcaption><b>D · Onda de dos crestas</b><span class="que">La de tu referencia. Un <code>border-radius</code> no puede subir y bajar dos veces, así que va dibujada en SVG.</span></figcaption>
+    <div class="corte">
+      <div class="cabecera"><p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p></div>
+      <div class="hoja">
+        <svg class="onda" viewBox="0 0 390 46" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 46 C 74 46 92 4 180 4 C 268 4 300 26 390 26 L 390 46 Z" fill="#fff"/>
+        </svg>
+        <div><h2>¡Hola de nuevo!</h2><p class="lema">Entra para gestionar tus consultas.</p></div>
+        <div class="grupo"><label for="d1">Correo electrónico</label><input id="d1" placeholder="maria@correo.com"></div>
+      </div>
+    </div>
+    <p class="dato"><b>El precio</b>Es la más decorativa de las seis. Con el marrón liso —sin foto detrás— la onda pide más protagonismo del que le toca.</p>
+  </figure>
+
+  <figure id="e">
+    <figcaption><b>E · Corte en diagonal</b><span class="que">El mismo gesto de “algo sube por un lado” sin curva ninguna. Más seco, más editorial.</span></figcaption>
+    <div class="corte">
+      <div class="cabecera"><p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p></div>
+      <div class="hoja">
+        <div><h2>¡Hola de nuevo!</h2><p class="lema">Entra para gestionar tus consultas.</p></div>
+        <div class="grupo"><label for="e1">Correo electrónico</label><input id="e1" placeholder="maria@correo.com"></div>
+      </div>
+    </div>
+    <p class="dato"><b>Ojo</b>La diagonal es un ángulo duro, y toda la marca de Daryeli va en curvas. Encaja peor con lo demás de lo que parece aquí sola.</p>
+  </figure>
+
+  <figure id="f">
+    <figcaption><b>F · Hoja de app, más abajo</b><span class="que">Esquinas redondeadas normales y la cabecera con más aire. Si “bajarla” significaba mover la hoja, es esta.</span></figcaption>
+    <div class="corte">
+      <div class="cabecera"><p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p></div>
+      <div class="hoja">
+        <div><h2>¡Hola de nuevo!</h2><p class="lema">Entra para gestionar tus consultas.</p></div>
+        <div class="grupo"><label for="f1">Correo electrónico</label><input id="f1" placeholder="maria@correo.com"></div>
+      </div>
+    </div>
+    <p class="dato"><b>El precio</b>La cabecera se lleva 222 px en vez de 118, y el título cae a 250. En “crear cuenta” eso es media pantalla más de scroll.</p>
+  </figure>
+
+</main>
+</body>
+</html>

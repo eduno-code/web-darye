@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #F5F0F1; color: #3B333A;
+           font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    a { color: #5E4551; } a:hover { color: #45323C; }
+    .serif { font-family: Newsreader, Georgia, "Times New Roman", serif; }
+  </style>
+</helmet>
+
+<article style="padding: 34px; display: flex; flex-direction: column; gap: 22px; height: 100%; box-sizing: border-box">
+
+  <header style="display: flex; flex-direction: column; gap: 7px">
+    <p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: #7A5A68">Alternativa · el rosa viejo</p>
+    <h2 class="serif" style="margin: 0; font-size: 29px; font-weight: 400; line-height: 1.12; letter-spacing: -.015em">Malva y hueso</h2>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #665C63">El que preguntaste hace unas semanas. El malva apagado hace de frío sin ser azul, así que la pantalla entera se queda del lado cálido.</p>
+  </header>
+
+  <div style="display: flex; gap: 10px">
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #5E4551"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #8A6B78"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #B08968"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #E4D5D8"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #F5F0F1; border: 1px solid rgba(94,69,81,.20)"></span>
+  </div>
+
+  <section style="display: flex; flex-direction: column; gap: 12px">
+    <article style="background: #FFFFFF; border: 1.5px solid #8A6B78; border-radius: 16px; overflow: hidden">
+      <header style="display: flex; align-items: center; gap: 10px; padding: 15px 0 11px; margin: 0 16px; border-bottom: 1px solid rgba(176,137,104,.26)">
+        <span style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #8A6B78; color: #8A6B78; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">3</span>
+        <p style="margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -.015em">sesiones</p>
+        <p style="margin: 0 0 0 auto; font-size: 12px; color: #665C63; display: flex; align-items: center; gap: 6px"><span style="width: 5px; height: 5px; border-radius: 50%; background: #B08968"></span>Sugerida</p>
+      </header>
+      <p style="margin: 0; padding: 13px 16px; font-size: 12.5px; color: #665C63">A tu ritmo, 90 días</p>
+      <footer style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 16px 17px; border-top: 1px solid rgba(176,137,104,.26)">
+        <p style="margin: 0; font-size: 27px; font-weight: 600; letter-spacing: -.03em; color: #8A5F3C; font-variant-numeric: tabular-nums">75 $</p>
+        <span style="display: flex; align-items: center; gap: 9px">
+          <span style="padding: 5px 8px; border-radius: 8px; background: #F3E7E9; color: #5E4551; font-size: 11.5px; font-weight: 500">Ahorras 15 $</span>
+          <span style="width: 21px; height: 21px; border-radius: 50%; background: #5E4551; display: flex; align-items: center; justify-content: center">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5.5 5.5L20 7"/></svg>
+          </span>
+        </span>
+      </footer>
+    </article>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+      <p style="margin: 0; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 500; background: #FFFFFF; border: 1px solid rgba(176,137,104,.30); border-radius: 11px; font-variant-numeric: tabular-nums">09:00</p>
+      <p style="margin: 0; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 500; background: #FBF5F6; border: 2px solid #8A6B78; border-radius: 11px; font-variant-numeric: tabular-nums">10:00</p>
+      <p style="margin: 0; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 500; background: #E7DFE0; color: #6B6166; border: 1px solid transparent; border-radius: 11px; font-variant-numeric: tabular-nums">11:00</p>
+    </div>
+
+    <button type="button" style="font: inherit; font-size: 14px; font-weight: 500; padding: 13px 22px; border-radius: 999px; border: 1px solid transparent; background: #5E4551; color: #FFFFFF; cursor: pointer; width: 100%">Ver horarios</button>
+  </section>
+
+  <footer style="margin-top: auto; display: flex; flex-direction: column; gap: 9px; padding: 16px 18px; background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(94,69,81,.18)">
+    <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #7A5A68">A favor</p>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #665C63">Es el más personal y el que menos se parece a una herramienta. Se aleja del azul corporativo sin irse al frío.</p>
+    <p style="margin: 8px 0 0; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #8A5F3C">El precio a pagar</p>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #665C63">Sin un frío de verdad, el contraste cálido/frío desaparece y todo tiende otra vez a la misma temperatura — que es justo el problema del que venimos.</p>
+  </footer>
+
+</article>
+</x-dc>
+</body>
+</html>

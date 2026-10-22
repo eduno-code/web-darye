@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quitar el punto de la opción · cuatro variantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     QUITAR EL PUNTO DE LA OPCION.
+
+     La idea tiene fundamento: desde que lo elegido lleva canto de salvia, el
+     punto dice lo mismo dos veces, y la pantalla se quita de encima el aire de
+     formulario.
+
+     LO QUE HAY QUE MIRAR ANTES DE DECIDIR no es la fila elegida, es LA QUE NO
+     LO ESTA. El punto tambien es lo unico que dice "esto es una opcion, elige
+     una". Sin el, las filas en reposo son texto pelado. Por eso cada ficha se
+     ensena DOS VECES: con algo elegido y sin nada elegido, que es como llega
+     todo el mundo a la pantalla.
+
+     Los radios siguen siendo nativos en las cuatro, asi que el teclado y el
+     lector de pantalla no cambian: esto es solo lo que se ve.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50; --acc-sv:#E8EDE6;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-nota:.79rem; --t-aux:.88rem; --t-base:1rem; --t-rotulo:1.05rem;
+  --r-chico:8px; --r-medio:14px; --r-pill:999px;
+  --canto:2px;
+  --paso:180ms ease;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--suelo);color:var(--txt);
+  font-family:var(--texto);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+header{padding:1.5rem 2rem 1rem}
+h1{margin:0 0 .3rem;font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+header p{margin:0;max-width:62rem;font-size:var(--t-aux);color:var(--txt-suave)}
+
+.caso{
+  margin:1.25rem 2rem;padding:1.4rem 1.5rem 1.6rem;
+  background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+.caso h2{margin:0 0 .2rem;font-size:1rem;font-weight:600}
+.caso .dice{margin:0 0 1.3rem;max-width:58rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.caso .dice b{color:var(--txt)}
+.par{display:flex;flex-wrap:wrap;gap:3rem}
+.lado{width:380px}
+.lado > h3{
+  margin:0 0 .7rem;font-size:var(--t-nota);font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--txt-suave);
+}
+
+.rotulo{
+  display:block;margin:0 0 .5rem;
+  font-family:var(--display);font-size:var(--t-rotulo);font-weight:600;
+  color:var(--marca);
+}
+.opciones{display:flex;flex-direction:column;gap:.3rem}
+
+/* ---------- la fila, igual que en la pagina ---------- */
+.op{
+  display:flex;align-items:center;gap:.85rem;
+  min-height:46px;padding:0 .6rem;margin:0 -.6rem;
+  border-radius:var(--r-medio);
+  cursor:pointer;font-size:var(--t-base);
+  transition:background var(--paso), box-shadow var(--paso);
+}
+.op input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.op:hover{background:var(--fila-viva)}
+.op:has(input:checked){background:var(--fila-viva);font-weight:600}
+
+/* el punto */
+.dot{
+  flex:none;width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--marca-cl);box-sizing:border-box;
+  transition:border-color var(--paso), background var(--paso), box-shadow var(--paso);
+}
+.op:has(input:checked) .dot{
+  border-color:var(--marca);background:var(--marca);
+  box-shadow:inset 0 0 0 3.5px var(--blanco);
+}
+
+/* ============ HOY · con punto ============ */
+.hoy .op:has(input:checked){box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+
+/* ============ 1 · sin punto, solo el canto ============ */
+.una .dot{display:none}
+.una .op{gap:0}
+.una .op:has(input:checked){box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+
+/* ============ 2 · sin punto, con canto tenue en reposo ============ */
+.dos .dot{display:none}
+.dos .op{gap:0}
+/* EL CANTO EN REPOSO es lo que dice "esto es una opcion" cuando no hay punto.
+   Muy tenue, para que no vuelvan las cajas que se quitaron. */
+.dos .op{box-shadow:inset 0 0 0 1px var(--linea)}
+.dos .op:has(input:checked){box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+
+/* ============ 3 · el punto cambia por un visto ============ */
+.tres .dot{
+  display:grid;place-items:center;
+  width:18px;height:18px;border:0;border-radius:0;background:none;
+}
+.tres .dot svg{width:16px;height:16px;opacity:0;transition:opacity var(--paso)}
+.tres .dot svg path{stroke:var(--acc-dp);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tres .op:has(input:checked) .dot{background:none;box-shadow:none}
+.tres .op:has(input:checked) .dot svg{opacity:1}
+.tres .op:has(input:checked){box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+
+/* ---------- los planes, que tambien llevan punto ---------- */
+.planes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin:0 -.8rem}
+.plan{
+  position:relative;display:grid;grid-template-columns:18px auto 1fr;
+  align-items:baseline;gap:.2rem .8rem;
+  padding:.85rem .8rem;border-radius:var(--r-medio);
+  cursor:pointer;transition:background var(--paso), box-shadow var(--paso);
+}
+.plan input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.plan:hover{background:var(--fila-viva)}
+.plan:has(input:checked){background:var(--fila-viva)}
+.plan .dot{grid-column:1;grid-row:1;align-self:center}
+.plan-nom{grid-column:2 / -1;grid-row:1;font-size:var(--t-base)}
+.plan:has(input:checked) .plan-nom{font-weight:600}
+/* `nowrap` para que el precio no se parta en "75 / $". En la pagina no pasa
+   -son tres columnas mas anchas-, pero aqui las fichas van a 380 px y sin esto
+   la comparativa ensenaria un defecto que no existe. */
+.plan-precio{grid-column:2;grid-row:2;font-size:var(--t-base);color:var(--txt-suave);white-space:nowrap}
+.plan:has(input:checked) .plan-precio{color:var(--txt)}
+.plan-ahorro:not(:empty){
+  grid-column:3;grid-row:2;justify-self:start;margin-left:.35rem;
+  padding:.18rem .65rem;border-radius:var(--r-pill);background:var(--acc-sv);
+  font-size:var(--t-nota);font-weight:500;color:var(--acc-dp);white-space:nowrap;
+}
+.hoy .plan:has(input:checked){box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+.una .plan:has(input:checked),
+.dos .plan:has(input:checked),
+.tres .plan:has(input:checked){box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+.una .plan .dot,.dos .plan .dot{display:none}
+.una .plan,.dos .plan{grid-template-columns:0 auto 1fr;gap:.2rem 0}
+.dos .plan{box-shadow:inset 0 0 0 1px var(--linea)}
+
+.cierre{padding:.5rem 2rem 4rem;max-width:62rem;font-size:var(--t-aux);line-height:1.7;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+.cierre p{margin:0 0 .9rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Quitar el punto de la opción</h1>
+  <p>Cada variante dos veces: <b>con algo elegido</b> y <b>sin nada elegido</b>, que es como llega todo el mundo a la pantalla. Los radios siguen siendo nativos en las cuatro, así que el teclado y el lector de pantalla no cambian.</p>
+</header>
+
+<div id="zona"></div>
+
+<div class="cierre">
+  <p><b>La fila elegida funciona sin punto en las cuatro.</b> El canto de salvia y la negrita bastan, y además no dependen del color solos, así que por accesibilidad no hay problema: sigue habiendo dos señales que no son color.</p>
+
+  <p><b>El problema está en la columna de la derecha, no en la izquierda.</b> Mira la 1 sin nada elegido: son cuatro líneas de texto sin nada que diga que hay que tocar una. El punto vacío era lo que lo decía. Y en un móvil no hay ratón que pasar por encima para descubrirlo.</p>
+
+  <p><b>Mi apuesta es la 3, el visto.</b> Quita el punto de radio —que es lo que da el aire de formulario que te molesta— y deja un hueco de 18&nbsp;px al principio de cada fila, así que las cuatro siguen alineadas y se leen como una lista de cosas elegibles, no como un párrafo. Al elegir aparece un visto en salvia, que dice «esta» de forma más cálida que un punto relleno. Es el mismo gesto que ya usan las pestañas al completarse.</p>
+
+  <p>La <b>2</b> resuelve el aviso de otra manera, con un canto muy tenue en reposo. Funciona, pero devuelve cuatro cajas a la pantalla de la que quitamos todas — es justo lo que no querías al principio.</p>
+
+  <p>La <b>1</b> es la más limpia de las cuatro y la que más me gustaría poder recomendarte. No lo hago por lo de arriba: en reposo no hay nada que invite a tocar.</p>
+</div>
+
+<script>
+(function () {
+  var VISTO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11"/></svg>';
+
+  var MODOS = [['online','En línea'],['presencial','Presencial']];
+  var SERV = [['ansiedad','Superar la Ansiedad'],['autoestima','Fortalecer tu Autoestima'],
+              ['pareja','Sanar en Pareja'],['duelo','Acompañar un Duelo']];
+
+  function fila(grupo, v, n, elegido, visto) {
+    return '<label class="op">' +
+      '<input type="radio" name="' + grupo + '" value="' + v + '"' + (elegido ? ' checked' : '') + '>' +
+      '<span class="dot" aria-hidden="true">' + (visto ? VISTO : '') + '</span>' +
+      '<span>' + n + '</span></label>';
+  }
+
+  function plan(grupo, v, n, precio, ahorro, elegido, visto) {
+    return '<label class="plan">' +
+      '<input type="radio" name="' + grupo + '" value="' + v + '"' + (elegido ? ' checked' : '') + '>' +
+      '<span class="dot" aria-hidden="true">' + (visto ? VISTO : '') + '</span>' +
+      '<span class="plan-nom">' + n + '</span>' +
+      '<span class="plan-precio">' + precio + ' $</span>' +
+      '<span class="plan-ahorro">' + (ahorro ? 'Ahorras ' + ahorro + ' $' : '') + '</span>' +
+      '</label>';
+  }
+
+  function grupo(id, elegido, visto) {
+    var s = '<span class="rotulo">Qué quieres trabajar</span><div class="opciones">';
+    SERV.forEach(function (x, i) {
+      s += fila(id, x[0], x[1], elegido && i === 0, visto);
+    });
+    s += '</div>';
+    s += '<span class="rotulo" style="margin-top:1.6rem">Consulta o paquete</span><div class="planes">' +
+      plan(id + '-p', '1', '1 Consulta', '30', 0, false, visto) +
+      plan(id + '-p', '3', '3 Consultas', '75', '15', elegido, visto) +
+      '</div>';
+    return s;
+  }
+
+  var CASOS = [
+    ['hoy', 'Como está ahora · con punto',
+     'El punto marca lo elegido y, sin elegir, el círculo vacío es lo que dice que hay opciones.'],
+    ['una', '1 · sin punto, solo el canto',
+     'Lo más limpio. Con algo elegido funciona perfectamente. <b>Mira la columna de la derecha.</b>'],
+    ['dos', '2 · sin punto, con canto tenue en reposo',
+     'El canto fino dice "esto se elige" sin punto. A cambio devuelve cuatro cajas a la pantalla.'],
+    ['tres', '3 · el punto cambia por un visto',
+     'Se va el punto de radio y queda su hueco, así que las filas siguen alineadas y se leen como lista. Al elegir, un visto en salvia.']
+  ];
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c, i) {
+    var visto = c[0] === 'tres';
+    return '<section class="caso ' + c[0] + '">' +
+      '<h2>' + c[1] + '</h2>' +
+      '<p class="dice">' + c[2] + '</p>' +
+      '<div class="par">' +
+        '<div class="lado"><h3>Con algo elegido</h3>' + grupo('a' + i, true, visto) + '</div>' +
+        '<div class="lado"><h3>Sin nada elegido — así llega la gente</h3>' + grupo('b' + i, false, visto) + '</div>' +
+      '</div>' +
+    '</section>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

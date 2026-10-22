@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Harness de captura</title>
+<link rel="icon" href="data:,">
+<style>
+  html,body{margin:0;padding:0;background:#fff}
+  #marco{border:0;display:block;background:#fff;margin:0}
+</style>
+</head>
+<body>
+<iframe id="marco" src="maqueta-vista1-salvia.html"></iframe>
+<script>
+  /* La ventana de Chrome no baja de ~488 px, asi que a 390 la maqueta solo se
+     puede ver de verdad dentro de un iframe de ese ancho. Y la foto se toma de
+     ESTA pagina, no del iframe: desde fuera, la barra fija del movil es
+     contenido estatico anclado al borde inferior del marco, que es justo donde
+     tiene que salir. Fotografiar el iframe como elemento la descoloca. */
+  var p = new URLSearchParams(location.search);
+  var marco = document.getElementById('marco');
+  marco.style.width = (p.get('w') || 390) + 'px';
+  marco.style.height = (p.get('h') || 900) + 'px';
+  window.ajustar = function () {
+    var d = marco.contentDocument, alto = 0;
+    for (var i = 0; i < 8; i++) { alto = d.documentElement.scrollHeight; marco.style.height = alto + 'px'; }
+    return alto;
+  };
+</script>
+</body>
+</html>

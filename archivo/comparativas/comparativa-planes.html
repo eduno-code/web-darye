@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa — tarjetas de sesiones</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="reservar/reservar.css">
+<style>
+  body{background:var(--papel);font-family:var(--font-display);margin:0;padding:2rem 1.25rem 4rem}
+  .env{max-width:74rem;margin:0 auto}
+  .env > h1{font-size:1.45rem;margin:0 0 .4rem}
+  .env > p.sub{color:var(--text-soft);margin:0 0 2.25rem;max-width:52rem;line-height:1.65}
+
+  .bloque{background:#fff;border:1px solid var(--linea);border-radius:20px;padding:1.5rem;margin-bottom:1.5rem}
+  .bloque.gana{border-color:var(--primary-deep);box-shadow:var(--elev-2)}
+  .bloque > header{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;
+    padding-bottom:.8rem;margin-bottom:1.6rem;border-bottom:1px solid var(--linea)}
+  .bloque > header .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-soft);font-weight:700}
+  .bloque.gana > header .et{color:var(--primary-deep)}
+  .bloque > header h2{font-size:1.05rem;margin:.1rem 0 0}
+  .bloque > header .alto{margin-left:auto;font-size:.78rem;color:var(--text-soft)}
+  .bloque > header .alto b{color:var(--primary-deep);font-variant-numeric:tabular-nums}
+  .bloque > p.nota{font-size:.84rem;color:var(--text-soft);line-height:1.65;margin:1.5rem 0 0;max-width:54rem}
+  .bloque > p.nota b{color:var(--text)}
+  .bloque code{background:var(--papel);border:1px solid var(--linea);border-radius:5px;padding:.06rem .3rem;font-size:.9em}
+
+  /* ================= tarjetas ================= */
+  /* Mas aire entre ellas: .85 -> 1.25rem. Tres tarjetas muy juntas se leen como
+     un bloque unico y cuesta ver donde acaba una y empieza la siguiente. */
+  .pl{display:grid;gap:1.25rem;grid-template-columns:1fr;max-width:50rem}
+  @media(min-width:640px){.pl{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+  .pl-card{position:relative;display:flex;flex-direction:column;
+    background:var(--white);border:1.5px solid var(--linea);border-radius:var(--wz-radio);
+    font:inherit;color:inherit;text-align:left;cursor:pointer;box-shadow:var(--elev-1);
+    /* recorta la cinta contra el radio de la tarjeta: sin esto la cinta es una
+       barra recta que sobresale de las esquinas curvas. */
+    overflow:hidden;
+    transition:box-shadow var(--paso),border-color var(--paso),background var(--paso)}
+  .pl-card:hover{border-color:var(--linea-fuerte);box-shadow:var(--elev-2)}
+  .pl-card[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2)}
+
+  /* CABECERA. La divisoria nace y muere en el mismo margen que el texto. */
+  .pl-cab{display:flex;align-items:center;gap:.55rem;
+    padding:var(--space-5) 0 .75rem;margin:0 var(--space-5);
+    border-bottom:1px solid var(--linea)}
+  .pl-card[aria-checked="true"] .pl-cab{border-bottom-color:var(--primary-light)}
+
+  /* Borde mas grueso y mas oscuro: a 1,5 px sobre blanco el circulo casi no se
+     leia como circulo. */
+  .pl-cifra{flex:none;width:32px;height:32px;border-radius:50%;
+    border:2.5px solid var(--primary);display:grid;place-items:center;
+    font-size:.95rem;font-weight:700;line-height:1;color:var(--primary-deep);
+    font-variant-numeric:tabular-nums;
+    transition:border-color var(--paso),background var(--paso),color var(--paso)}
+  .pl-card[aria-checked="true"] .pl-cifra{border-color:var(--primary-deep);background:var(--primary-deep);color:#fff}
+  .pl-nombre{font-weight:700;font-size:1.02rem;line-height:1.2;letter-spacing:-.01em}
+  .pl-etiqueta{margin-left:auto;flex:none;padding:.18rem .42rem;border-radius:5px;
+    background:var(--primary-deep);color:#fff;font-size:.62rem;font-weight:700;
+    letter-spacing:.03em;text-transform:uppercase;line-height:1.3;white-space:nowrap}
+
+  .pl-cuerpo{flex:1;display:flex;align-items:center;padding:var(--space-4) var(--space-5)}
+  .pl-detalle{display:flex;align-items:center;gap:.45rem;
+    font-size:var(--text-xs);color:var(--text-soft);line-height:1.5;margin:0}
+  .pl-detalle svg{width:15px;height:15px;flex:none;color:var(--primary)}
+
+  /* PIE. El check ya NO va en posicion absoluta: es un hijo mas de la fila, el
+     ultimo por la derecha. Asi nunca puede caer encima del badge de ahorro. */
+  .pl-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+    gap:.5rem;padding:.85rem var(--space-5) var(--space-5);min-height:2.5rem}
+  .pl-pie::before{content:"";position:absolute;top:0;left:var(--space-5);right:var(--space-5);
+    height:1px;background:var(--linea)}
+  .pl-card[aria-checked="true"] .pl-pie::before{background:var(--primary-light)}
+  .pl-precio{font-size:1.6rem;font-weight:700;letter-spacing:-.025em;line-height:1;color:var(--primary-darkest)}
+  .pl-derecha{display:flex;align-items:center;gap:.45rem;flex:none}
+  .pl-ahorro{display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .5rem;border-radius:6px;
+    background:var(--ok-suave);color:var(--ok);font-size:.7rem;font-weight:600;line-height:1.3;white-space:nowrap}
+  .pl-ahorro svg{width:12px;height:12px;flex:none}
+  .pl-card[aria-checked="true"] .pl-ahorro{background:var(--white)}
+  .pl-check{flex:none;width:22px;height:22px;border-radius:50%;background:var(--primary-deep);
+    display:grid;place-items:center;opacity:0;transform:scale(.6);
+    transition:opacity var(--paso),transform var(--paso)}
+  .pl-check svg{width:13px;height:13px;color:#fff}
+  .pl-card[aria-checked="true"] .pl-check{opacity:1;transform:scale(1)}
+
+  .pl-destacada{border-color:var(--primary-light)}
+  .pl-cinta{position:absolute;top:0;left:0;right:0;height:3px;background:var(--primary-deep)}
+</style>
+</head>
+<body>
+<div class="env">
+
+<h1>Opción I — las cuatro correcciones</h1>
+<p class="sub">El check baja a la fila del precio como un elemento más, la cinta se recorta contra
+   el radio de la tarjeta, hay más aire entre las tres y el círculo de la cifra gana grosor.</p>
+
+<section class="bloque gana">
+  <header>
+    <div><span class="et">Opción I · recomendada</span><h2>Detalle a la izquierda, como la variante que elegiste</h2></div>
+    <p class="alto">Tarjeta: <b data-mide="mI">—</b></p>
+  </header>
+
+  <div class="pl" id="mI" role="radiogroup" aria-label="I">
+    <button type="button" class="pl-card" role="radio" aria-checked="false">
+      <span class="pl-cab"><span class="pl-cifra">1</span><span class="pl-nombre">sesión</span></span>
+      <span class="pl-cuerpo">
+        <p class="pl-detalle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg>
+          <span>Una cita puntual</span>
+        </p>
+      </span>
+      <span class="pl-pie">
+        <span class="pl-precio">30 $</span>
+        <span class="pl-derecha">
+          <span class="pl-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span>
+        </span>
+      </span>
+    </button>
+
+    <button type="button" class="pl-card pl-destacada" role="radio" aria-checked="true">
+      <span class="pl-cinta" aria-hidden="true"></span>
+      <span class="pl-cab"><span class="pl-cifra">3</span><span class="pl-nombre">sesiones</span><span class="pl-etiqueta">Sugerida</span></span>
+      <span class="pl-cuerpo">
+        <p class="pl-detalle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+          <span>A tu ritmo, 90 días</span>
+        </p>
+      </span>
+      <span class="pl-pie">
+        <span class="pl-precio">75 $</span>
+        <span class="pl-derecha">
+          <span class="pl-ahorro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2 13.2 20.5a2 2 0 0 1-2.8 0l-7-7a2 2 0 0 1-.6-1.4V4.5a2 2 0 0 1 2-2h7.6a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg>Ahorras 15 $</span>
+          <span class="pl-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span>
+        </span>
+      </span>
+    </button>
+
+    <button type="button" class="pl-card" role="radio" aria-checked="false">
+      <span class="pl-cab"><span class="pl-cifra">5</span><span class="pl-nombre">sesiones</span></span>
+      <span class="pl-cuerpo">
+        <p class="pl-detalle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+          <span>A tu ritmo, 90 días</span>
+        </p>
+      </span>
+      <span class="pl-pie">
+        <span class="pl-precio">125 $</span>
+        <span class="pl-derecha">
+          <span class="pl-ahorro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2 13.2 20.5a2 2 0 0 1-2.8 0l-7-7a2 2 0 0 1-.6-1.4V4.5a2 2 0 0 1 2-2h7.6a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg>Ahorras 25 $</span>
+          <span class="pl-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span>
+        </span>
+      </span>
+    </button>
+  </div>
+
+  <p class="nota"><b>El check.</b> Estaba en posición absoluta en la esquina, así que en la
+     primera tarjeta caía en el hueco libre —por eso te gustaba— y en las otras dos aterrizaba
+     encima del badge de ahorro. Ahora es un hijo más de la fila del precio, el último por la
+     derecha: el badge lo empuja en vez de taparlo, y en la de una sesión sigue quedando en ese
+     mismo sitio que te gustó. <b>La cinta.</b> Le puse <code>overflow:hidden</code> a la tarjeta
+     para que la recorte contra su propio radio — antes era una barra recta con las esquinas
+     sobresaliendo, porque un elemento de 3 px de alto no puede curvarse con un radio mayor que
+     él. <b>Más aire:</b> el hueco entre tarjetas pasa de 0,85 a 1,25 rem. <b>El círculo:</b>
+     borde de 1,5 a 2,5 px y en verde en vez de gris, y sube de 30 a 32 px.</p>
+</section>
+
+<section class="bloque">
+  <header><div><span class="et">Comprobación</span><h2>Las tres seleccionadas a la vez</h2></div></header>
+  <div class="pl" id="mTodas" aria-label="todas">
+    <span class="pl-card" aria-checked="true">
+      <span class="pl-cab"><span class="pl-cifra">1</span><span class="pl-nombre">sesión</span></span>
+      <span class="pl-cuerpo"><p class="pl-detalle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg><span>Una cita puntual</span></p></span>
+      <span class="pl-pie"><span class="pl-precio">30 $</span><span class="pl-derecha"><span class="pl-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span></span></span>
+    </span>
+    <span class="pl-card pl-destacada" aria-checked="true">
+      <span class="pl-cinta" aria-hidden="true"></span>
+      <span class="pl-cab"><span class="pl-cifra">3</span><span class="pl-nombre">sesiones</span><span class="pl-etiqueta">Sugerida</span></span>
+      <span class="pl-cuerpo"><p class="pl-detalle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg><span>A tu ritmo, 90 días</span></p></span>
+      <span class="pl-pie"><span class="pl-precio">75 $</span><span class="pl-derecha"><span class="pl-ahorro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2 13.2 20.5a2 2 0 0 1-2.8 0l-7-7a2 2 0 0 1-.6-1.4V4.5a2 2 0 0 1 2-2h7.6a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg>Ahorras 15 $</span><span class="pl-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span></span></span>
+    </span>
+    <span class="pl-card" aria-checked="true">
+      <span class="pl-cab"><span class="pl-cifra">5</span><span class="pl-nombre">sesiones</span></span>
+      <span class="pl-cuerpo"><p class="pl-detalle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg><span>A tu ritmo, 90 días</span></p></span>
+      <span class="pl-pie"><span class="pl-precio">125 $</span><span class="pl-derecha"><span class="pl-ahorro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2 13.2 20.5a2 2 0 0 1-2.8 0l-7-7a2 2 0 0 1-.6-1.4V4.5a2 2 0 0 1 2-2h7.6a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg>Ahorras 25 $</span><span class="pl-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span></span></span>
+    </span>
+  </div>
+  <p class="nota">Las tres en estado elegido a la vez, que es el caso donde el check y el badge
+     competían. Aquí se ve de un golpe si alguno se pisa.</p>
+</section>
+
+</div>
+
+<script>
+  document.querySelectorAll('[data-mide]').forEach(function (b) {
+    var c = document.getElementById(b.dataset.mide).firstElementChild.getBoundingClientRect();
+    b.textContent = Math.round(c.width) + ' × ' + Math.round(c.height) + ' px';
+  });
+  document.querySelectorAll('[role="radiogroup"]').forEach(function (g) {
+    g.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[role="radio"]');
+      if (!b) return;
+      g.querySelectorAll('[role="radio"]').forEach(function (o) { o.setAttribute('aria-checked', String(o === b)); });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa · el icono de Cómo llegar</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --marca:#A8825F; --linea:#C6A783;
+  --txt:#2E332E; --txt-suave:#5C635A;
+  --acc:#5A7060; --acc-dp:#3E4F44;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#FAF3EA;color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:999px}
+
+.envoltorio{max-width:56rem;margin:0 auto;padding:1.75rem 1.25rem 3rem}
+h1{font-size:1.4rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .35rem}
+.intro{color:var(--txt-suave);margin:0 0 1.75rem;line-height:1.65;font-size:.9rem;max-width:42rem}
+
+.rejilla{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:700px){.rejilla{grid-template-columns:1fr 1fr}}
+.op{background:#fff;border:1px solid var(--linea);border-radius:14px;
+  padding:1.2rem 1.3rem 1.4rem;display:flex;flex-direction:column;gap:.85rem}
+.op.recomendada{border-color:var(--marca);border-width:2px}
+.op-cab{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;margin:0}
+.op-cab b{font-size:.98rem;font-weight:600}
+.op-cab em{font-style:normal;font-size:.68rem;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--acc-dp)}
+.op-nota{margin:0;font-size:.82rem;color:var(--txt-suave);line-height:1.6}
+.muestra{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;
+  padding:1.3rem .75rem;background:#fff;border-radius:10px}
+
+/* El boton, exactamente como esta en la maqueta */
+.ir{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.7rem 1.6rem;border-radius:999px;min-width:11rem;min-height:48px;
+  background:var(--acc);color:#fff;font:inherit;font-size:.9rem;font-weight:500;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:background var(--paso),transform 160ms cubic-bezier(.23,1,.32,1)}
+.ir:active{transform:scale(.97)}
+.ir svg{width:15px;height:15px;flex:none}
+
+/* la lupa: el mismo icono ampliado, para ver que forma tiene de verdad */
+.lupa{display:grid;place-items:center;width:56px;height:56px;border-radius:12px;
+  background:var(--acc);color:#fff;flex:none}
+.lupa svg{width:34px;height:34px}
+</style>
+</head>
+<body>
+<div class="envoltorio">
+
+  <header>
+    <h1>El icono de «Cómo llegar»</h1>
+    <p class="intro">A la izquierda, el botón al tamaño real con el icono a 15&nbsp;px — que es como se va a ver.
+       A la derecha, el mismo icono ampliado a 34, para que veas qué forma tiene realmente.
+       Lo que importa es la primera: a 15&nbsp;px solo sobrevive lo que es una forma simple.</p>
+  </header>
+
+  <div class="rejilla">
+
+    <section class="op recomendada">
+      <p class="op-cab"><b>A · Navegación, maciza</b> <em>mi recomendación</em></p>
+      <div class="muestra">
+        <button type="button" class="ir">Cómo llegar
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.4 10.6 21 3l-7.6 17.6-2-7.4-8-2.6Z"/></svg>
+        </button>
+        <span class="lupa"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.4 10.6 21 3l-7.6 17.6-2-7.4-8-2.6Z"/></svg></span>
+      </div>
+      <p class="op-nota">Una sola forma llena, sin trazos internos. Es el glifo que usa Google Maps para «cómo llegar», así que ya se reconoce. A 15&nbsp;px sigue siendo la misma silueta.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>B · Navegación, de trazo</b></p>
+      <div class="muestra">
+        <button type="button" class="ir">Cómo llegar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.4 10.6 21 3l-7.6 17.6-2-7.4-8-2.6Z"/></svg>
+        </button>
+        <span class="lupa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.4 10.6 21 3l-7.6 17.6-2-7.4-8-2.6Z"/></svg></span>
+      </div>
+      <p class="op-nota">La misma forma pero hueca. Encaja mejor con los otros iconos de la vista, que son todos de trazo — pero a 15&nbsp;px el hueco interior casi se cierra y pierde nitidez.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>C · Giro</b></p>
+      <div class="muestra">
+        <button type="button" class="ir">Cómo llegar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20v-5a4 4 0 0 1 4-4h9"/><path d="m13.5 6.5 4.5 4.5-4.5 4.5"/></svg>
+        </button>
+        <span class="lupa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20v-5a4 4 0 0 1 4-4h9"/><path d="m13.5 6.5 4.5 4.5-4.5 4.5"/></svg></span>
+      </div>
+      <p class="op-nota">Una flecha que gira: literalmente «te indico el camino». Dos trazos gruesos y bien separados, así que aguanta el tamaño pequeño mejor que el mapa.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>D · Mapa plegado</b> <em>el actual</em></p>
+      <div class="muestra">
+        <button type="button" class="ir">Cómo llegar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
+        </button>
+        <span class="lupa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5Z"/><path d="M9 4v13.5M15 6.5V20"/></svg></span>
+      </div>
+      <p class="op-nota">Ampliado se entiende perfectamente; a 15&nbsp;px los dos pliegues internos quedan a menos de 4&nbsp;px del borde y se funden en una mancha. Ese es el problema que viste.</p>
+    </section>
+
+  </div>
+</div>
+</body>
+</html>

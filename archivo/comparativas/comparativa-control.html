@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa · el control de modalidad</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --marca:#A8825F; --marca-cl:#C6A783;
+  --txt:#2E332E; --txt-suave:#5C635A;
+  --acc:#5A7060; --acc-dp:#3E4F44; --acc-sv:#E8EDE6;
+  --linea:#C6A783;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#FAF3EA;color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:999px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms !important}}
+
+.envoltorio{max-width:60rem;margin:0 auto;padding:1.75rem 1.25rem 3rem}
+h1{font-size:1.4rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .35rem}
+.intro{color:var(--txt-suave);margin:0 0 1.75rem;line-height:1.65;font-size:.9rem;max-width:40rem}
+
+.rejilla{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:740px){.rejilla{grid-template-columns:1fr 1fr}}
+.op{background:#fff;border:1px solid var(--linea);border-radius:14px;
+  padding:1.2rem 1.3rem 1.35rem;display:flex;flex-direction:column;gap:.8rem}
+.op.recomendada{border-color:var(--marca);border-width:2px}
+.op-cab{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;margin:0}
+.op-cab b{font-size:.98rem;font-weight:600;letter-spacing:-.012em}
+.op-cab em{font-style:normal;font-size:.68rem;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--acc-dp)}
+.op-nota{margin:0;font-size:.82rem;color:var(--txt-suave);line-height:1.6}
+.muestra{display:flex;align-items:center;justify-content:center;
+  padding:1.4rem .75rem;background:#fff;border-radius:10px;min-height:96px}
+
+/* ============ BASE COMUN ============ */
+.g{display:inline-flex;width:fit-content;max-width:100%}
+.g button{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:44px;font:inherit;font-size:.9rem;font-weight:500;cursor:pointer;
+  white-space:nowrap;background:none;border:none;color:var(--txt-suave);
+  transition:background var(--paso),color var(--paso),border-color var(--paso)}
+.g svg{width:18px;height:18px;flex:none}
+
+/* ---- A · pildora blanca con aro, la misma receta que los discos ---- */
+.g-a{gap:4px;padding:4px;background:#fff;border:1px solid var(--linea);border-radius:999px}
+.g-a button{padding:0 1.15rem;border:2.5px solid transparent;border-radius:999px}
+.g-a button[aria-checked="true"]{border-color:var(--acc);color:var(--acc)}
+
+/* ---- B · dividido de verdad ---- */
+.g-b{border:1px solid var(--linea);border-radius:999px;overflow:hidden}
+.g-b button{padding:0 1.35rem}
+.g-b button+button{border-left:1px solid var(--linea)}
+.g-b button[aria-checked="true"]{background:var(--acc-sv);color:var(--acc)}
+
+/* ---- C · subrayado ---- */
+.g-c{border:1px solid var(--linea);border-radius:12px;overflow:hidden}
+.g-c button{padding:0 1.35rem;position:relative}
+.g-c button+button{border-left:1px solid var(--linea)}
+.g-c button::after{content:"";position:absolute;left:1.35rem;right:1.35rem;bottom:0;
+  height:2px;background:transparent;transition:background var(--paso)}
+.g-c button[aria-checked="true"]{color:var(--acc)}
+.g-c button[aria-checked="true"]::after{background:var(--acc)}
+
+/* ---- D · relleno suave ---- */
+.g-d{gap:0;padding:3px;background:#fff;border:1px solid var(--linea);border-radius:999px}
+.g-d button{padding:0 1.3rem;border-radius:999px}
+.g-d button[aria-checked="true"]{background:var(--acc-sv);color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="envoltorio">
+
+  <header>
+    <h1>El control de modalidad</h1>
+    <p class="intro">Los cuatro con fondo blanco. Pulsa en cada uno para ver cómo cambia — lo que
+       importa es si al cambiar se entiende de inmediato cuál está elegido.</p>
+  </header>
+
+  <div class="rejilla">
+
+    <section class="op recomendada">
+      <p class="op-cab"><b>A · Píldora con aro</b> <em>mi recomendación</em></p>
+      <div class="muestra">
+        <div class="g g-a" role="radiogroup" aria-label="Modalidad A"></div>
+      </div>
+      <p class="op-nota">Exactamente la misma receta que el disco y el check: <b>blanco por
+         dentro, aro de salvia, tinta de salvia</b>. Una sola regla manda en toda la pantalla, y
+         no hace falta explicar nada dos veces.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>B · Dividido de verdad</b> <em>tu idea</em></p>
+      <div class="muestra">
+        <div class="g g-b" role="radiogroup" aria-label="Modalidad B"></div>
+      </div>
+      <p class="op-nota">Dos mitades pegadas con una divisoria de arcilla en medio, y la elegida
+         se tiñe de salvia claro. Aquí la división sí dice la verdad: hay dos opciones. Lo que
+         pierde es el aro, así que se aparta un poco de la regla de los discos.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>C · Subrayado</b> <em>el más callado</em></p>
+      <div class="muestra">
+        <div class="g g-c" role="radiogroup" aria-label="Modalidad C"></div>
+      </div>
+      <p class="op-nota">Nada se rellena: la elegida se marca con una línea de salvia debajo y la
+         letra en salvia. Es el más discreto de los cuatro — y el que más se parece a unas
+         pestañas, que puede ser bueno o confuso según cómo lo leas.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>D · Relleno suave</b> <em>sin bordes nuevos</em></p>
+      <div class="muestra">
+        <div class="g g-d" role="radiogroup" aria-label="Modalidad D"></div>
+      </div>
+      <p class="op-nota">La elegida se rellena de salvia claro, sin aro y sin divisoria. Es lo
+         más cercano a lo que hay ahora pero con el fondo en blanco y el relleno suave en vez de
+         macizo.</p>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var VIDEO = '<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>';
+  var PIN   = '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>';
+  function ico(d) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  [].forEach.call(document.querySelectorAll('.g'), function (g) {
+    g.innerHTML =
+      '<button type="button" role="radio" aria-checked="true" tabindex="0">' + ico(VIDEO) + 'Online</button>' +
+      '<button type="button" role="radio" aria-checked="false" tabindex="-1">' + ico(PIN) + 'Presencial</button>';
+  });
+  function elegir(g, b) {
+    [].forEach.call(g.children, function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+      o.tabIndex = o === b ? 0 : -1;
+    });
+  }
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[role="radio"]');
+    if (b) elegir(b.parentElement, b);
+  });
+  document.addEventListener('keydown', function (ev) {
+    var g = ev.target.closest && ev.target.closest('[role="radiogroup"]');
+    if (!g) return;
+    var t = ['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'];
+    if (t.indexOf(ev.key) < 0) return;
+    ev.preventDefault();
+    var h = [].slice.call(g.children), i = Math.max(0, h.indexOf(ev.target));
+    var n = ev.key === 'Home' ? 0 : ev.key === 'End' ? h.length - 1
+          : (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') ? (i + 1) % h.length
+          : (i - 1 + h.length) % h.length;
+    elegir(g, h[n]); h[n].focus();
+  });
+})();
+</script>
+</body>
+</html>

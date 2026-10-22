@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tu paleta, completada</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{background:#EFEBE6;font-family:Inter,system-ui,sans-serif;margin:0;padding:2rem 1.25rem 5rem;color:#2C3E50}
+  .env{max-width:76rem;margin:0 auto}
+  .env > h1{font-size:1.5rem;margin:0 0 .4rem}
+  .env > p.sub{color:#55697A;margin:0 0 1.75rem;max-width:52rem;line-height:1.65}
+  code{background:rgba(44,62,80,.06);border-radius:5px;padding:.06rem .32rem;font-size:.9em}
+
+  .bloque{border-radius:22px;padding:1.6rem;margin-bottom:1.5rem;border:1px solid rgba(44,62,80,.12)}
+  .bloque > header{display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap;
+    padding-bottom:.9rem;margin-bottom:1.5rem;border-bottom:1px solid rgba(44,62,80,.12)}
+  .bloque > header .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:#55697A}
+  .bloque > header h2{font-size:1.12rem;margin:.15rem 0 0}
+  .bloque > header .sw{margin-left:auto;display:flex;gap:.35rem}
+  .bloque > header .sw i{width:26px;height:26px;border-radius:7px;border:1px solid rgba(44,62,80,.1);display:block}
+  .bloque p.nota{font-size:.85rem;color:#55697A;line-height:1.68;margin:1.4rem 0 0;max-width:56rem}
+  .bloque p.nota b{color:#2C3E50}
+
+  .demo{display:grid;gap:1.75rem;grid-template-columns:1fr}
+  @media(min-width:1000px){.demo{grid-template-columns:1fr 1fr}}
+  .demo h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:#55697A;font-weight:700;margin:0 0 .85rem}
+
+  /* ====== componentes ====== */
+  .md{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.4rem}
+  .sv{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.4rem}
+  @media(min-width:1240px){.sv{grid-template-columns:repeat(4,1fr)}}
+  .pl{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+
+  .card{background:var(--sup);border:1.5px solid var(--bor);border-radius:14px;cursor:pointer;
+    font:inherit;color:#2C3E50;box-shadow:0 1px 2px rgba(44,62,80,.06);
+    transition:border-color 200ms,background 200ms,box-shadow 200ms}
+  .card:hover{border-color:var(--bor-f)}
+  .card[aria-checked="true"]{border-color:var(--acc);background:var(--sel);
+    box-shadow:0 4px 14px -4px rgba(44,62,80,.16)}
+  .md .card,.sv .card{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.5rem;min-height:98px;padding:.9rem .6rem;text-align:center}
+  .circ{width:38px;height:38px;border-radius:50%;border:2.5px solid var(--acc-cl);display:grid;
+    place-items:center;color:var(--acc);transition:all 200ms}
+  .circ svg{width:19px;height:19px}
+  .card[aria-checked="true"] .circ{border-color:var(--acc);background:var(--acc);color:var(--sobre-acc)}
+  .nom{font-weight:600;font-size:.88rem;line-height:1.3}
+
+  .pl .card{position:relative;display:flex;flex-direction:column;overflow:hidden;text-align:left}
+  .cab{display:flex;align-items:center;gap:.5rem;padding:1rem 0 .65rem;margin:0 1rem;
+    border-bottom:1px solid var(--bor)}
+  .card[aria-checked="true"] .cab{border-bottom-color:var(--bor-sel)}
+  .cifra{flex:none;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--acc-cl);
+    display:grid;place-items:center;font-size:.9rem;font-weight:700;color:var(--acc);transition:all 200ms}
+  .card[aria-checked="true"] .cifra{border-color:var(--acc);background:var(--acc);color:var(--sobre-acc)}
+  .tit{font-weight:700;font-size:.97rem}
+  .eti{margin-left:auto;padding:.16rem .38rem;border-radius:5px;background:var(--acc);color:var(--sobre-acc);
+    font-size:.58rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+  .cue{flex:1;display:flex;align-items:center;padding:.75rem 1rem;font-size:.76rem;color:#55697A;gap:.4rem}
+  .cue svg{width:14px;height:14px;flex:none;color:var(--acc)}
+  .pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+    gap:.4rem;padding:.7rem 1rem 1rem;min-height:2.3rem}
+  .pie::before{content:"";position:absolute;top:0;left:1rem;right:1rem;height:1px;background:var(--bor)}
+  .card[aria-checked="true"] .pie::before{background:var(--bor-sel)}
+  .pre{font-size:1.42rem;font-weight:700;letter-spacing:-.025em;line-height:1;color:var(--acc-osc)}
+  .der{display:flex;align-items:center;gap:.4rem}
+  .aho{display:inline-flex;align-items:center;padding:.2rem .42rem;border-radius:6px;
+    background:#E4EFE8;color:#2F6B4F;font-size:.65rem;font-weight:600;white-space:nowrap}
+  .card[aria-checked="true"] .aho{background:#fff}
+  .chk{width:20px;height:20px;border-radius:50%;background:var(--acc);display:grid;place-items:center;
+    opacity:0;transform:scale(.6);transition:all 200ms}
+  .chk svg{width:12px;height:12px;color:var(--sobre-acc)}
+  .card[aria-checked="true"] .chk{opacity:1;transform:scale(1)}
+  .cinta{position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc)}
+
+  .tira{display:grid;grid-template-columns:repeat(5,1fr);gap:.45rem}
+  .dia-cab{font-size:.68rem;color:#55697A;font-weight:600;margin:0 0 .4rem;line-height:1.35;text-align:center}
+  .hora{display:block;width:100%;padding:.5rem .2rem;margin-bottom:.35rem;border-radius:8px;
+    border:1px solid transparent;background:#E4EFE8;color:#2F6B4F;
+    font:inherit;font-size:.76rem;font-weight:600;cursor:pointer;transition:all 160ms}
+  .hora:hover{border-color:#2F6B4F}
+  .hora.sel{background:var(--acc);color:var(--sobre-acc)}
+  .hora.no{background:#E8E4DF;color:#9A968F;cursor:default}
+
+  .btn-demo{margin-top:1.1rem;display:flex;gap:.6rem;flex-wrap:wrap}
+  .bt{padding:.72rem 1.3rem;border-radius:999px;font:inherit;font-weight:600;font-size:.9rem;
+    border:1.5px solid transparent;cursor:pointer}
+  .bt1{background:var(--acc);color:var(--sobre-acc)}
+  .bt2{background:var(--sup);color:var(--acc-osc);border-color:var(--bor-f)}
+</style>
+</head>
+<body>
+<div class="env">
+
+<h1>Tu paleta, completada de dos formas</h1>
+<p class="sub">Los siete colores que elegiste son las superficies y el texto. Lo único que faltaba
+   era <b>el color de acción</b>: el del botón, la tarjeta elegida y el hueco reservado.
+   Aquí van las dos maneras de ponerlo sin inventarse ningún color que no esté ya en la landing.
+   El fondo de esta página es <code>--bg-main</code>, para que lo veas en su sitio.</p>
+
+<div id="salida"></div>
+
+</div>
+
+<script>
+(function () {
+  var OPCIONES = [
+    {
+      id:'D1', nom:'Solo pizarra', desc:'Cero colores nuevos. La acción es el mismo azul del texto',
+      fondo:'#FDFAF7', sup:'#FFFFFF', sel:'#F3E9DE',
+      acc:'#2C3E50', accOsc:'#22303E', accCl:'#8FA0AE', sobreAcc:'#FFFFFF',
+      bor:'rgba(166,123,91,.20)', borF:'rgba(166,123,91,.38)', borSel:'#C4A484',
+      swatches:['#FDFAF7','#F3E9DE','#C4A484','#55697A','#2C3E50'],
+      nota:'La acción usa <b>#2C3E50</b>, que ya es el color del texto de la landing: no entra ni un color nuevo en el proyecto. Da <b>10,98:1</b> con blanco encima, el contraste más alto de toda la paleta. El resultado es cálido de fondo y frío de acción, que es justo el contraste que hace que una herramienta se lea como herramienta y no como un folleto. El riesgo: es sobrio, casi institucional. Si buscabas calidez en el botón, aquí no la vas a encontrar.'
+    },
+    {
+      id:'D2', nom:'Pizarra + terracota profunda', desc:'La estructura en azul, la acción en el terracota de la landing',
+      fondo:'#FDFAF7', sup:'#FFFFFF', sel:'#F3E9DE',
+      acc:'#8C6246', accOsc:'#6E4C36', accCl:'#C4A484', sobreAcc:'#FFFFFF',
+      bor:'rgba(166,123,91,.20)', borF:'rgba(166,123,91,.38)', borSel:'#C4A484',
+      swatches:['#FDFAF7','#F3E9DE','#C4A484','#8C6246','#6E4C36'],
+      nota:'La acción usa <b>#8C6246</b>, que es <code>--primary-deep</code> de la landing: tampoco es un color nuevo, es uno de los tres que dejaste fuera. Da <b>5,32:1</b>, suficiente. Todo queda en la misma familia cálida y la continuidad con la landing es total. El riesgo es el contrario del anterior: al compartir tanto con la landing, la reserva puede sentirse como la misma página en vez de como el sitio donde se hace algo.'
+    }
+  ];
+
+  function ico(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w||1.6) +
+           '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    video:'<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>',
+    pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+    ans:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    aut:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    par:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    due:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    check:'<path d="m4 12 5.5 5.5L20 7"/>'
+  };
+  function tarj(n, d, sel) {
+    return '<button type="button" class="card" role="radio" aria-checked="' + sel + '">' +
+      '<span class="circ">' + ico(d) + '</span><span class="nom">' + n + '</span></button>';
+  }
+  function plan(c, n, det, ic, pr, ah, sel, dest) {
+    return '<button type="button" class="card" role="radio" aria-checked="' + sel + '">' +
+      (dest ? '<span class="cinta"></span>' : '') +
+      '<span class="cab"><span class="cifra">' + c + '</span><span class="tit">' + n + '</span>' +
+      (dest ? '<span class="eti">Sugerida</span>' : '') + '</span>' +
+      '<span class="cue">' + ico(ic, 1.7) + '<span>' + det + '</span></span>' +
+      '<span class="pie"><span class="pre">' + pr + '</span><span class="der">' +
+      (ah ? '<span class="aho">Ahorras ' + ah + '</span>' : '') +
+      '<span class="chk">' + ico(I.check, 3.5) + '</span></span></span></button>';
+  }
+  function tira() {
+    var dias = [['lun','8'],['mar','9'],['mié','10'],['jue','11'],['vie','12']];
+    var horas = ['09:00','10:00','11:00','16:00'];
+    return '<div class="tira">' + dias.map(function (d, i) {
+      return '<div><p class="dia-cab">' + d[0] + '<br><b>' + d[1] + '</b></p>' +
+        horas.map(function (h, j) {
+          var cl = (i === 2 && j === 1) ? ' sel' : ((i + j) % 4 === 3 ? ' no' : '');
+          return '<button type="button" class="hora' + cl + '">' + h + '</button>';
+        }).join('') + '</div>';
+    }).join('') + '</div>';
+  }
+
+  document.getElementById('salida').innerHTML = OPCIONES.map(function (o) {
+    return '<section class="bloque" style="background:' + o.fondo +
+      ';--sup:' + o.sup + ';--sel:' + o.sel + ';--acc:' + o.acc + ';--acc-osc:' + o.accOsc +
+      ';--acc-cl:' + o.accCl + ';--sobre-acc:' + o.sobreAcc + ';--bor:' + o.bor +
+      ';--bor-f:' + o.borF + ';--bor-sel:' + o.borSel + '">' +
+      '<header><div><span class="et">Opción ' + o.id + '</span><h2>' + o.nom + '</h2>' +
+      '<p style="font-size:.82rem;color:#55697A;margin:.3rem 0 0">' + o.desc + '</p></div>' +
+      '<span class="sw">' + o.swatches.map(function (c) {
+        return '<i style="background:' + c + '"></i>';
+      }).join('') + '</span></header>' +
+
+      '<div class="demo"><div>' +
+        '<h3>Paso 1</h3>' +
+        '<div class="md" role="radiogroup">' + tarj('Online', I.video, true) + tarj('Presencial', I.pin, false) + '</div>' +
+        '<div class="sv" role="radiogroup">' +
+          tarj('Superar la Ansiedad', I.ans, true) + tarj('Fortalecer tu Autoestima', I.aut, false) +
+          tarj('Sanar en Pareja', I.par, false) + tarj('Acompañar un Duelo', I.due, false) + '</div>' +
+        '<div class="pl" role="radiogroup">' +
+          plan('1', 'sesión', 'Una cita puntual', I.reloj, '30 $', '', false, false) +
+          plan('3', 'sesiones', 'A tu ritmo, 90 días', I.cal, '75 $', '15 $', true, true) +
+          plan('5', 'sesiones', 'A tu ritmo, 90 días', I.cal, '125 $', '25 $', false, false) + '</div>' +
+      '</div><div>' +
+        '<h3>Paso 2 · libre en verde, elegido en el color de acción</h3>' + tira() +
+        '<div class="btn-demo"><button class="bt bt1">Ver horarios</button>' +
+        '<button class="bt bt2">Atrás</button></div>' +
+        '<p class="nota" style="margin-top:1.3rem">' + o.nota + '</p>' +
+      '</div></div></section>';
+  }).join('');
+
+  document.addEventListener('click', function (ev) {
+    var h = ev.target.closest('.hora');
+    if (h && !h.classList.contains('no')) {
+      [].forEach.call(h.closest('.tira').querySelectorAll('.hora'), function (o) { o.classList.remove('sel'); });
+      h.classList.add('sel'); return;
+    }
+    var b = ev.target.closest('.card');
+    if (!b) return;
+    [].forEach.call(b.parentElement.children, function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+    });
+  });
+})();
+</script>
+</body>
+</html>

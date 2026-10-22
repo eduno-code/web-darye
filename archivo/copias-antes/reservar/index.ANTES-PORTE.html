@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reservar una sesión con Daryeli Romero — Psicconsciente</title>
+    <meta name="description" content="Agenda tu sesión de psicoterapia online con Daryeli Romero, psicóloga clínica. Elige el día y la hora que te vengan bien y confirma tu pago móvil.">
+
+    <!-- Esta página es el enlace que Daryeli comparte por chat y en redes. Al
+         pegarlo, WhatsApp e Instagram muestran una tarjeta con estos datos, así
+         que tienen que estar y tienen que decir de qué va.
+         PENDIENTE AL PUBLICAR: poner la URL absoluta del dominio en og:url y
+         og:image; los rastreadores resuelven mal las rutas relativas. -->
+    <meta property="og:title" content="Reserva tu sesión — Daryeli Romero, psicóloga clínica">
+    <meta property="og:description" content="Elige día y hora para tu sesión de psicoterapia online. Un espacio seguro para conectar contigo.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:image" content="../og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Psicconsciente — Daryeli Romero, psicóloga clínica.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="theme-color" content="#FFFFFF">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Solo Inter. La landing carga además Fraunces y Caveat, pero esta
+         página no las usa: pedirlas aquí sería descargar dos familias para
+         no pintar ni una letra con ellas. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+
+    <!-- style.css aporta los tokens de marca, la base tipográfica y el foco
+         visible. reservar.css se apoya en ellos y cambia el resto. -->
+    <link rel="stylesheet" href="../style.css?v=35">
+    <link rel="stylesheet" href="reservar.css?v=35">
+</head>
+<body class="wz-body">
+
+<a class="skip-link" href="#asistente">Saltar al formulario</a>
+
+<header class="wz-top">
+    <div class="wz-top-int">
+        <a href="../index.html" class="wz-marca">
+            <img class="wz-marca-foto" src="../darye-foto-pro-450.webp" width="38" height="38"
+                 alt="" loading="eager" decoding="async">
+            <span class="wz-marca-txt">
+                <span class="wz-marca-nombre">Daryeli Romero</span>
+                <span class="wz-marca-cargo">Psicóloga clínica</span>
+            </span>
+        </a>
+
+        <a href="https://wa.me/584126724351" class="wz-ayuda" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 20.5l1.8-5.3A8.4 8.4 0 1 1 21 11.5Z"/></svg>
+            ¿Dudas?<span class="wz-ayuda-larga">&nbsp;Escríbenos</span><span class="sr-only"> Escríbenos por WhatsApp (se abre en una pestaña nueva)</span>
+        </a>
+    </div>
+</header>
+
+<nav class="wz-progreso" aria-label="Progreso de la reserva">
+    <div class="wz-progreso-fila">
+        <p class="wz-paso-actual">Paso <span id="pasoNum">1</span> de 4 · <span class="wz-paso-nombre" id="pasoNombre">Tu sesión</span></p>
+    </div>
+    <div class="wz-barra" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-label="Progreso" id="barra">
+        <span class="wz-barra-relleno" id="barraRelleno"></span>
+    </div>
+</nav>
+
+<p class="sr-only" role="status" aria-live="polite" id="anuncio"></p>
+
+<main id="asistente" class="wz-main">
+
+    <!-- ============ PASO 1 · QUÉ SESIÓN ============ -->
+    <section class="wz-vista" id="vista1" aria-labelledby="t1">
+        <h1 id="t1">Reserva tu sesión</h1>
+        <p class="wz-intro">Elige el acompañamiento y el número de sesiones. Después escoges el horario.</p>
+
+        <!-- Primero el cómo: es lo único que decide si la persona tiene que
+             desplazarse hasta Barquisimeto o no. -->
+        <div class="wz-grupo">
+            <h2 class="wz-grupo-titulo" id="tModo">¿Cómo prefieres la sesión?</h2>
+            <div class="wz-modos" id="modos" role="radiogroup" aria-labelledby="tModo">
+                <button type="button" class="wz-modo" role="radio" aria-checked="true" data-modo="online">
+                    <span class="wz-modo-icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/></svg>
+                    </span>
+                    <span class="wz-modo-nombre">Online</span>
+                </button>
+                <button type="button" class="wz-modo" role="radio" aria-checked="false" data-modo="presencial">
+                    <span class="wz-modo-icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+                    </span>
+                    <span class="wz-modo-nombre">Presencial</span>
+                </button>
+            </div>
+            <!-- La dirección aparece solo si elige presencial: enseñarla antes
+                 sería ruido para quien va a conectarse por videollamada. -->
+            <div id="lugarPaso1" hidden></div>
+        </div>
+
+        <!-- Desplegable y no cuatro tarjetas: los motivos de consulta son una
+             lista cerrada que la persona ya trae decidida de casa, no algo que
+             haya que comparar. Cuatro tarjetas ocupaban media pantalla para una
+             eleccion que no necesita comparacion. Ademas es un <select> nativo:
+             en el movil abre el selector del sistema, que es lo que la gente
+             sabe usar. -->
+        <div class="wz-grupo">
+            <h2 class="wz-grupo-titulo" id="tServicio">¿En qué quieres trabajar?</h2>
+            <div class="wz-select">
+                <select id="servicio" aria-labelledby="tServicio">
+                    <option value="">Cargando las opciones…</option>
+                </select>
+                <svg class="wz-select-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+        </div>
+
+        <!-- Aparece al elegir servicio: preguntar cuántas sesiones antes de
+             saber de qué es pedir una decisión sin información. La linea de
+             arriba marca que empieza una decision distinta. -->
+        <div class="wz-grupo wz-grupo-separado" id="bloqueCantidad" hidden>
+            <h2 class="wz-grupo-titulo" id="t1b">
+                ¿Una sesión o un proceso?
+                <span class="wz-grupo-nota">Los paquetes salen más baratos por sesión</span>
+            </h2>
+            <div class="wz-planes" id="planes" role="radiogroup" aria-labelledby="t1b"></div>
+        </div>
+
+        <div class="wz-acciones">
+            <button type="button" class="btn btn-primary wz-continuar" id="ir2" disabled>
+                Ver horarios
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- ============ PASO 2 · CUÁNDO ============ -->
+    <section class="wz-vista" id="vista2" aria-labelledby="t2" hidden>
+        <!-- Solo al venir desde "cambiar de horario": deja claro que no se esta
+             reservando una cita nueva, que es la confusion evidente. -->
+        <div class="wz-modo-repro" id="bandaRepro" hidden>
+            <p class="wz-modo-repro-txt">
+                Estás cambiando el horario de tu cita.
+                <span id="reproActual"></span>
+            </p>
+            <button type="button" class="wz-modo-repro-salir" id="salirRepro">Dejarlo como está</button>
+        </div>
+
+        <h1 id="t2">Elige el día y la hora</h1>
+        <p class="wz-intro">Estos son los espacios disponibles de Daryeli. Toca el que te convenga
+           y te lo guardamos dos horas para que puedas pagar con calma.</p>
+
+        <div class="wz-agenda">
+            <!-- Lo que se reserva permanece a la vista mientras se decide. -->
+            <aside class="wz-resumen" id="contextoDatos" aria-label="Resumen de tu reserva"></aside>
+
+            <div>
+                <div class="wz-tira-cabecera">
+                    <div class="wz-tira-txt">
+                        <h2 class="wz-tira-rango" id="tiraRango" aria-live="polite">—</h2>
+                        <p class="wz-tira-duracion" id="tiraDuracion"></p>
+                    </div>
+                    <div class="wz-tira-nav">
+                        <button type="button" class="wz-flecha" id="diasAtras" aria-label="Días anteriores">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+                        <button type="button" class="wz-flecha" id="diasAdelante" aria-label="Días siguientes">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="wz-dias" id="dias" role="radiogroup" aria-label="Horarios disponibles">
+                    <p class="wz-cargando">Buscando horarios…</p>
+                </div>
+
+                <div class="wz-zona">
+                    <label for="zonaSelect">Horarios mostrados en</label>
+                    <div class="wz-select wz-select-compacto">
+                        <select id="zonaSelect"></select>
+                        <svg class="wz-select-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wz-acciones">
+            <button type="button" class="btn btn-secondary wz-volver" data-volver="1">Atrás</button>
+            <button type="button" class="btn btn-primary wz-continuar" id="ir3" disabled>Continuar</button>
+        </div>
+    </section>
+
+    <!-- ============ PASO 3 · QUIÉN ERES ============ -->
+    <section class="wz-vista" id="vista3" aria-labelledby="t3" hidden>
+        <h1 id="t3">Tus datos</h1>
+        <p class="wz-intro">Solo lo necesario para confirmarte la cita.</p>
+
+        <div class="wz-agenda">
+            <aside class="wz-resumen" id="contextoDatos3" aria-label="Resumen de tu reserva">
+            </aside>
+
+            <form id="formDatos" novalidate>
+                <p class="wz-vuelta" id="avisoVuelta" hidden></p>
+
+                <div class="wz-campo">
+                    <label for="nombre">Nombre y apellido</label>
+                    <input type="text" id="nombre" name="nombre" autocomplete="name"
+                           placeholder="María González" required
+                           aria-describedby="errNombre" enterkeyhint="next">
+                    <p class="wz-error" id="errNombre" role="alert" hidden></p>
+                </div>
+
+                <div class="wz-campo">
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" autocomplete="email"
+                           placeholder="tunombre@correo.com"
+                           inputmode="email" required aria-describedby="ayudaCorreo errCorreo" enterkeyhint="next">
+                    <p class="wz-ayuda-campo" id="ayudaCorreo">Aquí llega la confirmación y el enlace de la videollamada.</p>
+                    <p class="wz-error" id="errCorreo" role="alert" hidden></p>
+                </div>
+
+                <!-- Teléfono partido en prefijo y número: Daryeli atiende a gente
+                     de varios países y un campo único obliga a adivinar si hay
+                     que escribir el prefijo, el cero de delante, o ninguno. -->
+                <div class="wz-campo">
+                    <label for="telefono">Teléfono</label>
+                    <div class="wz-tel">
+                        <div class="wz-select wz-select-pais">
+                            <select id="paisTel" aria-label="Código de país"></select>
+                            <svg class="wz-select-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                        <input type="tel" id="telefono" name="telefono" autocomplete="tel-national"
+                               placeholder="412 123 4567"
+                               inputmode="tel" required aria-describedby="ayudaTelefono errTelefono" enterkeyhint="done">
+                    </div>
+                    <p class="wz-ayuda-campo" id="ayudaTelefono">Solo se usa para avisarte si hay que mover la cita a última hora.</p>
+                    <p class="wz-error" id="errTelefono" role="alert" hidden></p>
+                </div>
+
+                <!-- Va justo antes de comprometerse, que es donde una persona
+                     en crisis todavía puede leerlo a tiempo. -->
+                <aside class="wz-aviso" role="note">
+                    <span class="wz-aviso-icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".7" fill="currentColor" stroke="none"/><path d="M10.3 3.9 2.6 17.1c-.7 1.2.2 2.7 1.6 2.7h15.6c1.4 0 2.3-1.5 1.6-2.7L13.7 3.9c-.7-1.2-2.6-1.2-3.4 0Z"/></svg>
+                    </span>
+                    <div>
+                        <strong>Esto no atiende urgencias.</strong>
+                        Si estás en peligro o pensando en hacerte daño, llama al <a href="tel:911">911</a> o acude al centro de salud más cercano. Una cita se agenda con antelación y no sustituye una atención inmediata.
+                    </div>
+                </aside>
+
+                <!-- Caja propia: es la pieza que protege ante un reclamo y antes
+                     era la linea que seguia al aviso naranja, sin separacion. -->
+                <div class="wz-consent-caja">
+                    <div class="wz-consent">
+                        <input type="checkbox" id="consent" name="consent" required aria-describedby="errConsent">
+                        <label for="consent">
+                            He leído y acepto el <a href="privacidad.html" target="_blank" rel="noopener">consentimiento informado y la política de privacidad</a>, y autorizo el tratamiento de mis datos para gestionar esta cita.
+                        </label>
+                    </div>
+                    <p class="wz-error" id="errConsent" role="alert" hidden></p>
+                </div>
+
+                <div class="wz-acciones">
+                    <button type="button" class="btn btn-secondary wz-volver" data-volver="2">Atrás</button>
+                    <button type="submit" class="btn btn-primary wz-continuar" id="ir4">Reservar el horario</button>
+                </div>
+
+                <p class="wz-despues">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5 9.5 17.5 19.5 7"/></svg>
+                    Te guardamos el horario dos horas para que puedas pagar con calma. Daryeli confirma tu cita en cuanto revisa el comprobante.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <!-- ============ PASO 4 · PAGO ============ -->
+    <section class="wz-vista" id="vista4" aria-labelledby="t4" hidden>
+        <h1 id="t4">Confirma tu pago</h1>
+        <p class="wz-intro">El horario ya es tuyo. Solo falta el pago móvil.</p>
+
+        <!-- Una hora concreta, no un cronometro. Los digitos gigantes contando
+             hacia atras meten prisa, y meter prisa en una pagina de terapia es
+             justo lo contrario de lo que hace falta. La informacion es la misma;
+             la sensacion, no. -->
+        <div class="wz-reten" id="reten">
+            <span class="wz-reten-icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <p class="wz-reten-txt" id="retenPie">Te guardamos el horario mientras haces el pago.</p>
+        </div>
+
+        <div class="wz-agenda">
+            <aside class="wz-resumen" id="contextoDatos4" aria-label="Resumen de tu reserva">
+            </aside>
+
+            <div>
+                <!-- 0. CUANDO PAGAR. El horario ya es suyo; lo unico que
+                     queda por decidir es el momento del pago. "Ahora" viene
+                     preseleccionado porque el valor por defecto hace casi todo
+                     el trabajo de educar, y el motivo que lo acompana es un
+                     beneficio real, no una amenaza. -->
+                <div class="wz-momento" id="momentoPago" hidden>
+                    <h2 class="wz-grupo-titulo" id="tMomento">¿Cuándo quieres pagar?</h2>
+                    <div class="wz-momento-ops" role="radiogroup" aria-labelledby="tMomento">
+                        <button type="button" class="wz-momento-op" data-momento="ahora" role="radio" aria-checked="true">
+                            <span class="wz-marca-radio" aria-hidden="true"></span>
+                            <span class="wz-momento-txt">
+                                <span class="wz-momento-nombre">Pagar ahora</span>
+                                <span class="wz-momento-nota">Si lo dejas pagado, llegas y solo te sientas a hablar.</span>
+                            </span>
+                        </button>
+                        <button type="button" class="wz-momento-op" data-momento="despues" role="radio" aria-checked="false">
+                            <span class="wz-marca-radio" aria-hidden="true"></span>
+                            <span class="wz-momento-txt">
+                                <span class="wz-momento-nombre">Pagar en la consulta</span>
+                                <span class="wz-momento-nota">Le pagas a Daryeli cuando termine la sesión.</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Solo para quien reserva online sin haber pasado nunca por
+                     aqui. Es una norma, no una sospecha, y asi debe sonar. -->
+                <p class="wz-prepago" id="prepagoAviso" hidden>
+                    En tu primera sesión online el pago va por adelantado.
+                    A partir de la siguiente puedes elegir cuándo pagar.
+                </p>
+
+                <!-- 1. CUANTO. El numero que la persona necesita es el de
+                     bolivares, no el de dolares: es lo que va a teclear en la
+                     app del banco. El dolar queda como referencia debajo. -->
+                <div class="wz-importe" id="importe">
+                    <p class="wz-importe-etq">Transfiere</p>
+                    <p class="wz-importe-cifra">
+                        <span id="importeBs">—</span><span class="wz-importe-moneda">Bs</span>
+                    </p>
+                    <p class="wz-importe-nota" id="importeNota"></p>
+                    <button type="button" class="wz-copiar wz-copiar-grande" id="copiarMonto" data-copiar="">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+                        <span>Copiar monto</span>
+                    </button>
+                </div>
+
+                <!-- 2. A QUIEN -->
+                <h2 class="wz-grupo-titulo wz-paso-titulo">
+                    <span class="wz-paso-num" aria-hidden="true">1</span>
+                    Paga a cualquiera de estas cuentas
+                </h2>
+                <div class="wz-cuentas" id="cuentas"></div>
+
+                <!-- 3. QUE PASO -->
+                <form id="formPago" novalidate>
+                    <h2 class="wz-grupo-titulo wz-paso-titulo">
+                        <span class="wz-paso-num" aria-hidden="true">2</span>
+                        Cuéntanos del pago
+                    </h2>
+
+                    <div class="wz-campo">
+                        <label for="banco">Banco desde el que pagaste</label>
+                        <div class="wz-select">
+                            <select id="banco" name="banco" required aria-describedby="errBanco"></select>
+                            <svg class="wz-select-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                        <p class="wz-error" id="errBanco" role="alert" hidden></p>
+                    </div>
+
+                    <div class="wz-fila">
+                        <div class="wz-campo">
+                            <label for="referencia">Número de referencia</label>
+                            <input type="text" id="referencia" name="referencia" inputmode="numeric"
+                                   placeholder="000123456789"
+                                   autocomplete="off" required aria-describedby="ayudaRef errReferencia">
+                            <p class="wz-ayuda-campo" id="ayudaRef">Los dígitos que salen en el comprobante.</p>
+                            <p class="wz-error" id="errReferencia" role="alert" hidden></p>
+                        </div>
+
+                        <div class="wz-campo">
+                            <label for="montoBs">Monto en bolívares</label>
+                            <input type="text" id="montoBs" name="montoBs" inputmode="decimal"
+                                   required aria-describedby="ayudaMonto errMonto">
+                            <p class="wz-ayuda-campo" id="ayudaMonto">Ya viene puesto. Cámbialo si tu banco cobró otra cifra.</p>
+                            <p class="wz-error" id="errMonto" role="alert" hidden></p>
+                        </div>
+                    </div>
+
+                    <!-- Casi siempre es hoy o ayer. Tres botones resuelven el 95 %
+                         de los casos sin abrir ningun calendario; el calendario
+                         queda para la excepcion de verdad. -->
+                    <div class="wz-campo">
+                        <span class="wz-label-suelta" id="lblFecha">¿Cuándo lo pagaste?</span>
+                        <div class="wz-cuando" role="radiogroup" aria-labelledby="lblFecha">
+                            <button type="button" class="wz-chip" data-cuando="hoy" aria-checked="true" role="radio">Hoy</button>
+                            <button type="button" class="wz-chip" data-cuando="ayer" aria-checked="false" role="radio">Ayer</button>
+                            <button type="button" class="wz-chip" data-cuando="otro" aria-checked="false" role="radio">Otra fecha</button>
+                        </div>
+                        <div id="cajaFecha" hidden>
+                            <label class="wz-label-fecha" for="fechaPago">Fecha del pago</label>
+                            <input type="date" id="fechaPago" name="fechaPago" aria-describedby="errFecha">
+                        </div>
+                        <p class="wz-error" id="errFecha" role="alert" hidden></p>
+                    </div>
+
+                    <div class="wz-campo">
+                        <span class="wz-label-suelta" id="lblCaptura">Captura del comprobante</span>
+                        <!-- Sin el atributo capture: así abre la galería, que es
+                             donde está la captura del banco, no la cámara. -->
+                        <label class="wz-subir" for="captura" id="subirCaja">
+                            <input type="file" id="captura" name="captura"
+                                   accept="image/jpeg,image/png,image/webp,application/pdf"
+                                   aria-describedby="lblCaptura ayudaCaptura errCaptura">
+                            <span class="wz-subir-icono" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></svg>
+                            </span>
+                            <span class="wz-subir-txt" id="subirTxt">Elige la captura del pago</span>
+                            <span class="wz-subir-pista" id="subirPista">JPG, PNG o PDF · hasta 5 MB</span>
+                        </label>
+                        <p class="wz-error" id="errCaptura" role="alert" hidden></p>
+                        <div class="wz-vista-previa" id="vistaPrevia" hidden></div>
+                    </div>
+
+                    <div class="wz-acciones">
+                        <button type="submit" class="btn btn-primary wz-continuar" id="enviarPago">Enviar comprobante</button>
+                    </div>
+
+                    <p class="wz-auxilio">
+                        ¿Algo no cuadra?
+                        <a href="https://wa.me/584126724351" id="waPago" target="_blank" rel="noopener noreferrer">Escríbele a Daryeli</a>
+                    </p>
+                </form>
+
+                <!-- Camino de "pagar despues": ni importe, ni cuentas, ni
+                     formulario. Solo confirmar. El horario ya es suyo. -->
+                <div class="wz-despues-caja" id="pagoDespues" hidden>
+                    <p class="wz-despues-txt">
+                        Perfecto. Tu horario ya está reservado y le pagas a Daryeli
+                        cuando termine la sesión. Te dejamos un enlace por si
+                        prefieres pagar antes.
+                    </p>
+                    <div class="wz-acciones">
+                        <button type="button" class="btn btn-primary wz-continuar" id="confirmarDespues">Listo, ver mi cita</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CIERRE ============
+         Antes esto era un check a la izquierda, un titulo centrado, una pildora
+         gris vacia y un boton de 1070px: tres alineaciones distintas en cuatro
+         elementos, y ni una palabra sobre que pasa ahora. La cabecera se centra;
+         todo lo que se lee con detalle va alineado a la izquierda. -->
+    <section class="wz-vista wz-final" id="vistaFin" aria-labelledby="tFin" hidden>
+        <div class="wz-final-cabecera">
+            <span class="wz-final-marca" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 9.5 17.5 19.5 7"/></svg>
+            </span>
+            <h1 id="tFin">Listo, tu cita está reservada</h1>
+            <p class="wz-final-txt" id="finTexto"></p>
+        </div>
+
+        <div class="wz-final-cuerpo">
+            <div class="wz-resumen wz-final-cita" id="finCita"></div>
+
+            <!-- Quien va a consulta necesita saber adónde ir, y necesita poder
+                 abrirlo en su app de mapas sin copiar nada a mano. -->
+            <div id="lugarFin" hidden></div>
+
+            <div class="wz-siguiente">
+                <h2 class="wz-siguiente-titulo">Qué pasa ahora</h2>
+                <ol class="wz-siguiente-lista" id="finPasos"></ol>
+            </div>
+
+            <!-- El enlace es la unica forma que tiene la persona de volver a su
+                 cita si cierra la pestana: no hay cuenta ni contrasena. -->
+            <div class="wz-guardar" id="finEnlace" hidden>
+                <p class="wz-guardar-etq">Guarda este enlace para consultar tu cita</p>
+                <div class="wz-guardar-fila">
+                    <code class="wz-guardar-url" id="finUrl"></code>
+                    <button type="button" class="wz-copiar" id="copiarEnlace" data-copiar="">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+                        <span>Copiar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sin retencion ni pago por delante, cancelar no le cuesta nada a
+                 nadie: por eso mover la cita tiene que ser aun mas facil que
+                 abandonarla, y va primero. -->
+            <div class="wz-gestion" id="gestionCita">
+                <button type="button" class="wz-gestion-op" id="btnReprogramar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3M9 15l2 2 4-4"/></svg>
+                    Cambiar de horario
+                </button>
+                <button type="button" class="wz-gestion-op wz-gestion-baja" id="btnCancelar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+                    Cancelar la cita
+                </button>
+            </div>
+
+            <div class="wz-acciones">
+                <a href="../index.html" class="btn btn-secondary">Volver al inicio</a>
+                <a href="https://wa.me/584126724351" class="btn btn-primary" id="waFin" target="_blank" rel="noopener noreferrer">Escribir a Daryeli</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="wz-pie">
+    <p>Psicconsciente · Daryeli Romero, psicóloga clínica</p>
+    <p><a href="privacidad.html">Privacidad y consentimiento</a></p>
+</footer>
+
+<script src="supabase.js?v=35"></script>
+<script src="reservar.js?v=35"></script>
+</body>
+</html>

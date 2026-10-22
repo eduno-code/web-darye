@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa · el bloque de precios</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  --sup:#FFFFFF; --sup-cal:#FAF3EA; --sup-eleg:#F2E7D9;
+  --marca:#A8825F; --linea:#C6A783; --linea-int:rgba(168,130,95,.22);
+  --txt:#2E332E; --txt-suave:#5C635A;
+  --acc:#5A7060; --acc-dp:#3E4F44;
+  --r:14px; --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#EFE9E1;color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:var(--r)}
+
+.envoltorio{max-width:70rem;margin:0 auto;padding:2rem 1.25rem 4rem}
+h1{font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .4rem}
+.entrada{color:var(--txt-suave);margin:0 0 2.25rem;line-height:1.65;font-size:.92rem;max-width:44rem}
+
+.tres{display:grid;grid-template-columns:1fr;gap:1.75rem;justify-items:center}
+@media(min-width:1000px){.tres{grid-template-columns:repeat(3,340px);justify-content:center}}
+.caso{width:340px;max-width:100%}
+.caso-eti{margin:0 0 .2rem;display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap}
+.caso-eti b{font-size:.95rem;font-weight:600}
+.caso-eti em{font-style:normal;font-size:.72rem;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--txt-suave)}
+.caso-eti.buena em{color:var(--acc-dp)}
+.caso-nota{margin:0 0 .9rem;font-size:.82rem;color:var(--txt-suave);line-height:1.6;min-height:3.2em}
+/* El lienzo mide 340: es el ancho util que le queda al bloque dentro de un
+   telefono de 390 con el relleno de la vista. */
+.lienzo{background:#fff;border:1px solid var(--linea);border-radius:18px;padding:1.25rem}
+.tit{font-size:1.05rem;font-weight:600;letter-spacing:-.012em;margin:0 0 1rem;
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.tit-nota{font-size:.82rem;font-weight:400;color:var(--txt-suave)}
+.medida{margin:.9rem 0 0;font-size:.78rem;color:var(--txt-suave);font-variant-numeric:tabular-nums}
+
+/* ---------- A · las tarjetas de hoy ---------- */
+.card{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);text-align:left;width:100%;
+  transition:border-color var(--paso),background var(--paso)}
+.card[aria-checked="true"]{border:1.5px solid var(--linea);background:var(--sup-eleg)}
+.circ{flex:none;border-radius:50%;border:1.5px solid var(--acc);background:var(--acc);
+  display:grid;place-items:center;color:#fff}
+.card[aria-checked="true"] .circ{border-width:2.5px;border-color:var(--acc);
+  background:#fff;color:var(--acc)}
+.planes{display:grid;grid-template-columns:1fr;gap:1.25rem}
+.planes .card{display:flex;flex-direction:column;gap:.9rem;padding:1.35rem 1.25rem;overflow:hidden}
+.planes .card.sugerida{border-color:var(--marca)}
+.plan-cab{display:flex;align-items:center;gap:.6rem}
+.plan-cifra{width:34px;height:34px;font-size:1.05rem;font-weight:600;line-height:1;
+  font-variant-numeric:tabular-nums}
+.plan-nom{font-weight:600;font-size:.94rem;line-height:1.3;letter-spacing:-.01em}
+.plan-eti{margin-left:auto;flex:none;font-size:.74rem;font-weight:500;color:var(--acc-dp);
+  white-space:nowrap;display:inline-flex;align-items:center;gap:.35rem}
+.plan-eti::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--acc);flex:none}
+.plan-cuerpo{display:flex;align-items:center;gap:.45rem;font-size:.8rem;
+  color:var(--txt-suave);line-height:1.55}
+.plan-cuerpo svg{width:15px;height:15px;flex:none;color:var(--acc)}
+.plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem .6rem;flex-wrap:wrap;padding:.9rem 0 0}
+.plan-pie::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--linea-int)}
+.plan-precio{font-size:1.55rem;font-weight:600;letter-spacing:-.035em;line-height:1;
+  color:var(--txt);white-space:nowrap;font-variant-numeric:tabular-nums}
+.plan-ahorro{display:inline-flex;align-items:center;transform:translateY(1.5px);
+  padding:.28rem .5rem;border-radius:7px;background:var(--acc-dp);color:#fff;
+  font-size:.72rem;font-weight:500;line-height:1.3;white-space:nowrap}
+
+/* ---------- B · la lista, igual que los motivos ---------- */
+.lista{display:flex;flex-direction:column;background:var(--sup);
+  border:1px solid var(--linea);border-radius:var(--r);overflow:hidden}
+.fila{position:relative;display:flex;align-items:center;gap:1rem;width:100%;min-height:64px;
+  padding:.85rem 1.1rem;border:0;border-top:1px solid var(--linea-int);
+  background:transparent;font:inherit;color:var(--txt);text-align:left;cursor:pointer;
+  transition:background var(--paso)}
+.fila:first-child{border-top:0}
+.fila:hover{background:var(--sup-cal)}
+.fila[aria-checked="true"]{background:var(--sup-eleg)}
+.fila[aria-checked="true"]::before{content:"";position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--acc)}
+.fila:focus-visible{outline-offset:-3px;border-radius:0}
+.fp-txt{min-width:0}
+.fp-nom{display:block;font-weight:500;font-size:.94rem;line-height:1.35}
+.fila[aria-checked="true"] .fp-nom{font-weight:600}
+.fp-det{display:block;font-size:.78rem;color:var(--txt-suave);line-height:1.4;margin-top:.15rem}
+/* El precio a la derecha y en cifras tabulares: los tres quedan en una columna
+   perfecta y compararlos es una mirada de arriba abajo, no tres saltos. */
+.fp-precio{margin-left:auto;flex:none;font-size:1.3rem;font-weight:600;line-height:1;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bajo{margin:.85rem 0 0;font-size:.8rem;color:var(--txt-suave);line-height:1.55}
+
+/* ---------- C · tarjetas sin disco ni badge ---------- */
+.planes-c .card{display:flex;flex-direction:column;gap:.75rem;padding:1.15rem 1.25rem}
+.pc-cab{display:flex;align-items:baseline;gap:.5rem}
+.pc-cifra{font-size:1.05rem;font-weight:600;font-variant-numeric:tabular-nums;
+  letter-spacing:-.01em}
+.pc-nom{font-weight:600;font-size:.94rem;letter-spacing:-.01em}
+.pc-det{margin-left:auto;font-size:.78rem;color:var(--txt-suave)}
+.pc-pie{position:relative;display:flex;align-items:baseline;justify-content:space-between;
+  gap:.6rem;padding:.8rem 0 0}
+.pc-pie::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--linea-int)}
+.pc-precio{font-size:1.5rem;font-weight:600;letter-spacing:-.035em;line-height:1;
+  font-variant-numeric:tabular-nums}
+.pc-unidad{font-size:.78rem;color:var(--txt-suave);font-variant-numeric:tabular-nums}
+
+/* ---------- escritorio ---------- */
+.esc{margin:3rem auto 0;max-width:56rem}
+.esc h2{font-size:1.05rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+.esc>p{margin:0 0 1.25rem;font-size:.85rem;color:var(--txt-suave);line-height:1.65}
+.esc-caja{background:#fff;border:1px solid var(--linea);border-radius:var(--r);padding:1.4rem}
+/* La misma caja tumbada, igual que hace la lista de motivos. */
+.esc-caja .lista{flex-direction:row}
+.esc-caja .fila{flex:1 1 0;min-width:0;border-top:0;border-left:1px solid var(--linea-int);
+  align-items:baseline;min-height:76px;padding:1rem 1.1rem}
+.esc-caja .fila:first-child{border-left:0}
+
+.cierre{margin:3rem auto 0;max-width:44rem}
+.cierre h2{font-size:1.05rem;font-weight:600;margin:0 0 1rem;letter-spacing:-.01em}
+.nota{background:#fff;border:1px solid var(--linea);border-radius:var(--r);
+  padding:1rem 1.2rem;margin-bottom:.85rem}
+.nota b{display:block;font-size:.92rem;margin-bottom:.3rem}
+.nota p{margin:0;font-size:.85rem;color:var(--txt-suave);line-height:1.65}
+</style>
+</head>
+<body>
+<div class="envoltorio">
+
+  <header>
+    <h1>El bloque de precios</h1>
+    <p class="entrada">Los tres a 340&nbsp;px, que es el ancho útil que le queda al bloque dentro de
+      un teléfono de 390. Los tres se pueden pulsar. La maqueta lleva hoy la opción&nbsp;A.</p>
+  </header>
+
+  <div class="tres">
+
+    <section class="caso">
+      <p class="caso-eti"><b>A · Las tarjetas de hoy</b> <em>lo que hay</em></p>
+      <p class="caso-nota">Tres cajas con borde, un disco de color por tarjeta, la línea de los
+         60&nbsp;días repetida dos veces y dos badges de descuento.</p>
+      <div class="lienzo">
+        <h2 class="tit">¿Una consulta o un proceso?
+          <span class="tit-nota">Los paquetes salen más baratos por consulta</span></h2>
+        <div id="cA"></div>
+        <p class="medida" id="mA"></p>
+      </div>
+    </section>
+
+    <section class="caso">
+      <p class="caso-eti buena"><b>B · La misma lista de los motivos</b> <em>mi recomendación</em></p>
+      <p class="caso-nota">Una sola caja, tres filas, los precios en una columna. Elegir cuántas
+         consultas es la misma clase de decisión que elegir el motivo, así que se ve igual.</p>
+      <div class="lienzo">
+        <h2 class="tit">¿Una consulta o un proceso?</h2>
+        <div id="cB"></div>
+        <p class="bajo">Los paquetes se usan a tu ritmo, dentro de 60 días.</p>
+        <p class="medida" id="mB"></p>
+      </div>
+    </section>
+
+    <section class="caso">
+      <p class="caso-eti"><b>C · Tarjetas, pero limpias</b> <em>el término medio</em></p>
+      <p class="caso-nota">Se quedan las tres cajas y se van el disco, los badges y «Sugerida».
+         La cifra pasa a ser texto, como en cualquier lista de precios.</p>
+      <div class="lienzo">
+        <h2 class="tit">¿Una consulta o un proceso?</h2>
+        <div id="cC"></div>
+        <p class="medida" id="mC"></p>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="esc">
+    <h2>La B en escritorio</h2>
+    <p>La caja se tumba igual que la de los motivos: tres celdas en fila, el precio bajo el nombre.
+       Un solo componente para las dos pantallas y para las dos preguntas.</p>
+    <div class="esc-caja"><div id="cEsc"></div></div>
+  </section>
+
+  <section class="cierre">
+    <h2>Por qué recomiendo la B</h2>
+
+    <div class="nota">
+      <b>Es la misma pregunta que la de arriba</b>
+      <p>«¿En qué quieres trabajar?» y «¿Una consulta o un proceso?» son las dos elegir una opción
+         de una lista corta. Ahora que la primera es una lista, dejar la segunda como tres tarjetas
+         grandes hace que parezcan dos mecanismos distintos cuando son el mismo. Y las tarjetas son
+         el único sitio del móvil donde queda un círculo de color: el 1, el 3 y el 5.</p>
+    </div>
+
+    <div class="nota">
+      <b>Comparar tres precios es mirar una columna</b>
+      <p>Con las tarjetas, los tres importes están a distintas alturas y hay que saltar entre cajas.
+         En la lista quedan alineados a la derecha con cifras tabulares, así que 30, 75 y 125 se leen
+         de un vistazo. Ese es todo el trabajo que tiene que hacer este bloque.</p>
+    </div>
+
+    <div class="nota">
+      <b>Y se dice una sola vez</b>
+      <p>«A tu ritmo, 60 días» aparece hoy dos veces, una por tarjeta de paquete. En la lista baja a
+         una sola línea debajo, que es donde le toca a una condición que vale para los dos paquetes.</p>
+    </div>
+
+    <div class="nota">
+      <b>Lo que se pierde, dicho claro</b>
+      <p>El bloque baja de peso visual. Si Daryeli quiere empujar hacia el paquete, con la lista hay
+         menos sitio para hacerlo — se haría con una línea bajo el título, no con una etiqueta sobre
+         la fila. Y sigue pendiente la cuestión de negocio: tres y cinco consultas salen las dos a
+         <b>25&nbsp;$ cada una</b>, así que hoy el paquete de cinco no ofrece nada extra por consulta.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function svg(d) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var RELOJ = '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>';
+  var CAL   = '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>';
+
+  var P = [
+    {cifra:'1', nom:'Consulta',  det:'Una cita puntual',    ico:RELOJ, precio:30,  ahorro:0,  unidad:'Una cita puntual'},
+    {cifra:'3', nom:'Consultas', det:'A tu ritmo, 60 días', ico:CAL,   precio:75,  ahorro:15, unidad:'25 $ cada una', sugerida:true},
+    {cifra:'5', nom:'Consultas', det:'A tu ritmo, 60 días', ico:CAL,   precio:125, ahorro:25, unidad:'25 $ cada una'}
+  ];
+  var ELEGIDO = 1;   /* el de tres, para que se vea el estado elegido en los tres casos */
+
+  function A(g) {
+    var h = '<div class="planes" role="radiogroup" aria-label="Cuántas consultas">';
+    P.forEach(function (p, i) {
+      h += '<button type="button" class="card' + (p.sugerida ? ' sugerida' : '') + '" role="radio"' +
+        ' aria-checked="' + (i === ELEGIDO) + '" tabindex="' + (i === ELEGIDO ? 0 : -1) + '" data-g="' + g + '">' +
+        '<span class="plan-cab"><span class="circ plan-cifra">' + p.cifra + '</span>' +
+        '<span class="plan-nom">' + p.nom + '</span>' +
+        (p.sugerida ? '<span class="plan-eti">Sugerida</span>' : '') + '</span>' +
+        '<span class="plan-cuerpo">' + svg(p.ico) + p.det + '</span>' +
+        '<span class="plan-pie"><span class="plan-precio">' + p.precio + ' $</span>' +
+        (p.ahorro ? '<span class="plan-ahorro">Ahorras ' + p.ahorro + ' $</span>' : '') +
+        '</span></button>';
+    });
+    return h + '</div>';
+  }
+
+  function B(g) {
+    var h = '<div class="lista" role="radiogroup" aria-label="Cuántas consultas">';
+    P.forEach(function (p, i) {
+      h += '<button type="button" class="fila" role="radio"' +
+        ' aria-checked="' + (i === ELEGIDO) + '" tabindex="' + (i === ELEGIDO ? 0 : -1) + '" data-g="' + g + '">' +
+        '<span class="fp-txt"><span class="fp-nom">' + p.cifra + ' ' + p.nom + '</span>' +
+        '<span class="fp-det">' + p.unidad + '</span></span>' +
+        '<span class="fp-precio">' + p.precio + ' $</span></button>';
+    });
+    return h + '</div>';
+  }
+
+  function C(g) {
+    var h = '<div class="planes planes-c" role="radiogroup" aria-label="Cuántas consultas">';
+    P.forEach(function (p, i) {
+      h += '<button type="button" class="card" role="radio"' +
+        ' aria-checked="' + (i === ELEGIDO) + '" tabindex="' + (i === ELEGIDO ? 0 : -1) + '" data-g="' + g + '">' +
+        '<span class="pc-cab"><span class="pc-cifra">' + p.cifra + '</span>' +
+        '<span class="pc-nom">' + p.nom + '</span>' +
+        '<span class="pc-det">' + p.det + '</span></span>' +
+        '<span class="pc-pie"><span class="pc-precio">' + p.precio + ' $</span>' +
+        '<span class="pc-unidad">' + (p.ahorro ? '25 $ cada una' : '') + '</span></span>' +
+        '</button>';
+    });
+    return h + '</div>';
+  }
+
+  document.getElementById('cA').innerHTML   = A('a');
+  document.getElementById('cB').innerHTML   = B('b');
+  document.getElementById('cC').innerHTML   = C('c');
+  document.getElementById('cEsc').innerHTML = B('e');
+
+  /* Cuánto ocupa cada uno: es la mitad del argumento, asi que se mide y se
+     escribe en pantalla en vez de decirlo de memoria. */
+  ['A','B','C'].forEach(function (k) {
+    var caja = document.getElementById('c' + k);
+    var alto = Math.round(caja.getBoundingClientRect().height);
+    document.getElementById('m' + k).textContent = 'Ocupa ' + alto + ' px de alto';
+  });
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-g]');
+    if (!b) return;
+    var hermanos = document.querySelectorAll('[data-g="' + b.dataset.g + '"]');
+    [].forEach.call(hermanos, function (h) {
+      var yo = h === b;
+      h.setAttribute('aria-checked', String(yo));
+      h.tabIndex = yo ? 0 : -1;
+    });
+  });
+})();
+</script>
+</body>
+</html>

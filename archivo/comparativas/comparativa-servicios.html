@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa — motivo de consulta</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="reservar/reservar.css">
+<style>
+  body{background:var(--papel);font-family:var(--font-display);margin:0;padding:2rem 1.25rem 4rem}
+  .env{max-width:74rem;margin:0 auto}
+  .env > h1{font-size:1.45rem;margin:0 0 .4rem}
+  .env > p.sub{color:var(--text-soft);margin:0 0 2.25rem;max-width:52rem;line-height:1.65}
+
+  .bloque{background:#fff;border:1px solid var(--linea);border-radius:20px;padding:1.5rem;margin-bottom:1.5rem}
+  .bloque.gana{border-color:var(--primary-deep);box-shadow:var(--elev-2)}
+  .bloque > header{display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;
+    padding-bottom:.8rem;margin-bottom:1.6rem;border-bottom:1px solid var(--linea)}
+  .bloque > header .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-soft);font-weight:700}
+  .bloque.gana > header .et{color:var(--primary-deep)}
+  .bloque > header h2{font-size:1.05rem;margin:.1rem 0 0}
+  .bloque > header .alto{margin-left:auto;font-size:.78rem;color:var(--text-soft)}
+  .bloque > header .alto b{color:var(--primary-deep);font-variant-numeric:tabular-nums}
+  .bloque > p.nota{font-size:.84rem;color:var(--text-soft);line-height:1.65;margin:1.5rem 0 0;max-width:54rem}
+  .bloque > p.nota b{color:var(--text)}
+  .titulillo{font-size:.78rem;color:var(--text-soft);font-weight:600;margin:0 0 .7rem}
+
+  /* ============ SERVICIOS — el lenguaje nuevo ============
+     Mismo vocabulario que las tarjetas de sesiones: circulo con borde grueso que
+     se rellena al elegir, borde de 1,5 px, fondo verde suave, 20 px de aire. */
+  .sv{display:grid;gap:1.25rem;grid-template-columns:1fr 1fr;max-width:32rem}
+  .sv-4{max-width:50rem}
+  @media(min-width:760px){.sv-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+  .sv-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;
+    min-height:112px;padding:1.15rem .85rem;background:var(--white);
+    border:1.5px solid var(--linea);border-radius:var(--wz-radio);
+    font:inherit;color:inherit;text-align:center;cursor:pointer;box-shadow:var(--elev-1);
+    transition:box-shadow var(--paso),border-color var(--paso),background var(--paso)}
+  .sv-card:hover{border-color:var(--linea-fuerte);box-shadow:var(--elev-2)}
+  .sv-card[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2)}
+
+  .sv-icono{flex:none;width:42px;height:42px;border-radius:50%;
+    border:2.5px solid var(--primary);display:grid;place-items:center;color:var(--primary-deep);
+    transition:border-color var(--paso),background var(--paso),color var(--paso)}
+  .sv-icono svg{width:21px;height:21px}
+  .sv-card[aria-checked="true"] .sv-icono{border-color:var(--primary-deep);background:var(--primary-deep);color:#fff}
+  .sv-nombre{font-weight:600;font-size:.9rem;line-height:1.3}
+
+  /* fila: icono a la izquierda, nombre a la derecha */
+  .fila .sv-card{flex-direction:row;align-items:center;justify-content:flex-start;
+    text-align:left;min-height:76px;padding:.9rem 1rem;gap:.8rem}
+  .fila .sv-icono{width:38px;height:38px}
+  .fila .sv-icono svg{width:19px;height:19px}
+
+  /* ============ SESIONES — copiadas tal cual de la opción I ============ */
+  .pl{display:grid;gap:1.25rem;grid-template-columns:1fr;max-width:50rem}
+  @media(min-width:640px){.pl{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .pl-card{position:relative;display:flex;flex-direction:column;background:var(--white);
+    border:1.5px solid var(--linea);border-radius:var(--wz-radio);font:inherit;color:inherit;
+    text-align:left;cursor:pointer;box-shadow:var(--elev-1);overflow:hidden;
+    transition:box-shadow var(--paso),border-color var(--paso),background var(--paso)}
+  .pl-card[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2)}
+  .pl-cab{display:flex;align-items:center;gap:.55rem;padding:var(--space-5) 0 .75rem;
+    margin:0 var(--space-5);border-bottom:1px solid var(--linea)}
+  .pl-card[aria-checked="true"] .pl-cab{border-bottom-color:var(--primary-light)}
+  .pl-cifra{flex:none;width:32px;height:32px;border-radius:50%;border:2.5px solid var(--primary);
+    display:grid;place-items:center;font-size:.95rem;font-weight:700;line-height:1;
+    color:var(--primary-deep);font-variant-numeric:tabular-nums;
+    transition:border-color var(--paso),background var(--paso),color var(--paso)}
+  .pl-card[aria-checked="true"] .pl-cifra{border-color:var(--primary-deep);background:var(--primary-deep);color:#fff}
+  .pl-nombre{font-weight:700;font-size:1.02rem;line-height:1.2;letter-spacing:-.01em}
+  .pl-etiqueta{margin-left:auto;flex:none;padding:.18rem .42rem;border-radius:5px;background:var(--primary-deep);
+    color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;line-height:1.3;white-space:nowrap}
+  .pl-cuerpo{flex:1;display:flex;align-items:center;padding:var(--space-4) var(--space-5)}
+  .pl-detalle{display:flex;align-items:center;gap:.45rem;font-size:var(--text-xs);
+    color:var(--text-soft);line-height:1.5;margin:0}
+  .pl-detalle svg{width:15px;height:15px;flex:none;color:var(--primary)}
+  .pl-pie{position:relative;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+    padding:.85rem var(--space-5) var(--space-5);min-height:2.5rem}
+  .pl-pie::before{content:"";position:absolute;top:0;left:var(--space-5);right:var(--space-5);height:1px;background:var(--linea)}
+  .pl-card[aria-checked="true"] .pl-pie::before{background:var(--primary-light)}
+  .pl-precio{font-size:1.6rem;font-weight:700;letter-spacing:-.025em;line-height:1;color:var(--primary-darkest)}
+  .pl-derecha{display:flex;align-items:center;gap:.45rem;flex:none}
+  .pl-ahorro{display:inline-flex;align-items:center;gap:.25rem;padding:.22rem .5rem;border-radius:6px;
+    background:var(--ok-suave);color:var(--ok);font-size:.7rem;font-weight:600;line-height:1.3;white-space:nowrap}
+  .pl-ahorro svg{width:12px;height:12px;flex:none}
+  .pl-card[aria-checked="true"] .pl-ahorro{background:var(--white)}
+  .pl-check{flex:none;width:22px;height:22px;border-radius:50%;background:var(--primary-deep);
+    display:grid;place-items:center;opacity:0;transform:scale(.6);
+    transition:opacity var(--paso),transform var(--paso)}
+  .pl-check svg{width:13px;height:13px;color:#fff}
+  .pl-card[aria-checked="true"] .pl-check{opacity:1;transform:scale(1)}
+  .pl-destacada{border-color:var(--primary-light)}
+  .pl-cinta{position:absolute;top:0;left:0;right:0;height:3px;background:var(--primary-deep)}
+  .marco{width:390px;max-width:100%;background:#fff;border:1px solid var(--linea-fuerte);
+    border-radius:22px;padding:1.1rem;box-shadow:var(--elev-2)}
+  .marcos{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start}
+</style>
+</head>
+<body>
+<div class="env">
+
+<h1>El motivo de consulta, con el lenguaje nuevo</h1>
+<p class="sub">La C1 que elegiste, pero hablando el mismo idioma que las tarjetas de sesiones:
+   el icono pasa a un <b>círculo con borde de 2,5 px que se rellena de verde al elegir</b>,
+   exactamente igual que la cifra. Debajo de cada opción tienes las tarjetas de sesiones
+   reales, para que compruebes si pegan o si una desentona.</p>
+
+<!-- ============ J1 ============ -->
+<section class="bloque gana">
+  <header>
+    <div><span class="et">Opción J1 · recomendada</span><h2>2×2, como elegiste</h2></div>
+    <p class="alto">Tarjeta: <b data-mide="mJ1">—</b></p>
+  </header>
+
+  <p class="titulillo">¿En qué quieres trabajar?</p>
+  <div class="sv" id="mJ1" role="radiogroup" aria-label="J1">
+    <button type="button" class="sv-card" role="radio" aria-checked="true">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/></svg></span>
+      <span class="sv-nombre">Superar la Ansiedad</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/></svg></span>
+      <span class="sv-nombre">Fortalecer tu Autoestima</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/></svg></span>
+      <span class="sv-nombre">Sanar en Pareja</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/></svg></span>
+      <span class="sv-nombre">Acompañar un Duelo</span>
+    </button>
+  </div>
+
+  <p class="titulillo" style="margin-top:2rem">¿Una sesión o un proceso?</p>
+  <div class="pl" role="radiogroup" aria-label="planes J1">
+    <button type="button" class="pl-card" role="radio" aria-checked="false">
+      <span class="pl-cab"><span class="pl-cifra">1</span><span class="pl-nombre">sesión</span></span>
+      <span class="pl-cuerpo"><p class="pl-detalle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg><span>Una cita puntual</span></p></span>
+      <span class="pl-pie"><span class="pl-precio">30 $</span><span class="pl-derecha"><span class="pl-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span></span></span>
+    </button>
+    <button type="button" class="pl-card pl-destacada" role="radio" aria-checked="true">
+      <span class="pl-cinta" aria-hidden="true"></span>
+      <span class="pl-cab"><span class="pl-cifra">3</span><span class="pl-nombre">sesiones</span><span class="pl-etiqueta">Sugerida</span></span>
+      <span class="pl-cuerpo"><p class="pl-detalle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg><span>A tu ritmo, 90 días</span></p></span>
+      <span class="pl-pie"><span class="pl-precio">75 $</span><span class="pl-derecha"><span class="pl-ahorro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2 13.2 20.5a2 2 0 0 1-2.8 0l-7-7a2 2 0 0 1-.6-1.4V4.5a2 2 0 0 1 2-2h7.6a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg>Ahorras 15 $</span><span class="pl-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span></span></span>
+    </button>
+    <button type="button" class="pl-card" role="radio" aria-checked="false">
+      <span class="pl-cab"><span class="pl-cifra">5</span><span class="pl-nombre">sesiones</span></span>
+      <span class="pl-cuerpo"><p class="pl-detalle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg><span>A tu ritmo, 90 días</span></p></span>
+      <span class="pl-pie"><span class="pl-precio">125 $</span><span class="pl-derecha"><span class="pl-ahorro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13.2 13.2 20.5a2 2 0 0 1-2.8 0l-7-7a2 2 0 0 1-.6-1.4V4.5a2 2 0 0 1 2-2h7.6a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/></svg>Ahorras 25 $</span><span class="pl-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg></span></span></span>
+    </button>
+  </div>
+
+  <p class="nota">Las tarjetas de motivo miden <b><span id="anchoJ1">—</span> px</b> y las de sesiones
+     253 px: casi el mismo ancho, así que las dos rejillas tienen el mismo ritmo aunque una sea de
+     dos columnas y la otra de tres. El círculo del icono repite el de la cifra —mismo borde de
+     2,5 px, mismo relleno verde al elegir— y esa repetición es lo que hace que se lean como la
+     misma página.</p>
+</section>
+
+<!-- ============ J2 ============ -->
+<section class="bloque">
+  <header>
+    <div><span class="et">Variante J2</span><h2>Las cuatro en una fila</h2></div>
+    <p class="alto">Tarjeta: <b data-mide="mJ2">—</b></p>
+  </header>
+
+  <p class="titulillo">¿En qué quieres trabajar?</p>
+  <div class="sv sv-4" id="mJ2" role="radiogroup" aria-label="J2">
+    <button type="button" class="sv-card" role="radio" aria-checked="true">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/></svg></span>
+      <span class="sv-nombre">Superar la Ansiedad</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/></svg></span>
+      <span class="sv-nombre">Fortalecer tu Autoestima</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/></svg></span>
+      <span class="sv-nombre">Sanar en Pareja</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/></svg></span>
+      <span class="sv-nombre">Acompañar un Duelo</span>
+    </button>
+  </div>
+
+  <p class="nota">Ocupa la mitad de alto y alinea con las tres de sesiones. A cambio cada tarjeta
+     baja a <span id="anchoJ2">—</span> px y «Fortalecer tu Autoestima» parte en dos líneas.
+     En móvil las dos variantes acaban igual, apiladas.</p>
+</section>
+
+<!-- ============ J3 ============ -->
+<section class="bloque">
+  <header>
+    <div><span class="et">Variante J3</span><h2>Icono a la izquierda, en fila</h2></div>
+    <p class="alto">Tarjeta: <b data-mide="mJ3">—</b></p>
+  </header>
+
+  <p class="titulillo">¿En qué quieres trabajar?</p>
+  <div class="sv fila" id="mJ3" role="radiogroup" aria-label="J3">
+    <button type="button" class="sv-card" role="radio" aria-checked="true">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/></svg></span>
+      <span class="sv-nombre">Superar la Ansiedad</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/></svg></span>
+      <span class="sv-nombre">Fortalecer tu Autoestima</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/></svg></span>
+      <span class="sv-nombre">Sanar en Pareja</span>
+    </button>
+    <button type="button" class="sv-card" role="radio" aria-checked="false">
+      <span class="sv-icono" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/></svg></span>
+      <span class="sv-nombre">Acompañar un Duelo</span>
+    </button>
+  </div>
+
+  <p class="nota">El icono a la izquierda es exactamente la disposición de la cabecera de las
+     tarjetas de sesiones —círculo, luego el nombre—, así que es la que más se parece a ellas.
+     Más compacta, pero pierde el aire que te gustaba de la rejilla centrada.</p>
+</section>
+
+<!-- ============ movil ============ -->
+<section class="bloque gana">
+  <header>
+    <div><span class="et">J2 en móvil</span><h2>390 px — dos y dos</h2></div>
+    <p class="alto">Tarjeta: <b id="anchoMovil">—</b></p>
+  </header>
+  <div class="marcos">
+    <div class="marco">
+      <p class="titulillo">¿En qué quieres trabajar?</p>
+      <div class="sv" id="mMovil" role="radiogroup" aria-label="móvil"></div>
+    </div>
+  </div>
+  <p class="nota">Las mismas cuatro tarjetas a 390 px. En una sola columna la cuarta quedaba
+     fuera de pantalla y había que desplazar para verla — y una opción que no se ve no se
+     compara. En dos columnas caben las cuatro de golpe.</p>
+</section>
+
+</div>
+
+<script>
+  document.querySelectorAll('[data-mide]').forEach(function (b) {
+    var c = document.getElementById(b.dataset.mide).firstElementChild.getBoundingClientRect();
+    b.textContent = Math.round(c.width) + ' × ' + Math.round(c.height) + ' px';
+  });
+  ['J1','J2'].forEach(function (k) {
+    document.getElementById('ancho' + k).textContent =
+      Math.round(document.getElementById('m' + k).firstElementChild.getBoundingClientRect().width);
+  });
+  var mv = document.getElementById('mMovil');
+  if (mv) { mv.innerHTML = document.getElementById('mJ2').innerHTML;
+    document.getElementById('anchoMovil').textContent =
+      Math.round(mv.firstElementChild.getBoundingClientRect().width) + ' px'; }
+  document.querySelectorAll('[role="radiogroup"]').forEach(function (g) {
+    g.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[role="radio"]');
+      if (!b) return;
+      g.querySelectorAll('[role="radio"]').forEach(function (o) { o.setAttribute('aria-checked', String(o === b)); });
+    });
+  });
+</script>
+</body>
+</html>

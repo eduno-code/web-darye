@@ -1,0 +1,113 @@
+/* ============================================================
+   MODO OSCURO RETIRADO  ·  8 de septiembre de 2026
+
+   ESTO NO SE CARGA EN NINGUNA PARTE. Es un archivo de memoria.
+
+   El modo oscuro se quitó porque estaba A MEDIAS, no porque estuviera mal
+   hecho. En el momento de retirarlo:
+
+     · style.css (la landing, 897 líneas)  ·  ninguno
+     · reservar/                           ·  paleta oscura completa
+     · entrar/                             ·  completo, con light-dark()
+     · cuenta/ y el panel                  ·  claro forzado
+
+   Alguien con el sistema en oscuro veía la landing clara, el login oscuro y el
+   panel claro. Un tema a medias se lee como un fallo, no como una opción.
+
+   Se guarda aquí porque los contrastes estaban MEDIDOS, y esa es la parte cara
+   de hacer un modo oscuro. Si algún día se hace en todo el sitio, esto es el
+   punto de partida y no hay que volver a calcularlos.
+   ============================================================ */
+
+
+/* ---------- RESERVAR ---------- */
+
+@media (prefers-color-scheme: dark) {
+  :root{
+    --suelo:#131517;            /* la pagina */
+    --sup:#20241F;              /* la tarjeta · DL*=7,0 sobre la pagina */
+    --sup-cal:#272B25;          /* superficie tenue */
+    --sup-eleg:#333A2F;         /* la elegida LEVANTA · DL*=9,8 sobre la tarjeta */
+    --sel:#282D26;
+    --acc-sv:#242A25;
+
+    /* La arcilla BAJA. `--marca-dp` se queda alto a proposito: es un ICONO, no
+       una linea. */
+    --marca:#9C7A56; --marca-cl:#6E5539; --marca-dp:#C6A783; --marca-dk:#E0CDB8;
+
+    /* Hueso calido, nunca blanco puro: sobre negro la Fraunces de los
+       titulares halona y los remates se emborronan. */
+    --txt:#EDE9E1;              /* 15,12:1 sobre el suelo */
+    --txt-suave:#A9AEA4;        /* 8,09:1 */
+
+    /* La salvia conserva su papel, pero al reves: aqui es clara y lo que va
+       encima es la tinta de la pagina, asi que el boton pasa a ser lo mas
+       luminoso de la pantalla, que es exactamente su trabajo. */
+    --acc:#8AA891;              /* 7,05:1 con --acc-txt */
+    --acc-dp:#A8C0AE;           /* 9,43:1 · texto, foco y badge */
+    --acc-txt:#131517;          /* la tinta, ya no el blanco */
+
+    /* El disco elegido NO se apaga: sube al hueso del texto. */
+    --circ-eleg:#EDE9E1;
+    --circ-eleg-txt:#3E4F44;
+
+    --linea:#9C7A56;                    /* 4,00:1 sobre la tarjeta · claro 3,49 */
+    --linea-sug:rgba(156,122,86,.55);
+    --linea-int:rgba(156,122,86,.30);   /* DL*=10,3 · en claro es 9,0 */
+    /* --linea-f no se redefine: apunta a --acc, que ya cambio aqui arriba. */
+
+    --disco:rgba(19,21,23,.14);
+    --disco-off:rgba(237,233,225,.10);
+    --foto:saturate(.8) brightness(.95);
+    --foto-eleg:saturate(1.06) contrast(1.03);
+
+    --banda:#6E4C36;            /* el terracota mas hondo de style.css */
+    --barra:#221F1C;
+
+    --inerte:#2C2F2B; --inerte-txt:#979C93;   /* 4,84:1 */
+    --pend:#D9B45C; --pend-sv:#2A2317; --pend-linea:rgba(217,180,92,.28);
+    --mal:#E9887A;  --mal-sv:#2C1D1B; --mal-txt:#2C1D1B;
+    --ocupado:#1C1F1B;
+
+    /* La sombra no funciona sobre fondo oscuro: aqui la profundidad la da el
+       escalon de superficie. Se deja casi apagada para que el borde no se
+       ensucie. */
+    --elev-1:0 1px 2px rgba(0,0,0,.30);
+    --elev-2:0 4px 14px -4px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.30);
+  }
+}
+
+
+/* ---------- ENTRAR ----------
+   Estaba escrito con light-dark(claro, oscuro). Abajo, cada token con sus dos
+   valores tal como estaban. */
+
+/*
+  --blanco:        #FFFFFF, #20241F
+  --papel:         #FAF3EA, #191C18
+  --tierra:        #7A5A3C, #9C7A56
+  --tierra-cl:     #8A6746, #9C7A56
+  --panel-fondo:   #5E442C, #33261A
+  --panel-txt:     #FAF3EA, #F0E7DA
+  --panel-txt-sv:  #E2D5C4, #C9B9A4
+  --panel-linea:   #B99A78, #8A7157
+  --celosia:       rgba(255,246,232,.065), rgba(255,240,220,.045)
+  --celosia-sv:    rgba(255,246,232,.048), rgba(255,240,220,.032)
+  --salvia:        #5A7060, #8AA891
+  --salvia-dp:     #3E4F44, #A8C0AE
+  --salvia-sv:     #E8EDE6, #242A25
+  --txt:           #2E332E, #EDE9E1
+  --txt-tenue:     #6B665D, #ABA69B
+  --linea:         rgba(122,90,60,.20), rgba(156,122,86,.28)
+  --linea-med:     #A8825F, #9C7A56
+  --linea-fuerte:  #7A5A3C, #C6A783
+  --mal:           #A33A2E, #E9887A
+  --mal-sv:        #FBEAE8, #2C1D1B
+  --inerte:        #E6E1D7, #2C2F2B
+  --inerte-txt:    #625E56, #979C93
+  --btn-fondo:     #8A6746, #C6A783
+  --btn-fondo-hv:  #5E442C, #DCC1A2
+  --btn-txt:       #FAF3EA, #241C17
+  --elev-1:        0 1px 2px rgba(46,42,36,.06), 0 1px 2px rgba(0,0,0,.4)
+  --elev-2:        0 4px 14px -6px rgba(46,42,36,.18), 0 4px 14px -6px rgba(0,0,0,.55)
+*/

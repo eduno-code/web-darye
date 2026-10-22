@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Psicconsciente — Daryeli Romero, Psicóloga Clínica | Terapia Online</title>
+    <meta name="description" content="Psicconsciente: psicoterapia online con Daryeli Romero, psicóloga clínica. Un espacio seguro para sanar tus heridas, reconstruir tu autoestima y construir relaciones más sanas.">
+    <meta name="author" content="Daryeli Romero">
+    <meta property="og:title" content="Psicconsciente — Daryeli Romero, Psicoterapia Online">
+    <meta property="og:description" content="Un espacio seguro para conectar contigo y construir relaciones más sanas.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:image" content="og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Psicconsciente — Daryeli Romero, psicóloga clínica. Recupera la calma y aprende a vivir sin agobio.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- PENDIENTE AL PUBLICAR: cuando haya dominio, descomenta estas dos líneas
+         y pon la URL absoluta también en og:image (los scrapers de WhatsApp y
+         Facebook resuelven mejor una ruta absoluta que una relativa).
+    <link rel="canonical" href="https://TU-DOMINIO.com/">
+    <meta property="og:url" content="https://TU-DOMINIO.com/">
+    -->
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="theme-color" content="#8C6246">
+
+    <!-- La foto del hero es el elemento LCP: se pide cuanto antes y en el
+         tamaño que de verdad va a pintarse, no siempre el de 900px. -->
+    <link rel="preload" as="image" href="darye-foto-pro-450.webp"
+          imagesrcset="darye-foto-pro-450.webp 450w, darye-foto-pro-640.webp 640w, darye-foto-pro-768.webp 768w, darye-foto-pro.webp 900w"
+          imagesizes="(min-width:1200px) 483px, (min-width:900px) 40vw, 92vw"
+          fetchpriority="high">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Las fuentes dejan de bloquear el render: se cargan como hoja de
+         impresión y se activan al terminar. El <noscript> cubre el caso sin JS. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all';this.onload=null">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"></noscript>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<div class="blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+    <nav class="nav" aria-label="Navegación principal">
+        <a href="#inicio" class="nav-brand">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+                    <path d="M9 20h6M10.2 22.2h3.6"/>
+                    <path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+                </svg>
+            </span>
+            <span>
+                <span class="brand-title">Psicconsciente</span>
+                <span class="brand-subtitle">Daryeli Romero</span>
+            </span>
+        </a>
+
+        <div class="nav-menu">
+            <ul class="nav-list">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#servicios">Terapias</a></li>
+                <li><a href="#como-funciona">Cómo funciona</a></li>
+                <li><a href="#historia">Mi historia</a></li>
+                <li><a href="#faq">Preguntas</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </div>
+
+        <a href="https://wa.me/584126724351" class="nav-cta" target="_blank" rel="noopener noreferrer">
+            <span class="cta-full">Agenda tu cita</span><span class="cta-short">Agenda</span>
+        <span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navPanel" aria-label="Abrir menú">
+            <span class="bar" aria-hidden="true"></span>
+        </button>
+    </nav>
+</header>
+
+<div class="nav-scrim" id="navScrim"></div>
+
+<nav class="nav-panel" id="navPanel" data-open="false" aria-label="Menú">
+    <a href="#inicio">Inicio</a>
+    <a href="#servicios">Terapias</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#historia">Mi historia</a>
+    <a href="#faq">Preguntas</a>
+    <a href="#contacto">Contacto</a>
+</nav>
+
+<main id="contenido">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="inicio" aria-labelledby="hero-title">
+        <div class="container">
+            <div class="hero-grid">
+                <div>
+                    <p class="eyebrow">Psicoterapia online</p>
+                    <h1 id="hero-title">Recupera la calma y aprende a <span class="accent">vivir sin agobio</span></h1>
+                    <p class="hero-lede">Un espacio seguro para conectar contigo y construir relaciones más sanas. Te acompaño a sanar tus heridas, a reconstruir tu autoestima y a transformar tu vida.</p>
+
+                    <div class="actions">
+                        <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Agenda tu cita<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+                        <a href="#historia" class="btn btn-secondary">Conoce más</a>
+                    </div>
+
+                    <ul class="credentials">
+                        <li>Psicóloga clínica</li>
+                        <li>Especialista en clínica</li>
+                        <li>Terapias de tercera generación</li>
+                    </ul>
+                </div>
+
+                <div class="portrait">
+                    <div class="portrait-frame graded">
+                        <img src="darye-foto-pro-450.webp" width="900" height="1200" fetchpriority="high" decoding="async"
+                             srcset="darye-foto-pro-450.webp 450w, darye-foto-pro-640.webp 640w, darye-foto-pro-768.webp 768w, darye-foto-pro.webp 900w"
+                             sizes="(min-width:1200px) 483px, (min-width:900px) 40vw, 92vw"
+                             alt="Daryeli Romero, psicóloga clínica, en su espacio de consulta">
+                    </div>
+                    <div class="portrait-badge">
+                        <span class="dot" aria-hidden="true"></span>
+                        <span>
+                            <b>Sesiones de 50 min</b>
+                            <small>Online, desde donde estés</small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CIFRAS ============ -->
+    <section class="section section-tight" aria-label="Trayectoria en cifras">
+        <div class="container">
+            <div class="stats reveal">
+                <div>
+                    <span class="stat-number">2.000+</span>
+                    <span class="stat-label">Pacientes acompañados</span>
+                </div>
+                <div>
+                    <span class="stat-number">15.000+</span>
+                    <span class="stat-label">Horas de terapia</span>
+                </div>
+                <div>
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Relaciones fortalecidas</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PROPÓSITO ============ -->
+    <section class="section section-alt" aria-label="Mi propósito">
+        <div class="container purpose">
+            <p class="eyebrow eyebrow-center">Mi propósito</p>
+            <blockquote class="reveal">
+                Mi propósito es acompañarte desde un espacio seguro, donde te sientas <span class="accent">escuchada, validada y comprendida</span>. Ser ese refugio donde puedas sanar, reconstruirte y transformar tu dolor en evolución, para crear relaciones sanas y conscientes.
+            </blockquote>
+            <cite>Daryeli Romero — Psicóloga Clínica</cite>
+        </div>
+    </section>
+
+    <!-- ============ ESPECIALIDADES ============ -->
+    <section class="section" id="servicios" aria-labelledby="servicios-title">
+        <div class="container">
+            <div class="section-head is-center">
+                <p class="eyebrow eyebrow-center">En qué te acompaño</p>
+                <h2 id="servicios-title">Áreas de <span class="accent">especialidad</span></h2>
+            </div>
+
+            <div class="areas">
+                <article class="area reveal" id="area-ansiedad">
+                    <div class="area-content">
+                        <span class="area-icon" aria-hidden="true">
+                            <!-- Una linea que empieza agitada y termina en calma -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 3.6 5.2 5.2 18.8 6.8 6.6 8.4 16.4 10 10.6c1.6-3 3 4.4 4.6 1.8 1.4-2.4 3 1 4.4-.2.9-.8 2.1-.2 3-.2"/></svg>
+                        </span>
+                        <span class="area-tag">Gestión emocional</span>
+                        <h3>Superar la Ansiedad</h3>
+                        <p class="area-body">Cuando los pensamientos no paran y la tensión te agota. Te acompaño a entender lo que te pasa y a recuperar la calma con <strong>herramientas prácticas</strong> para tu día a día.</p>
+                        <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Agendar cita<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+                    </div>
+                    <figure class="area-figure graded">
+                        <img src="ansiedad.webp" width="1600" height="1200" loading="lazy" decoding="async" alt="">
+                    </figure>
+                </article>
+
+                <article class="area reveal" id="area-autoestima">
+                    <div class="area-content">
+                        <span class="area-icon" aria-hidden="true">
+                            <!-- Un brote que crece desde una base firme -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M12 21v-8.4"/><path d="M12 12.6C12 9.2 9.6 6.8 6.2 6.4c-.4 3.4 2 6.2 5.8 6.2Z"/><path d="M12 14.4c0-2.6 1.9-4.6 4.6-4.9-.3 2.6-1.7 4.9-4.6 4.9Z"/></svg>
+                        </span>
+                        <span class="area-tag">Crecimiento personal</span>
+                        <h3>Fortalecer tu Autoestima</h3>
+                        <p class="area-body">Si la autocrítica te pesa y te cuesta poner límites. Vamos a construir juntas una mirada mucho más <strong>compasiva, firme y amorosa</strong> hacia ti misma.</p>
+                        <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Agendar cita<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+                    </div>
+                    <figure class="area-figure graded">
+                        <img src="autoestima.webp" width="1600" height="1200" loading="lazy" decoding="async" alt="">
+                    </figure>
+                </article>
+
+                <article class="area reveal" id="area-pareja">
+                    <div class="area-content">
+                        <span class="area-icon" aria-hidden="true">
+                            <!-- Dos aros que se cruzan: el espacio comun del vinculo -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.8" cy="12" r="5.4"/><circle cx="15.2" cy="12" r="5.4"/></svg>
+                        </span>
+                        <span class="area-tag">Vínculos afectivos</span>
+                        <h3>Sanar en Pareja</h3>
+                        <p class="area-body">Cuando la comunicación se rompe o la distancia duele. Creamos un <strong>espacio neutral y seguro</strong> para reencontrarnos, hablar sin juicios y sanar el vínculo.</p>
+                        <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Agendar cita<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+                    </div>
+                    <figure class="area-figure graded">
+                        <img src="pareja.webp" width="1600" height="1200" loading="lazy" decoding="async" alt="">
+                    </figure>
+                </article>
+
+                <article class="area reveal" id="area-duelo">
+                    <div class="area-content">
+                        <span class="area-icon" aria-hidden="true">
+                            <!-- Luna menguante: algo mengua, pero el ciclo sigue. La version
+                                 anterior era una linea descendente que a 34px se leia como un
+                                 trazo sin terminar. -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 15.6A8.6 8.6 0 1 1 9.2 4.4a6.9 6.9 0 0 0 10.2 11.2Z"/></svg>
+                        </span>
+                        <span class="area-tag">Procesos de cambio</span>
+                        <h3>Acompañar un Duelo</h3>
+                        <p class="area-body">Hay pérdidas que cuesta mucho soltar: una persona, una etapa o un proyecto. Te ofrezco un espacio <strong>humano y respetuoso</strong> para transitar el dolor a tu propio ritmo.</p>
+                        <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Agendar cita<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+                    </div>
+                    <figure class="area-figure graded">
+                        <img src="duelo.webp" width="1400" height="1050" loading="lazy" decoding="async" alt="">
+                    </figure>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ TESTIMONIOS ============ -->
+    <section class="section section-alt" id="testimonios" aria-labelledby="testimonios-title">
+        <div class="container">
+            <div class="section-head is-center">
+                <p class="eyebrow eyebrow-center">Testimonios</p>
+                <h2 id="testimonios-title">Lo que otros han encontrado en este <span class="accent">proceso</span></h2>
+                <p>Cada proceso es distinto. Estos son algunos de los que han pasado por aquí.</p>
+            </div>
+
+
+            <div class="quotes">
+                <!-- Decorativo: el hilo pasa POR DEBAJO de las tarjetas y solo
+                     asoma en los huecos, dibujando el "proceso" del titular. -->
+                <svg class="quotes-thread" viewBox="0 -150 1160 1302" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M500 -115C430 -20 300 60 265 180C226 314 700 330 830 470C955 605 620 800 420 800C290 800 250 940 330 1030C419 1131 700 1085 838 1006C900 970 950 930 962 880C971 841 950 812 920 812C890 812 872 836 878 860C883 878 901 887 917 878"
+                          fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                </svg>
+                <article class="quote reveal">
+                    <blockquote>“Llegué con crisis de ansiedad casi a diario. Hoy tengo herramientas reales para manejarla y me siento escuchada en cada sesión.”</blockquote>
+                    <footer>
+                        <span class="quote-initials" aria-hidden="true">M.</span>
+                        <span class="quote-who"><b>Paciente</b><span>Terapia individual</span></span>
+                    </footer>
+                </article>
+
+                <article class="quote reveal">
+                    <blockquote>“Fuimos como pareja sin muchas expectativas y logramos hablar de cosas que llevábamos años evitando. Un espacio muy respetuoso.”</blockquote>
+                    <footer>
+                        <span class="quote-initials" aria-hidden="true">J&amp;L</span>
+                        <span class="quote-who"><b>Pacientes</b><span>Terapia de pareja</span></span>
+                    </footer>
+                </article>
+
+                <article class="quote reveal">
+                    <blockquote>“Nunca pensé que la modalidad online se sintiera tan cercana. Cada sesión es un espacio seguro que ya forma parte de mi semana.”</blockquote>
+                    <footer>
+                        <span class="quote-initials" aria-hidden="true">R.</span>
+                        <span class="quote-who"><b>Paciente</b><span>Autoestima</span></span>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CÓMO FUNCIONA ============ -->
+    <section class="section how" id="como-funciona" aria-labelledby="como-title">
+        <div class="container">
+            <div class="section-head is-center">
+                <p class="eyebrow eyebrow-center">Cómo funciona</p>
+                <h2 id="como-title">Así damos el <span class="accent">primer paso</span></h2>
+            </div>
+
+            <ol class="steps">
+                <li class="step reveal">
+                    <div class="step-top">
+                        <span class="step-num" aria-hidden="true">1</span>
+                        <span class="step-icon" aria-hidden="true">
+                            <!-- Bocadillo de conversación: el primer paso es un mensaje, no un formulario -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.6a7.9 7.9 0 0 1-8.5 7.9 9 9 0 0 1-2.6-.4L4.5 20.5l1.4-4.2a7.6 7.6 0 0 1-1.4-4.7A7.9 7.9 0 0 1 12.5 3.7a7.9 7.9 0 0 1 8 7.9Z"/><path d="M9.2 11.6h6.6M9.2 8.6h4.4"/></svg>
+                        </span>
+                    </div>
+                    <h3>Me escribes</h3>
+                    <p>Cuéntame en pocas líneas qué te está pasando. Sin formularios ni cuestionarios.</p>
+                </li>
+                <li class="step reveal">
+                    <div class="step-top">
+                        <span class="step-num" aria-hidden="true">2</span>
+                        <span class="step-icon" aria-hidden="true">
+                            <!-- Calendario con un día marcado: se elige una fecha concreta -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="5" width="17.6" height="15.5" rx="2.6"/><path d="M3.2 9.8h17.6M8.2 2.8v4.2M15.8 2.8v4.2"/><circle cx="12" cy="15" r="1.5" fill="currentColor" stroke="none"/></svg>
+                        </span>
+                    </div>
+                    <h3>Acordamos día y hora</h3>
+                    <p>Buscamos juntas un horario que te venga bien, dentro de mi disponibilidad.</p>
+                </li>
+                <li class="step reveal">
+                    <div class="step-top">
+                        <span class="step-num" aria-hidden="true">3</span>
+                        <span class="step-icon" aria-hidden="true">
+                            <!-- Cámara de vídeo: la sesión ocurre por videollamada -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/></svg>
+                        </span>
+                    </div>
+                    <h3>Nos vemos</h3>
+                    <p>Cincuenta minutos por videollamada, desde donde estés.</p>
+                </li>
+            </ol>
+
+            <div class="how-cta">
+                <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Escríbeme<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ HISTORIA ============ -->
+    <section class="section section-alt" id="historia" aria-labelledby="historia-title">
+        <div class="container">
+            <div class="story">
+                <figure class="story-figure graded">
+                    <img src="darye-historia.webp" width="800" height="1067" loading="lazy" decoding="async"
+                         alt="Daryeli Romero durante una sesión de terapia online">
+                </figure>
+
+                <div class="story-text">
+                    <p class="eyebrow">Mi historia</p>
+                    <h2 id="historia-title">Y aquí la <span class="accent">historia</span></h2>
+                    <p>Esta aventura comenzó mucho antes de que lo notara, mi amor por ver las personas felices nace a raíz del servicio, nada alegra más este corazón que ver a personas sentir que están viviendo una vida que vale la pena.</p>
+                    <p>Así que decidí estudiar el hermoso mundo de la mente humana, soy psicóloga, especialista en clínica, maestrante en terapias de tercera generación.</p>
+                    <p>Hace años comparto contenido de valor sin ninguna pretensión hasta que un día empezaron personas a preguntarme si yo los podía atender, me sentí honrada, desde ese entonces supe que este era mi camino, un camino no podía recorrer sola y en este viaje se han sumado personas y profesionales maravillosos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="container">
+            <div class="faq-card">
+                <div>
+                    <p class="eyebrow">Preguntas</p>
+                    <h2 id="faq-title">Preguntas <span class="accent">frecuentes</span></h2>
+                    <p style="color:var(--text-soft);margin-block:var(--space-4) var(--space-8)">Si te queda alguna duda adicional escríbenos por WhatsApp, estaremos felices de atenderte.</p>
+                    <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Contacto<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+                </div>
+
+                <div>
+                    <details class="faq-item">
+                        <summary>¿Cuánto dura cada sesión?
+                            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </summary>
+                        <p>Cada sesión individual dura 50 minutos. Las sesiones de pareja se extienden a 60 minutos para dar espacio a ambas partes.</p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>¿Cómo funcionan los pagos?
+                            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </summary>
+                        <p>El pago se realiza antes de cada sesión mediante transferencia o link de pago. Te enviaré todos los detalles al agendar tu cita.</p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>¿Necesito diagnóstico previo para empezar?
+                            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </summary>
+                        <p>No es necesario. La primera sesión sirve justamente para conversar sobre lo que sientes y definir juntas cómo trabajarlo.</p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>¿Las sesiones online son igual de efectivas?
+                            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </summary>
+                        <p>Sí. Múltiples estudios respaldan su efectividad, y muchos pacientes encuentran más cómodo abrirse desde un espacio propio y familiar.</p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>¿Qué pasa si necesito cancelar una cita?
+                            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </summary>
+                        <p>Puedes reprogramar sin costo avisando con al menos 24 horas de anticipación por WhatsApp.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CTA FINAL ============ -->
+    <section class="section final" id="contacto" aria-labelledby="contacto-title">
+        <!-- Manchas organicas de esquina, recortadas por el propio bloque -->
+        <span class="final-shape s1" aria-hidden="true"></span>
+        <span class="final-shape s2" aria-hidden="true"></span>
+        <span class="final-shape s3" aria-hidden="true"></span>
+
+        <div class="container reveal">
+            <p class="eyebrow eyebrow-center">Tu espacio seguro</p>
+            <h2 id="contacto-title">¿Y si empezamos despacio, a tu <span class="accent">propio ritmo</span>?</h2>
+            <p class="final-lede">Dar el primer paso cuesta, y está bien no tener todas las respuestas hoy. Si sientes que es el momento de hablarlo en un espacio seguro, conversemos por WhatsApp.</p>
+
+            <a href="https://wa.me/584126724351" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.03 21.97c-2.63 0-5.08-1.02-6.93-2.68L2 20.5l1.25-3.53C2.47 15.11 2 13.5 2 11.5 2 6.26 6.48 2 12.03 2 17.59 2 22 6.26 22 11.5c0 5.24-4.41 9.47-9.97 9.47z"/></svg>
+                Hablemos
+            <span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+
+            <small class="final-note">Atención confidencial y sin compromisos</small>
+            <!-- El telefono y el Instagram estaban repetidos aqui y en el footer,
+                 justo debajo. Se quedan solo en el footer: este bloque tiene un
+                 unico trabajo, que es el boton de WhatsApp. -->
+        </div>
+    </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer" id="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand">
+                    <span class="brand-mark" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+                            <path d="M9 20h6M10.2 22.2h3.6"/>
+                            <path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+                        </svg>
+                    </span>
+                    <span>
+                        <b>Psicconsciente</b>
+                        <span>Daryeli Romero · Psicoterapia online</span>
+                    </span>
+                </div>
+                <div class="socials">
+                    <a href="https://www.facebook.com/share/1BfT5i5Cnx/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook (se abre en una pestaña nueva)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.25-1.5 1.55-1.5h1.65V4.6c-.29-.04-1.27-.12-2.41-.12-2.38 0-4.01 1.45-4.01 4.12v2.3H7.6V14h2.67v8h3.23z"/></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@psicodarye?_r=1&amp;_t=ZS-98bUGggbBdy" target="_blank" rel="noopener noreferrer" aria-label="TikTok (se abre en una pestaña nueva)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .77-5.06V9.7a5.68 5.68 0 0 0-.77-.05A5.66 5.66 0 1 0 15.54 15V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.29 4.29 0 0 1-3.24-1.48z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/psicconsciente?igsh=MThsNHhlbjJ1aGsxMQ==" target="_blank" rel="noopener noreferrer" aria-label="Instagram (se abre en una pestaña nueva)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <nav class="footer-col" aria-label="Enlaces del sitio">
+                <h2>Explora</h2>
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#servicios">Terapias</a></li>
+                    <li><a href="#como-funciona">Cómo funciona</a></li>
+                    <li><a href="#historia">Mi historia</a></li>
+                    <li><a href="#faq">Preguntas frecuentes</a></li>
+                </ul>
+            </nav>
+
+            <div class="footer-col">
+                <h2>Contacto</h2>
+                <ul>
+                    <li>
+                        <a href="tel:+584126724351">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.12.9.35 1.8.67 2.6a2 2 0 0 1-.45 2.1L8.1 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.45c.84.32 1.7.55 2.6.67a2 2 0 0 1 1.7 2z"/></svg>
+                            (+58) 412-6724351
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:Daryeliromero54@gmail.com">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+                            Daryeliromero54@gmail.com
+                        </a>
+                    </li>
+                    <li class="plain">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        Lu a Vi, 8 am – 6 pm · Sá, 8 am – 12 m
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container">
+            <p>&copy; 2026 Daryeli Romero — Psicóloga Clínica. Este sitio no reemplaza una urgencia médica o psiquiátrica. Si estás en riesgo, contacta al servicio de emergencias de tu país.</p>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/584126724351" class="wa-float" target="_blank" rel="noopener noreferrer" aria-label="Escríbeme por WhatsApp (se abre en una pestaña nueva)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.03 21.97c-2.63 0-5.08-1.02-6.93-2.68L2 20.5l1.25-3.53C2.47 15.11 2 13.5 2 11.5 2 6.26 6.48 2 12.03 2 17.59 2 22 6.26 22 11.5c0 5.24-4.41 9.47-9.97 9.47zM8.31 7.24c-.24.2-.44.59-.44 1.1 0 .51.3 1.04.53 1.35.23.3 1.04 1.73 2.51 2.74 1.48 1.01 1.48 1.01 2.12 1.31.65.3 1.47.36 2 .1.53-.26 1.51-1.04 1.7-1.31.2-.27.29-.46.1-.8-.19-.34-1.12-1.15-1.5-1.36-.39-.21-.66-.17-.9.14-.23.31-.76.89-.94 1.05-.18.16-.42.2-.7.06-.27-.14-.99-.44-1.67-1.06-.68-.62-1.02-1.1-1.12-1.34-.1-.24-.04-.46.12-.67.16-.21.19-.23.33-.44.14-.21.05-.43-.03-.61-.08-.18-.58-1.42-.86-1.98-.2-.4-.46-.4-.64-.41h-.46c-.16 0-.42.06-.64.23z"/></svg>
+    <span>Escríbeme</span>
+</a>
+
+<!-- Datos estructurados: identifican la consulta ante Google y hacen las
+     preguntas frecuentes elegibles para aparecer desplegadas en el buscador. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Psychologist",
+      "@id": "#practica",
+      "name": "Psicconsciente",
+      "alternateName": "Psicconsciente — Daryeli Romero",
+      "description": "Psicoterapia online con Daryeli Romero, psicóloga clínica. Acompañamiento en ansiedad, autoestima, terapia de pareja y procesos de duelo.",
+      "image": "og-image.jpg",
+      "telephone": "+58-412-6724351",
+      "email": "Daryeliromero54@gmail.com",
+      "priceRange": "$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "VE"
+      },
+      "availableLanguage": "es",
+      "areaServed": {
+        "@type": "Place",
+        "name": "Atención online, sin límite geográfico"
+      },
+      "medicalSpecialty": "Psychiatric",
+      "founder": {
+        "@id": "#daryeli"
+      },
+      "sameAs": [
+        "https://www.instagram.com/psicconsciente",
+        "https://www.facebook.com/share/1BfT5i5Cnx/",
+        "https://www.tiktok.com/@psicodarye"
+      ],
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "08:00",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Saturday",
+          "opens": "08:00",
+          "closes": "12:00"
+        }
+      ],
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Superar la Ansiedad",
+            "serviceType": "Psicoterapia online"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Fortalecer tu Autoestima",
+            "serviceType": "Psicoterapia online"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Sanar en Pareja",
+            "serviceType": "Psicoterapia online"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Acompañar un Duelo",
+            "serviceType": "Psicoterapia online"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "#daryeli",
+      "name": "Daryeli Romero",
+      "jobTitle": "Psicóloga Clínica",
+      "description": "Psicóloga, especialista en clínica, maestrante en terapias de tercera generación.",
+      "knowsLanguage": "es",
+      "worksFor": {
+        "@id": "#practica"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cuánto dura cada sesión?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cada sesión individual dura 50 minutos. Las sesiones de pareja se extienden a 60 minutos para dar espacio a ambas partes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo funcionan los pagos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El pago se realiza antes de cada sesión mediante transferencia o link de pago. Te enviaré todos los detalles al agendar tu cita."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Necesito diagnóstico previo para empezar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No es necesario. La primera sesión sirve justamente para conversar sobre lo que sientes y definir juntas cómo trabajarlo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Las sesiones online son igual de efectivas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Múltiples estudios respaldan su efectividad, y muchos pacientes encuentran más cómodo abrirse desde un espacio propio y familiar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa si necesito cancelar una cita?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes reprogramar sin costo avisando con al menos 24 horas de anticipación por WhatsApp."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<script src="main.js" defer></script>
+<!-- ============================================================
+     CREDITOS DE LAS IMAGENES - Unsplash License
+     Las cuatro fotos de especialidades vienen de Unsplash. Su licencia
+     permite uso comercial gratuito pero pide atribuir al autor. Como las
+     imagenes son decorativas (alt="") el credito no puede ir en el alt,
+     asi que queda aqui. Si quieres cumplir del todo con las buenas
+     practicas de Unsplash, conviene ponerlo tambien visible en el pie.
+     - ansiedad.webp  |  Alehandra  |  https://unsplash.com/@alehandra13  |  https://unsplash.com/photos/hands-holding-a-warm-cup-of-black-coffee-hHux5YihplY
+     - autoestima.webp  |  Kelly Sikkema  |  https://unsplash.com/@kellysikkema  |  https://unsplash.com/photos/person-writing-on-white-paper-xcvXS6wDCAY
+     - pareja.webp  |  Jonathan Borba  |  https://unsplash.com/@jonathanborba  |  https://unsplash.com/photos/two-people-holding-hands-over-a-table-with-a-basket-of-bread-VLe_jIZj-Fc
+     - duelo.webp  |  Mildlee  |  https://unsplash.com/@mildlee  |  https://unsplash.com/photos/person-holding-white-and-gray-textile-m85oEMfWbE8
+     ============================================================ -->
+</body>
+</html>

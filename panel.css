@@ -1,0 +1,216 @@
+:root{--font-body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+
+/* ============================================================
+   EL MENÚ DEL PANEL
+
+   VIVE EN LA RAÍZ, como supabase.js y fechas.js, y por el mismo motivo: lo usan
+   dos páginas. La cuenta y el asistente de reserva.
+
+   POR QUÉ EL ASISTENTE TAMBIÉN LO LLEVA. Antes, pulsar "Reservar cita" desde la
+   cuenta te dejaba en una página sin menú y con otra cabecera: se sentía como
+   salir del sitio en vez de moverse dentro de él. La navegación de un panel es
+   una promesa —"esto sigue aquí"— y romperla en el paso mas importante es lo
+   peor que se puede hacer con ella.
+
+   El menú lo dibuja panel.js, no el HTML de cada página: si estuviera escrito
+   en los dos archivos, cambiar una entrada obligaría a acordarse del otro.
+   ============================================================ */
+
+:root {
+  /* El marrón y la celosía del panel de entrar/entrar.css:84,92,241. Se repite
+     el material a propósito: entras sobre un panel marrón y te quedas dentro de
+     otro igual, así el recorrido no se parte por la mitad. */
+  --pnl-fondo:#5E442C;
+  --pnl-txt:#FAF3EA;      /* 8,15:1 sobre el marrón */
+  --pnl-txt-sv:#E2D5C4;   /* 6,22:1 */
+  --pnl-activo:rgba(255,246,232,.13);
+  --pnl-borde:rgba(255,246,232,.18);
+  --pnl-claro:#C6A783;    /* el botón de reservar; con #241C17 da 7,38:1 */
+  --celosia:rgba(255,246,232,.065);
+  --celosia-sv:rgba(255,246,232,.048);
+
+  /* UNA escala de radios, con nombre. */
+  --r-chico:10px;
+  --r-medio:16px;
+}
+
+
+/* ---------- LA REJILLA ---------- */
+
+/* 13rem = 208 px, y el numero no es de gusto: esta medido. La fila que mas
+   pide es "Reservar cita" con 151 px de contenido —icono 17, hueco 7, texto 95,
+   relleno 32— y el menu anade 37 px de relleno propio, asi que el minimo real
+   del menu era 188 px, con 60 px de holgura que no sujetaba nada.
+
+   SEGUNDA PASADA, hasta 11,5rem = 184 px. Al encoger el boton de reservar, la
+   fila que mas pide pasa a ser "Mis consultas": icono 18, hueco 10, texto 98.
+   Bajando el relleno del menu a .85rem y el de las filas a .6rem, esa fila pide
+   145 px y el menu 172. En 184 quedan 12 px de holgura, que es lo justo para
+   que una etiqueta un poco mas larga no parta en dos lineas.
+
+   NO se toco el cuerpo de letra de los enlaces: 15 px se quedan. Estrechar una
+   barra recortando el tamano del texto de navegacion cambia un problema de
+   espacio por uno de legibilidad, y el espacio se puede sacar del relleno. */
+.pnl { display:grid; grid-template-columns:11.5rem 1fr; min-height:100vh; }
+
+/* Sin sesión no hay menú, y entonces esto no es una rejilla de dos columnas
+   sino una página normal. Pasa en el asistente cuando alguien abre el enlace de
+   su cita desde el correo en un dispositivo donde no ha entrado. */
+.pnl:not([data-menu="si"]) { grid-template-columns:1fr; }
+.pnl:not([data-menu="si"]) .pnl-menu { display:none; }
+
+
+/* ---------- EL MENÚ ---------- */
+
+.pnl-menu {
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; gap:1.75rem;
+  padding:1.5rem .85rem;
+  background:var(--pnl-fondo); color:var(--pnl-txt);
+}
+
+/* Luz colándose por una celosía. Mismo recurso y misma máscara que el panel de
+   entrar/, para que se lean como la misma superficie. */
+.pnl-menu::before {
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    repeating-linear-gradient(38deg,  var(--celosia) 0 16px, rgba(255,246,232,0) 30px 74px),
+    repeating-linear-gradient(-49deg, var(--celosia-sv) 0 12px, rgba(255,246,232,0) 26px 66px);
+  -webkit-mask-image:radial-gradient(90% 45% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 80%);
+  mask-image:radial-gradient(90% 45% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 80%);
+}
+/* Los pseudoelementos posicionados pintan por encima de los hijos que no lo
+   están. Sin esto la celosía taparía el menú entero. */
+.pnl-menu > * { position:relative; z-index:1; }
+
+.pnl-marca {
+  display:flex; align-items:center; gap:.5rem;
+  color:var(--pnl-txt); text-decoration:none;
+  font-family:var(--font-display); font-weight:600; font-size:1rem;
+}
+.pnl-marca svg { width:21px; height:21px; flex:none; }
+.pnl-marca:hover { color:var(--pnl-claro); }
+
+/* Reservar es LA acción del menú, y por eso es lo único con relleno sólido. */
+/* MIDE LO QUE PONE, no el ancho del menu. Era una pastilla de 48 px de alto
+   estirada a las 171 px de la columna para sostener 119 px de contenido: 52 px
+   de relleno que no sujetaban nada, y encima con el unico color claro del menu,
+   asi que era la pieza que mas gritaba de toda la barra.
+
+   `inline-flex` + `align-self:start` es lo que la deja medir su contenido; con
+   `flex` seguia ocupando la fila entera aunque se le quitara el relleno, porque
+   el menu es una columna flex y sus hijos se estiran por defecto.
+
+   Se queda el relleno claro: es la unica accion del panel y es lo que la separa
+   de los dos enlaces de vista. Lo que se va es el tamano, no la jerarquia.
+   Los 36 px de alto siguen por encima del minimo tactil de 24 px que pide WCAG
+   2.2 en el criterio de objetivo minimo. */
+.pnl-reservar {
+  display:inline-flex; align-self:start; align-items:center; gap:.4rem;
+  min-height:36px; padding:0 .8rem;
+  border-radius:999px;
+  background:var(--pnl-claro); color:#241C17;
+  font-weight:600; font-size:.875rem; text-decoration:none;
+}
+.pnl-reservar svg { width:15px; height:15px; flex:none; }
+.pnl-reservar:hover { background:#D6BA9A; }
+/* Estando ya dentro del asistente, el botón deja de ser una invitación y pasa
+   a ser el rótulo de dónde estás. */
+.pnl-reservar[aria-current] { background:var(--pnl-claro); cursor:default; }
+
+.pnl-vistas { display:flex; flex-direction:column; gap:.15rem; }
+
+.pnl-vista {
+  display:flex; align-items:center; gap:.6rem;
+  min-height:44px; padding:0 .6rem;
+  border-radius:var(--r-chico);
+  color:var(--pnl-txt-sv); text-decoration:none;
+  font-size:.9375rem;
+}
+.pnl-vista svg { width:18px; height:18px; flex:none; opacity:.75; }
+.pnl-vista:hover { color:var(--pnl-txt); background:rgba(255,246,232,.07); }
+.pnl-vista[aria-current] { background:var(--pnl-activo); color:var(--pnl-txt); font-weight:600; }
+.pnl-vista[aria-current] svg { opacity:1; }
+
+
+/* ---------- CERRAR SESIÓN ----------
+
+   CON CONTENEDOR, no suelto en el aire: al fondo de una columna, un texto sin
+   caja no parece un botón, parece una nota que se quedó ahí.
+
+   EL ROJO VA EN EL HOVER Y NO EN REPOSO, y no es una preferencia: sobre este
+   marrón el rojo de error del proyecto (#A33A2E) da 1,37:1 — es invisible. Y
+   cualquier rojo lo bastante claro para leerse deja de parecer rojo. La salida
+   es invertirlo: en reposo la caja es neutra, y al ir a pulsarla el FONDO se
+   tiñe de rojo con el texto claro encima, que da 7,15:1. El aviso llega en el
+   momento en que hace falta, que es cuando el dedo ya va hacia el botón. */
+.pnl-salir {
+  margin-top:auto;
+  display:flex; align-items:center; gap:.55rem;
+  width:100%; min-height:46px; padding:0 .6rem;
+  border:1px solid var(--pnl-borde);
+  border-radius:var(--r-chico);
+  background:none; color:var(--pnl-txt-sv);
+  font:inherit; font-size:.9375rem; cursor:pointer;
+  transition:background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.pnl-salir svg { width:16px; height:16px; flex:none; }
+
+.pnl-salir:hover,
+.pnl-salir:focus-visible {
+  /* rgba(163,58,46,.5) sobre el marrón resuelve a #803F2D */
+  background:rgba(163,58,46,.5);
+  border-color:rgba(214,110,96,.65);
+  color:var(--pnl-txt);
+}
+.pnl-salir:active { background:rgba(163,58,46,.62); }
+
+.pnl-vista:focus-visible,
+.pnl-reservar:focus-visible,
+.pnl-marca:focus-visible,
+.pnl-salir:focus-visible { outline:2px solid var(--pnl-claro); outline-offset:2px; }
+
+@media (prefers-reduced-motion:reduce) { .pnl-salir { transition:none; } }
+
+
+/* ---------- LA COLUMNA DE CONTENIDO ---------- */
+
+/* Ancho máximo y no todo el que haya: una línea de texto de 90 caracteres no se
+   lee, se recorre con el cuello. El asistente pide más porque su paso 2 es una
+   parrilla de horarios, y ahí el ancho sí trabaja. */
+.pnl-lienzo { padding:2.25rem clamp(1.25rem,3vw,2.5rem) 3.5rem; max-width:46rem; }
+/* El asistente trae su propio espaciado, asi que aqui solo el hueco de abajo:
+   lo necesita la barra fija del movil, y tiene que ir DENTRO de la rejilla para
+   que la columna del menu crezca hasta el final con el. */
+.pnl-lienzo-ancho { padding:0 0 4rem; max-width:none; min-width:0; }
+
+
+/* ============================================================
+   MÓVIL · PROVISIONAL
+
+   El panel de móvil está SIN DISEÑAR todavía: quedó apartado a propósito para
+   hacerlo bien y aparte, no como el de escritorio encogido. Lo de aquí abajo es
+   lo mínimo para que funcione en un teléfono mientras tanto: la columna marrón
+   pasa a ser una cabecera y las vistas, pestañas.
+
+   Cuando se diseñe el panel de móvil, este bloque se sustituye entero.
+   ============================================================ */
+
+@media (max-width:44rem) {
+  .pnl { grid-template-columns:1fr; }
+
+  .pnl-menu {
+    display:grid; grid-template-columns:1fr auto; gap:.9rem 1rem;
+    padding:.9rem 1.1rem 1rem;
+  }
+  .pnl-marca    { grid-column:1; }
+  .pnl-salir    { grid-column:2; grid-row:1; margin:0; width:auto; }
+  .pnl-salir span { display:none; }
+  .pnl-reservar { grid-column:1 / -1; }
+  .pnl-vistas   { grid-column:1 / -1; flex-direction:row; gap:.4rem; }
+  .pnl-vista    { flex:1 1 0; justify-content:center; }
+  .pnl-vista span { font-size:.8rem; }
+
+  .pnl-lienzo { padding:1.5rem 1.1rem 3rem; max-width:none; }
+  .pnl-lienzo-ancho { padding:0 0 4rem; }
+}

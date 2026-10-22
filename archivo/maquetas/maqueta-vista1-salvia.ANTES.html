@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maqueta · Vista 1 · salvia y arcilla</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  /* ===== SALVIA Y ARCILLA =====
+     Los dos polos son tonos de tierra, asi que la paleta no parece ensamblada.
+     El precio esta medido: en OKLCH la salvia y la arcilla estan a 89,7 grados
+     una de otra, la mitad de los 173,5 que separaban la pizarra del terracota.
+     Es armonia, no contraste — a cambio, nada chirria. */
+
+  /* --- superficies: la escalera de profundidad --- */
+  /* ===== LA ESCALERA, AHORA EN UN SOLO SENTIDO =====
+     El problema: la tarjeta en reposo era MAS CLARA que el papel y la elegida
+     MAS OSCURA, asi que al bajar el papel a #FAF4EE la elegida (#FAF5EE) acabo
+     valiendo exactamente lo mismo que el fondo — un punto de verde de diferencia.
+     Ahora los tres peldanos bajan en la misma direccion: la pagina es lo mas
+     claro, la tarjeta se hunde un paso y elegirla la hunde otro. Nada flota, y
+     cada escalon esta a ~1,10 del siguiente, que es donde el ojo lo nota sin
+     que parezca un bloque de color. */
+  --suelo:#FFFFFF;              /* la pagina · blanco */
+  --sup:#FFFFFF;                /* la tarjeta · blanca, igual que el papel */
+  --sup-cal:#FAF3EA;            /* hover del enlace de la cabecera */
+  --sup-eleg:#F2E7D9;           /* la tarjeta elegida · dos escalones */
+  --sel:#EFE6D8;                /* tinte de los badges */
+  --acc-sv:#E8EDE6;             /* reservado */
+
+  /* --- ARCILLA · dibuja: lineas, aros en reposo, precio --- */
+  --marca:#A8825F; --marca-cl:#C6A783; --marca-dp:#8A6746; --marca-dk:#7A5A3C;
+
+  /* --- TEXTO · neutros templados hacia el verde, para que acompanen a la salvia
+         en vez de pelearse con ella --- */
+  --txt:#2E332E; --txt-suave:#5C635A;
+
+  /* --- SALVIA · decide: boton, aro elegido, barra, foco ---
+     Aviso que se hereda de esta eleccion: si el verde significa "esto es lo
+     tuyo", ya NO puede significar "pago verificado" en la vista 4. Ese estado
+     habra que resolverlo con el check y la palabra, no con el color. */
+  --acc:#5A7060;      /* 5,30:1 con blanco */
+  --acc-dp:#3E4F44;   /* 8,35:1 con blanco */
+
+  /* --- lineas: un solo color de arcilla en tres opacidades --- */
+  /* El borde de la tarjeta lleva el color del hover en los tres estados: en
+     reposo la linea tenue dejaba las tarjetas con pinta de caja vacia. */
+  --linea:#C6A783;
+  --linea-sug:rgba(168,130,95,.44);
+  --linea-f:#C6A783;
+  --linea-int:rgba(168,130,95,.22);
+
+  --inerte:#E6E1D7; --inerte-txt:#625E56;   /* 4,94:1 */
+  --pend:#7A5B12; --pend-sv:#FAF0DC;
+
+  --r:14px;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+  --medida:min(100%,50rem);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--suelo);color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:var(--r)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  .lugar,.abre{transition:none !important}
+}
+
+/* ===================== CABECERA ===================== */
+.top{background:var(--sup);border-bottom:1px solid var(--linea)}
+.top-in{max-width:var(--medida);margin:0 auto;padding:.9rem 1.25rem;
+  display:flex;align-items:center;gap:.8rem}
+.avatar{width:42px;height:42px;border-radius:50%;flex:none;
+  background:var(--acc);border:none;
+  display:grid;place-items:center;color:#fff;font-weight:600;font-size:.9rem}
+.top-txt strong{display:block;font-size:.95rem;font-weight:600;line-height:1.25}
+.top-txt span{display:block;font-size:.78rem;color:var(--txt-suave);line-height:1.4}
+/* Se pulsa, asi que va del lado de la salvia, no del de la arcilla. */
+.wa{margin-left:auto;display:inline-flex;align-items:center;gap:.4rem;
+  padding:.5rem .85rem;border-radius:999px;border:1px solid rgba(90,112,96,.45);
+  background:var(--sup);color:var(--acc-dp);font-size:.8rem;font-weight:500;
+  text-decoration:none;min-height:44px;transition:background var(--paso)}
+.wa:hover{background:var(--acc-sv)}
+.wa svg{width:16px;height:16px}
+
+.barra-wrap{max-width:var(--medida);margin:0 auto;padding:0 1.25rem}
+.barra{height:4px;background:var(--inerte);border-radius:999px;overflow:hidden;margin-top:.1rem}
+.barra i{display:block;height:100%;width:25%;background:var(--acc);border-radius:999px;
+  transition:width 400ms cubic-bezier(.2,.8,.3,1)}
+.paso-txt{font-size:.76rem;color:var(--txt-suave);margin:.55rem 0 0;font-weight:500;
+  letter-spacing:.01em}
+
+/* ===================== CUERPO =====================
+   EL RANGO TIPOGRAFICO, ABIERTO.
+   Antes iba de 0,73 a 1,4 rem casi todo en 600: un rango de nada, y por eso el
+   ojo no tenia donde aterrizar. Ahora va de 0,72 a 1,8 rem y el peso maximo
+   baja de 700 a 600 — mas rango de tamano, menos rango de grosor, que es lo
+   que separa una pantalla cuidada de una en negrita. */
+main{max-width:var(--medida);margin:0 auto;padding:1.75rem 1.25rem 2rem}
+h1{font-size:1.8rem;font-weight:600;line-height:1.15;margin:0 0 .5rem;letter-spacing:-.022em}
+.intro{color:var(--txt-suave);margin:0 0 2.25rem;line-height:1.7;font-size:1rem;max-width:34rem}
+
+.grupo{margin-bottom:2.25rem}
+.grupo-tit{font-size:1.05rem;font-weight:600;letter-spacing:-.012em;margin:0 0 1rem;
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.grupo-nota{font-size:.82rem;font-weight:400;color:var(--txt-suave);letter-spacing:0}
+.grupo-sep{border-top:1px solid var(--linea);padding-top:2rem}
+
+/* ===================== TARJETAS BASE =====================
+   Sin sombra en reposo. La tarjeta se ve porque es blanca sobre el suelo crema,
+   no porque tenga un marco. */
+.card{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);
+  transition:border-color var(--paso),background var(--paso)}
+.card:hover{border-color:var(--linea-f)}
+
+/* LO QUE PIDIO EDGAR: al elegir, solo se pintan las LINEAS, y en el mismo color
+   del hover. Nada se rellena de oscuro. */
+/* Sin sombra. Lo elegido se dice con el relleno de salvia, la linea de arcilla
+   y el check — nunca levantando la tarjeta del papel. */
+.card[aria-checked="true"]{border:1.5px solid var(--linea-f);background:var(--sup-eleg)}
+
+/* El circulo pierde el disco: es un aro, en reposo tenue y al elegirlo del
+   mismo color que el hover. El icono se dibuja dentro, nunca en blanco sobre
+   oscuro. */
+/* El circulo pasa de aro a DISCO: relleno macizo en la misma salvia del boton
+   "Ver horarios", con el icono dibujado en blanco encima. Es lo que le da al
+   verde presencia real dentro de la tarjeta.
+   Al elegir, el disco baja un escalon a la salvia oscura — asi la seleccion
+   sigue teniendo senal propia sin cambiar de color. */
+.circ{flex:none;border-radius:50%;border:1.5px solid var(--acc);background:var(--acc);
+  display:grid;place-items:center;color:#fff;
+  transition:border-color var(--paso),background var(--paso),border-width var(--paso)}
+.card:hover .circ{border-color:var(--acc-dp);background:var(--acc-dp)}
+/* Al elegir, el disco se INVIERTE: de salvia maciza con el icono en blanco pasa a
+   blanco con el icono en salvia. Vale igual para el icono de motivo y para la
+   cifra de las sesiones, porque las dos cosas son .circ.
+   El aro va en salvia y mas grueso (2,5 px) para que el disco se recorte contra el
+   crema de la tarjeta: en blanco sobre blanco el borde daba 1,22:1 y el disco se
+   diluia. Con el aro sube a 4,33:1, muy por encima del 3:1 que pide la WCAG para
+   el contorno de un elemento grafico.
+   El ancho no mueve nada: el disco es 44x44 fijo con box-sizing border-box. */
+.card[aria-checked="true"] .circ{border-width:2.5px;border-color:var(--acc);
+  background:#fff;color:var(--acc)}
+
+/* --------- modalidad · control segmentado ---------
+   Antes eran dos tarjetas de 371x118 con un disco de 44 dentro: el disco ocupaba
+   el 11,9% del ancho, la mitad que en las tarjetas de motivo, y por eso se leian
+   como dos cajas vacias con un punto en medio. Elegir entre dos cosas no es
+   explorar una rejilla — es accionar un interruptor. */
+.segs{position:relative;width:min(100%,22rem);padding:4px;background:var(--sup);
+  border:1px solid var(--linea);border-radius:999px;
+  transition:transform 160ms cubic-bezier(.23,1,.32,1)}
+/* Al pulsar se hunde el control ENTERO, no un segmento. Si se hundiera solo el
+   segmento, la copia de color que va encima no lo acompanaria y el texto elegido
+   se quedaria quieto mientras el de debajo encoge. */
+.segs:active{transform:scale(.985)}
+
+/* Las dos mitades miden exactamente lo mismo (flex:1 1 0, no auto), asi que el
+   aro se mueve con un translateX limpio y no hay que medir nada en JavaScript. */
+/* 20 px de hueco entre las dos mitades: la costura queda centrada con 10 px de
+   aire a cada lado. Con 8 el aro casi la tocaba. */
+.segs-in{position:relative;display:flex;gap:20px}
+
+.seg{position:relative;z-index:2;flex:1 1 0;display:inline-flex;align-items:center;
+  justify-content:center;gap:.5rem;padding:0 1rem;min-height:44px;border-radius:999px;
+  border:1px solid transparent;background:none;font:inherit;font-size:.9rem;
+  font-weight:500;color:var(--txt-suave);cursor:pointer;white-space:nowrap;
+  transition:color var(--paso)}
+.seg svg{width:18px;height:18px;flex:none}
+
+/* EL ARO. Misma receta que el disco y el check: blanco por dentro, salvia fuerte
+   a 2,5 px. Lo que se desliza es un contorno, no un bloque de color. */
+.seg-ind{position:absolute;z-index:1;top:0;bottom:0;left:0;width:calc(50% - 10px);
+  border-radius:999px;border:2.5px solid var(--acc);
+  transition:transform 220ms cubic-bezier(.77,0,.175,1)}
+
+/* LA COPIA EN SALVIA, recortada al aro. El color no se funde: se BARRE. Un
+   fundido deja ver los dos colores a la vez a mitad de camino; con el recorte el
+   cambio ocurre exactamente en el borde del aro. */
+.seg-copia{position:absolute;z-index:3;inset:0;display:flex;gap:20px;
+  pointer-events:none;color:var(--acc);
+  transition:clip-path 220ms cubic-bezier(.77,0,.175,1)}
+.seg-copia .seg{color:inherit}
+
+/* LA COSTURA · hilo. Una linea que no empieza ni termina de golpe: se desvanece
+   hacia las dos puntas. Vive en el hueco de 8 px entre las dos mitades, asi que
+   el aro nunca la pisa. */
+.seg-hilo{position:absolute;z-index:0;left:50%;top:9px;bottom:9px;width:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(to bottom,transparent 0%,var(--linea) 35%,
+    var(--linea) 65%,transparent 100%)}
+
+/* --------- consultorio --------- */
+.lugar{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows 320ms cubic-bezier(.2,.8,.3,1),opacity 220ms,margin-top 320ms;
+  margin-top:0}
+.lugar.abierto{grid-template-rows:1fr;opacity:1;margin-top:1.1rem}
+.lugar-in{overflow:hidden;min-height:0}
+.lugar-caja{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1.2rem 1.3rem}
+.lugar-cab{display:flex;align-items:center;gap:.65rem;padding-bottom:.8rem;margin-bottom:.9rem;
+  border-bottom:1px solid var(--linea-int)}
+.lugar-cab svg{width:24px;height:24px;color:var(--marca-dp);flex:none}
+.lugar-cab strong{font-size:.98rem;font-weight:600}
+/* En movil la caja apila direccion y boton. Sin align-items el boton se estiraba
+   a todo el ancho de la caja y el rotulo quedaba pegado a la izquierda: parecia
+   una fila de lista, no un boton. Centrado y con un ancho minimo propio se lee
+   como lo que es. En escritorio vuelve a la fila, con la direccion a la izquierda. */
+.lugar-cuerpo{display:flex;flex-direction:column;gap:1.1rem;align-items:center}
+@media(min-width:640px){
+  .lugar-cuerpo{flex-direction:row;align-items:center;justify-content:space-between}
+  .lugar-ir{align-self:auto;min-width:0}
+}
+.lugar-dir{font-size:.85rem;color:var(--txt-suave);line-height:1.65;margin:0}
+.lugar-ir{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.7rem 1.6rem;border-radius:999px;min-width:11rem;
+  background:var(--acc);color:#fff;font-size:.9rem;font-weight:500;text-decoration:none;
+  min-height:48px;flex:none;transition:background var(--paso),transform 160ms cubic-bezier(.23,1,.32,1)}
+.lugar-ir:active{transform:scale(.97)}
+/* Es el UNICO icono macizo de la vista y es a proposito: a 15 px un icono de trazo
+   con detalle interior se cierra y queda en una mancha —le paso al mapa plegado que
+   habia antes—. Una forma llena conserva su silueta a cualquier tamano. Ademas es
+   el glifo que usa Google Maps para "como llegar", asi que ya viene aprendido. */
+.lugar-ir:hover{background:var(--acc-dp)}
+.lugar-ir svg{width:15px;height:15px}
+
+/* --------- motivo --------- */
+.servicios{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+@media(min-width:760px){.servicios{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.servicios .card{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.7rem;min-height:128px;padding:1.1rem .75rem;text-align:center}
+.servicios .circ{width:44px;height:44px}
+.servicios .circ svg{width:21px;height:21px}
+/* Mismo tamano que el nombre del plan: son la misma clase de etiqueta y no hay
+   jerarquia que justifique que una sea un 27% mayor. El tope lo pone esta tarjeta,
+   que tiene 152,8 px utiles: a 15 px los cuatro nombres envuelven igual que antes,
+   a 16 empieza a partirse "Acompanar un Duelo". */
+.serv-nom{font-weight:500;font-size:.94rem;line-height:1.4}
+
+/* --------- sesiones --------- */
+/* Las tres columnas entran a 780 px, no a 640.
+   A 640 cada tarjeta se quedaba en 186 px y el pie necesitaba 190: el precio y
+   el badge se partian en dos filas, y como solo pasaba en las tarjetas que
+   llevan badge, los precios dejaban de estar alineados entre si. Por debajo de
+   780 va una sola columna a ancho completo, donde no hay estrechez posible. */
+.planes{display:grid;grid-template-columns:1fr;gap:1.25rem}
+@media(min-width:780px){.planes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* padding:0 NO es decorativo. Estas tarjetas son <button>, y Chrome les aplica
+   su padding por defecto (6 px a cada lado). Eso se comia 12 px de ancho util
+   —suficiente para que el precio y el badge se partieran en dos filas— y ademas
+   desplazaba 6 px todo el contenido respecto al borde real de la tarjeta, asi
+   que las divisorias no empezaban donde decia el CSS. */
+.planes .card{position:relative;display:flex;flex-direction:column;overflow:hidden;
+  text-align:left;padding:0}
+
+.plan-cab{display:flex;align-items:center;gap:.6rem;padding:1.2rem 0 .8rem;margin:0 1.05rem;
+  border-bottom:1px solid var(--linea-int)}
+.card[aria-checked="true"] .plan-cab{border-bottom-color:var(--linea-f)}
+/* La sugerida NO se oscurece en reposo: el relleno calido significa una sola cosa
+   en toda la vista, "esto es lo que has elegido". Lo que la distingue es el
+   contorno mas marcado — una senal de TARJETA, que pesa mas que cualquier etiqueta
+   sin necesidad de gritar.
+   Va por COLOR y no por grosor: engordar el borde a 2px cambiaba la geometria de
+   la caja y desalineaba los precios de las tres tarjetas y el check. El color no
+   mueve nada. #A8825F da 3,53:1 contra el blanco frente al 2,29 del borde normal.
+   La regla va DESPUES de la de elegida para que la sugerida conserve su linea. */
+.planes .card.sugerida{border-color:var(--marca)}
+
+.plan-cifra{width:34px;height:34px;font-size:1.05rem;font-weight:600;line-height:1;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.plan-nom{font-weight:600;font-size:.94rem;line-height:1.3;letter-spacing:-.01em}
+/* "Sugerida" sube de gris a salvia oscura y a peso 500, pero NO se convierte en
+   caja: con el badge de ahorro ya macizo, dos pastillas en la misma tarjeta se
+   pelean. Y hay una razon medida — a 228 px de tarjeta el encabezado deja unos
+   194 px utiles, y circulo + "sesiones" + una pastilla no caben sin partirse. */
+.plan-eti{margin-left:auto;flex:none;font-size:.74rem;font-weight:500;color:var(--acc-dp);
+  white-space:nowrap;display:inline-flex;align-items:center;gap:.35rem}
+.plan-eti::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--acc);flex:none}
+.plan-cuerpo{flex:1;display:flex;align-items:center;gap:.45rem;padding:.9rem 1.05rem;
+  font-size:.8rem;color:var(--txt-suave);line-height:1.55}
+.plan-cuerpo svg{width:15px;height:15px;flex:none;color:var(--acc)}
+.plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem .6rem;flex-wrap:wrap;padding:.9rem 1.05rem 1.2rem;margin-top:auto}
+.plan-pie::before{content:"";position:absolute;top:0;left:1.05rem;right:1.05rem;height:1px;
+  background:var(--linea-int)}
+.card[aria-checked="true"] .plan-pie::before{background:var(--linea-f)}
+
+/* El precio va al mismo color que el titulo de la tarjeta. Con esto la arcilla
+   deja de tener tinta en toda la vista y pasa a ser solo estructura —lineas,
+   bordes y la costura—; el peso del precio lo llevan el tamano y las cifras
+   tabulares, no el color. */
+.plan-precio{font-size:1.8rem;font-weight:600;letter-spacing:-.035em;line-height:1;
+  color:var(--txt);white-space:nowrap;font-variant-numeric:tabular-nums}
+/* El pie ancla sus dos piezas a los extremos: el precio a la izquierda y el badge
+   a la derecha. Antes el badge iba pegado al precio y el check remataba a la
+   derecha; sin check, repartirlos es lo que deja las tres tarjetas uniformes. */
+/* El ahorro vuelve a ser un badge. Va en crema con letra terracota oscura: es
+   informacion que se dibuja, no una decision, asi que se queda del lado calido.
+   Sobre la tarjeta elegida el relleno pasa a blanco, porque el crema del badge y
+   el crema de la tarjeta son casi el mismo y el badge se disolveria. */
+/* El badge pasa a relleno macizo con la salvia oscura del hover del boton. En
+   crema sobre blanco daba 1,00 y desaparecia. Ya no necesita excepcion sobre la
+   tarjeta elegida: el mismo relleno se lee igual de bien sobre blanco y crema. */
+/* El margen separa el badge SOLO del precio; el hueco del pie sigue mandando en
+   la distancia hasta el check, que va empujado a la derecha por su cuenta. */
+/* translateY de 1,5 px: alineacion OPTICA, no geometrica. El precio tiene
+   line-height 1, asi que su caja reserva sitio para trazos descendentes que las
+   cifras casi no usan —24 px de tinta arriba de la linea base y 3 abajo—, y el
+   centro de la caja queda 1,5 px por debajo del centro visual de los numeros.
+   Centrar por caja deja el badge flotando alto. */
+.plan-ahorro{display:inline-flex;align-items:center;
+  transform:translateY(1.5px);
+  padding:.28rem .5rem;border-radius:7px;
+  background:var(--acc-dp);color:#fff;font-size:.72rem;font-weight:500;
+  line-height:1.3;white-space:nowrap}
+
+/* ============ LA APERTURA DE LAS CONSULTAS ============
+   Antes el bloque aparecia de golpe (hidden) y luego probe con las tarjetas
+   entrando escalonadas. Esto es lo que hay ahora, y es la misma tecnica que la caja
+   del consultorio: grid-template-rows de 0fr a 1fr. Es la unica forma de animar una
+   altura que no se conoce de antemano sin fijarla a mano.
+
+   La divisoria y el relleno superior viven DENTRO de la parte que se abre; si
+   estuvieran en el contenedor que anima, quedaria una raya suelta con el bloque
+   cerrado. */
+.abre{display:grid;grid-template-rows:0fr;opacity:0;margin-bottom:0;
+  transition:grid-template-rows 320ms cubic-bezier(.2,.8,.3,1),
+             opacity 220ms,margin-bottom 320ms}
+.abre.abierto{grid-template-rows:1fr;opacity:1;margin-bottom:2.25rem}
+.abre-in{overflow:hidden;min-height:0}
+
+/* ============ LAS TARJETAS DE CONSULTA, EN MOVIL ============
+   La tarjeta media 332 x 180 y 94 de esos 180 eran relleno y divisorias, no
+   contenido. Aqui no se estrecha —en la pantalla mas pequena no sobra ancho— ni
+   se parte en columnas: se aprieta.
+
+   Se probo antes una rejilla de dos columnas y fallaba por una razon de fondo:
+   en una rejilla las columnas se COMPARTEN entre filas, asi que el badge de 82 px
+   reservaba ancho tambien en la fila del nombre, donde el precio solo necesita 55.
+   La cabecera se quedaba en 167 px pidiendo 180, "Sugerida" caia a otra linea y
+   esa tarjeta acababa 19 px mas alta que sus vecinas. Tres filas a ancho completo
+   no comparten nada: nada aprieta a nada y las tres tarjetas miden igual. */
+@media(max-width:819.98px){
+  .planes .card{display:flex;flex-direction:column;gap:.9rem;padding:1.35rem 1.25rem}
+  .plan-cab{margin:0;padding:0;border-bottom:none}
+  .card[aria-checked="true"] .plan-cab{border-bottom-color:transparent}
+  .plan-cuerpo{padding:0;flex:none}
+  /* padding-top y no 0: la divisoria se dibuja en el borde superior del pie, asi
+     que sin relleno el precio arranca pegado al trazo. Con .9rem la linea queda
+     con 14,4 px por encima (el hueco entre filas) y 14,4 por debajo — el mismo
+     ritmo que ya tenia en escritorio. */
+  .plan-pie{padding:.9rem 0 0;margin-top:0;justify-content:space-between}
+  /* La divisoria sobre el precio SE QUEDA tambien en movil: separa el dato del
+     dinero del resto de la tarjeta y a Edgar le funciona. Lo que apretaba no era
+     la raya, era el relleno. */
+  .plan-precio{font-size:1.55rem}
+}
+
+/* ===================== ACCION ===================== */
+/* El icono del destino va dentro de su propio disco, no suelto al lado.
+   El disco es blanco al 16 %: da sitio propio al icono sin meter un color nuevo
+   ni partir el boton en dos objetos, que es lo que hacia la referencia del panel
+   diagonal. Cabe un solo icono, asi que este dice A DONDE VAS —un calendario en
+   el paso 1— y se renuncia a la flecha de avance. */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.9rem;
+  padding:.5rem .5rem .5rem 1.5rem;border-radius:999px;font:inherit;font-weight:500;
+  font-size:.95rem;border:1px solid transparent;cursor:pointer;min-height:48px;
+  transition:background var(--paso),transform var(--paso)}
+.btn-disco{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.16);transition:background var(--paso)}
+.btn svg{width:17px;height:17px}
+/* Apagado, el blanco al 16 % sobre el beige inerte no se veria: pasa a tinta. */
+.btn-1:disabled .btn-disco{background:rgba(46,51,46,.09)}
+.btn-1{background:var(--acc);color:#fff}
+.btn-1:hover:not(:disabled){background:var(--acc-dp)}
+/* scale y no translateY: se siente como que el boton te responde,
+   no como que se mueve de sitio. */
+.btn-1:active:not(:disabled){transform:scale(.97)}
+.btn-1:disabled{background:var(--inerte);color:var(--inerte-txt);cursor:not-allowed}
+
+/* En movil el boton es la barra fija de abajo y ocupa todo el ancho. */
+.acciones{margin-top:2.5rem}
+.acciones .btn{width:100%;max-width:26rem}
+
+/* En escritorio, la mitad izquierda de la fila la ocupa el RESUMEN de lo elegido,
+   no una linea. La linea decorativa medi­a 594 px contra 166 del boton —3,58 veces
+   mas— y a esa proporcion no se leia como una flecha sino como una regla suelta.
+   El hueco no se arreglaba con un trazo: se arregla con contenido que sirva.
+   Y justo antes de avanzar es cuando confirmar lo elegido vale para algo. */
+@media(min-width:760px){
+  .acciones{display:flex;align-items:center;gap:1.5rem}
+  /* El boton crece SOLO aqui: en movil la barra fija ya ocupa todo el ancho y no
+     necesita nada. Con min-width su tamano deja de depender de lo corto que sea
+     el rotulo — "Ver horarios" son dos palabras y sin un minimo el boton se
+     quedaba en 170 px, mas pequeno que una tarjeta de sesion. */
+  /* Largo, no alto. El min-width es lo que le da presencia —"Ver horarios" son dos
+     palabras cortas y sin un minimo el ancho lo decidiria el texto—; la altura
+     vuelve a los 52 px del resto de controles de la pantalla. */
+  /* Mas largo y mas bajo. El disco se encoge con el: con 34 px de disco mas su
+     relleno la altura no bajaria de 50 y el min-height no mandaria nada. */
+  .acciones .btn{width:auto;max-width:none;flex:none;
+    min-width:23rem;min-height:50px;font-size:.95rem;
+    padding:.45rem .45rem .45rem 1.75rem;gap:.9rem}
+  .acciones .btn .btn-disco{width:32px;height:32px}
+  .acciones .btn svg{width:17px;height:17px}
+}
+.resumen{flex:1 1 auto;margin:0;font-size:.85rem;line-height:1.55;color:var(--txt-suave);
+  text-wrap:pretty}
+.resumen b{font-weight:600;color:var(--txt);white-space:nowrap}
+/* Se va rellenando segun se decide, asi que la fila nunca esta vacia: la modalidad
+   siempre tiene valor. */
+
+.barra-fija{position:fixed;left:0;right:0;bottom:0;z-index:20;
+  padding:.8rem 1.25rem calc(.8rem + env(safe-area-inset-bottom));
+  background:rgba(244,236,228,.93);backdrop-filter:blur(10px);
+  border-top:1px solid var(--linea);display:none}
+.barra-fija .btn{width:100%}
+@media(max-width:759px){
+  .barra-fija{display:block}
+  .acciones{display:none}
+  main{padding-bottom:6.5rem}
+}
+
+.aviso-maqueta{max-width:var(--medida);margin:0 auto 1.5rem;padding:.8rem 1.1rem;
+  background:var(--pend-sv);border:1px solid rgba(122,91,18,.22);border-radius:12px;
+  font-size:.8rem;line-height:1.65;color:var(--pend)}
+.aviso-maqueta b{font-weight:600}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <span class="avatar" aria-hidden="true">DR</span>
+    <span class="top-txt">
+      <strong>Daryeli Romero</strong>
+      <span>Psicóloga · Barquisimeto y online</span>
+    </span>
+    <a class="wa" href="#" onclick="return false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+      Tengo una duda
+    </a>
+  </div>
+</header>
+
+<div class="barra-wrap">
+  <p class="paso-txt"><span id="pasoNum">1</span> de 4</p>
+  <!-- "1 de 4" a la vista y "Paso 1 de 4" para quien use lector de pantalla: la
+       version corta quita el tono de tramite sin dejar a nadie sin la referencia.
+       La barra era un div sin semantica, asi que el unico progreso que existia era
+       ese texto; ahora es un progressbar de verdad con sus valores. -->
+  <div class="barra" role="progressbar" aria-label="Progreso de la reserva"
+       aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-valuetext="Paso 1 de 4">
+    <i id="barraRelleno"></i>
+  </div>
+</div>
+
+<main>
+  <p class="aviso-maqueta"><b>Maqueta.</b> No toca la base de datos ni el proyecto.
+     Pruébala con el ratón, con <b>Tab</b> y con las <b>flechas</b>. Fíjate en que
+     <b>la salvia vive dentro de la tarjeta</b> y nada esta levantado del papel: lo que dice
+     «elegido» es el relleno cálido y el check, no un marco oscuro.</p>
+
+  <h1>Reserva tu consulta</h1>
+  <p class="intro">Cuéntame qué te trae y cuántas consultas quieres. El horario lo vemos enseguida.</p>
+
+  <!-- ============ MODALIDAD ============ -->
+  <section class="grupo">
+    <h2 class="grupo-tit" id="tModo">¿Cómo prefieres la consulta?</h2>
+    <div class="segs">
+      <div class="segs-in" id="gModos" role="radiogroup" aria-labelledby="tModo"></div>
+    </div>
+
+    <div class="lugar" id="lugar" aria-hidden="true" inert>
+      <div class="lugar-in">
+        <div class="lugar-caja">
+          <p class="lugar-cab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <strong>Centro Humanista Intellego</strong>
+          </p>
+          <div class="lugar-cuerpo">
+            <p class="lugar-dir">Av. Lara con calle 8, Torre Empresarial, piso 3<br>Barquisimeto, Lara<br>Frente a la plaza</p>
+            <a class="lugar-ir" href="#" onclick="return false"
+               aria-label="Cómo llegar — se abre en el mapa">
+              Cómo llegar
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.4 10.6 21 3l-7.6 17.6-2-7.4-8-2.6Z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOTIVO ============ -->
+  <!-- Misma divisoria que separa el bloque de consultas: si la linea marca el paso
+       de una decision a la siguiente, tiene que estar entre todas, no solo entre
+       las dos ultimas. Encima de la primera no va: ahi arriba estan el titulo y la
+       bajada, y esa relacion no es de "otro paso". -->
+  <section class="grupo grupo-sep">
+    <h2 class="grupo-tit" id="tServ">¿En qué quieres trabajar?</h2>
+    <div class="servicios" id="gServ" role="radiogroup" aria-labelledby="tServ"></div>
+  </section>
+
+  <!-- ============ CONSULTAS ============ -->
+  <section class="abre" id="bloquePlanes" aria-hidden="true" inert>
+    <div class="abre-in">
+      <div class="grupo-sep">
+        <h2 class="grupo-tit" id="tPlan">
+          ¿Una consulta o un proceso?
+          <span class="grupo-nota">Los paquetes salen más baratos por consulta</span>
+        </h2>
+        <div class="planes" id="gPlanes" role="radiogroup" aria-labelledby="tPlan"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="acciones">
+    <p class="resumen" id="resumen"></p>
+    <button type="button" class="btn btn-1" id="ir2Escritorio" disabled>
+      Ver horarios
+      <span class="btn-disco" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg></span>
+    </button>
+  </div>
+</main>
+
+<div class="barra-fija">
+  <button type="button" class="btn btn-1" id="ir2Movil" disabled>
+    Ver horarios
+    <span class="btn-disco" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg></span>
+  </button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function ico(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.6) +
+           '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    video:'<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>',
+    pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+    ansiedad:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    autoestima:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    pareja:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    duelo:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    check:'<path d="m4 12 5.5 5.5L20 7"/>'
+  };
+
+  var SERVICIOS = [
+    {slug:'ansiedad',   nom:'Superar la Ansiedad',      ico:I.ansiedad,   mod:'individual'},
+    {slug:'autoestima', nom:'Fortalecer tu Autoestima', ico:I.autoestima, mod:'individual'},
+    {slug:'pareja',     nom:'Sanar en Pareja',          ico:I.pareja,     mod:'pareja'},
+    {slug:'duelo',      nom:'Acompañar un Duelo',       ico:I.duelo,      mod:'individual'}
+  ];
+  var PLANES = {
+    individual:[
+      {slug:'1', cifra:'1', nom:'Consulta',  det:'Una cita puntual',   ico:I.reloj, precio:30,  ahorro:0},
+      {slug:'p3',cifra:'3', nom:'Consultas', det:'A tu ritmo, 60 días',ico:I.cal,   precio:75,  ahorro:15, sugerida:true},
+      {slug:'p5',cifra:'5', nom:'Consultas', det:'A tu ritmo, 60 días',ico:I.cal,   precio:125, ahorro:25}
+    ],
+    pareja:[
+      {slug:'1', cifra:'1', nom:'Consulta',  det:'Una cita puntual',   ico:I.reloj, precio:45,  ahorro:0},
+      {slug:'p3',cifra:'3', nom:'Consultas', det:'A tu ritmo, 60 días',ico:I.cal,   precio:100, ahorro:35, sugerida:true},
+      {slug:'p5',cifra:'5', nom:'Consultas', det:'A tu ritmo, 60 días',ico:I.cal,   precio:150, ahorro:75}
+    ]
+  };
+
+  var estado = {modo:'online', servicio:null, plan:null};
+  var $ = function (id) { return document.getElementById(id); };
+
+  var MODOS = [
+    {v:'online',     n:'Online',     d:I.video},
+    {v:'presencial', n:'Presencial', d:I.pin}
+  ];
+
+  function pintarModos() {
+    var botones = MODOS.map(function (m) {
+      return '<button type="button" class="seg" role="radio" data-modo="' + m.v + '" ' +
+        'aria-checked="' + (estado.modo === m.v) + '">' +
+        ico(m.d, 1.7) + '<span>' + m.n + '</span></button>';
+    }).join('');
+    // La copia va SIN role ni data-modo: es solo tinta, no un control. Si llevara
+    // role="radio" el teclado la contaria como una opcion mas.
+    var copias = MODOS.map(function (m) {
+      return '<span class="seg">' + ico(m.d, 1.7) + '<span>' + m.n + '</span></span>';
+    }).join('');
+
+    $('gModos').innerHTML =
+      '<span class="seg-hilo" aria-hidden="true"></span>' +
+      '<span class="seg-ind" aria-hidden="true"></span>' +
+      botones +
+      '<span class="seg-copia" aria-hidden="true">' + copias + '</span>';
+
+    roving($('gModos'));
+    refrescarModo();
+    abrirLugar(estado.modo === 'presencial');
+  }
+
+  /* No se repinta al cambiar de opcion: solo se mueven dos valores. Repintar
+     crearia elementos nuevos y la transicion arrancaria de cero, sin deslizarse. */
+  function refrescarModo() {
+    var dos = estado.modo === 'presencial';
+    var ind = $('gModos').querySelector('.seg-ind');
+    var cop = $('gModos').querySelector('.seg-copia');
+    if (ind) ind.style.transform = dos ? 'translateX(calc(100% + 20px))' : 'translateX(0)';
+    if (cop) cop.style.clipPath = dos ? 'inset(0 0 0 50%)' : 'inset(0 50% 0 0)';
+  }
+
+  function abrirLugar(abre) {
+    var l = $('lugar');
+    l.classList.toggle('abierto', abre);
+    l.setAttribute('aria-hidden', String(!abre));
+    if (abre) l.removeAttribute('inert'); else l.setAttribute('inert', '');
+  }
+
+  function pintarServicios() {
+    $('gServ').innerHTML = SERVICIOS.map(function (s) {
+      return '<button type="button" class="card" role="radio" data-serv="' + s.slug + '" ' +
+        'aria-checked="' + (estado.servicio === s.slug) + '">' +
+        '<span class="circ" aria-hidden="true">' + ico(s.ico) + '</span>' +
+        '<span class="serv-nom">' + s.nom + '</span></button>';
+    }).join('');
+    roving($('gServ'));
+  }
+
+  /* Cerrado mide cero, pero sin `inert` sus botones seguirian en el orden de
+     tabulacion y el teclado caeria dentro de un bloque invisible. Mismo problema
+     que tenia la caja del consultorio. */
+  function abrirPlanes(abre) {
+    var b = $('bloquePlanes');
+    b.classList.toggle('abierto', abre);
+    b.setAttribute('aria-hidden', String(!abre));
+    if (abre) b.removeAttribute('inert'); else b.setAttribute('inert', '');
+  }
+
+  function pintarPlanes() {
+    var s = SERVICIOS.filter(function (x) { return x.slug === estado.servicio; })[0];
+    if (!s) { abrirPlanes(false); return; }
+    $('gPlanes').innerHTML = PLANES[s.mod].map(function (p) {
+      return '<button type="button" class="card' + (p.sugerida ? ' sugerida' : '') + '" ' +
+        'role="radio" data-plan="' + p.slug + '" ' +
+        'aria-checked="' + (estado.plan === p.slug) + '">' +
+        '<span class="plan-cab">' +
+          '<span class="circ plan-cifra">' + p.cifra + '</span>' +
+          '<span class="plan-nom">' + p.nom + '</span>' +
+          (p.sugerida ? '<span class="plan-eti">Sugerida</span>' : '') +
+        '</span>' +
+        '<span class="plan-cuerpo">' + ico(p.ico, 1.7) + '<span>' + p.det + '</span></span>' +
+        '<span class="plan-pie">' +
+          '<span class="plan-precio">' + p.precio + ' $</span>' +
+          (p.ahorro ? '<span class="plan-ahorro">Ahorras ' + p.ahorro + ' $</span>' : '') +
+        '</span></button>';
+    }).join('');
+    abrirPlanes(true);
+    roving($('gPlanes'));
+  }
+
+  function refrescarBoton() {
+    var listo = !!(estado.servicio && estado.plan);
+    $('ir2Escritorio').disabled = !listo;
+    $('ir2Movil').disabled = !listo;
+    pintarResumen();
+  }
+
+  /* El resumen se arma de lo que ya hay en estado, sin inventar nada: modalidad
+     siempre, motivo cuando se elige, y sesiones con su precio al final. */
+  function pintarResumen() {
+    var s = SERVICIOS.filter(function (x) { return x.slug === estado.servicio; })[0];
+    var partes = [estado.modo === 'presencial' ? 'Presencial' : 'Online'];
+    if (s) partes.push(s.nom);
+    var p = null;
+    if (s && estado.plan) {
+      p = PLANES[s.mod].filter(function (x) { return x.slug === estado.plan; })[0];
+    }
+    if (p) partes.push(p.cifra + ' ' + p.nom);
+    var txt = partes.join(' · ');
+    // Un solo separador en toda la linea, el mismo punto medio: en castellano el
+    // guion largo abre incisos, no significa "y esto cuesta". La jerarquia la lleva
+    // la negrita, no la puntuacion ni una palabra de mas.
+    $('resumen').innerHTML = p ? txt + ' · <b>' + p.precio + ' $</b>' : txt;
+  }
+
+  /* El grupo de modalidad ya no contiene solo radios: lleva ademas el hilo, el aro
+     y la copia. Hay que recorrer los radios de verdad, no todos los hijos. */
+  function radios(g) {
+    return [].slice.call(g.querySelectorAll('[role="radio"]'));
+  }
+
+  function roving(g) {
+    var rs = radios(g);
+    rs.forEach(function (b) {
+      b.tabIndex = b.getAttribute('aria-checked') === 'true' ? 0 : -1;
+    });
+    if (!rs.some(function (b) { return b.tabIndex === 0; }) && rs[0]) rs[0].tabIndex = 0;
+  }
+
+  function alElegir(g, b) {
+    radios(g).forEach(function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+    });
+    roving(g);
+    if (g === $('gModos')) {
+      estado.modo = b.dataset.modo;
+      refrescarModo();
+      abrirLugar(estado.modo === 'presencial');
+      pintarResumen();
+    } else if (g === $('gServ')) {
+      var previo = estado.servicio;
+      estado.servicio = b.dataset.serv;
+      if (previo !== estado.servicio) estado.plan = null;
+      pintarPlanes();
+    } else {
+      estado.plan = b.dataset.plan;
+    }
+    refrescarBoton();
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[role="radio"]');
+    if (!b) return;
+    alElegir(b.parentElement, b);
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    var g = ev.target.closest && ev.target.closest('[role="radiogroup"]');
+    if (!g) return;
+    var teclas = ['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'];
+    if (teclas.indexOf(ev.key) < 0) return;
+    ev.preventDefault();
+    var hijos = radios(g);
+    var i = hijos.indexOf(ev.target);
+    if (i < 0) i = 0;
+    var n = ev.key === 'Home' ? 0
+          : ev.key === 'End' ? hijos.length - 1
+          : (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') ? (i + 1) % hijos.length
+          : (i - 1 + hijos.length) % hijos.length;
+    alElegir(g, hijos[n]);
+    hijos[n].focus();
+  });
+
+  pintarModos();
+  pintarServicios();
+  refrescarBoton();
+})();
+</script>
+</body>
+</html>

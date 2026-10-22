@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paleta Psicconsciente reserva</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  /* ---- Superficies. Todas tuyas, de la landing ---- */
+  --bg:#FDFAF7;          /* --bg-main */
+  --bg-2:#FAF4EE;        /* --bg-secondary */
+  --sup:#FFFFFF;         /* --white */
+  --sel:#F3E9DE;         /* --primary-soft, relleno de lo elegido */
+
+  /* ---- Terracota: la MARCA. Identidad, selección, precio ---- */
+  --marca:#A67B5B;       /* --primary, decorativo */
+  --marca-cl:#C4A484;    /* --primary-light, bordes */
+  --marca-dp:#8C6246;    /* --primary-deep, círculos y relleno de marca */
+  --marca-dk:#6E4C36;    /* --primary-darkest, cifras y texto fuerte */
+
+  /* ---- Pizarra: la ACCIÓN. Solo lo decisivo ---- */
+  --acc:#2C3E50;         /* --text-dark */
+  --acc-dk:#22303E;
+  --acc-cl:#55697A;      /* --text-soft */
+
+  /* ---- Texto ---- */
+  --txt:#2C3E50;
+  --txt-suave:#55697A;
+
+  /* ---- Líneas: terracota traslúcido, no gris ---- */
+  --linea:rgba(166,123,91,.20);
+  --linea-f:rgba(166,123,91,.40);
+
+  /* ---- Inerte. Lo que no se puede tocar ---- */
+  --inerte:#EDE7E0;
+  --inerte-txt:#6B635B;
+
+  /* ---- Pendiente. El único color de estado que queda ---- */
+  --pend:#7A5B12;
+  --pend-sv:#FAF0DC;
+
+  --elev-1:0 1px 2px rgba(44,62,80,.06);
+  --elev-2:0 6px 18px -6px rgba(44,62,80,.18);
+  --r:14px;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+  *{box-sizing:border-box}
+  body{background:var(--bg-2);font-family:Inter,system-ui,-apple-system,sans-serif;
+    margin:0;padding:2rem 1.25rem 5rem;color:var(--txt)}
+  .env{max-width:74rem;margin:0 auto}
+  h1{font-size:1.5rem;margin:0 0 .4rem}
+  .sub{color:var(--txt-suave);margin:0 0 2rem;max-width:52rem;line-height:1.68}
+  code{background:rgba(44,62,80,.06);border-radius:5px;padding:.06rem .32rem;font-size:.9em}
+
+  .bloque{background:var(--bg);border:1px solid var(--linea);border-radius:22px;
+    padding:1.6rem;margin-bottom:1.4rem}
+  .bloque > header{padding-bottom:.9rem;margin-bottom:1.5rem;border-bottom:1px solid var(--linea)}
+  .bloque > header .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;
+    font-weight:700;color:var(--marca-dk)}
+  .bloque > header h2{font-size:1.12rem;margin:.15rem 0 0}
+  .nota{font-size:.85rem;color:var(--txt-suave);line-height:1.68;margin:1.4rem 0 0;max-width:58rem}
+  .nota b{color:var(--txt)}
+  h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--txt-suave);
+    font-weight:700;margin:0 0 .85rem}
+  .dos{display:grid;gap:1.9rem;grid-template-columns:1fr}
+  @media(min-width:1000px){.dos{grid-template-columns:1fr 1fr}}
+
+  /* ============ TARJETAS ============ */
+  .md,.sv{display:grid;gap:.85rem;grid-template-columns:1fr 1fr;margin-bottom:1.4rem}
+  @media(min-width:1240px){.sv{grid-template-columns:repeat(4,1fr)}}
+  .pl{display:grid;gap:.85rem;grid-template-columns:repeat(3,1fr)}
+
+  .card{background:var(--sup);border:1.5px solid var(--linea);border-radius:var(--r);
+    cursor:pointer;font:inherit;color:var(--txt);box-shadow:var(--elev-1);
+    transition:border-color var(--paso),background var(--paso),box-shadow var(--paso)}
+  .card:hover{border-color:var(--linea-f)}
+  .card[aria-checked="true"]{border-color:var(--marca-dp);background:var(--sel);box-shadow:var(--elev-2)}
+  .md .card,.sv .card{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.55rem;min-height:100px;padding:.95rem .6rem;text-align:center}
+  .circ{width:39px;height:39px;border-radius:50%;border:2.5px solid var(--marca-cl);
+    display:grid;place-items:center;color:var(--marca-dp);transition:all var(--paso)}
+  .circ svg{width:19px;height:19px}
+  .card[aria-checked="true"] .circ{border-color:var(--marca-dp);background:var(--marca-dp);color:#fff}
+  .nom{font-weight:600;font-size:.89rem;line-height:1.3}
+
+  .pl .card{position:relative;display:flex;flex-direction:column;overflow:hidden;text-align:left}
+  .cab{display:flex;align-items:center;gap:.5rem;padding:1rem 0 .68rem;margin:0 1rem;
+    border-bottom:1px solid var(--linea)}
+  .card[aria-checked="true"] .cab{border-bottom-color:var(--marca-cl)}
+  .cifra{flex:none;width:31px;height:31px;border-radius:50%;border:2.5px solid var(--marca-cl);
+    display:grid;place-items:center;font-size:.9rem;font-weight:700;color:var(--marca-dk);
+    font-variant-numeric:tabular-nums;transition:all var(--paso)}
+  .card[aria-checked="true"] .cifra{border-color:var(--marca-dp);background:var(--marca-dp);color:#fff}
+  .tit{font-weight:700;font-size:.98rem}
+  .eti{margin-left:auto;padding:.16rem .4rem;border-radius:5px;background:var(--marca-dp);color:#fff;
+    font-size:.59rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+  .cue{flex:1;display:flex;align-items:center;gap:.42rem;padding:.78rem 1rem;
+    font-size:.77rem;color:var(--txt-suave)}
+  .cue svg{width:14px;height:14px;flex:none;color:var(--marca)}
+  .pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+    gap:.4rem;padding:.72rem 1rem 1rem;min-height:2.3rem}
+  .pie::before{content:"";position:absolute;top:0;left:1rem;right:1rem;height:1px;background:var(--linea)}
+  .card[aria-checked="true"] .pie::before{background:var(--marca-cl)}
+  .pre{font-size:1.44rem;font-weight:700;letter-spacing:-.025em;line-height:1;color:var(--marca-dk)}
+  .der{display:flex;align-items:center;gap:.4rem}
+  /* El badge de ahorro deja de ser verde: crema con letra terracota. */
+  .aho{display:inline-flex;align-items:center;padding:.2rem .44rem;border-radius:6px;
+    background:var(--sel);color:var(--marca-dk);font-size:.66rem;font-weight:700;white-space:nowrap}
+  .card[aria-checked="true"] .aho{background:var(--sup)}
+  .chk{width:21px;height:21px;border-radius:50%;background:var(--marca-dp);display:grid;
+    place-items:center;opacity:0;transform:scale(.6);transition:all var(--paso)}
+  .chk svg{width:12px;height:12px;color:#fff}
+  .card[aria-checked="true"] .chk{opacity:1;transform:scale(1)}
+  .cinta{position:absolute;top:0;left:0;right:0;height:3px;background:var(--marca-dp)}
+
+  /* ============ TIRA DE HORARIOS ============ */
+  .tira{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem}
+  .dia-cab{font-size:.69rem;color:var(--txt-suave);font-weight:600;margin:0 0 .45rem;
+    line-height:1.35;text-align:center}
+  .dia-cab b{color:var(--txt);font-size:.86rem}
+  .hora{display:block;width:100%;padding:.55rem .2rem;margin-bottom:.4rem;border-radius:9px;
+    background:var(--sup);border:1.5px solid var(--linea);color:var(--marca-dk);
+    font:inherit;font-size:.77rem;font-weight:600;cursor:pointer;transition:all 160ms}
+  .hora:hover{border-color:var(--marca-dp);background:var(--sel)}
+  .hora.sel{background:var(--acc);border-color:var(--acc);color:#fff}
+  .hora.no{background:var(--inerte);border-color:transparent;color:var(--inerte-txt);cursor:default}
+  .hora.no:hover{background:var(--inerte);border-color:transparent}
+
+  /* ============ BOTONES ============ */
+  .btns{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.2rem}
+  .bt{padding:.78rem 1.5rem;border-radius:999px;font:inherit;font-weight:600;font-size:.92rem;
+    border:1.5px solid transparent;cursor:pointer;transition:all var(--paso)}
+  .bt1{background:var(--acc);color:#fff}
+  .bt1:hover{background:var(--acc-dk)}
+  .bt2{background:var(--sup);color:var(--marca-dk);border-color:var(--linea-f)}
+  .bt2:hover{background:var(--sel)}
+
+  /* ============ ESTADOS DE PAGO ============ */
+  .estados{display:flex;gap:.6rem;flex-wrap:wrap}
+  .est{display:inline-flex;align-items:center;gap:.4rem;padding:.38rem .7rem;border-radius:8px;
+    font-size:.78rem;font-weight:700}
+  .est svg{width:14px;height:14px}
+  .est-pend{background:var(--pend-sv);color:var(--pend)}
+  .est-ok{background:var(--acc);color:#fff}
+  .est-cons{background:var(--sel);color:var(--marca-dk)}
+
+  .roles{display:grid;gap:.85rem;grid-template-columns:1fr}
+  @media(min-width:760px){.roles{grid-template-columns:1fr 1fr}}
+  .rol{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);padding:1rem 1.1rem}
+  .rol .barra{height:34px;border-radius:8px;margin-bottom:.7rem}
+  .rol h4{margin:0 0 .3rem;font-size:.92rem}
+  .rol p{margin:0;font-size:.79rem;color:var(--txt-suave);line-height:1.6}
+  .rol .hexes{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--marca-dk);
+    margin-top:.5rem;display:block}
+
+  .fichas{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(128px,1fr))}
+  .ficha{border-radius:10px;overflow:hidden;border:1px solid var(--linea);background:var(--sup)}
+  .ficha .m{height:52px}
+  .ficha .t{padding:.45rem .55rem .6rem}
+  .ficha .t b{display:block;font-family:ui-monospace,monospace;font-size:.72rem}
+  .ficha .t span{font-size:.68rem;color:var(--txt-suave);line-height:1.4;display:block;margin-top:.15rem}
+</style>
+</head>
+<body>
+<div class="env">
+
+<h1>La paleta combinada, sin verde</h1>
+<p class="sub">Tus siete colores más los dos que hacían falta para actuar, cada uno con un trabajo
+   distinto: <b>el terracota es la marca</b> y aparece en todo lo que se elige;
+   <b>la pizarra es la acción</b> y aparece solo en lo decisivo. Ningún verde en toda la página.</p>
+
+<!-- ROLES -->
+<section class="bloque">
+  <header><span class="et">Cómo se reparten</span><h2>Dos colores, dos trabajos</h2></header>
+  <div class="roles">
+    <div class="rol">
+      <div class="barra" style="background:#8C6246"></div>
+      <h4>Terracota · la marca</h4>
+      <p>Los círculos de icono y cifra, la tarjeta elegida, la etiqueta «Sugerida», el precio, el
+         badge de ahorro y todas las líneas. Es lo que hace que se reconozca a Daryeli.</p>
+      <span class="hexes">#A67B5B · #C4A484 · #8C6246 · #6E4C36 · #F3E9DE</span>
+    </div>
+    <div class="rol">
+      <div class="barra" style="background:#2C3E50"></div>
+      <h4>Pizarra · la acción</h4>
+      <p>El botón de avanzar, el horario que reservas y el pago confirmado. Nada más. Al aparecer
+         poco, cuando aparece se ve: da 10,98:1, el doble del mínimo.</p>
+      <span class="hexes">#2C3E50 · #22303E · #55697A</span>
+    </div>
+  </div>
+  <p class="nota"><b>La regla que lo sostiene:</b> el terracota dice «esto es tuyo, esto elegiste».
+     La pizarra dice «esto va a pasar». Si los dos hicieran lo mismo volveríamos al problema del
+     verde, con dos colores peleando por significar dos cosas a la vez.</p>
+</section>
+
+<!-- LA PÁGINA -->
+<section class="bloque">
+  <header><span class="et">En uso</span><h2>Paso 1 y paso 2, con la paleta puesta</h2></header>
+  <div class="dos">
+    <div>
+      <h3>Paso 1</h3>
+      <div class="md" id="gModo" role="radiogroup"></div>
+      <div class="sv" id="gServ" role="radiogroup"></div>
+      <div class="pl" id="gPlan" role="radiogroup"></div>
+    </div>
+    <div>
+      <h3>Paso 2 · los tres estados del horario</h3>
+      <div class="tira" id="gTira"></div>
+      <div class="btns">
+        <button class="bt bt1">Ver horarios</button>
+        <button class="bt bt2">Atrás</button>
+      </div>
+      <h3 style="margin-top:1.9rem">Estados del pago, sin verde</h3>
+      <div class="estados">
+        <span class="est est-pend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 1.8"/></svg>Por verificar</span>
+        <span class="est est-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5.5 5.5L20 7"/></svg>Pago verificado</span>
+        <span class="est est-cons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16M4 10V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3M4 10v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/></svg>En la consulta</span>
+      </div>
+      <p class="nota"><b>El verde se ha ido de los tres sitios donde estaba.</b> El hueco libre ya
+         no es verde sino <b>superficie limpia con borde cálido</b>, que es más honesto: libre
+         significa vacío, no «correcto». El elegido se rellena de pizarra. Y el pago verificado
+         usa también la pizarra, que es el color de «hecho» en toda la página. El ámbar de
+         «Por verificar» se queda porque no es marca, es una advertencia real.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TOKENS -->
+<section class="bloque">
+  <header><span class="et">Para el CSS</span><h2>Los tokens, con su contraste comprobado</h2></header>
+  <div class="fichas" id="gFichas"></div>
+  <p class="nota">Los cinco primeros son tuyos tal cual. <code>--acc</code> es
+     <code>--text-dark</code> de la landing ascendido a color de acción, y <code>--marca-dp</code>
+     es <code>--primary-deep</code>. <b>No hay ni un color inventado en toda la paleta.</b>
+     <code>--inerte-txt</code> es el único ajuste: el gris cálido que tenía en mente daba 3,03:1
+     sobre el fondo de ocupado, así que lo oscurecí hasta 4,80:1.</p>
+</section>
+
+</div>
+
+<script>
+(function () {
+  function ico(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w||1.6) +
+           '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    video:'<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>',
+    pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+    ans:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    aut:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    par:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    due:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    check:'<path d="m4 12 5.5 5.5L20 7"/>'
+  };
+  function tarj(n, d, sel) {
+    return '<button type="button" class="card" role="radio" aria-checked="' + sel + '">' +
+      '<span class="circ">' + ico(d) + '</span><span class="nom">' + n + '</span></button>';
+  }
+  document.getElementById('gModo').innerHTML = tarj('Online', I.video, true) + tarj('Presencial', I.pin, false);
+  document.getElementById('gServ').innerHTML =
+    tarj('Superar la Ansiedad', I.ans, true) + tarj('Fortalecer tu Autoestima', I.aut, false) +
+    tarj('Sanar en Pareja', I.par, false) + tarj('Acompañar un Duelo', I.due, false);
+
+  function plan(c, n, det, ic, pr, ah, sel, dest) {
+    return '<button type="button" class="card" role="radio" aria-checked="' + sel + '">' +
+      (dest ? '<span class="cinta"></span>' : '') +
+      '<span class="cab"><span class="cifra">' + c + '</span><span class="tit">' + n + '</span>' +
+      (dest ? '<span class="eti">Sugerida</span>' : '') + '</span>' +
+      '<span class="cue">' + ico(ic, 1.7) + '<span>' + det + '</span></span>' +
+      '<span class="pie"><span class="pre">' + pr + '</span><span class="der">' +
+      (ah ? '<span class="aho">Ahorras ' + ah + '</span>' : '') +
+      '<span class="chk">' + ico(I.check, 3.5) + '</span></span></span></button>';
+  }
+  document.getElementById('gPlan').innerHTML =
+    plan('1', 'sesión', 'Una cita puntual', I.reloj, '30 $', '', false, false) +
+    plan('3', 'sesiones', 'A tu ritmo, 90 días', I.cal, '75 $', '15 $', true, true) +
+    plan('5', 'sesiones', 'A tu ritmo, 90 días', I.cal, '125 $', '25 $', false, false);
+
+  var dias = [['lun','8'],['mar','9'],['mié','10'],['jue','11'],['vie','12']];
+  var horas = ['09:00','10:00','11:00','16:00'];
+  document.getElementById('gTira').innerHTML = dias.map(function (d, i) {
+    return '<div><p class="dia-cab">' + d[0] + '<br><b>' + d[1] + '</b></p>' +
+      horas.map(function (h, j) {
+        var cl = (i === 2 && j === 1) ? ' sel' : ((i + j) % 4 === 3 ? ' no' : '');
+        return '<button type="button" class="hora' + cl + '">' + h + '</button>';
+      }).join('') + '</div>';
+  }).join('');
+
+  var TOK = [
+    ['--bg','#FDFAF7','fondo general'],
+    ['--bg-2','#FAF4EE','secciones alternas'],
+    ['--sup','#FFFFFF','tarjetas'],
+    ['--sel','#F3E9DE','lo elegido'],
+    ['--marca-cl','#C4A484','bordes de círculo'],
+    ['--marca','#A67B5B','iconos decorativos'],
+    ['--marca-dp','#8C6246','relleno de marca'],
+    ['--marca-dk','#6E4C36','cifras y precio'],
+    ['--acc','#2C3E50','acción'],
+    ['--acc-cl','#55697A','texto suave'],
+    ['--inerte','#EDE7E0','ocupado'],
+    ['--inerte-txt','#6B635B','texto de ocupado'],
+    ['--pend','#7A5B12','por verificar'],
+    ['--pend-sv','#FAF0DC','fondo de aviso']
+  ];
+  document.getElementById('gFichas').innerHTML = TOK.map(function (t) {
+    return '<div class="ficha"><div class="m" style="background:' + t[1] + '"></div>' +
+      '<div class="t"><b>' + t[1] + '</b><span>' + t[0] + '<br>' + t[2] + '</span></div></div>';
+  }).join('');
+
+  document.addEventListener('click', function (ev) {
+    var h = ev.target.closest('.hora');
+    if (h && !h.classList.contains('no')) {
+      [].forEach.call(h.closest('.tira').querySelectorAll('.hora'), function (o) { o.classList.remove('sel'); });
+      h.classList.add('sel'); return;
+    }
+    var b = ev.target.closest('.card');
+    if (!b) return;
+    [].forEach.call(b.parentElement.children, function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+    });
+  });
+})();
+</script>
+</body>
+</html>

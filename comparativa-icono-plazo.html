@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El icono del plazo · cinco variantes</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     CINCO ICONOS PARA LA NOTA DEL PLAZO.
+
+     Cada uno se enseña DOS VECES, y eso es lo importante de esta comparativa:
+
+       · a 14 px, que es el tamaño real en la nota,
+       · y a 56 px, para ver el dibujo.
+
+     Porque el problema aqui no es el concepto, es el tamaño. Una tabla con un
+     lapiz son dos objetos, y a 14 px dos objetos con contorno se empastan: los
+     trazos se juntan y queda una mancha. Por eso hay variantes con el lapiz y
+     sin el — para que se vea cual sobrevive.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--suelo);color:var(--txt);
+     font-family:var(--texto);font-size:16px;line-height:1.55;
+     -webkit-font-smoothing:antialiased}
+
+header{padding:1rem 2rem;border-bottom:1px solid var(--linea)}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--texto);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+
+.fila{display:flex;flex-wrap:wrap;gap:1rem;padding:1.5rem 2rem}
+
+.caso{background:var(--blanco);border-radius:18px;padding:1.2rem 1.4rem 1.4rem;
+  width:25rem;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2)}
+.caso h2{margin:0 0 .1rem;font-size:.9rem;font-weight:600}
+.caso .dice{margin:0 0 1.1rem;font-size:.78rem;color:var(--txt-suave)}
+
+/* el grande, para ver el dibujo */
+.grande{display:flex;align-items:center;gap:1.1rem;margin:0 0 1rem;
+  padding-bottom:1rem;border-bottom:1px solid var(--linea)}
+.grande svg{width:56px;height:56px;color:var(--acc);flex:none}
+.grande .et{font-size:.76rem;color:var(--txt-suave)}
+
+/* la nota, exactamente como en la pagina */
+.nota{display:flex;align-items:center;gap:.45rem;margin:0;
+  font-size:.79rem;color:var(--txt-suave)}
+.nota svg{width:14px;height:14px;flex:none;color:var(--acc)}
+
+.cierre{padding:.5rem 2rem 3rem;max-width:52rem;font-size:.88rem;
+  line-height:1.65;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>El icono del plazo · cinco variantes<small>Cada uno a 56&nbsp;px para ver el dibujo, y a 14&nbsp;px que es su tamaño real en la nota</small></h1>
+</header>
+
+<div class="fila" id="zona"></div>
+
+<div class="cierre">
+  <p><b>El problema aquí no es el concepto, es el tamaño.</b> Una tabla con un lápiz son dos objetos, y a 14&nbsp;px dos objetos de contorno se empastan: los trazos se juntan y queda una mancha. Mira las dos columnas de cada ficha y verás que el 1 y el 4 pierden el lápiz por el camino.</p>
+  <p><b>Mi apuesta es la 2, el portapapeles con el visto.</b> Dice «agendado» con un solo objeto, y el visto es la forma más simple que existe: dos trazos rectos que aguantan cualquier tamaño. Conserva la idea de tabla que querías y sobrevive a los 14&nbsp;px.</p>
+  <p>Si el lápiz te importa más que la nitidez, la <b>3</b> es la que mejor lo lleva: el bloc es más estrecho que un portapapeles, así que el lápiz tiene sitio para separarse del cuerpo.</p>
+</div>
+
+<script>
+(function () {
+  var ICONOS = [
+    ['1 · Portapapeles con lápiz',
+     'Lo que pediste, literal. Dos objetos y el lápiz encima del cuerpo.',
+     '<path d="M9.5 4H7.6A2.1 2.1 0 0 0 5.5 6.1v12.3A2.1 2.1 0 0 0 7.6 20.5h4.6"/>' +
+     '<rect x="9.2" y="2.6" width="5.6" height="3.2" rx="1.1"/>' +
+     '<path d="M14.5 4h1.9a2.1 2.1 0 0 1 2.1 2.1v3.3"/>' +
+     '<path d="M19.9 12.2l1.9 1.9-4.7 4.7-2.5.6.6-2.5z"/>'],
+
+    ['2 · Portapapeles con visto',
+     'Dice «agendado» con un solo objeto. El visto son dos trazos rectos.',
+     '<path d="M9.5 4H7.6A2.1 2.1 0 0 0 5.5 6.1v12.3A2.1 2.1 0 0 0 7.6 20.5h8.8a2.1 2.1 0 0 0 2.1-2.1V6.1A2.1 2.1 0 0 0 16.4 4h-1.9"/>' +
+     '<rect x="9.2" y="2.6" width="5.6" height="3.2" rx="1.1"/>' +
+     '<path d="M9.2 13.4l2.1 2.1 4-4"/>'],
+
+    ['3 · Bloc con lápiz',
+     'El bloc es más estrecho, así que el lápiz tiene sitio para respirar.',
+     '<path d="M14.5 3.5H7A2 2 0 0 0 5 5.5v13A2 2 0 0 0 7 20.5h6"/>' +
+     '<path d="M8.4 8h5.2M8.4 11.6h3.4"/>' +
+     '<path d="M18.6 11.4l2 2-5 5-2.6.6.6-2.6z"/>'],
+
+    ['4 · Calendario con lápiz',
+     'Junta el calendario que hay ahora con la idea del lápiz.',
+     '<path d="M20.5 11.6V7.4A2.4 2.4 0 0 0 18.1 5H5.9A2.4 2.4 0 0 0 3.5 7.4v11.2A2.4 2.4 0 0 0 5.9 21h6.2"/>' +
+     '<path d="M3.5 10h17M8 3.2v3.4M16 3.2v3.4"/>' +
+     '<path d="M19.2 13.6l1.8 1.8-4.3 4.3-2.4.6.6-2.4z"/>'],
+
+    ['5 · El calendario actual',
+     'Sin lápiz. Es el que está puesto, y el más nítido de los cinco.',
+     '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/>' +
+     '<path d="M3.5 10h17M8 3.5v3M16 3.5v3"/>']
+  ];
+
+  var TXT = '60 días para agendar tus consultas';
+
+  function svg(rutas) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" ' +
+      'aria-hidden="true">' + rutas + '</svg>';
+  }
+
+  document.getElementById('zona').innerHTML = ICONOS.map(function (i) {
+    return '<section class="caso">' +
+      '<h2>' + i[0] + '</h2>' +
+      '<p class="dice">' + i[1] + '</p>' +
+      '<div class="grande">' + svg(i[2]) +
+        '<span class="et">56 px<br>para ver el dibujo</span></div>' +
+      '<p class="nota">' + svg(i[2]) + '<span>' + TXT + '</span></p>' +
+    '</section>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

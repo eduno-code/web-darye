@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrar · antes y después de la auditoría</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  --papel:#EFE9E0; --tinta:#2E332E; --suave:#5C635A;
+  --arcilla:#C6A783; --arcilla-dp:#8A6746; --salvia:#5A7060;
+  --paso:180ms cubic-bezier(.2,.8,.3,1);
+  color-scheme:only light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font:400 14px/1.5 Inter,"Segoe UI",system-ui,sans-serif}
+
+/* ---------- barra de control ---------- */
+.barra{position:sticky;top:0;z-index:5;display:flex;align-items:center;
+  gap:1rem;flex-wrap:wrap;padding:.7rem 1.1rem;
+  background:rgba(239,233,224,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--arcilla)}
+.barra h1{margin:0;font-size:.95rem;font-weight:600;letter-spacing:-.01em}
+.barra h1 small{display:block;font-size:.72rem;font-weight:400;color:var(--suave);
+  letter-spacing:.04em;text-transform:uppercase}
+
+.modos{display:flex;gap:.3rem;padding:.2rem;border-radius:999px;
+  border:1px solid var(--arcilla);background:#fff}
+.modos button{appearance:none;border:0;background:none;cursor:pointer;
+  padding:.4rem .95rem;border-radius:999px;font:inherit;font-size:.82rem;
+  color:var(--suave);transition:background var(--paso),color var(--paso)}
+.modos button[aria-pressed="true"]{background:var(--salvia);color:#fff;font-weight:500}
+.modos button:focus-visible{outline:2px solid var(--salvia);outline-offset:2px}
+
+.suelto{margin-left:auto;display:flex;align-items:center;gap:1rem;margin-block:0}
+.suelto a{color:var(--arcilla-dp);font-size:.82rem;text-decoration:none;
+  border-bottom:1px solid rgba(138,103,70,.4);padding-bottom:1px}
+.suelto a:hover{border-bottom-color:var(--arcilla-dp)}
+
+/* ---------- el escenario ---------- */
+.escena{display:flex;align-items:flex-start;justify-content:center;
+  gap:2.5rem;flex-wrap:wrap;padding:2rem 1.1rem 3rem}
+figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+figcaption{order:-1;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--suave);text-align:center}
+figcaption b{color:var(--tinta);font-weight:600}
+figcaption .etiq{display:block;font-size:.68rem;letter-spacing:.08em;margin-top:.15rem}
+.antes figcaption .etiq{color:#A33A2E}
+.despues figcaption .etiq{color:#3E6B4F}
+
+/* La caja reserva el sitio ya escalado; el lienzo va dentro a tamaño real y se
+   encoge con transform, que es lo único que no reflowea la maqueta: el iframe
+   sigue creyendo que mide 390 o 1280 px y dispara sus media queries de verdad. */
+.caja{overflow:hidden;border-radius:var(--radio,20px);
+  border:1px solid var(--arcilla);background:#fff}
+.lienzo{transform-origin:0 0}
+iframe{display:block;border:0;background:#fff}
+
+.movil{--radio:22px}
+.pc{--radio:10px}
+body[data-disp="movil"] .pc,
+body[data-disp="pc"] .movil{display:none}
+body[data-lado="antes"] .despues,
+body[data-lado="despues"] .antes{display:none}
+</style>
+</head>
+<body data-disp="movil" data-lado="dos">
+
+<header class="barra">
+  <h1>Entrar · la pantalla de verdad<small>entrar/ · auditoría de diseño, accesibilidad y movimiento</small></h1>
+
+  <nav class="modos" aria-label="Qué versión se ve">
+    <button type="button" data-lado="despues" aria-pressed="false">Después</button>
+    <button type="button" data-lado="antes"   aria-pressed="false">Antes</button>
+    <button type="button" data-lado="dos"     aria-pressed="true">Las dos</button>
+  </nav>
+
+  <nav class="modos" aria-label="En qué pantalla">
+    <button type="button" data-disp="pc"    aria-pressed="false">Escritorio</button>
+    <button type="button" data-disp="movil" aria-pressed="true">Móvil</button>
+    <button type="button" data-disp="dos"   aria-pressed="false">Las dos</button>
+  </nav>
+
+  <nav class="modos" aria-label="Con qué tema">
+    <button type="button" data-tema="claro"  aria-pressed="true">Claro</button>
+    <button type="button" data-tema="oscuro" aria-pressed="false">Oscuro</button>
+  </nav>
+
+  <p class="suelto">
+    <a href="entrar/index.html?tema=claro" target="_blank" rel="noopener">Abrir sola ↗</a>
+  </p>
+</header>
+
+<main class="escena">
+  <figure class="despues movil">
+    <figcaption><b>Móvil</b> · 390 × 844<span class="etiq">Después</span></figcaption>
+    <div class="caja" data-ancho="390" data-alto="844" data-fijo="si">
+      <div class="lienzo"><iframe data-base="entrar/index.html" width="390" height="844" title="Después, a 390 px"></iframe></div>
+    </div>
+  </figure>
+
+  <figure class="despues pc">
+    <figcaption><b>Escritorio</b> · 1280 × 860<span class="etiq">Después</span></figcaption>
+    <div class="caja" data-ancho="1280" data-alto="860">
+      <div class="lienzo"><iframe data-base="entrar/index.html" width="1280" height="860" title="Después, a 1280 px"></iframe></div>
+    </div>
+  </figure>
+
+  <figure class="antes movil">
+    <figcaption><b>Móvil</b> · 390 × 844<span class="etiq">Antes</span></figcaption>
+    <div class="caja" data-ancho="390" data-alto="844" data-fijo="si">
+      <div class="lienzo"><iframe data-base="entrar/index.ANTES-AUDITORIA.html" width="390" height="844" title="Antes, a 390 px"></iframe></div>
+    </div>
+  </figure>
+
+  <figure class="antes pc">
+    <figcaption><b>Escritorio</b> · 1280 × 860<span class="etiq">Antes</span></figcaption>
+    <div class="caja" data-ancho="1280" data-alto="860">
+      <div class="lienzo"><iframe data-base="entrar/index.ANTES-AUDITORIA.html" width="1280" height="860" title="Antes, a 1280 px"></iframe></div>
+    </div>
+  </figure>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var cuerpo = document.body;
+  var cajas = Array.prototype.slice.call(document.querySelectorAll('.caja'));
+  var marcos = Array.prototype.slice.call(document.querySelectorAll('iframe'));
+  var tema = 'claro';
+
+  /* ROMPE-CACHE y tema. La maqueta nueva lee ?tema= y fuerza el color-scheme;
+     la vieja no lo lee y se queda con el del sistema — que es justo una de las
+     cosas que la auditoria arreglo, asi que verlo tal cual es lo correcto.
+     El sello obliga a pedir el archivo de nuevo cada vez que se cambia de tema
+     o se recarga el visor, que si no Chrome sirve el de antes. */
+  function cargar() {
+    var sello = '?tema=' + tema + '&v=' + Date.now();
+    marcos.forEach(function (f) { f.src = f.dataset.base + sello; });
+  }
+
+  /* LA BARRA DE DESPLAZAMIENTO NO EXISTE EN UN TELEFONO.
+     Chrome de escritorio le pone al iframe una barra clasica que se come 20 px
+     de ancho, asi que el panel de "390" ensenaria 369 px utiles. La solucion no
+     toca la maqueta —seria mentir sobre la pagina que se revisa— sino el visor:
+     al iframe se le dan 390 mas lo que mida la barra y la caja lo recorta. */
+  function quitarBarraMovil(f) {
+    try {
+      var base = +f.closest('.caja').dataset.ancho;
+      var barra = f.contentWindow.innerWidth - f.contentDocument.documentElement.clientWidth;
+      if (barra > 0) { f.style.width = (base + barra) + 'px'; f.width = base + barra; }
+    } catch (e) { /* en file:// no se puede mirar dentro; se queda como estaba */ }
+  }
+
+  /* El movil se ve SIEMPRE a tamano real: 390 px caben en cualquier pantalla y
+     encogerlo seria tirar justo el detalle que hay que revisar. Lo que se
+     encoge es el escritorio. El pie dice a que escala esta, para que no se
+     juzgue un tamano de letra que no es el real. */
+  function encajar() {
+    var visibles = cajas.filter(function (c) { return c.offsetParent !== null; });
+    var hueco = window.innerWidth - 2 * 18 - (visibles.length > 1 ? 40 * (visibles.length - 1) : 0);
+    var gastado = 0;
+    visibles.forEach(function (c) { if (c.dataset.fijo === 'si') gastado += +c.dataset.ancho; });
+    var flexibles = visibles.filter(function (c) { return c.dataset.fijo !== 'si'; }).length || 1;
+
+    visibles.forEach(function (c) {
+      var a = +c.dataset.ancho, h = +c.dataset.alto;
+      var e = c.dataset.fijo === 'si' ? 1 : Math.min(1, (hueco - gastado) / flexibles / a);
+      c.style.width  = Math.round(a * e) + 'px';
+      c.style.height = Math.round(h * e) + 'px';
+      c.firstElementChild.style.transform = 'scale(' + e + ')';
+      if (c.dataset.fijo === 'si') quitarBarraMovil(c.querySelector('iframe'));
+      var pie = c.parentElement.querySelector('figcaption');
+      pie.dataset.base = pie.dataset.base || pie.innerHTML;
+      pie.innerHTML = pie.dataset.base + (e < .999 ? ' · al ' + Math.round(e * 100) + ' %' : '');
+    });
+  }
+
+  marcos.forEach(function (f) {
+    f.addEventListener('load', function () {
+      quitarBarraMovil(f);
+      requestAnimationFrame(function () { quitarBarraMovil(f); });
+      setTimeout(function () { quitarBarraMovil(f); encajar(); }, 300);
+    });
+  });
+
+  document.querySelector('.barra').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button');
+    if (!b) return;
+    var grupo = b.parentElement;
+    grupo.querySelectorAll('button').forEach(function (o) {
+      o.setAttribute('aria-pressed', String(o === b));
+    });
+    if (b.dataset.lado) cuerpo.dataset.lado = b.dataset.lado;
+    if (b.dataset.disp) cuerpo.dataset.disp = b.dataset.disp;
+    if (b.dataset.tema) { tema = b.dataset.tema; cargar(); }
+    encajar();
+  });
+
+  window.addEventListener('resize', encajar);
+  cargar();
+  encajar();
+}());
+</script>
+</body>
+</html>

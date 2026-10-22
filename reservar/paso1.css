@@ -1,0 +1,1581 @@
+/* ==========================================================================
+   EL ASISTENTE DE RESERVA · PASOS 1 Y 2
+   ==========================================================================
+
+   Hoja completa de esta vista. No hereda nada y no arrastra nada.
+   Lo unico de fuera es ../panel.css, que pinta el menu lateral.
+
+   ORDEN DEL ARCHIVO
+     1. Tokens          colores, letra y medidas
+     2. Base            body, hoja y titular
+     3. Pestañas        la tira y sus estados
+     4. Tarjeta         la carpeta
+     5. Preguntas       el rotulo de cada grupo
+     6. Opciones        las filas con su radio
+     7. Modalidad       y la nota que la acompaña
+     8. Planes          las tres opciones de precio
+     9. Pie             total, aviso y boton
+    10. Accesorios      legal y pendiente
+    11. Movimiento      y su respeto a prefers-reduced-motion
+
+   ==========================================================================
+   LAS CUATRO DECISIONES DE ESTA PASADA, y el porque de cada una
+
+   1 · LOS ROTULOS DEJAN DE SER MAYUSCULAS PEQUEÑAS.
+       Habia tres seguidos, identicos, en Inter de 12,5 px con interletraje
+       abierto. Eso hacia dos daños: los tres grupos pesaban lo mismo cuando no
+       valen lo mismo, y tres rotulos con la misma forma seguidos se leen como
+       una plantilla rellenada tres veces.
+       Ahora van en Fraunces, caja baja, 1,05 rem, en el marron de la marca. Es
+       el cambio que mas transforma la pantalla por lo poco que cuesta, y es el
+       unico sitio donde vuelve la letra de marca: en los rotulos, que son
+       exactamente donde una letra con caracter hace su trabajo sin estorbar la
+       lectura del cuerpo.
+
+   2 · LA COLUMNA DE LA IZQUIERDA DEJA DE ESTAR VACIA, y no con relleno.
+       Dos opciones contra cuatro dejaban 130 px de aire sin funcion. Debajo de
+       la modalidad entra ahora el dato que le corresponde a la eleccion: en
+       linea, cuanto dura y por donde; presencial, la direccion. Es informacion
+       que la persona necesita justo ahi, no decoracion para tapar un hueco.
+
+   3 · EL DINERO BAJA LA VOZ.
+       Las tarjetas de plan eran lo unico con caja en toda la tarjeta, asi que
+       eran lo que mas gritaba. En una consulta de psicologia el dinero no puede
+       ser el elemento mas fuerte de la pantalla. Pierden la caja y se quedan en
+       columnas con su cifra; lo que las marca al elegirlas es el mismo punto y
+       la misma negrita que el resto de las opciones, que es como debe ser
+       porque son la misma clase de decision.
+
+   4 · EL TOTAL ES LA UNICA CIFRA GRANDE.
+       Con los planes callados, el total puede ser lo mas alto de la pantalla
+       sin competir con nada. Va en Fraunces porque es una cifra, y las cifras
+       son el otro sitio donde esa letra trabaja.
+   ========================================================================== */
+
+
+/* ============ 1. TOKENS ============ */
+
+:root{
+  /* Solo modo claro. Hay que declararlo: sin esto, un sistema en oscuro pinta
+     los controles nativos con su propia paleta sobre el fondo claro. */
+  color-scheme:only light;
+
+  /* --- superficies, de abajo arriba ---
+     El suelo hace un escalon DE VERDAD por debajo del blanco. Con los dos casi
+     iguales, una tarjeta blanca solo existe por su sombra y la pestaña activa,
+     que tambien es blanca, se vuelve invisible. */
+  --suelo:#EDE2D2;
+  --blanco:#FFFFFF;
+  /* El relleno de la fila, tanto al pasar el raton como al elegirla. Es el
+     MISMO color a proposito: decision de Edgar, y funciona porque una fila con
+     el tono del suelo dentro de una tarjeta blanca se lee como un hueco
+     rebajado en el carton. Lo que distingue elegido de solo-señalado no es el
+     fondo, es el punto lleno y la negrita. */
+  --fila-viva:#EDE2D2;
+
+  /* --- texto --- */
+  --txt:#2C3E50;
+  --txt-suave:#55697A;
+
+  /* --- marca --- */
+  --marca:#6E4C36;          /* el marron fuerte; 7,7:1 sobre blanco */
+  --marca-cl:#C9B49A;       /* el mismo, lavado, para el aro del radio */
+  --acc:#5A7060;            /* salvia: decide, y es el color del boton */
+  --acc-dp:#4A5E50;
+  --acc-sv:#E8EDE6;         /* salvia lavada: el fondo del badge del ahorro */
+
+  /* --- pestañas dormidas: un paso por debajo del suelo ---
+     Contraste medido del texto #7A6752 sobre #E2D3BE: 3,94:1. Es un estado
+     apagado a proposito y se queda por encima del 3:1 de no-texto. */
+  --pest-off:#E2D3BE;
+  --pest-txt:#7A6752;
+  --pest-txt-off:#8A775F;
+
+  --linea:rgba(166,123,91,.22);
+
+  /* --- letra --- */
+  --display:Fraunces,Georgia,serif;
+  --texto:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+
+  --t-nota:.79rem;          /* 12,6 px  lo accesorio */
+  --t-aux:.88rem;           /* 14,1 px  lo que se lee de reojo */
+  --t-base:1rem;            /* 16   px  el cuerpo y las opciones */
+  --t-rotulo:1.05rem;       /* 16,8 px  Fraunces, el rotulo de cada pregunta */
+  --t-h1:1.6rem;            /* 25,6 px  el titular */
+
+  /* --- forma: UNA escala de radios y se respeta ---
+     La version anterior llego a tener nueve radios distintos en la misma
+     pantalla; el ojo no puede leer un sistema con nueve reglas. */
+  --r-chico:8px;
+  --r-medio:14px;
+  --r-grande:18px;
+  --r-pill:999px;
+
+  /* EL ARO DE LA MARCA SIN ELEGIR. Es el marron mas claro de la rampa de
+     --marca que todavia da 3:1 sobre los DOS fondos donde se dibuja: 3,97
+     sobre la tarjeta blanca y 3,10 sobre el tinte de la fila.
+
+     Hay token porque lo usan las filas y los planes, y porque el numero no es
+     arbitrario: se busco recorriendo la rampa de luminosidad y quedandose con
+     el ultimo que aguanta el umbral. El anterior, --marca-cl, daba 2,00 y 1,57
+     — por debajo de lo que WCAG 1.4.11 pide para el limite visual de un
+     control. */
+  --aro:#A87453;
+
+  /* El grosor del canto de lo elegido. En un token porque se pinta en dos
+     sitios —las filas de opcion y las tarjetas de plan— y tiene que ser el
+     mismo numero en los dos: dos grosores distintos para el mismo estado se
+     leen como dos estados distintos.
+
+     2 px y no 1,5: un `box-shadow` inset con medio pixel cae entre rejillas
+     y el navegador lo resuelve con antialias, asi que en pantalla no sale
+     mas grueso, sale mas turbio. Los numeros enteros salen limpios. */
+  --canto-elegido:2px;
+
+  /* --- la pestaña, en cuatro numeros. Las tres son iguales. --- */
+  --pest-alto:52px;
+  --pest-radio:14px;
+  --pest-aire:1.6rem;
+  --pest-hueco:4px;
+
+  /* --- sombras: teñidas hacia el marron, nunca negras ---
+     Una sombra neutra sobre un fondo calido se ve gris y sucia. */
+  --sombra:0 1px 2px rgba(110,76,54,.05), 0 14px 36px -14px rgba(110,76,54,.2);
+
+  --paso:160ms cubic-bezier(.2,.8,.3,1);
+}
+
+
+/* ============ 2. BASE ============
+
+   NO HAY REGLAS DE CASCARA. Esta hoja llego de `vista-reserva/`, donde era la
+   unica y vestia la pantalla entera: traia `body`, el fondo del lienzo, `.hoja`
+   y `h1`. En la pagina real todo eso es de otros y se ha quitado:
+
+     · `body` y el fondo los ponen style.css y reservar.css, y con el MISMO
+       color -#EDE2D2, que alli se llama --carp-suelo-, asi que quitarlo no
+       cambia un pixel.
+     · `.hoja` no existe en el marcado de la pagina real: era inerte.
+     · `h1` sin acotar alcanzaba TAMBIEN los titulares de los pasos 2 y 3 y del
+       cierre -#t2, #t3, #tFin-, que no estan rediseñados. Esa era la fuga.   */
+
+/* DOS FAMILIAS DE ICONO EN LA MISMA PAGINA, y por eso hacen falta dos clases.
+   El sprite de la pagina trae Phosphor regular, que dibuja el contorno como
+   relleno, y los iconos de esta vista son de trazo de verdad. Se ven igual, se
+   pintan distinto.
+
+   `fill` va declarado aqui a proposito: reservar.css pone `.ico{fill:
+   currentColor}` y esta hoja carga despues, asi que sin esto los de trazo
+   saldrian macizos. Un `fill="none"` en el marcado no serviria — el CSS le
+   gana a los atributos de presentacion.
+
+   EL TAMAÑO VA ACOTADO A #vista1 y el motivo se midio: sin acotar, esta regla
+   alcanzaba tambien el icono del boton de los pasos 2 y 3, que mide
+   `var(--ico)` = 16 px fijos por reservar.css, y lo pasaba a 1em del contexto
+   donde cayera. Aqui los iconos crecen con la letra a proposito -es lo que los
+   mantiene proporcionados dentro de cada nota-, pero eso es una decision de
+   esta vista, no de las otras dos.
+
+   `.ico-trazo` no se acota: solo pinta donde alguien pone la clase, y la ponen
+   los iconos de esta vista. */
+#vista1 .ico{width:1em;height:1em;flex:none}
+.ico-trazo{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+
+/* ============ 4. LA REJILLA DE LAS DOS COLUMNAS ============
+
+   La tarjeta blanca que envuelve esto NO se viste aqui: es cascara compartida
+   por los tres pasos y la tiene reservar.css. Aqui empieza el contenido.
+
+   Dentro de la tarjeta no hay cajas. Las dos preguntas de arriba se separan
+   solo con el hueco, y la de planes con una divisoria fina.
+
+   NO hay divisoria vertical entre las columnas: iba en el bloque de la
+   izquierda, asi que medía lo que mide ESE bloque, y con dos opciones contra
+   cuatro la linea llegaba a media altura y quedaba colgando. Una linea que no
+   llega abajo llama mas la atencion que la ausencia de linea. */
+.rejilla{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:2.75rem;
+  align-items:start;
+
+  /* LA DIVISORIA VERTICAL, dibujada en el FONDO de la rejilla y no en ninguna
+     de las dos columnas.
+
+     El primer intento la puso como `box-shadow` del bloque de la izquierda, y
+     eso la hacia medir lo que mide ESE bloque: con dos opciones contra cuatro
+     llegaba a media altura y quedaba un muñon colgando. El fondo de la rejilla
+     si mide la fila entera, asi que la linea cruza de arriba abajo pase lo que
+     pase con el contenido de cada lado.
+
+     Va al 50% del ancho, que es el centro exacto del hueco de 2,75rem. */
+  background-image:linear-gradient(var(--linea), var(--linea));
+  background-repeat:no-repeat;
+  /* NO LLEGA A TOCAR LA HORIZONTAL. Con `100%` la linea bajaba por todo el
+     relleno inferior hasta chocar con el borde, y las dos se encontraban en T.
+     Restandole ese relleno —los mismos 2rem— la vertical termina donde termina
+     el contenido y queda un aire de 32 px antes de la horizontal. */
+  background-size:1px calc(100% - 2rem);
+  background-position:50% 0;
+
+  /* LA DIVISORIA HORIZONTAL VIVE AQUI, en la rejilla de arriba, y no en el
+     grupo de abajo. Aparece con `:has()` solo cuando el grupo de planes esta
+     abierto: una linea que separa de algo que todavia no existe no separa
+     nada, solo cierra la tarjeta por la mitad.
+
+     Estuvo primero como `border-top` del fieldset de los planes y salia con
+     una muesca por el legend. Se paso a `box-shadow` y seguia mal, por otra
+     razon que se me escapo: un `legend` SE MONTA SOBRE EL CANTO SUPERIOR de su
+     fieldset, asi que ese canto esta a la altura del CENTRO del titulo. La
+     linea no se dibujaba mal — estaba exactamente donde estaba el borde.
+
+     Colgandola de la rejilla, que es un div y no tiene ese comportamiento, la
+     linea queda por encima de todo el grupo, que es su sitio. Y de paso las
+     dos divisorias se encuentran en T, que es como se cruzan las de un
+     periodico. */
+  padding-bottom:2rem;
+}
+#vista1:has(#bloquePlanes.abierto) .rejilla{
+  border-bottom:1px solid var(--linea);
+}
+
+/* Y LA VERTICAL, solo cuando hay dos columnas de verdad. Con el bloque de
+   terapias cerrado, la linea partia en dos una fila que tenia una sola
+   pregunta: separaba el contenido del vacio. */
+.rejilla{background-image:none}
+.rejilla:has(#abreServ.abierto){
+  background-image:linear-gradient(var(--linea), var(--linea));
+}
+
+.grupo{border:0;padding:0;margin:0;min-width:0}
+
+
+/* ============ 5. EL ROTULO DE CADA PREGUNTA ============
+
+   Fraunces, caja baja. Eran tres rotulos identicos en mayusculas pequeñas con
+   interletraje abierto: la forma que la disciplina de diseño llama *eyebrow* y
+   que recomienda no repetir mas de una vez cada tres secciones. Aqui habia
+   tres seguidos, y ademas hacian que los tres grupos pesaran lo mismo cuando
+   no valen lo mismo.
+
+   Es el unico sitio del paso donde vuelve la letra de marca, junto con el
+   total. En los rotulos hace su trabajo sin estorbar la lectura del cuerpo,
+   que es lo que pasaba cuando estaba en las opciones.                        */
+
+.rotulo{
+  display:flex;
+  align-items:baseline;
+  gap:.6rem;
+  flex-wrap:wrap;
+  padding:0;
+  margin:0 0 1.1rem;
+  font-family:var(--display);
+  font-size:var(--t-rotulo);
+  font-weight:600;
+  letter-spacing:-.01em;
+  color:var(--marca);
+}
+
+/* EL ECO: lo que llevas elegido, al lado de su rotulo.
+
+   Lleva la FORMA de una opcion seleccionada —radio de 8 px y el mismo tinte
+   `--fila-viva`— y no forma de pildora. Dos razones:
+     · se lee como un eco literal de la fila que has marcado, no como una
+       etiqueta de otra clase;
+     · el badge del ahorro, ahi abajo, SI es una pildora y va en salvia. Dos
+       pastillas iguales en la misma pantalla diciendo cosas distintas se
+       confunden; con forma y color distintos, cada una se queda en su papel.
+
+   EL COLOR es el 4 de la comparativa: blanco con un filete de un pixel.
+   Eleccion de Edgar sobre cinco candidatos de la paleta, y el que mejor
+   resuelve el problema real: iban a ser TRES chips en la tarjeta, y los
+   rellenos —el marron oscuro sobre todo— tiraban del ojo mas que la fila que
+   estaba de verdad elegida. El eco es un recordatorio, no la decision.
+
+   El filete va en `box-shadow: inset` y no en `border`: asi no suma al tamaño
+   de la caja y el chip no se descuadra respecto a la linea base del rotulo.
+
+   Medido: #6E4C36 sobre blanco da 7,70:1, el mas alto de los cinco. */
+.eco{
+  font-family:var(--texto);
+  font-size:var(--t-nota);
+  font-weight:500;
+  letter-spacing:0;
+  padding:.2rem .55rem;
+  border-radius:var(--r-chico);
+  background:var(--blanco);
+  box-shadow:inset 0 0 0 1px var(--marca-cl);
+  color:var(--marca);
+}
+
+/* Sin contestar no lleva caja: una pastilla rellena diciendo "sin elegir" se
+   lee como una respuesta, y es justo lo contrario. Queda el texto, en cursiva
+   y apagado, que es como se escribe lo que falta. */
+.eco[data-vacio]{
+  padding:0;
+  background:none;
+  box-shadow:none;
+  font-style:italic;
+  font-weight:400;
+  color:var(--txt-suave);
+}
+
+
+/* ============ 5b. LA APERTURA PROGRESIVA ============
+
+   Cada pregunta aparece cuando se contesta la anterior. La razon no es el
+   efecto: quien llega a pedir cita de psicologia no siempre llega con la
+   cabeza para tres decisiones apiladas, y una sola pregunta en pantalla pide
+   mucho menos.
+
+   COMO SE ANIMA UNA ALTURA QUE NO SE CONOCE. `height:auto` no se puede animar,
+   asi que el contenido va dentro de una rejilla de una fila y lo que se anima
+   es `grid-template-rows` de `0fr` a `1fr`. El navegador interpola la fraccion
+   y la fila crece hasta el alto real del contenido, sin que nadie lo mida.
+
+   `.abre-in` con `overflow:hidden` y `min-height:0` es obligatorio: recorta lo
+   que sobra mientras la fila es mas baja que su contenido. Sin `min-height:0`
+   un hijo de rejilla se niega a bajar de su tamaño minimo y no colapsa.
+
+   `inert` NO es decorativo. Cerrado el bloque mide cero pero sus radios
+   seguirian en el orden de tabulacion, y el teclado caeria dentro de algo
+   invisible. `inert` lo saca del arbol de accesibilidad y de los eventos.   */
+
+.abre{
+  display:grid;
+  grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows 340ms cubic-bezier(.2,.8,.3,1),
+             opacity 240ms ease-out;
+}
+.abre.abierto{
+  grid-template-rows:1fr;
+  opacity:1;
+}
+/* EL RECORTE NECESITA SITIO A LOS LADOS.
+
+   `overflow:hidden` hace falta para la animacion —recorta lo que sobra
+   mientras la fila crece— pero recorta en los CUATRO lados, y dentro hay
+   fondos que salen a proposito: las filas de opcion llevan `margin:0 -.6rem` y
+   el grupo de planes `-.8rem`, para que el relleno de lo elegido sobresalga.
+
+   Medido: el primer plan iba de x=247 a 541 y el recorte empezaba en 260. Se
+   comia 13 px de su izquierda, y con ellos sus dos esquinas redondeadas.
+
+   No se puede arreglar con `overflow-x:visible`: el CSS no permite mezclar un
+   eje oculto con otro visible —el visible pasa a `auto` y aparece una barra de
+   scroll—. La salida es relleno para que quepa el desbordamiento, y margen
+   negativo del mismo tamaño para que el contenido no se mueva de sitio. */
+.abre-in{
+  overflow:hidden;
+  min-height:0;
+  padding:0 1rem;
+  margin:0 -1rem;
+}
+
+/* La opacidad entra un poco despues de que la altura empiece a crecer: asi no
+   se lee como "algo aparece de la nada" sino como "algo se abre". */
+.abre.abierto{transition-delay:0ms, 60ms}
+
+
+/* ============ 6. OPCIONES ============
+
+   Una fila por opcion: el radio, el nombre, y nada mas. Sin caja, sin foto y
+   sin icono que la sustituya. Es la forma de una carta de menu, que lleva
+   siglos resolviendo "elige una de estas pocas cosas".
+
+   SIN DIVISORIAS, y el motivo es un efecto optico que costo encontrar: una
+   linea puesta con `box-shadow: inset 0 1px 0` SIGUE el `border-radius` del
+   elemento, asi que en una fila con 8 px de radio esa raya se curva hacia
+   abajo en los extremos. Con la raya de la fila siguiente debajo, el ojo
+   cierra las dos curvas y ve una caja redondeada alrededor de cada opcion:
+   justo los rectangulos que se habian quitado, dibujados de nuevo sin querer.
+   El circulo del radio ya marca donde empieza cada opcion.                   */
+
+.opciones{display:flex;flex-direction:column;gap:.3rem}
+
+.op{
+  display:flex;
+  align-items:center;
+  gap:.85rem;
+  min-height:46px;
+  padding:0 .6rem;
+  margin:0 -.6rem;   /* el hover se sale un poco, el texto no se mueve */
+  border-radius:var(--r-medio);
+  cursor:pointer;
+  font-size:var(--t-base);
+  transition:background var(--paso);
+}
+
+/* El radio nativo, escondido pero presente: el teclado, el nombre accesible y
+   el estado los sigue dando el navegador. */
+.op input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+
+/* LA MARCA ES UN CUADRADO DE ESQUINA REDONDEADA, no un circulo, y el motivo se
+   midio sobre esta misma hoja: habia exactamente DOS `border-radius:50%` en
+   todo el archivo, y los dos eran esta marca. El circulo era la unica forma
+   circular de la pantalla, en un sistema donde todo lo demas es rectangulo
+   redondeado — el eco a 8, las filas y los planes a 14, las pestanas a 14, la
+   tarjeta a 18, el ahorro y el boton en pildora.
+
+   Por eso el punto se sentia ajeno. Se probo antes aclararlo, afinarlo y
+   encogerlo, y ninguna convencia: el problema no era el peso, era la forma. Un
+   radio circular es el objeto mas reconocible de un formulario web.
+
+   16 px con radio de 5: 5 sobre 16 guarda la misma proporcion que 8 sobre 24,
+   asi que la marca entra en la familia que ya existe en vez de traer un numero
+   nuevo al sistema.
+
+   LO QUE SE PIERDE, dicho claro: en la web un cuadrado suele significar "elige
+   varias" y un circulo "elige una". El control sigue siendo un `radio` nativo,
+   asi que el teclado y el lector de pantalla lo anuncian bien igual; el riesgo
+   es solo para quien mira con el raton, y lo desactiva el comportamiento — al
+   elegir otra, la anterior se apaga sola.
+
+   `flex:none` es imprescindible: sin el se encoge cuando la etiqueta es larga
+   y deja de ser un cuadrado. */
+.op .dot{
+  flex:none;
+  width:16px;
+  height:16px;
+  border-radius:5px;
+  border:1px solid var(--aro);
+  box-sizing:border-box;
+  transition:border-color var(--paso), background var(--paso), box-shadow var(--paso);
+}
+/* ELEGIDA: se llena entera de salvia y no queda hueco dentro. Eleccion de
+   Edgar entre dos variantes renderizadas — la otra conservaba un hueco blanco
+   al centro.
+
+   El salvia y no el marron oscuro es lo que mas se nota del cambio: antes la
+   marca era la pieza mas oscura de la fila y competia con el canto de
+   seleccion; en salvia lo acompana, y la fila deja de tener dos colores
+   fuertes peleandose.
+
+   Se quita el `box-shadow` a mano: sin esto quedaria el hueco de la version
+   anterior, porque la propiedad no se hereda a cero sola. */
+.op:has(input:checked) .dot{
+  border-color:var(--acc);
+  background:var(--acc);
+  box-shadow:none;
+}
+
+.op:hover,
+.op:has(input:checked){background:var(--fila-viva)}
+
+/* EL CANTO DE LO ELEGIDO, en salvia. Es el color que decide en esta pantalla
+   —el del boton—, asi que marcar con el lo elegido cierra el circulo.
+
+   VA EN `box-shadow: inset` Y NO EN `border`, y no es un capricho: un borde de
+   verdad suma al tamaño de la caja, asi que al seleccionar la fila creceria
+   2 px y el texto se moveria. Con la sombra interior el canto se pinta DENTRO
+   y nada se desplaza.
+
+   Medido: #5A7060 sobre el tinte #EDE2D2 da 4,22:1, por encima del 3:1 que
+   pide WCAG para lo que no es texto.
+
+   Separa el canto del hover: al pasar el raton solo cambia el fondo, al elegir
+   aparece el canto. Antes los dos estados se veian exactamente igual salvo por
+   el punto y la negrita. */
+.op:has(input:checked){
+  font-weight:600;
+  box-shadow:inset 0 0 0 var(--canto-elegido) var(--acc);
+}
+.op:has(input:focus-visible){outline:2px solid var(--acc);outline-offset:1px}
+
+
+/* ============ 7. MODALIDAD Y SU NOTA ============
+
+   La columna de la modalidad tiene dos opciones contra las cuatro de la de al
+   lado, asi que sobraban unos 130 px de aire sin funcion. Debajo entra el dato
+   que le corresponde a lo elegido: en linea, cuanto dura y por donde;
+   presencial, la direccion. Es informacion que la persona necesita justo ahi,
+   no decoracion para tapar un hueco.
+
+   `:not([hidden])` es obligatorio: sin el, este `display` de autor le gana al
+   `[hidden]` del navegador y la nota se veria siempre.                       */
+
+/* LA NOTA ES EL SEPARADOR, no el panel: aqui viven la linea y su aire. El
+   panel es `.modo-caja`, dentro. Estan separados porque una raya pegada al
+   canto de arriba de un panel se lee como un error de maquetacion, no como una
+   divisoria.
+
+   `:not([hidden])` sigue siendo obligatorio: sin el, este `display` de autor le
+   gana al `[hidden]` del navegador y la nota se veria siempre. */
+.modo-nota:not([hidden]){
+  display:block;
+  margin:1.5rem 0 0;
+  padding-top:1.25rem;
+  border-top:1px solid var(--linea);
+  font-size:var(--t-aux);
+  line-height:1.6;
+  color:var(--txt-suave);
+}
+
+/* EL PANEL, A TODO EL ANCHO DE LA COLUMNA. Decision de Edgar entre cinco
+   variantes renderizadas.
+
+   QUE ARREGLA, medido: la columna mide 407 px y el texto de la direccion 186,
+   asi que sobraban 194 px a la derecha — casi la mitad de la columna, leyendose
+   como un hueco. Ocupando el ancho entero, ese espacio pasa a ser relleno del
+   panel: el vacio baja a 55 px y ya no se lee como que falta algo.
+
+   ES LA UNICA CAJA DE LA PANTALLA, y se sabe: de esta vista se quitaron todas
+   las cajas a proposito, y las opciones no llevan ninguna. Esta se queda porque
+   no es una opcion que se elige, es un dato que acompana a lo elegido — y
+   porque es lo que define el espacio que antes estaba suelto.
+
+   El tinte es `--fila-viva`, el mismo de la fila elegida. No es casualidad ni
+   descuido: la nota pertenece a la opcion que esta marcada justo encima, y
+   compartir el tinte es lo que dice que son la misma cosa. */
+.modo-caja{
+  display:flex;
+  align-items:flex-start;
+  gap:.6rem;
+  padding:1.1rem 1.2rem;
+  border-radius:var(--r-medio);
+  background:var(--fila-viva);
+}
+.modo-nota .ico{font-size:17px;color:var(--marca);margin-top:.15rem}
+
+/* El texto de la nota, en columna. Hacia falta para que el boton pueda irse a
+   su propia linea y a la derecha; pegado al final del parrafo quedaba
+   amontonado contra la ultima palabra de la direccion. */
+/* El texto de la nota, en columna, para que el boton del mapa pueda irse a su
+   propia linea debajo. Pegado al final del parrafo quedaba amontonado contra
+   la ultima palabra de la direccion.
+
+   OJO CON EL SELECTOR: es `.modo-caja > span` y no `.modo-nota > span`. Al
+   meter el panel, el bloque de texto bajo un nivel, y el selector viejo pasaba
+   a apuntar AL PANEL: lo ponia en columna, con lo que la chincheta se iba
+   encima del nombre y el boton del mapa se metia dentro de la linea de la
+   direccion. Tres defectos de una sola regla mal dirigida. */
+.modo-caja > span{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  /* `flex:1` para que el cuerpo ocupe el panel: es lo que permite que el pie
+     reparta el boton a la izquierda y la duracion a la derecha. Sin el, el
+     cuerpo mide su linea mas larga y el pie no tiene ancho que repartir. */
+  flex:1;
+  min-width:0;
+}
+
+/* El consejo, separado del titulo. */
+.modo-calida{margin:.4rem 0 0;line-height:1.65}
+
+/* EL PIE DEL PANEL: el boton a la izquierda y la duracion a la derecha, en la
+   misma fila y centrados el uno con el otro. Idea de Edgar.
+
+   `space-between` en vez de un margen automatico porque asi la fila funciona
+   igual con dos piezas y con una. */
+.modo-pie{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  width:100%;
+  /* 1,4rem = 22,4 px, casi el alto de una linea de la direccion. Estaba en
+     .9rem y el boton quedaba pegado a los descendentes de la ultima linea.
+
+     No es un numero a ojo: separa MAS de lo que el panel deja por debajo
+     -1,1rem de relleno-, y hace falta que sea asi. Si el aire de arriba fuera
+     menor que el de abajo, la fila del pie se leeria como que pertenece al
+     parrafo en vez de ser el pie del panel. */
+  margin-top:1.4rem;
+}
+
+/* En linea no tiene boton, asi que la duracion se queda sola a la derecha. Se
+   probo ponerla arriba, al nivel del titulo, para que los dos paneles tuvieran
+   la misma estructura: se descarto porque en 407 px no caben el titulo y el
+   dato en la misma fila y los titulos se partian en dos. */
+.modo-pie-sola{justify-content:flex-end}
+
+/* LA DURACION. `white-space:nowrap` para que no se parta nunca: "60 minutos de
+   consulta" cortado en dos lineas dentro de una fila de pie deja de leerse
+   como un dato y parece un descuido. */
+.dur{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  white-space:nowrap;
+}
+.dur svg{width:1em;height:1em;flex:none;font-size:15px;color:var(--marca)}
+.dur b{font-weight:600;color:var(--txt)}
+
+/* El nombre del sitio se despega de la direccion. Iban seguidos con el mismo
+   interlineado y se leian como un solo parrafo de cuatro lineas.
+
+   A `--t-base`, el cuerpo del texto normal: es el nombre de un sitio al que
+   alguien tiene que ir, no un pie de foto. */
+.modo-nota strong{
+  display:block;
+  margin-bottom:.4rem;
+  font-size:var(--t-base);
+  font-weight:600;
+  color:var(--txt);
+}
+
+/* LA DIRECCION, a `--t-aux`, el mismo cuerpo que el resto de la nota.
+
+   Se pintaba a `--t-nota` -12,64 px, el tamano de lo accesorio- y no era una
+   decision: la heredo del diseno viejo, de cuando la direccion vivia dentro de
+   una caja apretada, porque el porte reutilizo el nombre de clase
+   `.lugar-dir`. Aquella regla estaba en reservar.css y se ha ido con esto. */
+.lugar-dir{
+  margin:0;
+  font-size:var(--t-aux);
+  line-height:1.65;
+  color:var(--txt-suave);
+}
+/* EL BOTON DEL MAPA. Salvia, el color de la accion en esta pantalla, para que
+   se lea como "pulsa aqui y te llevo" y no como una palabra subrayada mas
+   dentro de un parrafo.
+
+   EN REPOSO ES UN CUADRADO DE 38 px CON LA FLECHA, y al pasar por encima crece
+   y ensena "Como llegar". Idea de Edgar, y resuelve dos cosas de una: el icono
+   solo no dice a donde lleva, y el boton dejo de flotar en un hueco.
+
+   38 px: por encima de los 24 que pide el criterio 2.5.8 de WCAG para el tamano
+   minimo de un objetivo, por debajo de los 44 que recomienda la practica para
+   dedos. Es una accion secundaria dentro de una nota de escritorio, y subirla a
+   44 la convertiria en la pieza mas grande de la columna.
+
+   VA A LA IZQUIERDA, debajo de la direccion, y no es una preferencia: creciendo
+   hacia la derecha desde el canto derecho se saldria de la columna. Antes
+   estaba pegado a ese canto con `align-self:flex-end` y quedaba un hueco entre
+   la direccion y el, con el boton sin pertenecer a nada.
+
+   CUADRADO CON ESQUINA REDONDEADA, no circulo: en esta pantalla los UNICOS
+   circulos son los radios. Todo lo demas son rectangulos redondeados —el eco a
+   8 px, las filas y los planes a 14, las pestanas a 14, la tarjeta a 18—, asi
+   que un boton redondo seria la forma rara del sistema y ademas entraria en la
+   familia visual de los puntos de seleccion, en una columna llena de ellos. */
+.modo-nota .mapa{
+  display:inline-flex;
+  align-items:center;
+  flex:none;
+  height:38px;
+  padding:0;
+  border-radius:var(--r-chico);
+  background:var(--acc);
+  color:#fff;
+  text-decoration:none;
+  /* EL ARO ES DEL COLOR DEL PANEL, no blanco. El aro existe para separar el
+     boton del fondo que tiene detras, y ese fondo ya no es la tarjeta blanca
+     sino el tinte del panel: un aro blanco aqui dibujaria un halo. */
+  box-shadow:0 0 0 3px var(--fila-viva), 0 1px 4px rgba(110,76,54,.28);
+  transition:background var(--paso), box-shadow var(--paso);
+}
+
+/* La caja de la flecha es cuadrada y de 38, asi que en reposo el boton entero
+   mide eso: el cuadrado de siempre. `flex:none` para que no se deforme cuando
+   la etiqueta crece. */
+.modo-nota .mapa-flecha{
+  display:grid;
+  place-items:center;
+  flex:none;
+  width:38px;
+  height:38px;
+}
+
+/* LA FLECHA, EN DIAGONAL. Apuntando arriba a la derecha, que es la orientacion
+   de "llevame alli" en los mapas; recta hacia arriba se lee mas como el norte
+   de una brujula que como una indicacion.
+
+   Se consigue rotando la misma geometria 45 grados y no dibujando otra ruta: el
+   path de cuatro puntos ya esta limpio, y rotarlo conserva esa limpieza exacta.
+
+   `fill` hay que declararlo: al pasar la flecha al sprite se quedo sin el
+   `fill="currentColor"` que llevaba de atributo, y un SVG sin `fill` se pinta
+   del negro por omision. Va en CSS y no en el marcado porque el CSS le gana a
+   los atributos de presentacion. */
+.modo-nota .mapa-flecha svg{
+  width:17px;
+  height:17px;
+  fill:currentColor;
+  transform:rotate(45deg);
+  transform-origin:50% 50%;
+}
+
+/* COMO SE ANIMA UN ANCHO QUE NO SE CONOCE. `width:auto` no se puede animar, asi
+   que la etiqueta vive en una rejilla de una columna y lo que se anima es
+   `grid-template-columns` de `0fr` a `1fr`. El navegador interpola la fraccion
+   y la columna crece hasta el ancho real del texto sin que nadie lo mida.
+
+   Es EL MISMO TRUCO que usa la apertura progresiva de esta pantalla —alli con
+   filas, aqui con columnas—, asi que no entra una tecnica nueva al proyecto. */
+.modo-nota .mapa-et{
+  display:grid;
+  grid-template-columns:0fr;
+  transition:grid-template-columns 260ms cubic-bezier(.2,.8,.3,1);
+}
+
+/* El recortador. `overflow:hidden` y `min-width:0` son obligatorios: sin ellos
+   el texto se niega a bajar de su ancho minimo y la columna no colapsa.
+
+   Y NO LLEVA RELLENO, que es la trampa de todo esto: una columna `0fr` se
+   resuelve como `minmax(auto, 0fr)` y ese minimo `auto` incluye el relleno del
+   elemento, asi que con el aire aqui el boton cerrado medía 55 px en vez de 38.
+   `min-width:0` no lo arregla — limita la caja de contenido, no el relleno. */
+.modo-nota .mapa-et > span{
+  overflow:hidden;
+  min-width:0;
+}
+
+/* El texto, con su aire. El relleno va aqui, en la capa de dentro, por lo que
+   dice el comentario de arriba.
+
+   EL TEXTO SIGUE EN EL ARBOL DE ACCESIBILIDAD estando recortado, porque
+   `overflow:hidden` no saca nada de ahi —a diferencia de `display:none`—. Por
+   eso el boton se llama "Como llegar" siempre, se pase o no el raton. */
+.modo-nota .mapa-lbl{
+  display:block;
+  padding-left:.9rem;
+  padding-right:.15rem;
+  white-space:nowrap;
+  font-size:var(--t-nota);
+  font-weight:600;
+}
+
+/* `:focus-visible` va junto al hover y no es un anadido de cortesia: quien
+   navega con el teclado llega aqui y, sin esto, se encuentra una flecha sin
+   nombre. */
+.modo-nota .mapa:hover .mapa-et,
+.modo-nota .mapa:focus-visible .mapa-et{
+  grid-template-columns:1fr;
+}
+
+.modo-nota .mapa:hover{
+  background:var(--acc-dp);
+  box-shadow:0 0 0 3px var(--fila-viva), 0 2px 7px rgba(110,76,54,.34);
+}
+.modo-nota .mapa:focus-visible{
+  outline:2px solid var(--marca);
+  outline-offset:3px;
+}
+
+/* EN TACTIL NACE ABIERTO. En un telefono no hay raton que pasar por encima, y
+   una flecha sola no dice "como llegar": sin esto, en movil el boton se
+   quedaria para siempre siendo un cuadrado con un simbolo. */
+@media (hover:none){
+  .modo-nota .mapa-et{grid-template-columns:1fr}
+}
+
+
+/* ============ 8. PLANES ============
+
+   SIN CAJA, y es la decision que mas cambia el tono de la pantalla. Eran las
+   unicas tres cajas de toda la tarjeta, asi que el dinero era el elemento mas
+   fuerte de una pantalla de psicologia. Ahora son tres columnas con su cifra y
+   se marcan igual que cualquier otra opcion: con el punto y la negrita, porque
+   son la misma clase de decision.                                            */
+
+/* LA DIVISORIA DEL GRUPO DE ABAJO va en `box-shadow`, no en `border-top`.
+
+   Con `border-top` en un `fieldset`, el `legend` le abre una MUESCA: el borde
+   se corta por donde esta el titulo y reaparece a su derecha. Por eso parecia
+   una linea que salia del rotulo en vez de una divisoria que cruza. Es
+   comportamiento normal del par fieldset/legend, no un fallo del CSS.
+
+   `box-shadow` no lo muerde el legend, asi que la linea cruza entera. */
+.planes-zona{
+  /* Sin linea propia: la de arriba la pone la rejilla. */
+  margin-top:1.75rem;
+}
+
+/* EL RELLENO NEGATIVO VA EN EL GRUPO, NO EN CADA PLAN.
+
+   Cada plan tenia `margin:0 -.6rem` para que su fondo sobresaliera igual que
+   en las filas de terapia. En UNA columna eso funciona: el color se sale hacia
+   hueco vacio. En una rejilla de TRES no: cada plan se ensancha 9,6 px por
+   lado y el hueco entre ellos mide 4,8, asi que los fondos se solapaban
+   14,4 px y el color del primero llegaba hasta el radio del segundo.
+
+   Se saca al contenedor: el grupo entero se desplaza a la izquierda para que
+   el texto siga alineado con el resto de la tarjeta, y cada plan se queda
+   dentro de su celda sin pisar a nadie. */
+.planes{
+  display:grid;
+  /* LAS TRES MIDEN UN TERCIO EXACTO, y es decision de Edgar tras verlo.
+
+     Se probo `max-content` para que cada caja midiera su contenido y no
+     quedara hueco muerto dentro —con `1fr` sobran entre 114 y 170 px a la
+     derecha del texto, y el relleno de lo elegido lo pinta—. Pero al mirarlo
+     era peor: los tres nombres arrancaban en x distintas con huecos desiguales
+     y el elegido quedaba como una losa torcida.
+
+     El aire interior se lee mejor que el desalineo. Tres opciones en fila son
+     una comparacion, y una comparacion pide que las columnas se correspondan;
+     que el relleno del elegido sobre por la derecha es un precio menor que
+     romper esa correspondencia. */
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.5rem;
+  margin:0 -.8rem;
+}
+
+/* LA TARJETA SON TRES BANDAS APILADAS, no una rejilla de celdas: la cabecera,
+   la linea, y la fila del dinero.
+
+   POR QUE SE CAMBIO, medido sobre la version anterior: del nombre al precio
+   habia 3 px, que entre dos lineas de 16 px es una colision y no un grupo; y
+   del ahorro al canto derecho quedaban 111 px muertos, porque el badge vivia
+   en una columna `1fr` con `justify-self:start`. No estaba a la derecha —
+   estaba a la izquierda con todo el hueco detras.
+
+   Apilado en bandas, cada una reparte su propio ancho y el ahorro llega al
+   canto de verdad. */
+.plan{
+  position:relative;
+  display:block;
+  padding:.85rem .8rem;
+  border-radius:var(--r-medio);
+  cursor:pointer;
+  transition:background var(--paso);
+}
+
+/* LA CABECERA: la marca y el nombre, lo que se elige. */
+.plan-cab{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+
+/* LA LINEA.
+
+   NO LLEGA A LOS CANTOS —decision de Edgar—, y el aire no es un numero a ojo:
+   son .8rem por lado, exactamente el relleno lateral de la tarjeta. Asi la
+   linea queda insertada el doble de ese relleno desde el borde, que es una
+   relacion del sistema y no una medida inventada.
+
+   Y ES DEL COLOR DE LAS DIVISORIAS de la pantalla, `--linea`, la misma que
+   separa las dos columnas y el grupo de planes. NO se tiñe al elegir: probamos
+   pasarla a salvia con la tarjeta elegida y la decision fue que se quede
+   igual, para que sea la misma linea en todas partes. */
+.plan-sep{
+  display:block;   /* un span es `inline`, y lo inline ignora `height` */
+  height:1px;
+  margin:.7rem .8rem;
+  background:var(--linea);
+}
+
+/* LA FILA DEL DINERO: el precio a la izquierda, el ahorro al canto derecho.
+
+   `space-between` y no un margen automatico porque asi la fila funciona igual
+   con dos piezas y con una — la consulta suelta no lleva ahorro. */
+.plan-dinero{
+  display:flex;
+  /* `center` y no `baseline`: el badge es una pastilla con su propio relleno,
+     asi que alinear por la linea de las letras lo deja visiblemente alto
+     respecto a la cifra. Centrados entre si, las dos piezas se equilibran. */
+  align-items:center;
+  justify-content:space-between;
+  gap:.8rem;
+}
+.plan input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.plan:hover,
+.plan:has(input:checked){background:var(--fila-viva)}
+.plan:has(input:checked){box-shadow:inset 0 0 0 var(--canto-elegido) var(--acc)}
+.plan:has(input:focus-visible){outline:2px solid var(--acc);outline-offset:1px}
+
+/* La misma marca que en las filas, por la misma razon. Ya no necesita celda ni
+   `align-self`: vive dentro de la cabecera, que la centra con el nombre. */
+.plan .dot{
+  flex:none;
+  width:16px;height:16px;
+  border-radius:5px;
+  border:1px solid var(--aro);
+  box-sizing:border-box;
+  transition:border-color var(--paso), background var(--paso), box-shadow var(--paso);
+}
+.plan:has(input:checked) .dot{
+  border-color:var(--acc);
+  background:var(--acc);
+  box-shadow:none;
+}
+
+.plan-nom{font-size:var(--t-base);line-height:1.3}
+.plan:has(input:checked) .plan-nom{font-weight:600}
+
+.plan-precio{
+  font-size:var(--t-base);
+  /* Tabulares, y no es gusto: obliga a que todos los digitos ocupen lo mismo y
+     es lo que mantiene los tres precios alineados. Sin esto un "1" mide menos
+     que un "3" y las cifras bailan al cambiar de terapia. */
+  font-variant-numeric:tabular-nums;
+  color:var(--txt-suave);
+}
+.plan:has(input:checked) .plan-precio{color:var(--txt)}
+
+/* El ahorro NO es una insignia. Un badge de oferta en una consulta de
+   psicologia suena a rebajas; una nota debajo del precio dice lo mismo sin
+   levantar la voz. La altura minima evita que la fila salte cuando es cero. */
+/* EL AHORRO, COMO BADGE. Es decision de Edgar por encima de mi objecion, que
+   dejo escrita porque sigue siendo verdad: una insignia de ahorro en una
+   consulta de psicologia tira hacia el registro de rebajas, y esta pantalla
+   tiene que bajar el pulso.
+
+   Asi que el badge esta hecho para NO gritar:
+     · salvia lavada de fondo, el color que este proyecto usa para lo que va
+       bien, no rojo ni naranja de oferta;
+     · sin borde, porque un contorno lo convertiria en una pegatina;
+     · 12,6 px, el tamaño de lo accesorio, no del dato;
+     · texto en `--acc-dp` y no en `--acc`: medido, #4A5E50 sobre #E8EDE6 da
+       5,88:1, mientras el salvia normal se queda en 4,51 — pasa AA por los
+       pelos, y un badge pequeño no es sitio para ir justo de contraste.
+
+   `nowrap` es obligatorio: "Ahorras 15 $" partido en dos lineas dentro de una
+   pastilla se ve roto, y con la caja midiendo su contenido puede pasar. */
+.plan-ahorro:not(:empty){
+  /* SIN COLOCACION DE REJILLA. Llevaba `grid-column`, `grid-row` y
+     `justify-self:start`, y con la tarjeta en bandas el padre es flex: esas
+     tres propiedades no hacen nada ahi. Hacian falta cuando la pastilla vivia
+     en una columna `1fr` y sin `start` se estiraba hasta el borde de la celda.
+     Ahora la fila del dinero la manda al canto derecho con `space-between`, y
+     una pastilla en flex mide su texto por defecto.
+
+     El `margin-left:.35rem` se fue por lo mismo: el hueco entre el precio y la
+     pastilla lo pone ahora el `gap` de la fila, y mantener los dos dejaria dos
+     fuentes para el mismo espacio. */
+  flex:none;
+  /* Aire dentro: 10,4 px a cada lado y 2,9 arriba y abajo. Una capsula sin
+     relleno horizontal no se lee como capsula, se lee como un rectangulo
+     pegado al texto. */
+  padding:.18rem .65rem;
+  border-radius:var(--r-pill);
+  background:var(--acc-sv);
+  font-size:var(--t-nota);
+  font-weight:500;
+  line-height:1.5;
+  color:var(--acc-dp);
+  white-space:nowrap;
+}
+
+.nota{
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+  margin:1.1rem 0 0;
+  font-size:var(--t-nota);
+  color:var(--txt-suave);
+}
+/* 16 px y no 14: el portapapeles con lapiz son dos objetos, y a 14 los dos
+   contornos se juntan. La salvia es la misma que ya usaba la nota. */
+.nota .ico{font-size:16px;color:var(--acc)}
+
+
+/* ============ 9. PIE ============
+
+   Con los planes callados, el total puede ser lo mas alto de la pantalla sin
+   competir con nada. Va en Fraunces porque es una cifra, y las cifras son el
+   otro sitio donde esa letra trabaja.                                        */
+
+/* SIN DIVISORIA. La llevaba, y tenia sentido cuando el pie era una fila con
+   dos cosas —el total a la izquierda y el boton a la derecha—: la linea decia
+   "aqui acaban las preguntas y empieza el resumen". Al quitar el total, el pie
+   se quedo con un boton solo, y una linea que cruza la tarjeta entera para
+   anunciar un boton alineado a la derecha pesa mas que lo que anuncia.
+
+   El aire hace el mismo trabajo: los 2,25rem de separacion dicen "esto ya no
+   es una pregunta" sin dibujar nada. */
+.pie{
+  display:flex;
+  align-items:center;
+  gap:1rem 1.5rem;
+  flex-wrap:wrap;
+  margin-top:2.25rem;
+}
+
+/* El total se retiro: repetia el precio del plan elegido. Con el se fue la
+   unica cifra grande de la pantalla, y con ella el token --t-cifra. */
+
+/* Dice POR QUE el boton esta apagado, y desaparece cuando deja de estarlo. Un
+   boton muerto sin explicacion deja a la persona sin saber que le falta. */
+.falta:not([hidden]){
+  margin:0;
+  font-size:var(--t-nota);
+  color:var(--txt-suave);
+}
+
+.seguir{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  min-height:48px;
+  /* Mas ancho ahora que no hay icono: sin el, "Horarios" se quedaba en un
+     boton corto y el elemento final de la pantalla no puede ser el mas
+     pequeño de su fila. */
+  padding:0 2.2rem;
+  margin-left:auto;
+  border:0;
+  border-radius:var(--r-pill);
+  background:var(--acc);
+  color:#fff;
+  font:inherit;
+  font-size:.97rem;
+  font-weight:600;
+  cursor:pointer;
+  /* Sombra en el tono de la salvia, no negra ni marron: la de una superficie
+     de color se tiñe de su propio color o se ve sucia. */
+  box-shadow:0 1px 2px rgba(74,94,80,.18), 0 6px 16px -8px rgba(74,94,80,.45);
+  transition:background var(--paso), box-shadow var(--paso), transform 90ms ease-out;
+}
+.seguir:hover:not(:disabled){
+  background:var(--acc-dp);
+  box-shadow:0 1px 2px rgba(74,94,80,.2), 0 8px 20px -8px rgba(74,94,80,.5);
+}
+
+/* RESPUESTA AL PULSAR, que es lo que le faltaba de verdad. El boton no daba
+   ninguna señal tactil: se pulsaba y no pasaba nada hasta que la pagina
+   cambiaba. `scale` y no `translateY` a proposito — se siente como que el
+   boton te responde, no como que se mueve de sitio— y la sombra se recoge a la
+   vez, que es lo que vende el gesto de hundirse. */
+.seguir:active:not(:disabled){
+  transform:scale(.97);
+  box-shadow:0 1px 2px rgba(74,94,80,.22);
+}
+.seguir:focus-visible{outline:2px solid var(--marca);outline-offset:3px}
+
+/* Apagado deja de tener relleno. Un boton gris con su icono dentro no se lee
+   como "todavia no", se lee como averiado. Queda el contorno y el texto en el
+   gris de lo inerte, que da 4,94:1 sobre blanco y por tanto se sigue leyendo. */
+/* El calendario, `flex:none` para que no se deforme si el boton se estrecha. */
+.seguir svg{width:18px;height:18px;flex:none}
+
+/* Apagado no lleva relleno NI sombra: un boton inerte no flota. Queda el
+   contorno y el texto en el gris de lo inerte, que da 4,94:1 sobre blanco. */
+.seguir:disabled{
+  background:none;
+  border:1px solid var(--linea);
+  color:#625E56;
+  box-shadow:none;
+  cursor:not-allowed;
+}
+
+
+/* ============ 10. ACCESORIOS ============
+
+   Aqui vivian `.pendiente` -los dos paneles de relleno de la vista taller- y
+   `.solo-lector` -la region que solo oye un lector de pantalla-. Las dos se
+   fueron al llegar a la pagina real: los paneles 2 y 3 son los de verdad, y la
+   region usa `.sr-only`, que ya esta en reservar.css y recorta el elemento a un
+   pixel igual. Dos clases con el mismo trabajo y distinto nombre es como se
+   empieza a ensuciar una hoja.                                               */
+
+
+/* ============ 10b. CUANDO EL CATALOGO NO LLEGA ============
+
+   El aviso de que una lectura fallo. Va DENTRO de la pregunta afectada, en el
+   sitio exacto donde falta el dato, para que se lea en el momento de decidir.
+
+   No lleva rojo ni triangulo de alarma. No es culpa de quien esta reservando y
+   tampoco es grave: es "esto no cargo, prueba otra vez". El registro de esta
+   pantalla es suave, y un aviso de error gritando seria la pieza mas fuerte de
+   la pagina por algo que se arregla con un clic.                             */
+
+.fallo-catalogo{
+  /* CRUZA LA FILA ENTERA. Sin esto caia en la primera celda de la rejilla de
+     tres columnas y empujaba "1 Consulta" a la segunda, asi que el aviso se
+     leia como si fuera una de las opciones. */
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  flex-wrap:wrap;
+  margin:0;
+  padding:.85rem 1rem;
+  border-radius:var(--r-medio);
+  background:var(--fila-viva);
+  box-shadow:inset 0 0 0 1px var(--marca-cl);
+  font-size:var(--t-aux);
+  color:var(--txt-suave);
+}
+
+/* El boton del reintento: subrayado y del color de la marca, para que se lea
+   como algo que se pulsa sin competir con el boton principal del pie, que es el
+   unico relleno de la pantalla. */
+.fallo-otra{
+  border:0;
+  padding:0;
+  background:none;
+  font-family:inherit;
+  font-size:inherit;
+  font-weight:600;
+  color:var(--marca);
+  text-decoration:underline;
+  text-underline-offset:2px;
+  cursor:pointer;
+}
+.fallo-otra:hover{color:var(--txt)}
+.fallo-otra:disabled{color:var(--txt-suave);text-decoration:none;cursor:default}
+.fallo-otra:focus-visible{outline:2px solid var(--marca);outline-offset:3px;border-radius:2px}
+
+
+/* ============ 12. PASO 2 · EL CALENDARIO Y LAS HORAS ============
+
+   LAS DOS COSAS A LA VEZ, en dos columnas. Es el patron de las referencias del
+   sector —Calendly y Cal.com ensenan mes y horas en una sola pantalla— y
+   resuelve el riesgo de un calendario de mes: elegir un dia y descubrir despues
+   que no tenia huecos.
+
+   LAS DOS COLUMNAS MIDEN LO MISMO. Estaba en `400px 1fr`, asi que el mes se
+   quedaba fijo y las horas se comian todo el resto: el lado izquierdo tenia
+   menos espacio y se veia descompensado. Decision de Edgar: mitad y mitad.
+
+   `minmax(0,1fr)` y no `1fr` a secas: sin el minimo en cero, una rejilla de
+   siete columnas dentro se niega a bajar de su ancho minimo y desborda la
+   columna en vez de encogerse.                                               */
+
+.cal-y-horas{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:2.75rem;
+  align-items:start;
+  margin-top:1.5rem;
+}
+
+
+/* ---------- LA CABECERA DEL MES ---------- */
+
+.cal-cab{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  margin:0 0 1rem;
+}
+.cal-mes{
+  margin:0;
+  font-family:var(--display);
+  font-size:1.15rem;
+  font-weight:600;
+  color:var(--txt);
+}
+/* MAYUSCULA SOLO EN LA PRIMERA LETRA, con `::first-letter` y no con
+   `text-transform:capitalize`. `capitalize` la pone en CADA palabra, y el
+   espanol escribe los meses en minuscula y une con "de": salia "Septiembre De
+   2026" y "Martes, 15 De Septiembre". */
+.cal-mes::first-letter{text-transform:uppercase}
+
+.cal-nav{display:flex;gap:.35rem}
+.cal-nav button{
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  padding:0;
+  border:1px solid var(--linea);
+  border-radius:var(--r-chico);
+  background:none;
+  color:var(--marca);
+  cursor:pointer;
+  transition:background var(--paso), border-color var(--paso);
+}
+.cal-nav button:hover:not(:disabled){background:var(--fila-viva);border-color:var(--aro)}
+.cal-nav button:disabled{color:var(--marca-cl);cursor:default}
+.cal-nav button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.cal-nav svg{
+  width:16px;height:16px;
+  fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+
+
+/* ---------- LA SEMANA Y LOS DIAS ---------- */
+
+.cal-semana{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  margin:0 0 .4rem;
+}
+.cal-semana span{
+  text-align:center;
+  font-size:.7rem;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--txt-suave);
+}
+
+/* El contenedor de las semanas. Le falta a proposito `grid-template-columns`:
+   las columnas las pone cada fila, porque cada `.cal-fila` es un `role="row"`
+   del `role="grid"` y la rejilla de siete columnas vive dentro de ella. Aqui
+   solo se separa una semana de la siguiente. */
+.cal-dias{display:grid;gap:8px}
+
+/* HUECO ENTRE LOS DIAS, y hace falta desde que el dia cerrado tiene fondo: sin
+   el, las celdas van canto con canto y los grises contiguos se FUSIONAN en una
+   mancha, en vez de leerse como siete dias. Antes no importaba porque nada
+   tenia relleno salvo el dia elegido, que siempre esta solo.
+
+   8 px Y NO 4. Con 4 seguian fusionandose, y el motivo es el radio: con
+   esquinas de 8 px, dos pastillas a 4 px de distancia tienen sus curvas casi
+   tocandose y el ojo las une en una barra. El hueco tiene que ser al menos del
+   tamano del radio para que cada dia se lea por separado. */
+.cal-fila{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+
+/* UN TOPE AL ALTO DE LA FILA. Con las columnas al 50 % el mes puede pasar de
+   500 px de ancho, y con `aspect-ratio:1` eso daria celdas de 70 px: un numero
+   de dos cifras nadando en un cuadrado enorme, y un calendario mas alto que la
+   columna de horas que tiene al lado. El tope las deja cuadradas hasta 56 px y
+   a partir de ahi solo crecen a lo ancho. */
+.cal-dia{max-height:52px}
+.cal-dia{display:grid;place-items:center}
+.cal-fuera{visibility:hidden}
+
+/* EL NUMERO DEL DIA.
+
+   SIN REJILLA DE CELDAS —eleccion de Edgar sobre tres variantes
+   renderizadas—: los numeros respiran y lo unico que pinta color es el dia
+   elegido. Con las 42 celdas dibujadas, la unica que importa competia con 41
+   rectangulos mas.
+
+   EN FRAUNCES, la tipografia de los rotulos. Un calendario es sobre todo
+   cifras, asi que dejarlas en la de texto era desperdiciar la unica pieza con
+   caracter que tiene esta pantalla.
+
+   CUADRADO DE ESQUINA REDONDEADA, no circulo, como el resto de la hoja: los
+   circulos se retiraron de esta vista a proposito y meter 42 los habria
+   devuelto el mismo dia. */
+.cal-num{
+  position:relative;
+  width:100%;
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  border:0;
+  padding:0;
+  background:none;
+  border-radius:var(--r-chico);
+  font-family:var(--texto);
+  font-size:1.05rem;
+  font-weight:500;
+  font-variant-numeric:tabular-nums;
+  color:var(--txt);
+  cursor:pointer;
+  transition:background var(--paso), color var(--paso);
+}
+.cal-num:not([aria-disabled]):hover{background:var(--fila-viva)}
+.cal-num:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+
+/* APAGADO ES LO CERRADO, y esto es lo contrario de lo que suele hacerse. Se
+   midio la agenda real: 27 dias con hueco de 31, solo cierran los domingos.
+   Marcar lo disponible habria encendido casi todo el mes sin informar de nada;
+   apagar lo cerrado si dice algo.
+
+   GRIS DE VERDAD, no el beige de la marca. Estaba en `--marca-cl`, un tostado
+   calido, y la nota de abajo decia "los dias en gris": ninguno era gris, asi
+   que la frase no se correspondia con lo que se veia.
+
+   Y el cambio no podia ser de claridad: medido, `--marca-cl` ya esta a 2,00:1
+   del blanco y a 5,48 del numero activo — bajarlo mas lo haria desaparecer.
+   Lo que faltaba era el TONO, y luego el FONDO.
+
+   EL FONDO GRIS lo pidio Edgar para que el dia cerrado se note, y obliga a
+   mover el numero a la vez: con relleno `#EFF0F1` detras, el gris anterior
+   —#B8BCC0— caia a 1,67:1 y el numero se habria borrado. `#8A939B` da 2,74:1
+   sobre ese fondo: se lee sin dudar y sigue leyendose apagado.
+
+   2,74 esta por debajo del 4,5:1 del texto normal a proposito y con permiso:
+   WCAG 1.4.3 exime a los componentes inactivos, y un dia sin horarios no es
+   algo que haya que poder leer con esfuerzo, es algo que hay que poder
+   descartar de un vistazo.
+
+   EL RELLENO NO ES PARA TODOS LOS DIAS NO ELEGIBLES, y esto costo una vuelta:
+   puesto en todos, 14 de los 17 grises eran dias YA PASADOS, y el mes se leia
+   como medio cerrado cuando 27 de 31 tienen hueco. Esa masa gris era lo que
+   hacia que se viera amontonado.
+
+   Son dos cosas distintas: un dia pasado no informa de nada y solo tiene que
+   no invitar; un domingo cerrado si informa. El relleno se queda para el
+   segundo, que en un mes normal son tres o cuatro pastillas en vez de
+   diecisiete. */
+.cal-num[aria-disabled]{
+  color:#8A939B;
+  cursor:default;
+}
+
+/* LO CERRADO PERO POR VENIR: pastilla gris. Es lo que dice "este dia existe y
+   no tiene hueco". */
+.cal-num[aria-disabled]:not([data-pasado]){
+  background:#EFF0F1;
+}
+
+/* LO QUE YA PASO: solo el numero apagado, sin relleno. No hay nada que decidir
+   ahi, asi que no pinta. Y mas claro todavia que lo cerrado, porque entre los
+   dos el que importa es el otro. */
+.cal-num[data-pasado]{
+  color:#C9CDD1;
+}
+
+/* HOY, con un punto debajo del numero. No lleva relleno ni borde para no
+   competir con el dia elegido, que es el unico que puede pintar color. */
+.cal-hoy::after{
+  content:"";
+  position:absolute;
+  bottom:6px;
+  left:50%;
+  width:4px;
+  height:4px;
+  margin-left:-2px;
+  border-radius:var(--r-pill);
+  background:var(--marca);
+}
+
+.cal-num[aria-pressed="true"]{
+  background:var(--acc);
+  color:var(--blanco);
+}
+/* Sobre el salvia, el punto de hoy pasa a blanco o desaparece. */
+.cal-num[aria-pressed="true"].cal-hoy::after{background:var(--blanco)}
+
+.cal-nota{
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+  margin:.9rem 0 0;
+  font-size:var(--t-nota);
+  color:var(--txt-suave);
+}
+.cal-cargando{margin:2rem 0;font-size:var(--t-aux);color:var(--txt-suave)}
+
+
+/* ---------- LAS HORAS ---------- */
+
+.horas-cab{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:1rem;
+  flex-wrap:wrap;
+  margin:0 0 1.25rem;
+}
+.horas-dia{
+  margin:0;
+  font-family:var(--display);
+  font-size:1.15rem;
+  font-weight:600;
+  color:var(--txt);
+}
+.horas-dia::first-letter{text-transform:uppercase}
+
+/* LA ZONA SIGUE SIENDO FUNCIONAL pero deja de ser un campo de formulario. Era
+   un `select` con borde y etiqueta encima, del tamano de un campo, para un dato
+   que el 90 % no va a tocar — la zona se detecta sola. Ahora es texto con una
+   flecha: se lee como una nota y se pulsa como un control. */
+/* `:not([hidden])` porque este `display` de autor le gana al `[hidden]` del
+   navegador. Es la tercera vez que aparece este fallo en esta pantalla —paso
+   antes con `.modo-nota` y con el aviso de reprogramar—: cualquier elemento que
+   se oculte con el atributo y tenga `display` propio necesita la guarda. */
+.horas-zona:not([hidden]){
+  display:flex;
+  align-items:center;
+  gap:.35rem;
+  margin:0;
+  font-size:var(--t-nota);
+  color:var(--txt-suave);
+}
+.horas-zona label{white-space:nowrap}
+.horas-zona-sel{position:relative;display:inline-flex;align-items:center}
+.horas-zona-sel select{
+  appearance:none;
+  border:0;
+  padding:.1rem 1.1rem .1rem .2rem;
+  background:none;
+  font-family:var(--texto);
+  font-size:var(--t-nota);
+  font-weight:600;
+  color:var(--marca);
+  cursor:pointer;
+  /* El texto se subraya para que se lea como algo que se puede cambiar: sin el
+     subrayado, un `select` sin borde parece texto muerto. */
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.horas-zona-sel select:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+.horas-zona-sel svg{
+  position:absolute;
+  right:0;
+  width:12px;height:12px;
+  pointer-events:none;
+  fill:none;stroke:var(--marca);stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* LAS TRES FRANJAS. Doce huecos en una columna son una lista que hay que leer
+   entera; en manana, tarde y noche se ven de un vistazo, y el salto de las
+   18:00 de la agenda real cae en la frontera en vez de partir un grupo. */
+.franja{margin:0 0 1.35rem}
+.franja:last-child{margin-bottom:0}
+.franja-tit{
+  margin:0 0 .55rem;
+  font-family:var(--texto);
+  font-size:var(--t-nota);
+  font-weight:600;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:var(--txt-suave);
+}
+
+/* `auto-fill` con un minimo, no un numero fijo de columnas: las horas caben de
+   cuatro en cuatro en escritorio y se reacomodan solas cuando el lienzo se
+   estrecha, sin un salto de maquetacion. */
+.franja-horas{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(88px,1fr));
+  gap:.4rem;
+}
+
+.hueco{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.1rem;
+  padding:.6rem .4rem;
+  border:1px solid var(--linea);
+  border-radius:var(--r-chico);
+  background:none;
+  font-family:var(--texto);
+  font-size:var(--t-aux);
+  font-weight:500;
+  /* Tabulares para que las columnas de horas alineen sus cifras: sin esto un
+     "1" mide menos que un "9" y la rejilla baila. */
+  font-variant-numeric:tabular-nums;
+  color:var(--txt);
+  cursor:pointer;
+  transition:background var(--paso), border-color var(--paso), color var(--paso);
+}
+.hueco:hover{background:var(--fila-viva);border-color:var(--aro)}
+.hueco:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.hueco[aria-checked="true"]{
+  background:var(--acc);
+  border-color:var(--acc);
+  color:var(--blanco);
+}
+/* La hora de Caracas, solo si quien mira esta en otro huso. */
+.hueco-alt{font-size:.68rem;font-weight:400;color:var(--txt-suave)}
+.hueco[aria-checked="true"] .hueco-alt{color:rgba(255,255,255,.8)}
+
+.horas-vacio{margin:0;font-size:var(--t-aux);color:var(--txt-suave)}
+
+
+/* ---------- EL PIE DEL PASO 2 ----------
+
+   Hablaba el idioma de reservar.css: "Reservar el horario" salia como un bloque
+   palido que ocupaba casi todo el ancho, y "Atras" como un boton con relleno al
+   mismo nivel. Dos acciones con el mismo peso visual cuando una es la principal
+   y la otra es volver.
+
+   Se acota a `#vista2` a proposito: las mismas clases `.btn` las usa el paso 3,
+   que todavia no esta redisenado, y no se toca lo que no toca. */
+
+#vista2 .wz-acciones{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:1.5rem;
+  flex-wrap:wrap;
+  margin-top:2.25rem;
+  padding-top:1.5rem;
+  border-top:1px solid var(--linea);
+}
+
+/* "Atras" es texto subrayado, no un boton: volver no compite con reservar. */
+#vista2 .wz-volver{
+  margin-right:auto;
+  border:0;
+  padding:.85rem 0;
+  background:none;
+  font-family:var(--texto);
+  font-size:var(--t-aux);
+  font-weight:500;
+  color:var(--txt-suave);
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  min-height:0;
+  box-shadow:none;
+}
+#vista2 .wz-volver:hover{color:var(--txt);background:none}
+#vista2 .wz-volver:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+
+/* La accion, con el mismo oval de salvia que "Ver horario" en el paso 1: es la
+   misma clase de gesto en la misma pantalla. */
+#vista2 .wz-continuar{
+  display:inline-flex;
+  align-items:center;
+  gap:.55rem;
+  /* `flex:none` y no solo `width:auto`: `.btn` en reservar.css trae
+     `flex: 2 1 208px`, y una base flex hace crecer el boton por encima de su
+     ancho — medido, 499 px de los 575 disponibles. `width:auto` no puede con
+     eso porque el reparto flex se calcula despues. */
+  flex:none;
+  width:auto;
+  padding:.85rem 1.6rem;
+  border:0;
+  border-radius:var(--r-pill);
+  background:var(--acc);
+  color:var(--blanco);
+  font-family:var(--texto);
+  font-size:var(--t-base);
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 1px 3px rgba(74,94,80,.3);
+  transition:background var(--paso), box-shadow var(--paso), transform var(--paso);
+}
+#vista2 .wz-continuar:hover:not(:disabled){background:var(--acc-dp)}
+#vista2 .wz-continuar:active:not(:disabled){transform:scale(.97)}
+#vista2 .wz-continuar:focus-visible{outline:2px solid var(--marca);outline-offset:3px}
+
+/* Apagado no lleva relleno ni sombra: un boton inerte no flota. Igual que el
+   del paso 1. */
+#vista2 .wz-continuar:disabled{
+  background:none;
+  color:var(--txt-suave);
+  box-shadow:inset 0 0 0 1px var(--linea);
+  cursor:default;
+}
+
+
+/* ---------- LA LINEA DEL CONSENTIMIENTO ----------
+
+   Sustituye a la casilla, que se retiro por decision de Edgar. El clic en
+   "Reservar el horario" es el acto de aceptacion y esta linea lo dice antes de
+   pulsarlo, asi que el consentimiento que se guarda en la base sigue siendo
+   verdad.
+
+   ES PROVISIONAL: lo acordado es llevarlo al registro de la cuenta, y eso pide
+   una migracion. */
+.consiento{
+  margin:.9rem 0 0;
+  font-size:var(--t-nota);
+  color:var(--txt-suave);
+}
+.consiento a{color:var(--marca)}
+
+
+/* ---------- MOVIL ----------
+   Provisional, igual que el resto del movil de este proyecto: en cuanto el
+   lienzo no da para dos columnas, el mes se va arriba y las horas debajo. */
+@media (max-width:860px){
+  .cal-y-horas{grid-template-columns:1fr;gap:2rem}
+  .cal{max-width:400px}
+}
+
+
+/* ============ 11. MOVIMIENTO ============ */
+
+@media (prefers-reduced-motion:reduce){
+  /* La etiqueta del boton del mapa APARECE igual, lo que se quita es el
+     recorrido: es informacion, no decoracion. Lo cubre esta misma regla, que
+     mata la transicion pero no el estado final. */
+  *{transition:none !important;animation:none !important}
+}

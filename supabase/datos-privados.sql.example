@@ -1,0 +1,32 @@
+-- ============================================================
+-- Cuentas de cobro de Daryeli — PLANTILLA
+--
+-- Copia este archivo a "datos-privados.sql" (que está en .gitignore),
+-- rellena los datos reales y ejecútalo una sola vez en el SQL Editor de
+-- Supabase, después de aplicar las migraciones.
+--
+-- Por qué aparte y no en la semilla: estos datos se muestran al cliente en
+-- la página de reserva, así que no son secretos, pero la cédula tampoco tiene
+-- por qué quedar registrada para siempre en el historial de un repositorio
+-- público, donde la rastrean los buscadores. Si algún día cambia una cuenta,
+-- se edita desde el panel y no hace falta volver aquí.
+-- ============================================================
+
+update public.settings
+set value = '[
+  {
+    "bank_code": "0000",
+    "bank_name": "Nombre del banco",
+    "holder":    "Nombre y apellido de la titular",
+    "id_number": "V-00.000.000",
+    "phone":     "0000-0000000"
+  },
+  {
+    "bank_code": "0000",
+    "bank_name": "Segundo banco",
+    "holder":    "Nombre y apellido de la titular",
+    "id_number": "V-00.000.000",
+    "phone":     "0000-0000000"
+  }
+]'::jsonb
+where key = 'pago_movil';

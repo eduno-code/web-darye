@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Las cinco recomendaciones, en vivo</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="reservar/reservar.css">
+<style>
+  body{background:var(--papel);font-family:var(--font-display);margin:0;padding:2rem 1.25rem 5rem}
+  .env{max-width:72rem;margin:0 auto}
+  .env > h1{font-size:1.5rem;margin:0 0 .4rem}
+  .env > p.sub{color:var(--text-soft);margin:0 0 2.25rem;max-width:50rem;line-height:1.65}
+
+  .bloque{background:#fff;border:1px solid var(--linea);border-radius:20px;padding:1.6rem;margin-bottom:1.5rem}
+  .bloque > header{padding-bottom:.85rem;margin-bottom:1.5rem;border-bottom:1px solid var(--linea)}
+  .bloque > header .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--primary-deep);font-weight:700}
+  .bloque > header h2{font-size:1.1rem;margin:.15rem 0 0}
+  .bloque p.nota{font-size:.85rem;color:var(--text-soft);line-height:1.65;margin:1.3rem 0 0;max-width:54rem}
+  .bloque p.nota b{color:var(--text)}
+  .prueba{background:var(--primary-soft);border:1px solid var(--primary-light);border-radius:12px;
+    padding:.8rem 1rem;font-size:.84rem;line-height:1.6;color:var(--primary-darkest);margin:0 0 1.3rem}
+  .prueba b{font-weight:700}
+  .par{display:grid;gap:1.5rem;grid-template-columns:1fr}
+  @media(min-width:820px){.par{grid-template-columns:1fr 1fr}}
+  .lado{min-width:0}
+  .lado > h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin:0 0 .9rem;font-weight:700}
+  .mal{color:#A33A2E} .bien{color:var(--primary-deep)}
+  .contador{font-size:.78rem;color:var(--text-soft);margin:.9rem 0 0;font-variant-numeric:tabular-nums}
+  .contador b{color:var(--primary-deep)}
+
+  /* ---------- tarjetas de modalidad ---------- */
+  .md{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .md-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;
+    min-height:104px;padding:1.1rem .7rem;background:var(--white);border:1.5px solid var(--linea);
+    border-radius:var(--wz-radio);font:inherit;color:inherit;cursor:pointer;text-align:center;
+    box-shadow:var(--elev-1);transition:box-shadow var(--paso),border-color var(--paso),background var(--paso)}
+  .md-card[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2)}
+  .md-nombre{font-weight:600;font-size:var(--text-base);line-height:1.3}
+  /* viejo: icono suelto */
+  .viejo .md-ico{display:flex;color:var(--primary-deep)}
+  .viejo .md-ico svg{width:26px;height:26px}
+  /* nuevo: icono en circulo, igual que las de motivo y las de sesiones */
+  .nuevo .md-ico{width:42px;height:42px;border-radius:50%;border:2.5px solid var(--primary);
+    display:grid;place-items:center;color:var(--primary-deep);
+    transition:border-color var(--paso),background var(--paso),color var(--paso)}
+  .nuevo .md-ico svg{width:21px;height:21px}
+  .nuevo .md-card[aria-checked="true"] .md-ico{border-color:var(--primary-deep);background:var(--primary-deep);color:#fff}
+
+  /* ---------- rejilla de motivo (para el demo de teclado) ---------- */
+  .sv{display:grid;gap:1rem;grid-template-columns:1fr 1fr}
+  .sv-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;
+    min-height:104px;padding:1rem .7rem;background:var(--white);border:1.5px solid var(--linea);
+    border-radius:var(--wz-radio);font:inherit;color:inherit;text-align:center;cursor:pointer;
+    box-shadow:var(--elev-1);transition:box-shadow var(--paso),border-color var(--paso),background var(--paso)}
+  .sv-card[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2)}
+  .sv-ico{width:40px;height:40px;border-radius:50%;border:2.5px solid var(--primary);
+    display:grid;place-items:center;color:var(--primary-deep);
+    transition:border-color var(--paso),background var(--paso),color var(--paso)}
+  .sv-ico svg{width:20px;height:20px}
+  .sv-card[aria-checked="true"] .sv-ico{border-color:var(--primary-deep);background:var(--primary-deep);color:#fff}
+  .sv-nombre{font-weight:600;font-size:.88rem;line-height:1.3}
+
+  /* ---------- FOCO ---------- */
+  /* Lo que hay hoy: el navegador pinta lo que quiera, y sobre un boton a medida
+     casi no se ve. */
+  .sinfoco :focus{outline:1px dotted #999;outline-offset:0}
+  /* Lo propuesto: anillo grueso, separado, del verde de la pagina. */
+  .confoco :focus-visible{outline:3px solid var(--primary-deep);outline-offset:3px;border-radius:var(--wz-radio)}
+
+  /* ---------- MOVIMIENTO ---------- */
+  .anim .sv-card{transition:box-shadow 260ms cubic-bezier(.2,.8,.3,1),border-color 260ms,background 260ms,transform 260ms}
+  .anim .sv-card[aria-checked="true"]{transform:scale(1.06)}
+  .anim .sv-ico{transition:all 260ms cubic-bezier(.34,1.56,.64,1)}
+  .anim .sv-card[aria-checked="true"] .sv-ico{transform:scale(1.18) rotate(-8deg)}
+  .quieto .sv-card, .quieto .sv-ico{transition:none !important;transform:none !important}
+  .interruptor{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border-radius:10px;
+    border:1.5px solid var(--linea);background:#fff;font:inherit;font-size:.82rem;font-weight:600;
+    cursor:pointer;margin-bottom:1.1rem}
+  .interruptor[aria-pressed="true"]{border-color:var(--primary-deep);background:var(--primary-soft);color:var(--primary-darkest)}
+
+  /* ---------- MOVIL con barra fija ---------- */
+  .marcos{display:flex;gap:1.75rem;flex-wrap:wrap;align-items:flex-start}
+  .movil{width:390px;max-width:100%;height:560px;position:relative;overflow:hidden;
+    background:#fff;border:1px solid var(--linea-fuerte);border-radius:24px;box-shadow:var(--elev-2)}
+  .movil-scroll{height:100%;overflow-y:auto;padding:1.1rem 1.1rem 1.5rem}
+  .movil.conbarra .movil-scroll{padding-bottom:5.5rem}
+  .movil-barra{position:absolute;left:0;right:0;bottom:0;padding:.85rem 1.1rem;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-top:1px solid var(--linea)}
+  .movil-barra .btn{width:100%;justify-content:center}
+  .movil h4{font-size:1.15rem;margin:0 0 .3rem}
+  .movil .lin{font-size:.8rem;color:var(--text-soft);margin:0 0 1.1rem;line-height:1.5}
+  .movil .tit{font-size:.78rem;font-weight:600;color:var(--text-soft);margin:1.3rem 0 .7rem}
+  .fin{margin-top:1.4rem}
+
+  /* ---------- iconos de duelo ---------- */
+  .duelos{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .duelo{display:flex;flex-direction:column;align-items:center;gap:.65rem;padding:1.1rem .8rem;
+    background:#fff;border:1.5px solid var(--linea);border-radius:var(--wz-radio);text-align:center;cursor:pointer;
+    box-shadow:var(--elev-1);transition:border-color var(--paso),background var(--paso)}
+  .duelo[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft)}
+  .duelo .ico{width:44px;height:44px;border-radius:50%;border:2.5px solid var(--primary);
+    display:grid;place-items:center;color:var(--primary-deep)}
+  .duelo .ico svg{width:22px;height:22px}
+  .duelo .et{font-size:.76rem;color:var(--text-soft);line-height:1.4}
+  .duelo .et b{display:block;color:var(--text);font-size:.86rem;margin-bottom:.15rem}
+</style>
+</head>
+<body>
+<div class="env">
+
+<h1>Las cinco recomendaciones, para verlas</h1>
+<p class="sub">Cada bloque tiene a la izquierda lo que hay hoy y a la derecha lo que propongo.
+   Los tres primeros se prueban: haz clic, tabula, usa las flechas.</p>
+
+<!-- ═══════════ 1 ═══════════ -->
+<section class="bloque">
+  <header><span class="et">Recomendación 1</span><h2>Las tarjetas de modalidad, en el idioma nuevo</h2></header>
+  <div class="par">
+    <div class="lado viejo">
+      <h3 class="mal">Hoy · icono suelto</h3>
+      <div class="md" role="radiogroup" aria-label="modalidad hoy">
+        <button type="button" class="md-card" role="radio" aria-checked="true">
+          <span class="md-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/></svg></span>
+          <span class="md-nombre">Online</span>
+        </button>
+        <button type="button" class="md-card" role="radio" aria-checked="false">
+          <span class="md-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+          <span class="md-nombre">Presencial</span>
+        </button>
+      </div>
+    </div>
+    <div class="lado nuevo">
+      <h3 class="bien">Propuesto · icono en círculo</h3>
+      <div class="md" role="radiogroup" aria-label="modalidad nueva">
+        <button type="button" class="md-card" role="radio" aria-checked="true">
+          <span class="md-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/></svg></span>
+          <span class="md-nombre">Online</span>
+        </button>
+        <button type="button" class="md-card" role="radio" aria-checked="false">
+          <span class="md-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+          <span class="md-nombre">Presencial</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <p class="nota">Pulsa una de cada lado. A la izquierda solo cambia el fondo; a la derecha
+     <b>el círculo se rellena</b>, igual que la cifra de las sesiones y que el icono del motivo.
+     Es el mismo gesto repetido tres veces en la misma pantalla: eso es lo que hace que se lea
+     como una página y no como tres bloques pegados.</p>
+</section>
+
+<!-- ═══════════ 2 ═══════════ -->
+<section class="bloque">
+  <header><span class="et">Recomendación 2</span><h2>El teclado que perdemos al quitar el desplegable</h2></header>
+  <p class="prueba"><b>Pruébalo:</b> haz clic en el fondo gris de un lado y pulsa <b>Tab</b> varias
+     veces, y luego las <b>flechas</b>. Abajo se cuenta cuántas veces has tenido que tabular.</p>
+  <div class="par">
+    <div class="lado">
+      <h3 class="mal">Hoy · 4 paradas, flechas muertas</h3>
+      <div class="sv" id="g1" role="radiogroup" aria-label="motivo hoy"></div>
+      <p class="contador">Tabuladores usados aquí: <b id="c1">0</b></p>
+    </div>
+    <div class="lado">
+      <h3 class="bien">Propuesto · 1 parada, flechas vivas</h3>
+      <div class="sv" id="g2" role="radiogroup" aria-label="motivo propuesto"></div>
+      <p class="contador">Tabuladores usados aquí: <b id="c2">0</b></p>
+    </div>
+  </div>
+  <p class="nota">A la derecha el grupo entero es <b>una sola parada</b>: entras con Tab y te mueves
+     con las flechas, que además <b>seleccionan al pasar</b>. Es exactamente lo que hacía el
+     <code>&lt;select&gt;</code> nativo sin que nadie lo programara — y es lo que le quitamos a
+     quien usa teclado al cambiarlo por tarjetas. Con 4 opciones parece poco; en el paso 2, con la
+     tira de horarios, son decenas.</p>
+</section>
+
+<!-- ═══════════ 3 ═══════════ -->
+<section class="bloque">
+  <header><span class="et">Recomendación 3</span><h2>La barra de acción fija en el móvil</h2></header>
+  <p class="prueba"><b>Pruébalo:</b> desplaza dentro de los dos teléfonos. Los dos tienen el mismo
+     contenido; solo cambia dónde vive el botón.</p>
+  <div class="marcos">
+    <div class="movil" id="mov1">
+      <div class="movil-scroll">
+        <h4>Reserva tu sesión</h4>
+        <p class="lin">Elige el acompañamiento y el número de sesiones.</p>
+        <p class="tit">¿Cómo prefieres la sesión?</p>
+        <div class="md nuevo" role="radiogroup" aria-label="m1"></div>
+        <p class="tit">¿En qué quieres trabajar?</p>
+        <div class="sv" id="g3"></div>
+        <div class="fin">
+          <button type="button" class="btn btn-primary" style="width:100%;justify-content:center">Ver horarios</button>
+        </div>
+      </div>
+    </div>
+    <div class="movil conbarra" id="mov2">
+      <div class="movil-scroll">
+        <h4>Reserva tu sesión</h4>
+        <p class="lin">Elige el acompañamiento y el número de sesiones.</p>
+        <p class="tit">¿Cómo prefieres la sesión?</p>
+        <div class="md nuevo" role="radiogroup" aria-label="m2"></div>
+        <p class="tit">¿En qué quieres trabajar?</p>
+        <div class="sv" id="g4"></div>
+      </div>
+      <div class="movil-barra">
+        <button type="button" class="btn btn-primary">Ver horarios</button>
+      </div>
+    </div>
+  </div>
+  <p class="nota">A la izquierda, <b>lo que hay hoy</b>: el botón vive al final del documento y hay
+     que desplazar hasta abajo para encontrarlo. Medido en la página real a 390 px, arranca en
+     <b>y = 1.149 px</b> con una pantalla de 844 — y eso <i>antes</i> de añadir las cuatro tarjetas
+     de motivo, que suman casi 200 px más. A la derecha, la barra está siempre ahí: nunca dudas de
+     cómo se sigue.</p>
+</section>
+
+<!-- ═══════════ 4 ═══════════ -->
+<section class="bloque">
+  <header><span class="et">Recomendación 4</span><h2>El anillo de foco y el movimiento</h2></header>
+  <p class="prueba"><b>Pruébalo:</b> haz clic en el fondo y pulsa <b>Tab</b> hasta entrar en cada
+     rejilla — mira si sabes dónde estás. Y usa el interruptor para ver el movimiento.</p>
+  <div class="par">
+    <div class="lado sinfoco">
+      <h3 class="mal">Hoy · foco del navegador</h3>
+      <div class="sv" id="g5"></div>
+    </div>
+    <div class="lado confoco">
+      <h3 class="bien">Propuesto · anillo verde separado</h3>
+      <div class="sv" id="g6"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem">
+    <button type="button" class="interruptor" id="swMov" aria-pressed="true">Movimiento activado</button>
+    <div class="sv anim" id="g7" style="max-width:26rem"></div>
+    <p class="nota"><b>Pulsa las tarjetas con el interruptor en cada posición.</b> Con movimiento,
+      la tarjeta crece y el icono gira al elegirla. Apagado, el cambio es instantáneo y sigue
+      entendiéndose igual de bien. Hoy en <code>reservar.css</code> hay <b>una sola</b> regla de
+      <code>prefers-reduced-motion</code> y <b>cinco</b> de foco en 47 KB. Esto es una página de
+      terapia donde «Ansiedad» es uno de los cuatro motivos: quien tiene sensibilidad al
+      movimiento debería poder apagarlo, y el sistema operativo ya lo dice — solo hay que
+      escucharlo.</p>
+  </div>
+</section>
+
+<!-- ═══════════ 5 ═══════════ -->
+<section class="bloque">
+  <header><span class="et">Recomendación 5</span><h2>El icono de Duelo — cuatro candidatos</h2></header>
+  <p class="prueba">Este es el que más me preocupa y el único que no se decide midiendo.
+     Míralos y dime qué te transmite cada uno.</p>
+  <div class="duelos" role="radiogroup" aria-label="duelo">
+    <button type="button" class="duelo" role="radio" aria-checked="true">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/></svg></span>
+      <span class="et"><b>El actual</b>Corazón sobre una curva. Ambiguo: puede leerse como amor.</span>
+    </button>
+    <button type="button" class="duelo" role="radio" aria-checked="false">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21c-2.5-1.6-4-4-4-6.8C5 9.8 8.4 6 12 3c3.6 3 7 6.8 7 11.2 0 2.8-1.5 5.2-4 6.8"/><path d="M12 21V9"/></svg></span>
+      <span class="et"><b>Hoja</b>Lo que sigue vivo. Sin religión y sin tristeza obligatoria.</span>
+    </button>
+    <button type="button" class="duelo" role="radio" aria-checked="false">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 15.5a5 5 0 0 1 7 0"/><path d="M6 12.5a9 9 0 0 1 12 0"/><path d="M3.5 9.5a13 13 0 0 1 17 0"/><circle cx="12" cy="19.5" r="1.2"/></svg></span>
+      <span class="et"><b>Ondas</b>Algo que se propaga y se calma. Abstracto a propósito.</span>
+    </button>
+    <button type="button" class="duelo" role="radio" aria-checked="false">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.5c1.6-1.2 3.2-1.2 4.8 0s3.2 1.2 4.8 0 3.2-1.2 4.8 0"/><path d="M4 19c1.6-1.2 3.2-1.2 4.8 0s3.2 1.2 4.8 0 3.2-1.2 4.8 0"/><circle cx="12" cy="6" r="2.6"/><path d="M12 8.6v2.6"/></svg></span>
+      <span class="et"><b>Agua</b>Lo que pasa y sigue. El más suave de los cuatro.</span>
+    </button>
+  </div>
+  <p class="nota">Ninguno es «el correcto» y por eso lo saco aparte: <b>esto lo decide Daryeli</b>,
+     que es quien sabe cómo hablan sus pacientes de un duelo. Lo único que sostengo es que el
+     actual se lee ambiguo, y que en esta página concreta un icono mal elegido hace más daño que
+     no poner ninguno — quien entra por un duelo reciente no debería toparse con un dibujo que no
+     le representa.</p>
+</section>
+
+</div>
+
+<script>
+(function () {
+  var MOTIVOS = [
+    ['Superar la Ansiedad', '<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>'],
+    ['Fortalecer tu Autoestima', '<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>'],
+    ['Sanar en Pareja', '<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>'],
+    ['Acompañar un Duelo', '<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>']
+  ];
+  var MODOS = [
+    ['Online', '<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>'],
+    ['Presencial', '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>']
+  ];
+  function svg(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.6) +
+           '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  function pintar(id, datos, clase, icoClase) {
+    var c = document.getElementById(id); if (!c) return;
+    c.innerHTML = datos.map(function (m, i) {
+      return '<button type="button" class="' + clase + '" role="radio" aria-checked="' + (i === 0) + '">' +
+             '<span class="' + icoClase + '" aria-hidden="true">' + svg(m[1]) + '</span>' +
+             '<span class="' + (clase === 'md-card' ? 'md-nombre' : 'sv-nombre') + '">' + m[0] + '</span></button>';
+    }).join('');
+  }
+  ['g1','g2','g3','g4','g5','g6','g7'].forEach(function (id) { pintar(id, MOTIVOS, 'sv-card', 'sv-ico'); });
+  document.querySelectorAll('.movil .md').forEach(function (c, i) {
+    c.id = 'md' + i; pintar('md' + i, MODOS, 'md-card', 'md-ico');
+  });
+
+  /* Selección por clic, en todas las rejillas. */
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[role="radio"], .sv-card, .md-card, .duelo');
+    if (!b || !b.parentElement) return;
+    [].forEach.call(b.parentElement.children, function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+    });
+  });
+
+  /* --- Recomendación 2: el grupo de la derecha se comporta como un radiogroup
+         de verdad. Una sola parada de tabulador (roving tabindex) y las flechas
+         mueven Y seleccionan. El de la izquierda se queda como está hoy. --- */
+  var g2 = document.getElementById('g2');
+  function roving() {
+    [].forEach.call(g2.children, function (b, i) {
+      b.tabIndex = b.getAttribute('aria-checked') === 'true' ? 0 : -1;
+    });
+  }
+  roving();
+  g2.addEventListener('keydown', function (ev) {
+    var k = ev.key;
+    if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'].indexOf(k) < 0) return;
+    ev.preventDefault();
+    var hijos = [].slice.call(g2.children);
+    var i = hijos.indexOf(document.activeElement);
+    if (i < 0) i = 0;
+    var n = k === 'Home' ? 0
+          : k === 'End' ? hijos.length - 1
+          : (k === 'ArrowRight' || k === 'ArrowDown') ? (i + 1) % hijos.length
+          : (i - 1 + hijos.length) % hijos.length;
+    hijos.forEach(function (o, j) { o.setAttribute('aria-checked', String(j === n)); });
+    roving();
+    hijos[n].focus();
+  });
+  g2.addEventListener('click', roving);
+
+  /* Contadores de tabulador, uno por lado. */
+  var c1 = 0, c2 = 0;
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Tab') return;
+    setTimeout(function () {
+      var a = document.activeElement;
+      if (document.getElementById('g1').contains(a)) { document.getElementById('c1').textContent = ++c1; }
+      if (g2.contains(a)) { document.getElementById('c2').textContent = ++c2; }
+    }, 0);
+  });
+
+  /* --- Recomendación 4: interruptor de movimiento --- */
+  var sw = document.getElementById('swMov'), g7 = document.getElementById('g7');
+  sw.addEventListener('click', function () {
+    var on = sw.getAttribute('aria-pressed') === 'true';
+    sw.setAttribute('aria-pressed', String(!on));
+    sw.textContent = !on ? 'Movimiento activado' : 'Movimiento reducido';
+    g7.classList.toggle('quieto', on);
+  });
+})();
+</script>
+</body>
+</html>

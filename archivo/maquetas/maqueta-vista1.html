@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maqueta · Vista 1</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  /* ===== SUPERFICIES · todas de la landing ===== */
+  --bg:#FDFAF7; --bg-2:#FAF4EE; --sup:#FFFFFF; --sel:#F3E9DE;
+
+  /* ===== TERRACOTA · la marca. Identidad y seleccion ===== */
+  --marca:#A67B5B; --marca-cl:#C4A484; --marca-dp:#8C6246; --marca-dk:#6E4C36;
+
+  /* ===== PIZARRA · la accion. Un escalon por debajo del texto,
+     para que el boton no sea el mismo color que cada parrafo ===== */
+  --acc:#22303E; --acc-hover:#16202B;
+
+  /* ===== TEXTO ===== */
+  --txt:#2C3E50; --txt-suave:#55697A;
+
+  /* ===== LINEAS · terracota, en tres escalones, igual que el circulo.
+     A pizarra .16 daban 1,33:1 y la tarjeta se leia como una caja vacia.
+     Ahora: en reposo se ven, al pasar por encima se marcan con el mismo
+     #C4A484 del circulo, y al elegir el borde salta a pizarra. ===== */
+  --linea:rgba(166,123,91,.42);      /* 1,62:1 · el borde en reposo */
+  --linea-f:#C4A484;                 /* 2,34:1 · el mismo hover que el circulo */
+  --linea-int:rgba(166,123,91,.28);  /* divisorias de dentro, un paso mas suaves */
+
+  /* Tinte de pizarra para los distintivos que antes iban en crema. */
+  --acc-suave:#EAECEE;
+
+  /* ===== INERTE Y AVISO ===== */
+  --inerte:#EDE7E0; --inerte-txt:#6B635B;
+  --pend:#7A5B12; --pend-sv:#FAF0DC;
+
+  --elev-1:0 1px 2px rgba(44,62,80,.06);
+  --elev-2:0 6px 18px -6px rgba(44,62,80,.18);
+  --r:14px; --r-g:20px;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+  --medida:min(100%,50rem);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+
+/* ===================== FOCO =====================
+   Anillo grueso y separado. Antes el navegador pintaba un punteado de 1 px
+   que sobre un boton a medida no se veia. */
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px;border-radius:var(--r)}
+
+/* ================ MOVIMIENTO REDUCIDO ================
+   Quien lo pide en su sistema deja de ver crecer el check y el circulo.
+   Todo sigue entendiendose: el cambio pasa a ser instantaneo. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  .lugar{transition:none !important}
+}
+
+/* ===================== CABECERA ===================== */
+.top{background:var(--sup);border-bottom:1px solid var(--linea)}
+.top-in{max-width:var(--medida);margin:0 auto;padding:.9rem 1.25rem;
+  display:flex;align-items:center;gap:.8rem}
+.avatar{width:42px;height:42px;border-radius:50%;flex:none;
+  background:var(--sel);border:1.5px solid var(--marca-cl);
+  display:grid;place-items:center;color:var(--marca-dk);font-weight:700;font-size:.9rem}
+.top-txt strong{display:block;font-size:.95rem;line-height:1.25}
+.top-txt span{display:block;font-size:.78rem;color:var(--txt-suave);line-height:1.4}
+.wa{margin-left:auto;display:inline-flex;align-items:center;gap:.4rem;
+  padding:.5rem .8rem;border-radius:999px;border:1.5px solid var(--linea-f);
+  background:var(--sup);color:var(--marca-dk);font-size:.8rem;font-weight:600;
+  text-decoration:none;min-height:44px}
+.wa:hover{background:var(--sel)}
+.wa svg{width:16px;height:16px}
+
+.barra-wrap{max-width:var(--medida);margin:0 auto;padding:0 1.25rem}
+.barra{height:4px;background:var(--inerte);border-radius:999px;overflow:hidden;margin-top:.1rem}
+.barra i{display:block;height:100%;width:25%;background:var(--acc);border-radius:999px;
+  transition:width 400ms cubic-bezier(.2,.8,.3,1)}
+.paso-txt{font-size:.76rem;color:var(--txt-suave);margin:.55rem 0 0;font-weight:600}
+
+/* ===================== CUERPO ===================== */
+main{max-width:var(--medida);margin:0 auto;padding:1.75rem 1.25rem 2rem}
+h1{font-size:1.65rem;line-height:1.2;margin:0 0 .4rem;letter-spacing:-.015em}
+.intro{color:var(--txt-suave);margin:0 0 2rem;line-height:1.65;font-size:.95rem;max-width:36rem}
+
+.grupo{margin-bottom:2rem}
+.grupo-tit{font-size:1rem;font-weight:700;margin:0 0 .9rem;display:flex;align-items:baseline;
+  gap:.6rem;flex-wrap:wrap}
+.grupo-nota{font-size:.8rem;font-weight:400;color:var(--txt-suave)}
+.grupo-sep{border-top:1px solid var(--linea);padding-top:1.75rem}
+
+/* ===================== TARJETAS BASE ===================== */
+.card{background:var(--sup);border:1.5px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);box-shadow:var(--elev-1);
+  transition:border-color var(--paso),background var(--paso),box-shadow var(--paso)}
+.card:hover{border-color:var(--linea-f)}
+.card[aria-checked="true"]{border-color:var(--acc);background:var(--sel);box-shadow:var(--elev-2)}
+
+/* El circulo en reposo va en pizarra, como el resto de la estructura. El
+   terracota entra SOLO al elegir: asi el calor deja de ser decoracion de fondo
+   y pasa a ser la senal de "esto es lo tuyo". */
+.circ{flex:none;border-radius:50%;border:2.5px solid var(--sel);display:grid;place-items:center;
+  color:var(--acc);transition:border-color var(--paso),background var(--paso),color var(--paso)}
+.card:hover .circ{border-color:var(--marca-cl)}
+.card[aria-checked="true"] .circ{border-color:var(--acc);background:var(--acc);color:#fff}
+.card[aria-checked="true"] .plan-cifra{color:#fff}
+
+/* --------- modalidad --------- */
+.modos{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.modos .card{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.6rem;min-height:106px;padding:1rem .7rem;text-align:center}
+.modos .circ{width:42px;height:42px}
+.modos .circ svg{width:21px;height:21px}
+.modo-nom{font-weight:600;font-size:.97rem}
+
+/* --------- consultorio, con apertura suave ---------
+   grid-template-rows 0fr -> 1fr es la unica forma de animar una altura que no
+   se conoce de antemano sin fijarla a mano. */
+.lugar{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows 320ms cubic-bezier(.2,.8,.3,1),opacity 220ms,margin-top 320ms;
+  margin-top:0}
+.lugar.abierto{grid-template-rows:1fr;opacity:1;margin-top:1rem}
+.lugar-in{overflow:hidden;min-height:0}
+.lugar-caja{background:var(--bg-2);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1.1rem 1.2rem}
+.lugar-cab{display:flex;align-items:center;gap:.65rem;padding-bottom:.75rem;margin-bottom:.85rem;
+  border-bottom:1px solid var(--linea)}
+.lugar-cab svg{width:24px;height:24px;color:var(--marca-dp);flex:none}
+.lugar-cab strong{font-size:.95rem}
+.lugar-cuerpo{display:flex;flex-direction:column;gap:.9rem}
+@media(min-width:640px){.lugar-cuerpo{flex-direction:row;align-items:center;justify-content:space-between}}
+.lugar-dir{font-size:.85rem;color:var(--txt-suave);line-height:1.6;margin:0}
+.lugar-ir{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.1rem;border-radius:999px;
+  background:var(--marca-dp);color:#fff;font-size:.85rem;font-weight:600;text-decoration:none;
+  min-height:44px;flex:none}
+.lugar-ir:hover{background:var(--marca-dk)}
+.lugar-ir svg{width:15px;height:15px}
+
+/* --------- motivo · 4 en fila, 2x2 en movil --------- */
+.servicios{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(min-width:760px){.servicios{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.servicios .card{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.6rem;min-height:116px;padding:1rem .7rem;text-align:center}
+.servicios .circ{width:42px;height:42px}
+.servicios .circ svg{width:21px;height:21px}
+.serv-nom{font-weight:600;font-size:.88rem;line-height:1.3}
+
+/* --------- sesiones --------- */
+.planes{display:grid;grid-template-columns:1fr;gap:1.25rem}
+@media(min-width:640px){.planes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.planes .card{position:relative;display:flex;flex-direction:column;overflow:hidden;text-align:left}
+.plan-cab{display:flex;align-items:center;gap:.55rem;padding:1.1rem 0 .7rem;margin:0 1.15rem;
+  border-bottom:1px solid var(--linea-int)}
+.card[aria-checked="true"] .plan-cab{border-bottom-color:var(--linea-f)}
+.plan-cifra{width:32px;height:32px;font-size:.95rem;font-weight:700;line-height:1;
+  font-variant-numeric:tabular-nums}
+.plan-nom{font-weight:700;font-size:1.02rem;line-height:1.2;letter-spacing:-.01em}
+.plan-eti{margin-left:auto;flex:none;padding:.18rem .42rem;border-radius:5px;
+  background:var(--acc);color:#fff;font-size:.62rem;font-weight:700;
+  letter-spacing:.03em;text-transform:uppercase;line-height:1.3;white-space:nowrap}
+.plan-cuerpo{flex:1;display:flex;align-items:center;gap:.45rem;padding:.85rem 1.15rem;
+  font-size:.81rem;color:var(--txt-suave);line-height:1.5}
+.plan-cuerpo svg{width:15px;height:15px;flex:none;color:var(--marca)}
+.plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem .6rem;flex-wrap:wrap;padding:.85rem 1.15rem 1.15rem;min-height:2.5rem}
+.plan-pie::before{content:"";position:absolute;top:0;left:1.15rem;right:1.15rem;height:1px;
+  background:var(--linea-int)}
+.card[aria-checked="true"] .plan-pie::before{background:var(--linea-f)}
+.plan-precio{font-size:1.6rem;font-weight:700;letter-spacing:-.025em;line-height:1;
+  color:var(--marca-dk);white-space:nowrap}
+.plan-der{display:flex;align-items:center;gap:.45rem;flex:none}
+.plan-ahorro{display:inline-flex;align-items:center;padding:.24rem .45rem;border-radius:6px;
+  background:var(--acc-suave);color:var(--acc);font-size:.7rem;font-weight:700;
+  line-height:1.3;white-space:nowrap}
+.plan-ahorro svg{width:12px;height:12px;flex:none}
+.card[aria-checked="true"] .plan-ahorro{background:var(--sup)}  /* sobre la crema, blanco */
+.plan-check{flex:none;width:22px;height:22px;border-radius:50%;background:var(--acc);
+  display:grid;place-items:center;opacity:0;transform:scale(.6);
+  transition:opacity var(--paso),transform var(--paso)}
+.plan-check svg{width:13px;height:13px;color:#fff}
+.card[aria-checked="true"] .plan-check{opacity:1;transform:scale(1)}
+.plan-cinta{position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc)}
+
+/* ===================== ACCION ===================== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.85rem 1.6rem;border-radius:999px;font:inherit;font-weight:600;font-size:.95rem;
+  border:1.5px solid transparent;cursor:pointer;min-height:48px;
+  transition:background var(--paso),transform var(--paso)}
+.btn svg{width:17px;height:17px}
+.btn-1{background:var(--acc);color:#fff}
+.btn-1:hover:not(:disabled){background:var(--acc-hover)}
+.btn-1:active:not(:disabled){transform:translateY(1px)}
+.btn-1:disabled{background:var(--inerte);color:var(--inerte-txt);cursor:not-allowed}
+
+/* Escritorio: el boton al final del contenido. */
+.acciones{margin-top:2.25rem}
+.acciones .btn{width:100%;max-width:26rem}
+
+/* ============ BARRA FIJA · SOLO EN MOVIL ============
+   Medido en la pagina real a 390 px, el boton arrancaba en y=1149 con una
+   pantalla de 844: habia que desplazar hasta el final para encontrarlo. */
+.barra-fija{position:fixed;left:0;right:0;bottom:0;z-index:20;
+  padding:.8rem 1.25rem calc(.8rem + env(safe-area-inset-bottom));
+  background:rgba(253,250,247,.92);backdrop-filter:blur(10px);
+  border-top:1px solid var(--linea);display:none}
+.barra-fija .btn{width:100%}
+@media(max-width:759px){
+  .barra-fija{display:block}
+  .acciones{display:none}
+  main{padding-bottom:6.5rem}
+}
+
+/* nota de la maqueta */
+.aviso-maqueta{max-width:var(--medida);margin:0 auto 1.25rem;padding:.8rem 1.1rem;
+  background:var(--pend-sv);border:1px solid rgba(122,91,18,.25);border-radius:12px;
+  font-size:.8rem;line-height:1.6;color:var(--pend)}
+.aviso-maqueta b{font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <span class="avatar" aria-hidden="true">DR</span>
+    <span class="top-txt">
+      <strong>Daryeli Romero</strong>
+      <span>Psicóloga · Barquisimeto y online</span>
+    </span>
+    <a class="wa" href="#" onclick="return false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+      Tengo una duda
+    </a>
+  </div>
+</header>
+
+<div class="barra-wrap">
+  <p class="paso-txt">Paso <span id="pasoNum">1</span> de 4 · Tu sesión</p>
+  <div class="barra"><i id="barraRelleno"></i></div>
+</div>
+
+<main>
+  <p class="aviso-maqueta"><b>Esto es una maqueta.</b> No toca la base de datos ni el proyecto.
+     Pruébala con el ratón, con <b>Tab</b> y con las <b>flechas</b>, y estréchala hasta el
+     tamaño de un móvil para ver la barra de abajo.</p>
+
+  <h1>Reserva tu sesión</h1>
+  <p class="intro">Elige el acompañamiento y el número de sesiones. Después escoges el horario.</p>
+
+  <!-- ============ MODALIDAD ============ -->
+  <section class="grupo">
+    <h2 class="grupo-tit" id="tModo">¿Cómo prefieres la sesión?</h2>
+    <div class="modos" id="gModos" role="radiogroup" aria-labelledby="tModo"></div>
+
+    <div class="lugar" id="lugar" aria-hidden="true" inert>
+      <div class="lugar-in">
+        <div class="lugar-caja">
+          <p class="lugar-cab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <strong>Centro Humanista Intellego</strong>
+          </p>
+          <div class="lugar-cuerpo">
+            <p class="lugar-dir">Av. Lara con calle 8, Torre Empresarial, piso 3<br>Barquisimeto, Lara<br>Frente a la plaza</p>
+            <a class="lugar-ir" href="#" onclick="return false">
+              Cómo llegar
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOTIVO ============ -->
+  <section class="grupo">
+    <h2 class="grupo-tit" id="tServ">¿En qué quieres trabajar?</h2>
+    <div class="servicios" id="gServ" role="radiogroup" aria-labelledby="tServ"></div>
+  </section>
+
+  <!-- ============ SESIONES ============ -->
+  <section class="grupo grupo-sep" id="bloquePlanes" hidden>
+    <h2 class="grupo-tit" id="tPlan">
+      ¿Una sesión o un proceso?
+      <span class="grupo-nota">Los paquetes salen más baratos por sesión</span>
+    </h2>
+    <div class="planes" id="gPlanes" role="radiogroup" aria-labelledby="tPlan"></div>
+  </section>
+
+  <div class="acciones">
+    <button type="button" class="btn btn-1" id="ir2Escritorio" disabled>
+      Ver horarios
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</main>
+
+<div class="barra-fija">
+  <button type="button" class="btn btn-1" id="ir2Movil" disabled>
+    Ver horarios
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function ico(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.6) +
+           '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    video:'<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>',
+    pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+    ansiedad:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    autoestima:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    pareja:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    duelo:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    etiqueta:'<path d="M20.5 13.2 13.2 20.5a2 2 0 0 1-2.8 0l-7-7a2 2 0 0 1-.6-1.4V4.5a2 2 0 0 1 2-2h7.6a2 2 0 0 1 1.4.6l7 7a2 2 0 0 1 0 2.8Z"/><path d="M7.5 7.5h.01"/>',
+    check:'<path d="m4 12 5.5 5.5L20 7"/>'
+  };
+
+  /* Los mismos datos que devuelve la base: slug, nombre, modalidad y precio. */
+  var SERVICIOS = [
+    {slug:'ansiedad',   nom:'Superar la Ansiedad',      ico:I.ansiedad,   mod:'individual'},
+    {slug:'autoestima', nom:'Fortalecer tu Autoestima', ico:I.autoestima, mod:'individual'},
+    {slug:'pareja',     nom:'Sanar en Pareja',          ico:I.pareja,     mod:'pareja'},
+    {slug:'duelo',      nom:'Acompañar un Duelo',       ico:I.duelo,      mod:'individual'}
+  ];
+  var PLANES = {
+    individual:[
+      {slug:'1', cifra:'1', nom:'sesión',   det:'Una cita puntual',   ico:I.reloj, precio:30,  ahorro:0},
+      {slug:'p3',cifra:'3', nom:'sesiones', det:'A tu ritmo, 90 días',ico:I.cal,   precio:75,  ahorro:15, sugerida:true},
+      {slug:'p5',cifra:'5', nom:'sesiones', det:'A tu ritmo, 90 días',ico:I.cal,   precio:125, ahorro:25}
+    ],
+    pareja:[
+      {slug:'1', cifra:'1', nom:'sesión',   det:'Una cita puntual',   ico:I.reloj, precio:45,  ahorro:0},
+      {slug:'p3',cifra:'3', nom:'sesiones', det:'A tu ritmo, 90 días',ico:I.cal,   precio:100, ahorro:35, sugerida:true},
+      {slug:'p5',cifra:'5', nom:'sesiones', det:'A tu ritmo, 90 días',ico:I.cal,   precio:150, ahorro:75}
+    ]
+  };
+
+  var estado = {modo:'online', servicio:null, plan:null};
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ============ PINTADO ============ */
+  function pintarModos() {
+    $('gModos').innerHTML = [
+      {v:'online',     n:'Online',     d:I.video},
+      {v:'presencial', n:'Presencial', d:I.pin}
+    ].map(function (m) {
+      return '<button type="button" class="card" role="radio" data-modo="' + m.v + '" ' +
+        'aria-checked="' + (estado.modo === m.v) + '">' +
+        '<span class="circ" aria-hidden="true">' + ico(m.d) + '</span>' +
+        '<span class="modo-nom">' + m.n + '</span></button>';
+    }).join('');
+    roving($('gModos'));
+
+    abrirLugar(estado.modo === 'presencial');
+  }
+
+  /* El bloque cerrado mide cero, pero sin `inert` sus enlaces seguian en el
+     orden de tabulacion y el teclado caia dentro de una caja invisible. */
+  function abrirLugar(abre) {
+    var l = $('lugar');
+    l.classList.toggle('abierto', abre);
+    l.setAttribute('aria-hidden', String(!abre));
+    if (abre) l.removeAttribute('inert'); else l.setAttribute('inert', '');
+  }
+
+  function pintarServicios() {
+    $('gServ').innerHTML = SERVICIOS.map(function (s) {
+      return '<button type="button" class="card" role="radio" data-serv="' + s.slug + '" ' +
+        'aria-checked="' + (estado.servicio === s.slug) + '">' +
+        '<span class="circ" aria-hidden="true">' + ico(s.ico) + '</span>' +
+        '<span class="serv-nom">' + s.nom + '</span></button>';
+    }).join('');
+    roving($('gServ'));
+  }
+
+  function pintarPlanes() {
+    var s = SERVICIOS.filter(function (x) { return x.slug === estado.servicio; })[0];
+    if (!s) { $('bloquePlanes').hidden = true; return; }
+    $('gPlanes').innerHTML = PLANES[s.mod].map(function (p) {
+      return '<button type="button" class="card" role="radio" data-plan="' + p.slug + '" ' +
+        'aria-checked="' + (estado.plan === p.slug) + '">' +
+        (p.sugerida ? '<span class="plan-cinta" aria-hidden="true"></span>' : '') +
+        '<span class="plan-cab">' +
+          '<span class="circ plan-cifra">' + p.cifra + '</span>' +
+          '<span class="plan-nom">' + p.nom + '</span>' +
+          (p.sugerida ? '<span class="plan-eti">Sugerida</span>' : '') +
+        '</span>' +
+        '<span class="plan-cuerpo">' + ico(p.ico, 1.7) + '<span>' + p.det + '</span></span>' +
+        '<span class="plan-pie">' +
+          '<span class="plan-precio">' + p.precio + ' $</span>' +
+          '<span class="plan-der">' +
+            (p.ahorro ? '<span class="plan-ahorro">Ahorras ' + p.ahorro + ' $</span>' : '') +
+            '<span class="plan-check" aria-hidden="true">' + ico(I.check, 3.5) + '</span>' +
+          '</span>' +
+        '</span></button>';
+    }).join('');
+    $('bloquePlanes').hidden = false;
+    roving($('gPlanes'));
+  }
+
+  function refrescarBoton() {
+    var listo = !!(estado.servicio && estado.plan);
+    $('ir2Escritorio').disabled = !listo;
+    $('ir2Movil').disabled = !listo;
+  }
+
+  /* ============ TECLADO ============
+     Un role="radiogroup" de verdad es UNA sola parada de tabulador: entras con
+     Tab y te mueves con las flechas, que ademas seleccionan al pasar. Es lo que
+     el <select> nativo hacia gratis y se pierde al cambiarlo por tarjetas. */
+  function roving(g) {
+    [].forEach.call(g.children, function (b) {
+      b.tabIndex = b.getAttribute('aria-checked') === 'true' ? 0 : -1;
+    });
+    if (![].some.call(g.children, function (b) { return b.tabIndex === 0; }) && g.children[0]) {
+      g.children[0].tabIndex = 0;
+    }
+  }
+
+  function alElegir(g, b) {
+    [].forEach.call(g.children, function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+    });
+    roving(g);
+    if (g === $('gModos')) {
+      estado.modo = b.dataset.modo;
+      abrirLugar(estado.modo === 'presencial');
+    } else if (g === $('gServ')) {
+      var previo = estado.servicio;
+      estado.servicio = b.dataset.serv;
+      // Cambiar de servicio puede cambiar de modalidad (pareja cuesta otra cosa),
+      // asi que el plan elegido deja de ser valido.
+      if (previo !== estado.servicio) estado.plan = null;
+      pintarPlanes();
+    } else {
+      estado.plan = b.dataset.plan;
+    }
+    refrescarBoton();
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[role="radio"]');
+    if (!b) return;
+    alElegir(b.parentElement, b);
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    var g = ev.target.closest && ev.target.closest('[role="radiogroup"]');
+    if (!g) return;
+    var teclas = ['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'];
+    if (teclas.indexOf(ev.key) < 0) return;
+    ev.preventDefault();
+    var hijos = [].slice.call(g.children);
+    var i = hijos.indexOf(ev.target);
+    if (i < 0) i = 0;
+    var n = ev.key === 'Home' ? 0
+          : ev.key === 'End' ? hijos.length - 1
+          : (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') ? (i + 1) % hijos.length
+          : (i - 1 + hijos.length) % hijos.length;
+    alElegir(g, hijos[n]);
+    hijos[n].focus();
+  });
+
+  pintarModos();
+  pintarServicios();
+  refrescarBoton();
+})();
+</script>
+</body>
+</html>

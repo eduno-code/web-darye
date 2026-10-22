@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maqueta · Vista 1 · salvia y arcilla</title>
+<link rel="icon" href="favicon.svg">
+
+<!-- LA TIPOGRAFIA DE LA MARCA, no la del sistema operativo.
+     Antes esta pagina declaraba Inter y no la cargaba: cero @font-face, cero
+     enlaces a Google Fonts. El resultado era que el titular salia en Segoe UI en
+     Windows y en San Francisco en un Mac, asi que era la unica pagina de la web
+     que no titulaba en Fraunces.
+     El patron de carga es el mismo que usa index.html: la hoja entra como hoja de
+     impresion (no bloquea el render) y se activa al terminar de descargarse; el
+     <noscript> cubre el caso sin JavaScript. Caveat no se pide: aqui no hay nada
+     manuscrito. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all';this.onload=null">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"></noscript>
+<style>
+:root{
+  /* ===== SALVIA Y ARCILLA =====
+     Los dos polos son tonos de tierra, asi que la paleta no parece ensamblada.
+     El precio esta medido: en OKLCH la salvia y la arcilla estan a 89,7 grados
+     una de otra, la mitad de los 173,5 que separaban la pizarra del terracota.
+     Es armonia, no contraste — a cambio, nada chirria. */
+
+  /* --- superficies: la escalera de profundidad --- */
+  /* ===== LA ESCALERA, AHORA EN UN SOLO SENTIDO =====
+     El problema: la tarjeta en reposo era MAS CLARA que el papel y la elegida
+     MAS OSCURA, asi que al bajar el papel a #FAF4EE la elegida (#FAF5EE) acabo
+     valiendo exactamente lo mismo que el fondo — un punto de verde de diferencia.
+     Ahora los tres peldanos bajan en la misma direccion: la pagina es lo mas
+     claro, la tarjeta se hunde un paso y elegirla la hunde otro. Nada flota, y
+     cada escalon esta a ~1,10 del siguiente, que es donde el ojo lo nota sin
+     que parezca un bloque de color. */
+  --suelo:#FFFFFF;              /* la pagina · blanco */
+  --sup:#FFFFFF;                /* la tarjeta · blanca, igual que el papel */
+  --sup-cal:#FAF3EA;            /* hover del enlace de la cabecera */
+  --sup-eleg:#F2E7D9;           /* la tarjeta elegida · dos escalones */
+  --sel:#EFE6D8;                /* tinte de los badges */
+  --acc-sv:#E8EDE6;             /* reservado */
+
+  /* --- ARCILLA · dibuja: lineas, aros en reposo, precio --- */
+  --marca:#A8825F; --marca-cl:#C6A783; --marca-dp:#8A6746; --marca-dk:#7A5A3C;
+
+  /* --- TEXTO · neutros templados hacia el verde, para que acompanen a la salvia
+         en vez de pelearse con ella --- */
+  --txt:#2E332E; --txt-suave:#5C635A;
+
+  /* --- SALVIA · decide: boton, aro elegido, barra, foco ---
+     Aviso que se hereda de esta eleccion: si el verde significa "esto es lo
+     tuyo", ya NO puede significar "pago verificado" en la vista 4. Ese estado
+     habra que resolverlo con el check y la palabra, no con el color. */
+  --acc:#5A7060;      /* 5,30:1 con blanco */
+  --acc-dp:#3E4F44;   /* 8,35:1 con blanco */
+
+  /* --- lineas: un solo color de arcilla en tres opacidades --- */
+  /* El borde de la tarjeta lleva el color del hover en los tres estados: en
+     reposo la linea tenue dejaba las tarjetas con pinta de caja vacia. */
+  --linea:#C6A783;
+  --linea-sug:rgba(168,130,95,.44);
+  --linea-f:#C6A783;
+  --linea-int:rgba(168,130,95,.22);
+
+  --inerte:#E6E1D7; --inerte-txt:#625E56;   /* 4,94:1 */
+  --pend:#7A5B12; --pend-sv:#FAF0DC;
+
+  /* ===== TIPOGRAFIA · los dos tokens de style.css, sin tocar =====
+     El reparto no lo invento aqui: es el que ya sigue la landing. Fraunces viste
+     los titulos, el nombre de la marca y las cifras grandes; Inter escribe todo
+     lo demas. Las familias "respaldo" son metricamente equivalentes a las de
+     verdad, asi que mientras se descargan el diseno no salta. */
+  --display:Fraunces,"Fraunces respaldo",Georgia,"Times New Roman",serif;
+  --texto:Inter,"Inter respaldo",system-ui,-apple-system,"Segoe UI",sans-serif;
+
+  /* --- LA BANDA DE LA CABECERA ---
+     Es `--primary-deep` de style.css, el mismo terracota hondo con el que la
+     landing pinta su pie, sus cifras y su boton principal. No es un color nuevo:
+     la reserva se abre con la misma banda con la que se cierra la web de la que
+     viene el visitante. 5,32:1 con el blanco del nombre. */
+  --banda:#8C6246;
+
+  /* --- EL FONDO DE LA BARRA FIJA ---
+     Dos escalones mas oscuro que el beige de antes (#F5EDE6), para que el boton
+     verde se apoye en algo en vez de flotar sobre casi blanco. El tope no es
+     estetico: un boton es un objeto grafico y la WCAG le pide 3:1 con su fondo.
+     Aqui el verde da 3,47:1 — con margen. Un paso mas (#D6BFA6) lo dejaria en
+     3,03 y cualquier retoque posterior del verde lo tumbaria.
+     De regalo, el boton APAGADO —que es como arranca la pantalla, porque al
+     entrar no hay nada elegido— pasa de 1,13:1 a 1,19:1 contra la barra: sobre el
+     beige claro de antes era practicamente el mismo color. */
+  --barra:#E0CDB8;
+
+  /* --- LA ESCALA DE ICONOS, DE SEIS VALORES A DOS ---
+     Habia 15, 16, 17, 18, 19 y 24 px conviviendo: diferencias que nadie ve una a
+     una pero que hacen que nada rime. Ahora solo hay dos medidas, y la grande se
+     reserva para los dos sitios donde el icono no acompana a un texto pequeno sino
+     que encabeza algo: la caja del consultorio y la pastilla de WhatsApp cuando en
+     movil se queda sin rotulo y el icono es lo unico que queda.
+     16 y no 18 para la base: los glifos de Phosphor vienen con el trazo convertido
+     en relleno, asi que al mismo tamano pesan mas que los de linea que habia. */
+  --ico:16px; --ico-lg:20px;
+
+  /* --- LA ESCALA DE ESQUINAS ---
+     Habia cinco valores sin regla: 50 %, 999 px, 14, 8, 7 y un 12 suelto. Los dos
+     que sobraban eran el 7 px del badge de "Ahorras" y de la pastilla de los 60
+     dias —que no rimaba con nada— y el 12 px del aviso de maqueta.
+     Ahora son tres valores y un circulo, y no son inventados: son los mismos que
+     `style.css` (8 / 16 / 28 / 999), menos el 28 que esta pantalla no usa. La
+     tarjeta sube de 14 a 16 para que la reserva y la landing tengan el mismo canto
+     en la misma clase de objeto.
+     Regla: circulo para lo que es una moneda, pastilla para lo que se pulsa o
+     encierra dos palabras, 16 para las cajas y 8 para lo que va dentro de una. */
+  --r-sm:8px;          /* la miniatura dentro de una fila */
+  --r:16px;            /* tarjetas, cajas y la lista */
+  --r-pill:999px;      /* pastillas y barras */
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+  --medida:min(100%,50rem);
+}
+/* ===== RESPALDOS CON METRICAS AJUSTADAS =====
+   Copiados tal cual de style.css. size-adjust y los override de ascendente y
+   descendente hacen que Georgia y Arial ocupen exactamente el mismo sitio que
+   Fraunces e Inter, asi que el texto no se mueve cuando las fuentes de verdad
+   terminan de cargar. Se declara cada peso por separado para que el navegador no
+   sintetice la negrita. Si el sistema no tiene ninguna de las fuentes locales, la
+   regla se descarta sola y se pasa a la siguiente familia de la lista. */
+@font-face{
+  font-family:"Fraunces respaldo";font-weight:400;
+  src:local("Georgia"),local("Times New Roman");
+  size-adjust:103.54%;ascent-override:93.90%;descent-override:24.15%;line-gap-override:0%;
+}
+@font-face{
+  font-family:"Fraunces respaldo";font-weight:600;
+  src:local("Georgia"),local("Times New Roman");
+  size-adjust:106.50%;ascent-override:91.29%;descent-override:23.47%;line-gap-override:0%;
+}
+@font-face{
+  font-family:"Fraunces respaldo";font-weight:700;
+  src:local("Georgia"),local("Times New Roman");
+  size-adjust:110.46%;ascent-override:88.01%;descent-override:22.63%;line-gap-override:0%;
+}
+@font-face{
+  font-family:"Inter respaldo";font-weight:400;
+  src:local("Arial"),local("Helvetica");
+  size-adjust:106.63%;ascent-override:88.27%;descent-override:22.07%;line-gap-override:0%;
+}
+@font-face{
+  font-family:"Inter respaldo";font-weight:500;
+  src:local("Arial"),local("Helvetica");
+  size-adjust:107.66%;ascent-override:87.42%;descent-override:21.86%;line-gap-override:0%;
+}
+@font-face{
+  font-family:"Inter respaldo";font-weight:600;
+  src:local("Arial"),local("Helvetica");
+  size-adjust:108.69%;ascent-override:86.59%;descent-override:21.65%;line-gap-override:0%;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--suelo);color:var(--txt);
+  font:400 16px/1.5 var(--texto)}
+
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:var(--r)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  .lugar,.abre{transition:none !important}
+}
+
+/* ===================== CABECERA =====================
+   Sin borde inferior: el propio cambio de color ya separa la banda del papel, y
+   una linea de arcilla encima del terracota no se ve. */
+.top{background:var(--banda);border-bottom:0;color:#fff}
+/* El foco global es `--acc-dp`, verde hondo, y sobre el terracota da 1,64:1
+   cuando la WCAG 2.2 pide 3:1 para el indicador de foco. Dentro de la banda pasa
+   a blanco, que da 5,32:1. */
+.top :focus-visible{outline-color:#fff}
+.top-in{max-width:var(--medida);margin:0 auto;padding:.9rem 1.25rem;
+  display:flex;align-items:center;gap:.8rem}
+/* LA FOTO, NO LAS INICIALES. Un avatar de iniciales es lo que genera un sistema
+   cuando no tiene retrato, y era lo primero que se veia al entrar. Quien esta a
+   punto de contarle a una desconocida que no puede dormir necesita verle la cara.
+   El encuadre es el mismo que ya usa `reservar/reservar.css`: la foto original es
+   vertical (900x1200), asi que centrarla dejaria el torso; al 18 % desde arriba
+   queda la cara.
+   El aro va como BORDE, no como sombra: en esta vista no hay una sola sombra y un
+   aro de 1 px hace el mismo trabajo de recortar el circulo contra el fondo.
+   Ahora que el fondo es terracota el aro es blanco al 62 %, no arcilla: la arcilla
+   sobre terracota no se distingue.
+   El fondo de salvia se queda de reserva para el instante en que la imagen aun no
+   ha cargado: sin el, la cabecera arranca con un agujero. */
+.avatar{width:42px;height:42px;border-radius:50%;flex:none;
+  object-fit:cover;object-position:center 18%;
+  background:var(--acc);border:1px solid rgba(255,255,255,.62)}
+.top-txt{min-width:0}
+/* El nombre es la marca, asi que va en Fraunces igual que .brand-title en la
+   landing. Sube de .95 a 1rem porque el serif con opsz pequeno pesa menos de lo
+   que su tamano dice, y a .95 se quedaba por debajo del subtitulo que lleva
+   debajo. */
+.top-txt strong{display:block;font-family:var(--display);font-size:1rem;font-weight:600;
+  line-height:1.25;letter-spacing:-.01em;color:#fff}
+/* .92 y no blanco puro: es el valor con el que el pie de la landing separa su
+   texto secundario del principal. Da 4,79:1 sobre la banda, por encima del 4,5
+   que pide la WCAG para texto normal. */
+.top-txt > span{display:block;font-size:.78rem;color:rgba(255,255,255,.92);line-height:1.4}
+/* El subtitulo dice lo mismo en las dos anchuras. Se probo a sumarle la
+   especializacion en escritorio, donde el hueco entre el nombre y la pastilla esta
+   vacio, y sobraba: el hueco no es un problema que haya que rellenar, y la
+   cabecera se lee mejor diciendo una sola cosa a cualquier ancho.
+   Lo que si arregla la linea corta es el desbordamiento al filo: "Barquisimeto y
+   online" ocupaba 194,5 px en una caja de 194,5 —el 100 % exacto— asi que envolvia
+   en cuanto la fuente tardaba en cargar. "Psicologa clinica" ocupa 98,7 de 120,6. */
+/* LA PASTILLA, DENTRO DE LA BANDA.
+   Rellenarla de blanco sobre el terracota la convertiria en lo mas luminoso de la
+   pantalla, y no es la accion principal de esta vista: la principal es elegir. Va
+   hueca con el canto claro, que es como el pie de la landing dibuja sus botones
+   redondos, y se rellena al pasar por encima.
+   El canto va al 62 %, no al 32 % del pie: ese .32 da 1,88:1 sobre el terracota y
+   la WCAG pide 3:1 para el contorno de un objeto grafico. Al 62 % da 3,12:1.
+   Copiar el .32 habria sido heredar un fallo, no una receta. */
+.wa{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;
+  gap:.4rem;padding:.5rem .85rem;border-radius:var(--r-pill);border:1px solid rgba(255,255,255,.62);
+  background:transparent;color:#fff;font-size:.8rem;font-weight:500;
+  text-decoration:none;min-height:44px;
+  transition:background var(--paso),color var(--paso)}
+.wa:hover{background:#fff;color:var(--banda)}
+/* Una sola regla para todos: el tamano se hereda de la escala y el color de la
+   tinta del sitio donde este el icono, salvo las dos excepciones anotadas abajo. */
+.ico{width:var(--ico);height:var(--ico);flex:none;display:block;fill:currentColor}
+
+/* En el telefono la pastilla se queda en el icono. A 390 px la cabecera reparte
+   42 de foto, el nombre con su linea de abajo y esta pastilla, y no daban: el
+   texto se partia en "Tengo una / duda" dentro de la propia pastilla y de paso
+   estrujaba el subtitulo hasta hacerlo envolver tambien.
+   El texto NO se borra, se oculta a la vista: el lector de pantalla lo sigue
+   leyendo, asi que el boton conserva su nombre accesible. El globo de WhatsApp
+   se reconoce solo, y el objetivo tactil sube a 44x44 exactos. */
+@media(max-width:559.98px){
+  .wa{width:44px;padding:0;gap:0}
+  .wa .ico{width:var(--ico-lg);height:var(--ico-lg)}
+  .wa-txt{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap;border:0}
+}
+
+.barra-wrap{max-width:var(--medida);margin:0 auto;padding:0 1.25rem}
+.barra{height:4px;background:var(--inerte);border-radius:var(--r-pill);overflow:hidden;margin-top:.1rem}
+.barra i{display:block;height:100%;width:25%;background:var(--acc);border-radius:var(--r-pill);
+  transition:width 400ms cubic-bezier(.2,.8,.3,1)}
+.paso-txt{font-size:.76rem;color:var(--txt-suave);margin:.55rem 0 0;font-weight:500;
+  letter-spacing:.01em}
+
+/* ===================== CUERPO =====================
+   EL RANGO TIPOGRAFICO, ABIERTO.
+   Antes iba de 0,73 a 1,4 rem casi todo en 600: un rango de nada, y por eso el
+   ojo no tenia donde aterrizar. Ahora va de 0,72 a 1,8 rem y el peso maximo
+   baja de 700 a 600 — mas rango de tamano, menos rango de grosor, que es lo
+   que separa una pantalla cuidada de una en negrita. */
+main{max-width:var(--medida);margin:0 auto;padding:1.75rem 1.25rem 2rem}
+/* Mismas medidas que h1,h2,h3 en style.css: peso 600, interlineado 1,12,
+   interletraje -0,02em y text-wrap:balance, que reparte las lineas del titular en
+   vez de dejar una palabra suelta abajo. */
+h1{font-family:var(--display);font-size:1.8rem;font-weight:600;line-height:1.12;
+  margin:0 0 .5rem;letter-spacing:-.02em;text-wrap:balance}
+.intro{color:var(--txt-suave);margin:0 0 2.25rem;line-height:1.7;font-size:1rem;max-width:34rem}
+
+.grupo{margin-bottom:2.25rem}
+/* Son h2, asi que llevan el display. A 1,05rem y peso 600 son exactamente la
+   misma pieza que .brand-title y que el summary de las preguntas frecuentes de la
+   landing, de ahi el -0,01em en vez del -0,02em de los titulares grandes. */
+.grupo-tit{font-family:var(--display);font-size:1.05rem;font-weight:600;
+  letter-spacing:-.01em;margin:0 0 1rem;
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+/* La bajada acompana al titulo pero no es titulo: vuelve a Inter, o el bloque
+   entero se leeria como una sola frase en serif.
+   Sirve tambien suelta debajo de un grupo, que es como la usa el plazo de los
+   paquetes: ahi el dato no es de una tarjeta sino de las tres, asi que se dice una
+   vez fuera de ellas en lugar de repetirse dentro. */
+.grupo-nota{font-family:var(--texto);font-size:.82rem;font-weight:400;
+  color:var(--txt-suave);letter-spacing:0;line-height:1.5;margin:1rem 0 0}
+/* LA CONDICION DE LOS PAQUETES, EN PASTILLA.
+   No inventa una forma: es el mismo radio de 7 px del badge de "Ahorras" y el
+   unico tinte calido de la paleta que no significa nada mas —`--sel` solo lo usa
+   hoy el hueco de la foto mientras carga—, asi que no se confunde con el relleno
+   de una tarjeta elegida.
+   `inline-flex` y no `flex`: la pastilla mide lo que mide su texto. A ancho
+   completo dejaria de ser una pastilla y pasaria a ser una franja, que es peso que
+   este dato no tiene.
+   Medido: el texto da 5,01:1 sobre el tinte y el icono 7,06:1. */
+/* CAJA Y NO CAPSULA.
+   Empezo siendo una pastilla y en movil no funcionaba: a 390 px la columna util
+   son 330 y la capsula media 276, el 84 %. Una capsula es para dos o tres
+   palabras; ahi hay siete, y a esa anchura deja de leerse como pastilla y se lee
+   como una barra estirada.
+   Al ancho completo el problema desaparece y ademas rima con la tarjeta que tiene
+   encima, que mide exactamente lo mismo. El radio es el 16 de la escala, asi que
+   no aparece ningun valor nuevo. */
+.nota-plazo{display:flex;align-items:center;gap:.55rem;margin:1.15rem 0 0;
+  padding:.7rem .9rem;border-radius:var(--r);background:var(--sel)}
+/* En escritorio la caja se encoge hasta su texto. A ancho completo aqui son 760 px
+   de superficie para seis palabras, y el hueco vacio pesa mas que el dato. Abajo
+   no pasa porque la columna mide 330 y la caja se llena casi sola.
+   El corte es 780 y no otro porque es EL DE SU PROPIO BLOQUE: a 780 las tarjetas
+   de consulta pasan de una columna a tres. Mientras las tarjetas sigan apiladas a
+   ancho completo la nota las acompana; en cuanto se reparten en tres, la nota deja
+   de tener con quien alinearse y vuelve a medir lo suyo. Usar el 760 de la lista
+   de motivos habria encogido la nota mientras su bloque seguia en una columna. */
+@media(min-width:780px){
+  .nota-plazo{display:inline-flex}
+}
+.nota-plazo .ico{color:var(--acc-dp)}
+.grupo-sep{border-top:1px solid var(--linea);padding-top:2rem}
+
+/* ===================== TARJETAS BASE =====================
+   Sin sombra en reposo. La tarjeta se ve porque es blanca sobre el suelo crema,
+   no porque tenga un marco. */
+.card{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);
+  transition:border-color var(--paso),background var(--paso)}
+.card:hover{border-color:var(--linea-f)}
+
+/* LO QUE PIDIO EDGAR: al elegir, solo se pintan las LINEAS, y en el mismo color
+   del hover. Nada se rellena de oscuro. */
+/* Sin sombra. Lo elegido se dice con el relleno de salvia, la linea de arcilla
+   y el check — nunca levantando la tarjeta del papel. */
+.card[aria-checked="true"]{border:1.5px solid var(--linea-f);background:var(--sup-eleg)}
+
+/* El circulo pierde el disco: es un aro, en reposo tenue y al elegirlo del
+   mismo color que el hover. El icono se dibuja dentro, nunca en blanco sobre
+   oscuro. */
+/* El circulo pasa de aro a DISCO: relleno macizo en la misma salvia del boton
+   "Ver horarios", con el icono dibujado en blanco encima. Es lo que le da al
+   verde presencia real dentro de la tarjeta.
+   Al elegir, el disco baja un escalon a la salvia oscura — asi la seleccion
+   sigue teniendo senal propia sin cambiar de color. */
+.circ{flex:none;border-radius:50%;border:1.5px solid var(--acc);background:var(--acc);
+  display:grid;place-items:center;color:#fff;
+  transition:border-color var(--paso),background var(--paso),border-width var(--paso)}
+.card:hover .circ{border-color:var(--acc-dp);background:var(--acc-dp)}
+/* Al elegir, el disco se INVIERTE: de salvia maciza con el icono en blanco pasa a
+   blanco con el icono en salvia. Vale igual para el icono de motivo y para la
+   cifra de las sesiones, porque las dos cosas son .circ.
+   El aro va en salvia y mas grueso (2,5 px) para que el disco se recorte contra el
+   crema de la tarjeta: en blanco sobre blanco el borde daba 1,22:1 y el disco se
+   diluia. Con el aro sube a 4,33:1, muy por encima del 3:1 que pide la WCAG para
+   el contorno de un elemento grafico.
+   El ancho no mueve nada: el disco es 44x44 fijo con box-sizing border-box. */
+.card[aria-checked="true"] .circ{border-width:2.5px;border-color:var(--acc);
+  background:#fff;color:var(--acc)}
+
+/* --------- modalidad · control segmentado ---------
+   Antes eran dos tarjetas de 371x118 con un disco de 44 dentro: el disco ocupaba
+   el 11,9% del ancho, la mitad que en las tarjetas de motivo, y por eso se leian
+   como dos cajas vacias con un punto en medio. Elegir entre dos cosas no es
+   explorar una rejilla — es accionar un interruptor. */
+.segs{position:relative;width:min(100%,22rem);padding:4px;background:var(--sup);
+  border:1px solid var(--linea);border-radius:var(--r-pill);
+  transition:transform 160ms cubic-bezier(.23,1,.32,1)}
+/* Al pulsar se hunde el control ENTERO, no un segmento. Si se hundiera solo el
+   segmento, la copia de color que va encima no lo acompanaria y el texto elegido
+   se quedaria quieto mientras el de debajo encoge. */
+.segs:active{transform:scale(.985)}
+
+/* Las dos mitades miden exactamente lo mismo (flex:1 1 0, no auto), asi que el
+   aro se mueve con un translateX limpio y no hay que medir nada en JavaScript. */
+/* 20 px de hueco entre las dos mitades: la costura queda centrada con 10 px de
+   aire a cada lado. Con 8 el aro casi la tocaba. */
+.segs-in{position:relative;display:flex;gap:20px}
+
+.seg{position:relative;z-index:2;flex:1 1 0;display:inline-flex;align-items:center;
+  justify-content:center;gap:.5rem;padding:0 1rem;min-height:44px;border-radius:var(--r-pill);
+  border:1px solid transparent;background:none;font:inherit;font-size:.9rem;
+  font-weight:500;color:var(--txt-suave);cursor:pointer;white-space:nowrap;
+  transition:color var(--paso)}
+
+
+/* EL ARO. Misma receta que el disco y el check: blanco por dentro, salvia fuerte
+   a 2,5 px. Lo que se desliza es un contorno, no un bloque de color. */
+.seg-ind{position:absolute;z-index:1;top:0;bottom:0;left:0;width:calc(50% - 10px);
+  border-radius:var(--r-pill);border:2.5px solid var(--acc);
+  transition:transform 220ms cubic-bezier(.77,0,.175,1)}
+
+/* LA COPIA EN SALVIA, recortada al aro. El color no se funde: se BARRE. Un
+   fundido deja ver los dos colores a la vez a mitad de camino; con el recorte el
+   cambio ocurre exactamente en el borde del aro. */
+.seg-copia{position:absolute;z-index:3;inset:0;display:flex;gap:20px;
+  pointer-events:none;color:var(--acc);
+  transition:clip-path 220ms cubic-bezier(.77,0,.175,1)}
+.seg-copia .seg{color:inherit}
+
+/* LA COSTURA · hilo. Una linea que no empieza ni termina de golpe: se desvanece
+   hacia las dos puntas. Vive en el hueco de 8 px entre las dos mitades, asi que
+   el aro nunca la pisa. */
+.seg-hilo{position:absolute;z-index:0;left:50%;top:9px;bottom:9px;width:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(to bottom,transparent 0%,var(--linea) 35%,
+    var(--linea) 65%,transparent 100%)}
+
+/* --------- consultorio --------- */
+.lugar{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows 320ms cubic-bezier(.2,.8,.3,1),opacity 220ms,margin-top 320ms;
+  margin-top:0}
+.lugar.abierto{grid-template-rows:1fr;opacity:1;margin-top:1.1rem}
+.lugar-in{overflow:hidden;min-height:0}
+.lugar-caja{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1.2rem 1.3rem}
+.lugar-cab{display:flex;align-items:center;gap:.65rem;padding-bottom:.8rem;margin-bottom:.9rem;
+  border-bottom:1px solid var(--linea-int)}
+.lugar-cab .ico{width:var(--ico-lg);height:var(--ico-lg);color:var(--marca-dp)}
+/* Encabeza su caja, asi que es un titulo pequeno y le toca el display. */
+.lugar-cab strong{font-family:var(--display);font-size:.98rem;font-weight:600;
+  letter-spacing:-.01em}
+/* En movil la caja apila direccion y boton. Sin align-items el boton se estiraba
+   a todo el ancho de la caja y el rotulo quedaba pegado a la izquierda: parecia
+   una fila de lista, no un boton. Centrado y con un ancho minimo propio se lee
+   como lo que es. En escritorio vuelve a la fila, con la direccion a la izquierda. */
+.lugar-cuerpo{display:flex;flex-direction:column;gap:1.1rem;align-items:center}
+@media(min-width:640px){
+  .lugar-cuerpo{flex-direction:row;align-items:center;justify-content:space-between}
+  .lugar-ir{align-self:auto;min-width:0}
+}
+.lugar-dir{font-size:.85rem;color:var(--txt-suave);line-height:1.65;margin:0}
+.lugar-ir{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.7rem 1.6rem;border-radius:var(--r-pill);min-width:11rem;
+  background:var(--acc);color:#fff;font-size:.9rem;font-weight:500;text-decoration:none;
+  min-height:48px;flex:none;transition:background var(--paso),transform 160ms cubic-bezier(.23,1,.32,1)}
+.lugar-ir:active{transform:scale(.97)}
+/* Es el UNICO icono macizo de la vista y es a proposito: a 15 px un icono de trazo
+   con detalle interior se cierra y queda en una mancha —le paso al mapa plegado que
+   habia antes—. Una forma llena conserva su silueta a cualquier tamano. Ademas es
+   el glifo que usa Google Maps para "como llegar", asi que ya viene aprendido. */
+.lugar-ir:hover{background:var(--acc-dp)}
+
+
+/* --------- motivo · una lista, no una rejilla ---------
+   Antes eran cuatro tarjetas con su borde, cada una con un disco de salvia de 44
+   px. Dos motivos para cambiarlo:
+
+   1. Icono in a circle repetido cuatro veces es el patron de maquetacion generada
+      mas reconocible que hay. Y estos cuatro glifos no informaban: tapando el
+      nombre, nadie distingue "Superar la ansiedad" de "Acompanar un duelo". Un
+      icono que no se puede adivinar es decoracion, y decoracion repetida es lo que
+      delata.
+   2. La rejilla centraba el contenido, asi que cuando un nombre ocupaba una linea
+      y su vecino dos, los discos quedaban a 844,1 y 833,6 px — 10,5 px de desfase
+      entre dos circulos que estan uno al lado del otro. La fila no centra nada, y
+      el problema desaparece por construccion.
+
+   Cuatro cajas pasan a ser UNA. Ese solo cambio quita tres rectangulos con borde
+   de una pantalla que tenia veintiuno. */
+.lista{display:flex;flex-direction:column;background:var(--sup);
+  border:1px solid var(--linea);border-radius:var(--r);overflow:hidden}
+.fila{position:relative;display:flex;align-items:center;gap:.9rem;width:100%;min-height:56px;
+  padding:.9rem 1.1rem;border:0;border-top:1px solid var(--linea-int);
+  background:transparent;font:inherit;color:var(--txt);text-align:left;cursor:pointer;
+  transition:background var(--paso)}
+/* LA FOTO, EN LAS DOS ANCHURAS.
+   Aqui es una miniatura de 44 px a la izquierda; en escritorio el mismo elemento
+   se estira a franja de 16:10 sobre el nombre. Un solo envoltorio con dos formas,
+   igual que la lista entera: mismo marcado, sin JavaScript por medio.
+   Son las cuatro imagenes que la landing ya usa para estos mismos cuatro motivos,
+   asi que quien llega a reservar viene de verlas hace treinta segundos. */
+.serv-foto{position:relative;flex:none;display:block;width:44px;height:44px;
+  border-radius:var(--r-sm);overflow:hidden;background:var(--sel)}
+.serv-foto img{display:block;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.8);transition:filter var(--paso)}
+/* La misma gradacion de arcilla que `.graded` en style.css: sin ella las cuatro
+   fotos llegan con su temperatura de origen y no rimarian ni entre si ni con la
+   pagina de la que vienen. */
+.serv-foto::after{content:"";position:absolute;inset:0;pointer-events:none;
+  mix-blend-mode:multiply;
+  background:linear-gradient(165deg,rgba(196,164,132,.12),rgba(243,233,222,.06) 45%,
+    rgba(166,123,91,.14))}
+/* El color hace de segunda senal de "elegido". Los valores no son inventados: son
+   los de `.graded img`, saturate(1.06) contrast(1.03). En reposo la foto baja a
+   0,8 de saturacion, asi que la elegida es la unica a todo color. El relleno calido
+   y el canto de salvia siguen siendo la senal principal — esto se suma, no
+   sustituye, porque el color por si solo no vale como unica marca de estado. */
+.fila[aria-checked="true"] .serv-foto img{filter:saturate(1.06) contrast(1.03)}
+.fila:first-child{border-top:0}
+.fila:hover{background:var(--sup-cal)}
+.fila[aria-checked="true"]{background:var(--sup-eleg)}
+/* El canto de salvia dice "elegido" con el mismo color de accion que el disco
+   invertido de las tarjetas de consulta, pero en el formato que le toca a una
+   lista. El relleno calido sigue siendo la senal principal; el canto es lo que
+   la vuelve inequivoca. */
+.fila[aria-checked="true"]::before{content:"";position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--acc)}
+/* El anillo de foco va hacia DENTRO: la caja recorta lo que sobresale, asi que con
+   el desplazamiento por defecto se perderia la mitad del anillo. */
+.fila:focus-visible{outline-offset:-3px;border-radius:0}
+/* Mismo tamano que el nombre del plan: son la misma clase de etiqueta y no hay
+   jerarquia que justifique que una sea un 27% mayor. */
+.serv-nom{font-weight:500;font-size:.94rem;line-height:1.35}
+.fila[aria-checked="true"] .serv-nom{font-weight:600}
+
+/* EN ESCRITORIO LA CAJA SE DESHACE y vuelven las cuatro tarjetas de siempre.
+   La lista de una pieza funciona en el telefono porque alli es una columna: cuatro
+   filas apiladas se leen de arriba abajo. Tumbada a 800 px se convierte en el
+   unico objeto de la pagina que ocupa todo el ancho sin partirse en piezas, y
+   entonces no rima ni con la pildora de arriba ni con las tarjetas de abajo.
+   Separadas, los dos bloques de elegir vuelven a tener el mismo radio, el mismo
+   borde y la misma separacion.
+   Es un solo componente con dos disposiciones — el mismo marcado, sin JavaScript
+   por medio. */
+@media(min-width:760px){
+  .lista{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem;
+    background:none;border:0;border-radius:0;overflow:visible}
+  .fila{flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    gap:.7rem;min-height:128px;padding:1.1rem .75rem;
+    background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+    transition:background var(--paso),border-color var(--paso)}
+  /* La regla base quita el borde superior a la primera fila para que no doble la
+     linea del contenedor. Aqui ya no hay contenedor, asi que hay que devolverselo
+     — y con la misma especificidad, o gana la de arriba. */
+  .fila:first-child{border-top:1px solid var(--linea)}
+  .fila:hover{background:var(--sup);border-color:var(--linea-f)}
+  .fila[aria-checked="true"]{border:1.5px solid var(--linea-f);background:var(--sup-eleg)}
+  /* El canto de salvia es marca de lista. En una tarjeta suelta no pinta nada:
+     ahi lo que dice "elegida" es el relleno calido, como en las de consulta. */
+  .fila[aria-checked="true"]::before{content:none}
+  /* Ya no hay caja que recorte, asi que el anillo de foco vuelve a ir por fuera. */
+  .fila:focus-visible{outline-offset:3px;border-radius:var(--r)}
+  /* LA MINIATURA SE ESTIRA A FRANJA y entra a sangre por los tres cantos altos.
+     Aqui es donde volvia el patron que se habia quitado en movil: cuatro tarjetas
+     iguales con cuatro discos de salvia identicos, justo encima de otras tres
+     tarjetas iguales. Con la foto cada tarjeta trae su propio contenido y las
+     cuatro dejan de ser la misma. */
+  .fila{padding:0;gap:0;justify-content:flex-start;overflow:hidden;min-height:0}
+  .fila .serv-foto{width:100%;height:auto;aspect-ratio:16/10;border-radius:0}
+  /* LA HOLGURA VUELVE A REPARTIRSE, POR OTRA VIA.
+     La rejilla estira las cuatro al alto de la mas alta y "Fortalecer tu
+     Autoestima" es la unica de dos lineas. Con el nombre a su alto natural las
+     otras tres se quedaban con 21,2 px muertos abajo — el mismo descuadre que el
+     `min-height:2.7em` resolvia para los discos y que con foto deja de servir,
+     porque ese minimo se lo come el propio relleno del nombre.
+     La franja de texto toma el hueco sobrante y centra dentro lo que tenga, una
+     linea o dos: medido, la asimetria queda en 2,8 px y es identica en las cuatro.
+     Es el mismo defecto que resolvia el `min-height:2.7em` de los discos, por otra
+     via: alli el nombre reservaba dos lineas siempre, aqui se queda con todo el
+     hueco que le sobre a la tarjeta. */
+  .fila .serv-nom{display:grid;place-items:center;flex:1;width:100%;
+    padding:.75rem .7rem .85rem}
+}
+
+/* --------- sesiones --------- */
+/* Las tres columnas entran a 780 px, no a 640.
+   A 640 cada tarjeta se quedaba en 186 px y el pie necesitaba 190: el precio y
+   el badge se partian en dos filas, y como solo pasaba en las tarjetas que
+   llevan badge, los precios dejaban de estar alineados entre si. Por debajo de
+   780 va una sola columna a ancho completo, donde no hay estrechez posible. */
+.planes{display:grid;grid-template-columns:1fr;gap:1.25rem}
+@media(min-width:780px){.planes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* padding:0 NO es decorativo. Estas tarjetas son <button>, y Chrome les aplica
+   su padding por defecto (6 px a cada lado). Eso se comia 12 px de ancho util
+   —suficiente para que el precio y el badge se partieran en dos filas— y ademas
+   desplazaba 6 px todo el contenido respecto al borde real de la tarjeta, asi
+   que las divisorias no empezaban donde decia el CSS. */
+.planes .card{position:relative;display:flex;flex-direction:column;overflow:hidden;
+  text-align:left;padding:0}
+
+.plan-cab{display:flex;align-items:center;gap:.6rem;padding:1.2rem 0 .8rem;margin:0 1.05rem;
+  border-bottom:1px solid var(--linea-int)}
+.card[aria-checked="true"] .plan-cab{border-bottom-color:var(--linea-f)}
+/* La sugerida NO se oscurece en reposo: el relleno calido significa una sola cosa
+   en toda la vista, "esto es lo que has elegido". Lo que la distingue es el
+   contorno mas marcado — una senal de TARJETA, que pesa mas que cualquier etiqueta
+   sin necesidad de gritar.
+   Va por COLOR y no por grosor: engordar el borde a 2px cambiaba la geometria de
+   la caja y desalineaba los precios de las tres tarjetas y el check. El color no
+   mueve nada. #A8825F da 3,53:1 contra el blanco frente al 2,29 del borde normal.
+   La regla va DESPUES de la de elegida para que la sugerida conserve su linea. */
+.planes .card.sugerida{border-color:var(--marca)}
+
+/* Esto es, pieza por pieza, el .step-num de la landing: un disco con un numero
+   dentro, en Fraunces 600 a 1,05rem. Se copia el mismo tratamiento. */
+.plan-cifra{width:34px;height:34px;font-family:var(--display);font-size:1.05rem;
+  font-weight:600;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.plan-nom{font-weight:600;font-size:.94rem;line-height:1.3;letter-spacing:-.01em}
+/* "Sugerida" sube de gris a salvia oscura y a peso 500, pero NO se convierte en
+   caja: con el badge de ahorro ya macizo, dos pastillas en la misma tarjeta se
+   pelean. Y hay una razon medida — a 228 px de tarjeta el encabezado deja unos
+   194 px utiles, y circulo + "sesiones" + una pastilla no caben sin partirse. */
+.plan-eti{margin-left:auto;flex:none;font-size:.74rem;font-weight:500;color:var(--acc-dp);
+  white-space:nowrap;display:inline-flex;align-items:center;gap:.35rem}
+.plan-eti::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--acc);flex:none}
+/* EL CUERPO DE LA TARJETA SE FUE ENTERO.
+   Era `[icono] + [texto]` y en las de 3 y 5 consultas las dos piezas eran la
+   misma: mismo calendario y "A tu ritmo, 60 dias" palabra por palabra. Cuando una
+   fila se repite identica entre opciones que hay que comparar deja de ayudar a
+   decidir y pasa a ser relleno.
+   No se sustituyo por otro dato porque no existe: el precio por consulta es 25 $
+   en las dos de individual (75/3 y 125/5). En pareja si difiere, 33,33 y 30, pero
+   una linea que solo funciona en una de las dos modalidades es peor que ninguna.
+   El plazo se dice ahora una vez debajo del grupo. Lo que distingue una tarjeta de
+   otra es la cifra y el precio, y los dos ya estaban ahi.
+   `.plan-pie` conserva su `margin-top:auto`, asi que el precio sigue anclado al
+   fondo de la tarjeta y la holgura queda entre la cabecera y el pie. */
+.plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem .6rem;flex-wrap:wrap;padding:.9rem 1.05rem 1.2rem;margin-top:auto}
+.plan-pie::before{content:"";position:absolute;top:0;left:1.05rem;right:1.05rem;height:1px;
+  background:var(--linea-int)}
+.card[aria-checked="true"] .plan-pie::before{background:var(--linea-f)}
+
+/* El precio va al mismo color que el titulo de la tarjeta. Con esto la arcilla
+   deja de tener tinta en toda la vista y pasa a ser solo estructura —lineas,
+   bordes y la costura—; el peso del precio lo llevan el tamano y las cifras
+   tabulares, no el color. */
+/* La landing ya tiene resuelto como se pinta una cifra grande: .stat-number va en
+   Fraunces con peso 700. Es el mismo caso.
+   El interletraje sube de -0,035 a -0,02em: aquel valor estaba apretado a mano
+   para compensar lo suelto que va el sans del sistema entre cifras, y Fraunces ya
+   viene ajustada. A -0,035 el "125 $" se pegaba consigo mismo. */
+.plan-precio{font-family:var(--display);font-size:1.8rem;font-weight:700;
+  letter-spacing:-.02em;line-height:1;
+  color:var(--txt);white-space:nowrap;font-variant-numeric:tabular-nums}
+/* El pie ancla sus dos piezas a los extremos: el precio a la izquierda y el badge
+   a la derecha. Antes el badge iba pegado al precio y el check remataba a la
+   derecha; sin check, repartirlos es lo que deja las tres tarjetas uniformes. */
+/* El ahorro vuelve a ser un badge. Va en crema con letra terracota oscura: es
+   informacion que se dibuja, no una decision, asi que se queda del lado calido.
+   Sobre la tarjeta elegida el relleno pasa a blanco, porque el crema del badge y
+   el crema de la tarjeta son casi el mismo y el badge se disolveria. */
+/* El badge pasa a relleno macizo con la salvia oscura del hover del boton. En
+   crema sobre blanco daba 1,00 y desaparecia. Ya no necesita excepcion sobre la
+   tarjeta elegida: el mismo relleno se lee igual de bien sobre blanco y crema. */
+/* El margen separa el badge SOLO del precio; el hueco del pie sigue mandando en
+   la distancia hasta el check, que va empujado a la derecha por su cuenta. */
+/* translateY de 1,5 px: alineacion OPTICA, no geometrica. El precio tiene
+   line-height 1, asi que su caja reserva sitio para trazos descendentes que las
+   cifras casi no usan —24 px de tinta arriba de la linea base y 3 abajo—, y el
+   centro de la caja queda 1,5 px por debajo del centro visual de los numeros.
+   Centrar por caja deja el badge flotando alto. */
+/* EL translateY SE VA AL CAMBIAR DE FUENTE, y esta medido.
+   Aquel 1,5 px era una compensacion optica calibrada contra el sans del sistema:
+   sus cifras dejaban mucho hueco por debajo de la linea base dentro de una caja
+   con line-height 1, asi que el badge centrado por caja flotaba alto.
+   Fraunces reparte su tinta de otra manera. Medido con canvas a 28,8 px, "125 $"
+   deja 23 px de tinta sobre la linea base y 3 por debajo, y con eso los centros
+   visuales del precio y del badge caen ya en el mismo sitio: el desfase sin
+   transform es de 0,05 px. Manteniendo el 1,5 el badge se iba 1,49 px abajo, asi
+   que la correccion habia pasado a ser el error. */
+.plan-ahorro{display:inline-flex;align-items:center;
+  padding:.28rem .7rem;border-radius:var(--r-pill);
+  background:var(--acc-dp);color:#fff;font-size:.72rem;font-weight:500;
+  line-height:1.3;white-space:nowrap}
+
+/* ============ LA APERTURA DE LAS CONSULTAS ============
+   Antes el bloque aparecia de golpe (hidden) y luego probe con las tarjetas
+   entrando escalonadas. Esto es lo que hay ahora, y es la misma tecnica que la caja
+   del consultorio: grid-template-rows de 0fr a 1fr. Es la unica forma de animar una
+   altura que no se conoce de antemano sin fijarla a mano.
+
+   La divisoria y el relleno superior viven DENTRO de la parte que se abre; si
+   estuvieran en el contenedor que anima, quedaria una raya suelta con el bloque
+   cerrado. */
+.abre{display:grid;grid-template-rows:0fr;opacity:0;margin-bottom:0;
+  transition:grid-template-rows 320ms cubic-bezier(.2,.8,.3,1),
+             opacity 220ms,margin-bottom 320ms}
+.abre.abierto{grid-template-rows:1fr;opacity:1;margin-bottom:2.25rem}
+.abre-in{overflow:hidden;min-height:0}
+
+/* ============ LAS TARJETAS DE CONSULTA, EN MOVIL ============
+   La tarjeta media 332 x 180 y 94 de esos 180 eran relleno y divisorias, no
+   contenido. Aqui no se estrecha —en la pantalla mas pequena no sobra ancho— ni
+   se parte en columnas: se aprieta.
+
+   Se probo antes una rejilla de dos columnas y fallaba por una razon de fondo:
+   en una rejilla las columnas se COMPARTEN entre filas, asi que el badge de 82 px
+   reservaba ancho tambien en la fila del nombre, donde el precio solo necesita 55.
+   La cabecera se quedaba en 167 px pidiendo 180, "Sugerida" caia a otra linea y
+   esa tarjeta acababa 19 px mas alta que sus vecinas. Tres filas a ancho completo
+   no comparten nada: nada aprieta a nada y las tres tarjetas miden igual. */
+@media(max-width:819.98px){
+  .planes .card{display:flex;flex-direction:column;gap:.9rem;padding:1.35rem 1.25rem}
+  .plan-cab{margin:0;padding:0;border-bottom:none}
+  .card[aria-checked="true"] .plan-cab{border-bottom-color:transparent}
+  /* padding-top y no 0: la divisoria se dibuja en el borde superior del pie, asi
+     que sin relleno el precio arranca pegado al trazo. Con .9rem la linea queda
+     con 14,4 px por encima (el hueco entre filas) y 14,4 por debajo — el mismo
+     ritmo que ya tenia en escritorio. */
+  .plan-pie{padding:.9rem 0 0;margin-top:0;justify-content:space-between}
+  /* La divisoria sobre el precio SE QUEDA tambien en movil: separa el dato del
+     dinero del resto de la tarjeta y a Edgar le funciona. Lo que apretaba no era
+     la raya, era el relleno. */
+  .plan-precio{font-size:1.55rem}
+}
+
+/* EL CANTO DE SALVIA, TAMBIEN EN LAS TARJETAS DE CONSULTA — solo en movil.
+   Es la misma marca que llevan las filas del motivo, asi que en el telefono las
+   dos decisiones se senalan igual: relleno calido mas canto de salvia.
+   En escritorio NO va, y es a proposito: alli el motivo vuelve a ser tarjeta
+   cuadrada sin canto, y ponerselo solo a las de precio inventaria una senal que
+   no existe en ningun otro sitio de esa pantalla.
+   El corte de 759,98 es el mismo de la lista y el de la barra fija, para que
+   "movil" signifique lo mismo en todo el archivo.
+   Dos detalles que resuelve el codigo solo: la tarjeta ya recorta su contenido,
+   asi que los extremos del canto salen redondeados como los de la fila; y al
+   posicionarse contra la caja de relleno, el canto queda POR DENTRO del borde de
+   arcilla en vez de taparlo — la linea de la tarjeta se conserva entera. */
+@media(max-width:759.98px){
+  .planes .card[aria-checked="true"]::before{content:"";position:absolute;
+    left:0;top:0;bottom:0;width:3px;background:var(--acc)}
+}
+
+/* ===================== ACCION ===================== */
+/* El icono del destino va dentro de su propio disco, no suelto al lado.
+   El disco es blanco al 16 %: da sitio propio al icono sin meter un color nuevo
+   ni partir el boton en dos objetos, que es lo que hacia la referencia del panel
+   diagonal. Cabe un solo icono, asi que este dice A DONDE VAS —un calendario en
+   el paso 1— y se renuncia a la flecha de avance. */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.9rem;
+  padding:.5rem .5rem .5rem 1.5rem;border-radius:var(--r-pill);font:inherit;font-weight:500;
+  font-size:.95rem;border:1px solid transparent;cursor:pointer;min-height:48px;
+  transition:background var(--paso),transform var(--paso)}
+.btn-disco{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.16);transition:background var(--paso)}
+
+/* Apagado, el blanco al 16 % sobre el beige inerte no se veria: pasa a tinta. */
+.btn-1:disabled .btn-disco{background:rgba(46,51,46,.09)}
+.btn-1{background:var(--acc);color:#fff}
+.btn-1:hover:not(:disabled){background:var(--acc-dp)}
+/* scale y no translateY: se siente como que el boton te responde,
+   no como que se mueve de sitio. */
+.btn-1:active:not(:disabled){transform:scale(.97)}
+.btn-1:disabled{background:var(--inerte);color:var(--inerte-txt);cursor:not-allowed}
+
+/* En movil el boton es la barra fija de abajo y ocupa todo el ancho. */
+.acciones{margin-top:2.5rem}
+.acciones .btn{width:100%;max-width:26rem}
+
+/* En escritorio, la mitad izquierda de la fila la ocupa el RESUMEN de lo elegido,
+   no una linea. La linea decorativa medi­a 594 px contra 166 del boton —3,58 veces
+   mas— y a esa proporcion no se leia como una flecha sino como una regla suelta.
+   El hueco no se arreglaba con un trazo: se arregla con contenido que sirva.
+   Y justo antes de avanzar es cuando confirmar lo elegido vale para algo. */
+@media(min-width:760px){
+  .acciones{display:flex;align-items:center;gap:1.5rem}
+  /* El boton crece SOLO aqui: en movil la barra fija ya ocupa todo el ancho y no
+     necesita nada. Con min-width su tamano deja de depender de lo corto que sea
+     el rotulo — "Ver horarios" son dos palabras y sin un minimo el boton se
+     quedaba en 170 px, mas pequeno que una tarjeta de sesion. */
+  /* Largo, no alto. El min-width es lo que le da presencia —"Ver horarios" son dos
+     palabras cortas y sin un minimo el ancho lo decidiria el texto—; la altura
+     vuelve a los 52 px del resto de controles de la pantalla. */
+  /* Mas largo y mas bajo. El disco se encoge con el: con 34 px de disco mas su
+     relleno la altura no bajaria de 50 y el min-height no mandaria nada. */
+  .acciones .btn{width:auto;max-width:none;flex:none;
+    min-width:23rem;min-height:50px;font-size:.95rem;
+    padding:.45rem .45rem .45rem 1.75rem;gap:.9rem}
+  .acciones .btn .btn-disco{width:32px;height:32px}
+
+}
+.resumen{flex:1 1 auto;margin:0;font-size:.85rem;line-height:1.55;color:var(--txt-suave);
+  text-wrap:pretty}
+.resumen b{font-weight:600;color:var(--txt);white-space:nowrap}
+/* Se va rellenando segun se decide, asi que la fila nunca esta vacia: la modalidad
+   siempre tiene valor. */
+
+/* EL FONDO VA MACIZO, NO TRASLUCIDO.
+   Antes era `rgba(244,236,228,.93)` con desenfoque detras. Con un beige claro eso
+   daba igual, pero al oscurecerlo el 7 % de transparencia deja pasar lo que haya
+   debajo y el tono de la barra cambia segun por donde vaya el desplazamiento —y
+   con el, el contraste del boton verde, que es justo lo que hay que garantizar.
+   Macizo, el 3,47:1 del boton contra la barra es una cifra fija y no una media.
+   Al no haber transparencia el `backdrop-filter` ya no pinta nada, asi que se va:
+   era un filtro sobre algo que ya no se ve. */
+.barra-fija{position:fixed;left:0;right:0;bottom:0;z-index:20;
+  padding:.8rem 1.25rem calc(.8rem + env(safe-area-inset-bottom));
+  background:var(--barra);
+  border-top:1px solid var(--linea);display:none}
+.barra-fija .btn{width:100%}
+@media(max-width:759px){
+  .barra-fija{display:block}
+  .acciones{display:none}
+  main{padding-bottom:6.5rem}
+}
+
+.aviso-maqueta{max-width:var(--medida);margin:0 auto 1.5rem;padding:.8rem 1.1rem;
+  background:var(--pend-sv);border:1px solid rgba(122,91,18,.22);border-radius:var(--r);
+  font-size:.8rem;line-height:1.65;color:var(--pend)}
+.aviso-maqueta b{font-weight:600}
+</style>
+</head>
+<body>
+<!-- ===================== LOS ICONOS =====================
+     Phosphor 2.1.1. Los tres iconos de interfaz —vídeo, pin y calendario— van en
+     peso "regular". Los otros dos van MACIZOS, y por la misma razón medida: a 15 o
+     16 px un dibujo con detalle interior pierde su interior y se cierra en una
+     mancha. La flecha de "Cómo llegar" ya lo estaba, y el logo de WhatsApp se pasó
+     después de medirlo: en "regular" su contorno mide 2.052 unidades de perímetro
+     dentro del mismo cuadrado en que el macizo mide 1.452, un 41 % más de línea
+     peleándose consigo misma a menos de un píxel físico de grosor. Ademas es un
+     LOGOTIPO, y una marca se reconoce por su silueta: WhatsApp se dibuja macizo en
+     todas partes, y su version de contorno es una desnaturalizacion de algo que la
+     gente ya tiene memorizado.
+     El hallazgo 03 pide una librería y un tratamiento coherente, no un peso literal
+     único: los dos casos macizos lo son por el mismo motivo declarado.
+     Se copian los glifos sueltos, así que esto no añade ni una petición ni una
+     librería.
+     Van en un sprite y no sueltos por dos razones. La primera es que el pin salía
+     DOS VECES en el archivo —a 1.6 y 24 px en la caja del consultorio y a 1.7 y 18
+     en el control de modalidad—, o sea el mismo dibujo mantenido por duplicado y
+     ya divergido. Con un <symbol> el path existe una vez y no hay forma de que las
+     dos copias se separen. La segunda es que así el JavaScript y el marcado
+     estático usan exactamente la misma pieza.
+     Phosphor no expone el grosor como stroke-width: sus paths vienen con el trazo
+     ya convertido en relleno, sobre un lienzo de 256. Por eso desaparecen los
+     cuatro tratamientos que había (1.6, 1.7, 1.8 y macizo) — el peso ahora es la
+     variante, y la variante es una sola. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-video" viewBox="0 0 256 256"><!-- Vídeo · Online --><path d="M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 256 256"><!-- Pin de mapa --><path d="M128,64a40,40,0,1,0,40,40A40,40,0,0,0,128,64Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,128Zm0-112a88.1,88.1,0,0,0-88,88c0,31.4,14.51,64.68,42,96.25a254.19,254.19,0,0,0,41.45,38.3,8,8,0,0,0,9.18,0A254.19,254.19,0,0,0,174,200.25c27.45-31.57,42-64.85,42-96.25A88.1,88.1,0,0,0,128,16Zm0,206c-16.53-13-72-60.75-72-118a72,72,0,0,1,144,0C200,161.23,144.53,209,128,222Z"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 256 256"><!-- WhatsApp --><path d="M152.58,145.23l23,11.48A24,24,0,0,1,152,176a72.08,72.08,0,0,1-72-72A24,24,0,0,1,99.29,80.46l11.48,23L101,118a8,8,0,0,0-.73,7.51,56.47,56.47,0,0,0,30.15,30.15A8,8,0,0,0,138,155ZM232,128A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-40,24a8,8,0,0,0-4.42-7.16l-32-16a8,8,0,0,0-8,.5l-14.69,9.8a40.55,40.55,0,0,1-16-16l9.8-14.69a8,8,0,0,0,.5-8l-16-32A8,8,0,0,0,104,64a40,40,0,0,0-40,40,88.1,88.1,0,0,0,88,88A40,40,0,0,0,192,152Z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 256 256"><!-- Calendario --><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></symbol>
+  <symbol id="i-ir" viewBox="0 0 256 256"><!-- Flecha de navegación · relleno --><path d="M248,121.58a15.76,15.76,0,0,1-11.29,15l-.2.06-78,21.84-21.84,78-.06.2a15.77,15.77,0,0,1-15,11.29h-.3a15.77,15.77,0,0,1-15.07-10.67L41,61.41a1,1,0,0,1-.05-.16A16,16,0,0,1,61.25,40.9l.16.05,175.92,65.26A15.78,15.78,0,0,1,248,121.58Z"/></symbol>
+</svg>
+
+
+<header class="top">
+  <div class="top-in">
+    <!-- alt vacio a proposito: el nombre va escrito justo al lado, asi que
+         describir la foto haria que el lector de pantalla dijera "Daryeli Romero"
+         dos veces seguidas. -->
+    <img class="avatar" src="darye-foto-pro-450.webp" width="42" height="42"
+         alt="" decoding="async">
+    <span class="top-txt">
+      <strong>Daryeli Romero</strong>
+      <!-- "Psicóloga clínica" y no "Psicóloga" a secas: es el cargo que usa el
+           resto del sitio —el <title> de la landing, la lista de credenciales y
+           la ficha de datos estructurados—, así que la reserva era el único sitio
+           donde se le rebajaba el título.
+           Y fuera "Barquisimeto y online": esa es exactamente la elección que se
+           pide tres centímetros más abajo, en el control de Online / Presencial.
+           Un dato se dice una vez, en el paso donde se decide; repetirlo en la
+           cabecera no informa, sólo llena. -->
+      <span>Psicóloga clínica</span>
+    </span>
+    <a class="wa" href="#" onclick="return false">
+      <svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>
+      <span class="wa-txt">Tengo una duda</span>
+    </a>
+  </div>
+</header>
+
+<div class="barra-wrap">
+  <p class="paso-txt"><span id="pasoNum">1</span> de 4</p>
+  <!-- "1 de 4" a la vista y "Paso 1 de 4" para quien use lector de pantalla: la
+       version corta quita el tono de tramite sin dejar a nadie sin la referencia.
+       La barra era un div sin semantica, asi que el unico progreso que existia era
+       ese texto; ahora es un progressbar de verdad con sus valores. -->
+  <div class="barra" role="progressbar" aria-label="Progreso de la reserva"
+       aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-valuetext="Paso 1 de 4">
+    <i id="barraRelleno"></i>
+  </div>
+</div>
+
+<main>
+  <p class="aviso-maqueta"><b>Maqueta.</b> No toca la base de datos ni el proyecto.
+     Pruébala con el ratón, con <b>Tab</b> y con las <b>flechas</b>. Fíjate en que
+     <b>la salvia vive dentro de la tarjeta</b> y nada esta levantado del papel: lo que dice
+     «elegido» es el relleno cálido y el check, no un marco oscuro.</p>
+
+  <h1>Reserva tu consulta</h1>
+  <p class="intro">Cuéntame qué te trae y cuántas consultas quieres. El horario lo vemos enseguida.</p>
+
+  <!-- ============ MODALIDAD ============ -->
+  <section class="grupo">
+    <h2 class="grupo-tit" id="tModo">¿Cómo prefieres la consulta?</h2>
+    <div class="segs">
+      <div class="segs-in" id="gModos" role="radiogroup" aria-labelledby="tModo"></div>
+    </div>
+
+    <div class="lugar" id="lugar" aria-hidden="true" inert>
+      <div class="lugar-in">
+        <div class="lugar-caja">
+          <p class="lugar-cab">
+            <svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg>
+            <strong>Centro Humanista Intellego</strong>
+          </p>
+          <div class="lugar-cuerpo">
+            <p class="lugar-dir">Av. Lara con calle 8, Torre Empresarial, piso 3<br>Barquisimeto, Lara<br>Frente a la plaza</p>
+            <a class="lugar-ir" href="#" onclick="return false"
+               aria-label="Cómo llegar — se abre en el mapa">
+              Cómo llegar
+              <svg class="ico" aria-hidden="true"><use href="#i-ir"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOTIVO ============ -->
+  <!-- Misma divisoria que separa el bloque de consultas: si la linea marca el paso
+       de una decision a la siguiente, tiene que estar entre todas, no solo entre
+       las dos ultimas. Encima de la primera no va: ahi arriba estan el titulo y la
+       bajada, y esa relacion no es de "otro paso". -->
+  <section class="grupo grupo-sep">
+    <h2 class="grupo-tit" id="tServ">¿En qué quieres trabajar?</h2>
+    <div class="lista" id="gServ" role="radiogroup" aria-labelledby="tServ"></div>
+  </section>
+
+  <!-- ============ CONSULTAS ============ -->
+  <section class="abre" id="bloquePlanes" aria-hidden="true" inert>
+    <div class="abre-in">
+      <div class="grupo-sep">
+        <!-- Sin bajada: "Los paquetes salen mas baratos por consulta" decia con
+             palabras lo que los badges dicen con la cifra exacta -"Ahorras 15 $",
+             "Ahorras 25 $"-, y ademas lo decia antes de que se vieran los numeros.
+             Cuando el dato ya esta en la pantalla, anunciarlo sobra. -->
+        <h2 class="grupo-tit" id="tPlan">¿Una consulta o un proceso?</h2>
+        <div class="planes" id="gPlanes" role="radiogroup" aria-labelledby="tPlan"
+             aria-describedby="notaPlan"></div>
+        <!-- El plazo es de los tres paquetes, no de una tarjeta, así que se dice
+             una vez aquí en vez de repetirse dentro. Va enlazada con
+             `aria-describedby` para que quien use lector de pantalla la oiga al
+             llegar a las opciones y no después de haberlas pasado todas. -->
+        <p class="grupo-nota nota-plazo" id="notaPlan">
+          <!-- El calendario vuelve, pero una sola vez y fuera de las tarjetas. Lo
+               que se quitó en el hallazgo 06 no era el icono: era la MISMA fila
+               repetida en dos tarjetas que hay que comparar. Aquí acompaña a un
+               dato que se dice una vez. Sigue siendo un glifo dibujado a mano, así
+               que entra en el lote del hallazgo 03 cuando pasemos a Phosphor. -->
+          <svg class="ico" aria-hidden="true"><use href="#i-cal"/></svg>
+          Tienes 60 días para usar el paquete</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="acciones">
+    <p class="resumen" id="resumen"></p>
+    <button type="button" class="btn btn-1" id="ir2Escritorio" disabled>
+      Ver horarios
+      <span class="btn-disco" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-cal"/></svg></span>
+    </button>
+  </div>
+</main>
+
+<div class="barra-fija">
+  <button type="button" class="btn btn-1" id="ir2Movil" disabled>
+    Ver horarios
+    <span class="btn-disco" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-cal"/></svg></span>
+  </button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* Antes esta funcion recibia el path entero y un grosor de trazo. Ahora recibe
+     el NOMBRE del simbolo: el dibujo vive en el sprite y aqui solo se apunta a el.
+     El parametro del grosor se fue porque en Phosphor el peso no es un atributo
+     sino la variante del glifo, y la variante ya esta elegida al copiarlo. */
+  function ico(n) {
+    return '<svg class="ico" aria-hidden="true"><use href="#i-' + n + '"/></svg>';
+  }
+
+  /* `foto` va explicito aunque hoy coincida con el slug. Deducir el nombre del
+     archivo del slug ata dos cosas que no tienen por que seguir atadas: el dia que
+     un motivo cambie de nombre interno, o que dos compartan imagen, se rompe sin
+     avisar. */
+  var SERVICIOS = [
+    {slug:'ansiedad',   nom:'Superar la ansiedad',      foto:'ansiedad.webp',   mod:'individual'},
+    {slug:'autoestima', nom:'Fortalecer tu autoestima', foto:'autoestima.webp', mod:'individual'},
+    {slug:'pareja',     nom:'Sanar en pareja',          foto:'pareja.webp',     mod:'pareja'},
+    {slug:'duelo',      nom:'Acompañar un duelo',       foto:'duelo.webp',      mod:'individual'}
+  ];
+  var PLANES = {
+    individual:[
+      {slug:'1', cifra:'1', nom:'Consulta',  precio:30,  ahorro:0},
+      {slug:'p3',cifra:'3', nom:'Consultas', precio:75,  ahorro:15, sugerida:true},
+      {slug:'p5',cifra:'5', nom:'Consultas', precio:125, ahorro:25}
+    ],
+    pareja:[
+      {slug:'1', cifra:'1', nom:'Consulta',  precio:45,  ahorro:0},
+      {slug:'p3',cifra:'3', nom:'Consultas', precio:100, ahorro:35, sugerida:true},
+      {slug:'p5',cifra:'5', nom:'Consultas', precio:150, ahorro:75}
+    ]
+  };
+
+  var estado = {modo:'online', servicio:null, plan:null};
+  var $ = function (id) { return document.getElementById(id); };
+
+  var MODOS = [
+    {v:'online',     n:'Online',     d:'video'},
+    {v:'presencial', n:'Presencial', d:'pin'}
+  ];
+
+  function pintarModos() {
+    var botones = MODOS.map(function (m) {
+      return '<button type="button" class="seg" role="radio" data-modo="' + m.v + '" ' +
+        'aria-checked="' + (estado.modo === m.v) + '">' +
+        ico(m.d) + '<span>' + m.n + '</span></button>';
+    }).join('');
+    // La copia va SIN role ni data-modo: es solo tinta, no un control. Si llevara
+    // role="radio" el teclado la contaria como una opcion mas.
+    var copias = MODOS.map(function (m) {
+      return '<span class="seg">' + ico(m.d) + '<span>' + m.n + '</span></span>';
+    }).join('');
+
+    $('gModos').innerHTML =
+      '<span class="seg-hilo" aria-hidden="true"></span>' +
+      '<span class="seg-ind" aria-hidden="true"></span>' +
+      botones +
+      '<span class="seg-copia" aria-hidden="true">' + copias + '</span>';
+
+    roving($('gModos'));
+    refrescarModo();
+    abrirLugar(estado.modo === 'presencial');
+  }
+
+  /* No se repinta al cambiar de opcion: solo se mueven dos valores. Repintar
+     crearia elementos nuevos y la transicion arrancaria de cero, sin deslizarse. */
+  function refrescarModo() {
+    var dos = estado.modo === 'presencial';
+    var ind = $('gModos').querySelector('.seg-ind');
+    var cop = $('gModos').querySelector('.seg-copia');
+    if (ind) ind.style.transform = dos ? 'translateX(calc(100% + 20px))' : 'translateX(0)';
+    if (cop) cop.style.clipPath = dos ? 'inset(0 0 0 50%)' : 'inset(0 50% 0 0)';
+  }
+
+  function abrirLugar(abre) {
+    var l = $('lugar');
+    l.classList.toggle('abierto', abre);
+    l.setAttribute('aria-hidden', String(!abre));
+    if (abre) l.removeAttribute('inert'); else l.setAttribute('inert', '');
+  }
+
+  function pintarServicios() {
+    $('gServ').innerHTML = SERVICIOS.map(function (s) {
+      return '<button type="button" class="fila" role="radio" data-serv="' + s.slug + '" ' +
+        'aria-checked="' + (estado.servicio === s.slug) + '">' +
+        /* alt vacio a proposito: el nombre del motivo va al lado, en texto, dentro
+           del mismo boton. Describir la foto ademas haria que el lector de pantalla
+           anunciase dos veces la misma opcion. Es el mismo criterio que sigue la
+           landing con estas cuatro imagenes. */
+        '<span class="serv-foto"><img src="' + s.foto + '" alt="" width="1600" height="1200" ' +
+          'loading="lazy" decoding="async"></span>' +
+        '<span class="serv-nom">' + s.nom + '</span></button>';
+    }).join('');
+    roving($('gServ'));
+  }
+
+  /* Cerrado mide cero, pero sin `inert` sus botones seguirian en el orden de
+     tabulacion y el teclado caeria dentro de un bloque invisible. Mismo problema
+     que tenia la caja del consultorio. */
+  function abrirPlanes(abre) {
+    var b = $('bloquePlanes');
+    b.classList.toggle('abierto', abre);
+    b.setAttribute('aria-hidden', String(!abre));
+    if (abre) b.removeAttribute('inert'); else b.setAttribute('inert', '');
+  }
+
+  function pintarPlanes() {
+    var s = SERVICIOS.filter(function (x) { return x.slug === estado.servicio; })[0];
+    if (!s) { abrirPlanes(false); return; }
+    $('gPlanes').innerHTML = PLANES[s.mod].map(function (p) {
+      return '<button type="button" class="card' + (p.sugerida ? ' sugerida' : '') + '" ' +
+        'role="radio" data-plan="' + p.slug + '" ' +
+        'aria-checked="' + (estado.plan === p.slug) + '">' +
+        '<span class="plan-cab">' +
+          '<span class="circ plan-cifra">' + p.cifra + '</span>' +
+          '<span class="plan-nom">' + p.nom + '</span>' +
+          (p.sugerida ? '<span class="plan-eti">Sugerida</span>' : '') +
+        '</span>' +
+        '<span class="plan-pie">' +
+          '<span class="plan-precio">' + p.precio + ' $</span>' +
+          (p.ahorro ? '<span class="plan-ahorro">Ahorras ' + p.ahorro + ' $</span>' : '') +
+        '</span></button>';
+    }).join('');
+    abrirPlanes(true);
+    roving($('gPlanes'));
+  }
+
+  function refrescarBoton() {
+    var listo = !!(estado.servicio && estado.plan);
+    $('ir2Escritorio').disabled = !listo;
+    $('ir2Movil').disabled = !listo;
+    pintarResumen();
+  }
+
+  /* El resumen se arma de lo que ya hay en estado, sin inventar nada: modalidad
+     siempre, motivo cuando se elige, y sesiones con su precio al final. */
+  function pintarResumen() {
+    var s = SERVICIOS.filter(function (x) { return x.slug === estado.servicio; })[0];
+    var partes = [estado.modo === 'presencial' ? 'Presencial' : 'Online'];
+    if (s) partes.push(s.nom);
+    var p = null;
+    if (s && estado.plan) {
+      p = PLANES[s.mod].filter(function (x) { return x.slug === estado.plan; })[0];
+    }
+    if (p) partes.push(p.cifra + ' ' + p.nom);
+    var txt = partes.join(' · ');
+    // Un solo separador en toda la linea, el mismo punto medio: en castellano el
+    // guion largo abre incisos, no significa "y esto cuesta". La jerarquia la lleva
+    // la negrita, no la puntuacion ni una palabra de mas.
+    $('resumen').innerHTML = p ? txt + ' · <b>' + p.precio + ' $</b>' : txt;
+  }
+
+  /* El grupo de modalidad ya no contiene solo radios: lleva ademas el hilo, el aro
+     y la copia. Hay que recorrer los radios de verdad, no todos los hijos. */
+  function radios(g) {
+    return [].slice.call(g.querySelectorAll('[role="radio"]'));
+  }
+
+  function roving(g) {
+    var rs = radios(g);
+    rs.forEach(function (b) {
+      b.tabIndex = b.getAttribute('aria-checked') === 'true' ? 0 : -1;
+    });
+    if (!rs.some(function (b) { return b.tabIndex === 0; }) && rs[0]) rs[0].tabIndex = 0;
+  }
+
+  function alElegir(g, b) {
+    radios(g).forEach(function (o) {
+      o.setAttribute('aria-checked', String(o === b));
+    });
+    roving(g);
+    if (g === $('gModos')) {
+      estado.modo = b.dataset.modo;
+      refrescarModo();
+      abrirLugar(estado.modo === 'presencial');
+      pintarResumen();
+    } else if (g === $('gServ')) {
+      var previo = estado.servicio;
+      estado.servicio = b.dataset.serv;
+      if (previo !== estado.servicio) estado.plan = null;
+      pintarPlanes();
+    } else {
+      estado.plan = b.dataset.plan;
+    }
+    refrescarBoton();
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[role="radio"]');
+    if (!b) return;
+    alElegir(b.parentElement, b);
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    var g = ev.target.closest && ev.target.closest('[role="radiogroup"]');
+    if (!g) return;
+    var teclas = ['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'];
+    if (teclas.indexOf(ev.key) < 0) return;
+    ev.preventDefault();
+    var hijos = radios(g);
+    var i = hijos.indexOf(ev.target);
+    if (i < 0) i = 0;
+    var n = ev.key === 'Home' ? 0
+          : ev.key === 'End' ? hijos.length - 1
+          : (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') ? (i + 1) % hijos.length
+          : (i - 1 + hijos.length) % hijos.length;
+    alElegir(g, hijos[n]);
+    hijos[n].focus();
+  });
+
+  pintarModos();
+  pintarServicios();
+  refrescarBoton();
+})();
+</script>
+</body>
+</html>

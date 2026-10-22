@@ -1,0 +1,634 @@
+/* ============================================================
+   entrar.css · pantalla de entrar y crear cuenta
+
+   Los tokens son los de Psicconsciente, repartidos al reves que en el
+   asistente de reserva: aqui mandan los marrones sobre blanco y la salvia
+   queda de acento — el aro del foco y la nota de privacidad.
+
+   Lo que hay que saber antes de tocar nada:
+
+   · Los DOS formularios estan siempre en el DOM, uno en cada mitad de la
+     rejilla. El panel marron tapa el que no toca y VIAJA de una mitad a la
+     otra al cambiar de modo. Por eso el cambio puede ser un desplazamiento y
+     no una sustitucion: no se monta ni se desmonta nada.
+   · El unico atributo que manda es data-modo en .puerta ("entrar" o
+     "registro"). Todo lo demas cuelga de el.
+   · Del formulario tapado se encarga el JavaScript con inert, no el CSS.
+
+   ============================================================
+   REVISION DE AUDITORIA · lo que cambio y por que
+   ============================================================
+
+   1. EL PANEL TIENE TOKENS PROPIOS (--panel-*). Antes pintaba su fondo con
+      --tierra-dp, un token compartido que en modo oscuro se invertia a un tono
+      CLARO: el panel pasaba de ancla oscura a losa brillante, y los textos
+      —escritos a mano como rgba(250,243,234,…) en vez de con un token— se
+      quedaban en crema sobre crema. Medido: 2,48:1 el subtitulo, 2,35:1 la
+      nota de privacidad, 2,04:1 el borde del boton. Ahora el panel se pinta
+      solo con sus cuatro tokens y ninguno se invierte de sentido.
+
+   2. EL CONTORNO DE LOS CAMPOS SUBE A #A8825F. rgba(122,90,60,.38) sobre
+      blanco da 1,78:1 y el criterio 1.4.11 de la WCAG pide 3:1 para el
+      contorno de un control. #A8825F da 3,49:1 y no es un color inventado: es
+      exactamente el valor que reservar.css ya documenta por este mismo motivo.
+
+   3. SE VA LA TARJETA BLANCA. Su fondo valia lo mismo que el de la pagina
+      (1:1) y su borde 1,33:1: no separaba nada, solo gastaba 80 px de alto en
+      relleno. Quien separa las dos mitades es el panel marron. Sin la tarjeta,
+      el formulario de registro entra entero en una pantalla de 900 px.
+
+   4. LA MARCA SE VE DESDE EL PRIMER FOTOGRAMA. El nombre tenia 2,15 s de
+      retraso, calibrados para un dibujado del logo cuya regla @keyframes
+      nunca llego a escribirse: la animacion no existia y el retraso si. En una
+      pantalla de acceso la marca es la prueba de que estas en el sitio
+      correcto — no puede tardar dos segundos y medio en aparecer.
+
+   5. EL HUECO ENTRE CAMPOS SE ABRE A 1,1rem. Con 9,6 px entre campos y 5,1 px
+      entre rotulo y campo, la proximidad no agrupaba nada: la relacion era de
+      1,88 a 1 y el ojo necesita el triple para leer un grupo como grupo.
+   ============================================================ */
+
+/* ============================================================
+   LOS TOKENS · una sola definicion por color
+
+   Cada token se escribe con light-dark(claro, oscuro): el valor de la
+   izquierda manda cuando el sistema esta en claro y el de la derecha cuando
+   esta en oscuro. Antes eran dos bloques —uno normal y otro dentro de un
+   @media— y ahi se colo el fallo mas caro de la pantalla: --tierra-dp valia
+   #5E442C en claro y #B08C64 en oscuro, o sea que el token CAMBIABA DE
+   SENTIDO, y el panel que lo usaba de fondo pasaba de ancla oscura a losa
+   brillante. Con los dos valores en la misma linea eso ya no puede pasarte
+   inadvertido: se leen juntos.
+
+   Para forzar un tema —el visor lo hace— basta con data-tema en el <html>,
+   veinte lineas mas abajo. No hay que duplicar ni un color.
+   ============================================================ */
+
+:root {
+  color-scheme:light dark;
+
+  --blanco:light-dark(#FFFFFF, #20241F);
+  --papel:light-dark(#FAF3EA, #191C18);
+
+  --tierra:light-dark(#7A5A3C, #9C7A56);
+  --tierra-cl:light-dark(#8A6746, #9C7A56);
+  --marca-cl:#C6A783;
+
+  /* EL PANEL, APARTE. Cuatro tokens que no comparte con nadie: el panel es la
+     unica superficie oscura de la pantalla y su contraste no puede depender de
+     como se reparta el resto de la paleta.
+     Medido sobre su propio fondo, en los dos temas:
+       texto principal  8,15:1 / 11,97:1
+       texto secundario 6,22:1 /  7,65:1
+       contorno control 3,40:1 /  3,20:1   (el criterio 1.4.11 pide 3:1) */
+  --panel-fondo:light-dark(#5E442C, #33261A);
+  --panel-txt:light-dark(#FAF3EA, #F0E7DA);
+  --panel-txt-sv:light-dark(#E2D5C4, #C9B9A4);
+  --panel-linea:light-dark(#B99A78, #8A7157);
+  /* LA LUZ DE LA CELOSIA. Es el unico color del panel que ACLARA, asi que
+     lleva su alfa muy corta y va confinada a la esquina de arriba: donde toca
+     el texto, el contraste bajaria. En oscuro se atenua todavia mas, porque
+     sobre un marron ya oscuro la misma alfa se nota el doble. */
+  --celosia:light-dark(rgba(255,246,232,.065), rgba(255,240,220,.045));
+  --celosia-sv:light-dark(rgba(255,246,232,.048), rgba(255,240,220,.032));
+
+  --salvia:light-dark(#5A7060, #8AA891);
+  --salvia-dp:light-dark(#3E4F44, #A8C0AE);   /* aro del foco · 8,73:1 / 8,11:1 */
+  --salvia-sv:light-dark(#E8EDE6, #242A25);
+
+  --txt:light-dark(#2E332E, #EDE9E1);
+  --txt-tenue:light-dark(#6B665D, #ABA69B);
+
+  /* El contorno del campo en reposo ya cumple 1.4.11: 3,49:1 en claro y
+     6,07:1 en oscuro. Antes era rgba(122,90,60,.38) — 1,78:1 — y no llegaba.
+     El valor claro no es inventado: es el que reservar.css ya documenta por
+     este mismo motivo. */
+  --linea:light-dark(rgba(122,90,60,.20), rgba(156,122,86,.28));
+  --linea-med:light-dark(#A8825F, #9C7A56);
+  --linea-fuerte:light-dark(#7A5A3C, #C6A783);
+
+  --mal:light-dark(#A33A2E, #E9887A);
+  --mal-sv:light-dark(#FBEAE8, #2C1D1B);
+  --inerte:light-dark(#E6E1D7, #2C2F2B);
+  --inerte-txt:light-dark(#625E56, #979C93);
+
+  /* En oscuro el boton se invierte. Crema sobre marron daba 4,37:1 y no
+     llegaba; tinta oscura sobre arena da 7,38:1. */
+  --btn-fondo:light-dark(#8A6746, #C6A783);
+  --btn-fondo-hv:light-dark(#5E442C, #DCC1A2);
+  --btn-txt:light-dark(#FAF3EA, #241C17);
+
+  --display:"Fraunces",Georgia,serif;
+  --texto:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  --t-nota:.8rem; --t-aux:.9rem; --t-base:1rem;
+
+  --r-sm:10px; --r-pill:999px;
+
+  --elev-1:light-dark(0 1px 2px rgba(46,42,36,.06), 0 1px 2px rgba(0,0,0,.4));
+  --elev-2:light-dark(0 4px 14px -6px rgba(46,42,36,.18), 0 4px 14px -6px rgba(0,0,0,.55));
+
+  /* Curvas del estandar, no aproximadas a ojo:
+     entrar y salir -> ease-out fuerte; moverse por la pantalla -> ease-in-out. */
+  --curva:cubic-bezier(.23,1,.32,1);
+  --curva-mueve:cubic-bezier(.77,0,.175,1);
+  --paso:160ms var(--curva);
+  --viaje:460ms var(--curva-mueve);   /* el panel cruzando la pantalla */
+}
+
+/* Forzar un tema sin tocar el sistema operativo: cambiar el color-scheme basta
+   para que todos los light-dark() de arriba escojan la otra columna. */
+:root[data-tema="claro"]  { color-scheme:only light; }
+:root[data-tema="oscuro"] { color-scheme:only dark; }
+
+*,*::before,*::after { box-sizing:border-box; }
+html,body { height:100%; }
+
+body {
+  margin:0;
+  background:var(--blanco);
+  color:var(--txt);
+  font-family:var(--texto);
+  font-size:var(--t-base);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+:focus { outline:none; }
+:focus-visible { outline:3px solid var(--salvia-dp); outline-offset:3px; border-radius:var(--r-sm); }
+.banda :focus-visible { outline-color:var(--panel-txt); }
+
+.sr-only {
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ============ LAS DOS MITADES ============ */
+
+.puerta { position:relative; min-height:100dvh; display:grid; overflow:hidden; }
+
+/* El zocalo solo existe en movil; en escritorio sus dos piezas viven dentro
+   del panel y viajan con el. */
+.zocalo { display:none; }
+
+@media (min-width:60rem) {
+  .puerta { grid-template-columns:1fr 1fr; }
+}
+
+/* Los dos formularios estan SIEMPRE en su sitio, uno en cada mitad. El panel
+   tapa el que no toca. Por eso el cambio de modo puede ser un desplazamiento
+   y no una sustitucion: no se monta ni se desmonta nada. */
+.cara {
+  display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(2.5rem,6vh,4rem) clamp(1.25rem,3vw,2.5rem);
+  transition:opacity 240ms var(--curva);
+}
+
+#vEntrar   { grid-area:1 / 1; }
+#vRegistro { grid-area:1 / 2; }
+
+.puerta[data-modo="registro"] #vEntrar,
+.puerta[data-modo="entrar"]   #vRegistro { opacity:0; }
+
+/* Sin tarjeta: una caja blanca sobre fondo blanco no separa nada, y quien
+   separa las dos mitades ya es el panel marron. La columna mide lo que pide su
+   contenido y no se estira porque en escritorio sobre ancho. */
+.panel {
+  width:min(100%,23rem);
+  margin-inline:auto;
+  display:flex; flex-direction:column; gap:1.75rem;
+}
+
+/* ============ EL PANEL QUE VIAJA ============ */
+.banda {
+  position:absolute; inset:0 auto 0 0;
+  width:50%;
+  z-index:2;
+  color:var(--panel-txt);
+  padding:clamp(1.6rem,3.4vw,3rem);
+  display:flex; flex-direction:column; gap:1.5rem;
+  overflow:hidden;
+  transition:transform var(--viaje);
+
+  background-color:var(--panel-fondo);
+}
+
+/* ---------- LA CELOSIA ----------
+   La reja de luz de puerta-b-banco.jpg, abstraida: dos familias de bandas
+   cruzadas que imitan la luz colandose por una celosia. Trae la foto sin la
+   foto — y si algun dia se pone la imagen de verdad, el lenguaje ya esta
+   puesto y encaja solo.
+
+   Tres decisiones que no son de gusto:
+
+   1. LAS PARADAS LLEVAN RAMPA, NO CORTE. `0 16px` y luego `30px 74px` deja
+      14 px de degradado entre banda y fondo. Las esferas que habia antes iban
+      de color a transparente en un 0,5% y por eso se veian escalonadas: un
+      degradado con parada dura no lo suaviza el navegador.
+
+   2. NO SE USA `transparent`. En CSS `transparent` es rgba(0,0,0,0) —negro
+      transparente— asi que al interpolar hacia el se pasa por grises sucios.
+      Se usa el mismo crema con alfa 0.
+
+   3. VA ENMASCARADA A LA ESQUINA DE ARRIBA. Es lo unico del panel que aclara
+      el fondo, y donde aclara baja el contraste: con las dos bandas solapadas
+      el contorno del boton caeria de 3,40:1 a 2,44:1, por debajo del 3:1 que
+      pide el criterio 1.4.11. La mascara la apaga del todo antes del 78% de
+      su radio, muy por encima de donde empieza la invitacion. */
+.banda::before {
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    repeating-linear-gradient(38deg,  var(--celosia) 0 16px, rgba(255,246,232,0) 30px 74px),
+    repeating-linear-gradient(-49deg, var(--celosia-sv) 0 12px, rgba(255,246,232,0) 26px 66px);
+  -webkit-mask-image:radial-gradient(85% 42% at 100% 0%, #000 0%, rgba(0,0,0,.55) 40%, transparent 78%);
+  mask-image:radial-gradient(85% 42% at 100% 0%, #000 0%, rgba(0,0,0,.55) 40%, transparent 78%);
+}
+
+/* Lo posicionado se pinta por encima de lo que no lo esta, y entre iguales
+   manda el orden del documento. Con z-index explicito —0 la celosia, 1 el
+   contenido— el orden deja de depender de quien vaya antes en el arbol. */
+.banda > * { position:relative; z-index:1; }
+
+.puerta[data-modo="entrar"] .banda { transform:translateX(100%); }
+
+/* En movil no hay dos mitades que intercambiar: el panel se queda arriba y el
+   formulario debajo. Un desplazamiento lateral aqui no significaria nada.
+   El panel se encoge: antes ocupaba 308 px de una pantalla de 844 —un 36%—
+   antes de que empezara el formulario. */
+/* ============================================================
+   MOVIL · LA HOJA QUE SUBE SOBRE EL PANEL
+
+   En movil no hay dos mitades que intercambiar, asi que el viaje lateral no
+   significaria nada. Lo que se hace en su lugar es lo que hacen las apps: el
+   panel marron se queda arriba convertido en una cabecera corta y el
+   formulario sube por encima como una hoja de papel con el borde curvado.
+
+   La curva NO se recorta contra una foto sino contra el propio panel marron.
+   Eso es deliberado: una foto obligaria a tener tambien version de escritorio
+   con foto, y ademas pondria el texto sobre una imagen cuyo tono cambia con
+   cada recorte. Con el panel, el color de detras es un valor conocido.
+
+   El reparto del texto es la otra mitad de la idea. Antes el panel llevaba
+   logo, titular, subtitulo, boton y nota de privacidad — y luego el formulario
+   traia SU titular: dos titulos peleandose por el mismo sitio. Ahora:
+
+     · el panel marron  → solo la marca
+     · la hoja blanca   → el titular de verdad y el formulario
+     · el zocalo        → el conmutador de modo y la nota de privacidad
+
+   El conmutador y la nota se mudan de sitio con JavaScript, no con CSS: son
+   hijos del panel para poder viajar con el en escritorio, y ahi el CSS no
+   puede sacarlos de su caja.
+   ============================================================ */
+@media (max-width:59.99rem) {
+  /* Tres filas, las dos primeras a contenido. El sobrante se va a la ULTIMA,
+     no a la del formulario: si la fila del formulario se lleva el hueco, entre
+     el boton y el pie queda un vacio de 400 px en la vista de entrar, que solo
+     tiene dos campos. Asi el pie sube y se pega al formulario, y lo que sobra
+     queda debajo del todo — donde no se ve, porque es del mismo blanco. */
+  .puerta { grid-template-rows:auto auto 1fr; }
+
+  .banda {
+    position:static; width:auto;
+    min-height:auto;
+    gap:1rem;
+    /* El relleno de abajo es el hueco que se come la curva de la hoja. */
+    padding:2rem clamp(1.25rem,5vw,2rem) 3rem;
+  }
+  .puerta[data-modo="entrar"] .banda { transform:none; }
+
+  /* La cabecera de movil es baja y ancha: en 102 px de alto la mascara de
+     escritorio dejaria la celosia en una franja de 40 px. Se ensancha para que
+     ocupe la mitad derecha entera, que es donde no hay ni marca ni texto. */
+  .banda::before {
+    -webkit-mask-image:radial-gradient(72% 150% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
+    mask-image:radial-gradient(72% 150% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
+  }
+
+  /* LA HOJA. El margen negativo la sube por encima del panel y el radio
+     eliptico asimetrico le da la curva. Asimetrico a proposito: un arco de
+     compas se lee como una esquina redondeada, y esto tiene que leerse como
+     papel levantandose.
+
+     LA PROFUNDIDAD ES 32/22 px Y NO 60/42. La curva honda se dibujo pensando
+     en tener una FOTO detras: sobre una foto una curva profunda esta tapando
+     algo y revelando algo, y ese es su motivo. Sobre el marron liso no tapa
+     nada, asi que el gesto se queda sin excusa y se lee como adorno. A la
+     mitad de profundidad sigue leyendose la hoja que sube, pero deja de pedir
+     atencion — y de paso el titulo sube 14 px. */
+  #vEntrar, #vRegistro {
+    grid-area:2 / 1;
+    position:relative; z-index:3;
+    margin-top:-2rem;
+    background:var(--blanco);
+    border-radius:64% 36% 0 0 / 32px 22px 0 0;
+    padding:2.5rem clamp(1.25rem,5vw,2rem) 1.75rem;
+    justify-content:flex-start;
+    box-shadow:0 -14px 34px -18px rgba(46,42,36,.40);
+  }
+  .puerta[data-modo="registro"] #vEntrar,
+  .puerta[data-modo="entrar"]   #vRegistro { display:none; }
+
+  /* EL ZOCALO. Mismo blanco que la hoja, asi que se leen como una sola
+     superficie: la costura no debe verse. */
+  .zocalo {
+    grid-area:3 / 1;
+    align-self:start;
+    position:relative; z-index:3;
+    background:var(--blanco);
+    padding:0 clamp(1.25rem,5vw,2rem) 1.75rem;
+    display:flex; flex-direction:column; gap:1.25rem;
+  }
+
+  /* La invitacion deja de ser un bloque centrado con titular grande y pasa a
+     ser UNA LINEA: "¿Primera vez aqui? Crear cuenta". Es el patron de siempre
+     al pie de un formulario, y no compite con el titulo de la hoja. */
+  .zocalo .invita {
+    margin:0; gap:.15rem .45rem;
+    flex-direction:row; flex-wrap:wrap;
+    justify-content:center; align-items:center;
+  }
+  .zocalo .invita h2 {
+    font-family:var(--texto); font-size:var(--t-aux); font-weight:400;
+    letter-spacing:0; color:var(--txt-tenue);
+  }
+  .zocalo .invita p { display:none; }   /* lo dice ya el rotulo del boton */
+  .zocalo .invita button {
+    margin:0; padding:.55rem .4rem; min-height:44px;
+    border:0; background:none;
+    color:var(--salvia-dp); font-size:var(--t-aux); font-weight:600;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  @media (hover:hover) and (pointer:fine) {
+    .zocalo .invita button:hover { background:none; color:var(--txt); }
+  }
+
+  /* La nota de privacidad ya no esta sobre marron: se repinta en tinta. */
+  .zocalo .banda-pie { max-width:none; color:var(--txt-tenue); }
+}
+
+/* ---------- EL LOGO · tambien es la salida ----------
+   Sin animacion de entrada y sin retraso: en una pantalla de acceso la marca
+   es lo que confirma que estas en el sitio correcto, asi que se lee en el
+   primer fotograma. La flecha solo aparece al apuntarlo, para que se entienda
+   que es un enlace sin convertirlo en un boton mas. */
+.logo {
+  align-self:flex-start;
+  display:inline-flex; flex-direction:row; align-items:center; gap:.5rem;
+  color:var(--panel-txt);
+  text-decoration:none;
+  padding:.35rem .5rem; margin:-.35rem -.5rem;
+  border-radius:var(--r-sm);
+  transition:background var(--paso);
+}
+
+.logo svg {
+  width:clamp(1.4rem,2.5vw,1.75rem); height:auto; flex:none;
+  fill:none; stroke:currentColor;
+  stroke-width:1.1; stroke-linecap:round; stroke-linejoin:round;
+}
+
+.logo > span:not(.sr-only):not(.volver) {
+  font-size:var(--t-nota); font-weight:500;
+  letter-spacing:.06em; text-transform:uppercase;
+}
+
+.logo .volver {
+  display:grid; place-items:center;
+  width:0; overflow:hidden;
+  opacity:0;
+  transition:width var(--paso), opacity var(--paso);
+}
+.logo .volver svg {
+  width:14px; height:14px; stroke-width:1.9;
+  transform:translateX(2px);
+  transition:transform var(--paso);
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .logo:hover { background:rgba(250,243,234,.10); }
+  .logo:hover .volver { width:14px; opacity:.85; }
+  .logo:hover .volver svg { transform:translateX(0); }
+}
+.logo:focus-visible .volver { width:14px; opacity:.85; }
+
+/* ---------- LA INVITACIÓN ----------
+   Lo unico que cambia de lado a lado. Se desvanece mientras el panel viaja y
+   vuelve ya cambiada: si el texto se sustituyera de golpe a mitad de camino
+   se leeria el truco. */
+
+.invita {
+  margin:auto 0;
+  display:flex; flex-direction:column; align-items:center; gap:.9rem;
+  text-align:center;
+  transition:opacity 180ms var(--curva);
+}
+
+.puerta.viajando .invita { opacity:0; }
+
+.invita h2 {
+  margin:0;
+  font-family:var(--display);
+  font-size:clamp(1.6rem,2.8vw,2.1rem);
+  font-weight:600; line-height:1.08; letter-spacing:-.03em;
+  text-wrap:balance;
+}
+
+.invita p { margin:0; font-size:var(--t-aux); color:var(--panel-txt-sv); max-width:28ch; }
+
+.invita button {
+  appearance:none; cursor:pointer;
+  margin-top:.35rem;
+  font:inherit; font-size:var(--t-aux); font-weight:600;
+  color:var(--panel-txt);
+  background:transparent;
+  border:1px solid var(--panel-linea);
+  border-radius:var(--r-pill);
+  padding:.7rem 2rem; min-height:46px;
+  transition:background var(--paso), border-color var(--paso), color var(--paso), transform 140ms var(--curva);
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .invita button:hover { background:var(--panel-txt); border-color:var(--panel-txt); color:var(--panel-fondo); }
+}
+.invita button:active { transform:scale(.98); }
+
+.banda-pie {
+  margin:0;
+  display:flex; gap:.6rem; align-items:flex-start;
+  font-size:var(--t-nota); line-height:1.5;
+  color:var(--panel-txt-sv);
+  border-left:2px solid var(--salvia);
+  padding-left:.85rem;
+  max-width:36ch;
+}
+
+.banda-pie svg { flex:none; width:15px; height:15px; margin-top:.2rem; color:var(--salvia); }
+
+/* ============ EL FORMULARIO ============ */
+
+.encabezado { display:flex; flex-direction:column; gap:.5rem; }
+
+.encabezado h1 {
+  margin:0;
+  font-family:var(--display);
+  font-size:clamp(1.75rem,3vw,2.15rem);
+  font-weight:600; line-height:1.05; letter-spacing:-.03em;
+  text-wrap:balance;
+}
+
+.encabezado p { margin:0; font-size:var(--t-aux); line-height:1.6; color:var(--txt-tenue); max-width:34ch; }
+
+@keyframes sube { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+.anima > * {
+  opacity:0;
+  animation:sube 260ms var(--curva) forwards;
+  animation-delay:calc(var(--i,0) * 40ms);
+}
+
+/* El hueco ENTRE campos triplica al que hay dentro de un campo: eso es lo que
+   hace que rotulo, control y error se lean como una sola cosa. */
+.campos { display:flex; flex-direction:column; gap:1.1rem; }
+.campo  { display:flex; flex-direction:column; gap:.35rem; }
+
+.campo > label { font-size:var(--t-nota); font-weight:500; color:var(--txt-tenue); letter-spacing:.01em; }
+
+.campo input, .campo select {
+  font:inherit; font-size:var(--t-base);
+  color:var(--txt); background:var(--blanco);
+  border:1px solid var(--linea-med); border-radius:var(--r-sm);
+  padding:.6rem .85rem;
+  min-height:46px;
+  width:100%;
+  transition:border-color var(--paso), box-shadow var(--paso);
+}
+
+/* Nacionalidad y pais en la misma linea. Debajo de 25rem se apilan: dos
+   desplegables de pais en 180 px no se leen. */
+.fila-doble { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+@media (max-width:25rem) { .fila-doble { grid-template-columns:1fr; gap:1.1rem; } }
+
+/* El marcador de posicion es un EJEMPLO, no la etiqueta repetida: si dice lo
+   mismo que el rotulo, desaparece al escribir y no ha servido de nada. */
+.campo input::placeholder { color:var(--inerte-txt); opacity:1; }
+
+/* La flecha del desplegable lleva UN solo color en los dos temas —#8A8378,
+   que da 3,75:1 sobre blanco y 4,23:1 sobre la pagina oscura, por encima del
+   3:1 que pide 1.4.11 para un elemento grafico con significado—. Antes habia
+   dos data-uri identicas salvo el color, una por tema, y bastaba con forzar el
+   tema desde fuera para que la flecha se quedara con el color del contrario. */
+.campo select {
+  appearance:none; padding-right:2.4rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238A8378' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6.5 8 10.5 12 6.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .85rem center; background-size:16px;
+}
+
+.campo input:focus, .campo select:focus {
+  border-color:var(--salvia);
+  box-shadow:0 0 0 3px var(--salvia-sv);
+}
+
+.tel { display:grid; grid-template-columns:auto 1fr; gap:.5rem; }
+
+.tel .prefijo {
+  width:auto; padding:0 2rem 0 .7rem;
+  background-color:var(--papel);
+  background-position:right .55rem center;
+  font-size:var(--t-aux); font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+
+.clave { position:relative; }
+.clave input { padding-right:3.35rem; }
+
+/* 44x44: el minimo para acertar con el dedo. */
+.ojo {
+  position:absolute; right:3px; top:50%; transform:translateY(-50%);
+  appearance:none; border:0; background:none;
+  width:44px; height:44px; display:grid; place-items:center;
+  border-radius:var(--r-sm); color:var(--txt-tenue); cursor:pointer;
+  transition:color var(--paso), background var(--paso);
+}
+
+.ojo svg { width:19px; height:19px; }
+.ojo .tachado { display:none; }
+.ojo[aria-pressed="true"] .abierto { display:none; }
+.ojo[aria-pressed="true"] .tachado { display:block; }
+
+@media (hover:hover) and (pointer:fine) {
+  .campo input:hover, .campo select:hover { border-color:var(--linea-fuerte); }
+  .ojo:hover { color:var(--txt); background:var(--papel); }
+}
+
+/* La regla de la contrasena se dice antes de escribirla. Cuando el campo falla
+   se calla, para no repetir en dos renglones lo que ya dice el error. */
+.pista { font-size:var(--t-nota); color:var(--txt-tenue); }
+.campo.mal .pista { display:none; }
+
+.campo.mal input, .campo.mal select { border-color:var(--mal); background:var(--mal-sv); }
+
+/* EL ERROR NO EMPUJA LA PAGINA. Antes era display:none → visible, y cada
+   validacion desplazaba de golpe todo lo que tenia debajo. La rejilla de 0fr a
+   1fr abre el hueco en 180 ms sin mover nada de sitio.
+   El texto sigue sin animarse: un error es una respuesta, y una respuesta
+   instantanea es mas honesta que una que llega tarde. */
+.err {
+  display:grid; grid-template-rows:0fr;
+  font-size:var(--t-nota); color:var(--mal);
+  transition:grid-template-rows 180ms var(--curva);
+}
+.err > span { overflow:hidden; }
+.campo.mal .err { grid-template-rows:1fr; }
+
+.btn {
+  appearance:none; border:0;
+  font:inherit; font-size:var(--t-base); font-weight:600;
+  background:var(--btn-fondo); color:var(--btn-txt);
+  border-radius:var(--r-pill);
+  padding:.8rem 1.4rem;
+  min-height:48px;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:.55rem;
+  box-shadow:var(--elev-1);
+  transition:background var(--paso), box-shadow var(--paso), transform 140ms var(--curva);
+}
+
+/* El movimiento al pasar por encima solo donde hay raton de verdad: en una
+   pantalla tactil un toque dispara un hover falso y el boton se queda
+   animado despues de soltarlo. */
+@media (hover:hover) and (pointer:fine) {
+  .btn:hover { background:var(--btn-fondo-hv); box-shadow:var(--elev-2); }
+}
+
+/* Hundirse es mas fisico que bajar un pixel: el dedo empuja el boton hacia
+   dentro de la pantalla, no hacia abajo. */
+.btn:active { transform:scale(.98); }
+.btn[disabled] { background:var(--inerte); color:var(--inerte-txt); cursor:default; box-shadow:none; transform:none; }
+
+.rueda {
+  width:17px; height:17px; flex:none;
+  border:2px solid currentColor; border-right-color:transparent;
+  border-radius:var(--r-pill);
+  animation:gira 700ms linear infinite; display:none;
+}
+@keyframes gira { to { transform:rotate(360deg); } }
+
+.btn[data-cargando="1"] .rueda { display:block; }
+
+.pie-panel { font-size:var(--t-nota); color:var(--txt-tenue); text-align:center; margin:0; }
+.pie-panel a { color:var(--salvia-dp); text-underline-offset:2px; }
+
+/* ---------- MENOS MOVIMIENTO ----------
+   Se va lo que desplaza: el viaje del panel y la entrada escalonada. Se quedan
+   los cambios de color y de opacidad, que son la RESPUESTA del control a lo
+   que acabas de hacer — quitarlos no es reducir el movimiento, es dejar la
+   interfaz muda. */
+@media (prefers-reduced-motion: reduce) {
+  .banda { transition:none; }
+  .cara, .invita { transition:opacity 150ms linear; }
+  .anima > * { opacity:1; animation:none; }
+  .err { transition:none; }
+  .btn:active, .invita button:active { transform:none; }
+  .logo .volver { transition:none; }
+}

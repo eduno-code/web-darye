@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Psicconsciente en móvil · maqueta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#FFFFFF;
+  --blanco:#FFFFFF;
+  --txt:#2C3E50;
+  --txt-suave:#55697A;
+  --marron:#5E442C;
+  --marron-txt:#FAF3EA;
+  --marron-txt-sv:#E2D5C4;
+  --terra:#A87453;
+  --terra-dp:#8C6246;
+  --terra-sv:#F3E9DE;
+  --linea:rgba(166,123,91,.22);
+  --fondo-suave:#FBF7F2;
+  --piz:#3D5568;
+  --piz-dp:#2F4455;
+  --piz-sv:#E7EDF1;
+  --piz-borde:rgba(61,85,104,.35);
+  --display:Fraunces,Georgia,serif;
+  --texto:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --sombra:0 1px 2px rgba(94,68,44,.06),0 10px 28px -12px rgba(94,68,44,.22);
+  --r:16px;
+  --paso:180ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:#E6DACB;color:var(--txt);
+  font:400 1rem/1.5 var(--texto);-webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--piz-sv);color:var(--piz-dp)}
+button{font:inherit;color:inherit}
+svg.ic{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+:focus-visible{outline:2px solid var(--piz);outline-offset:2px}
+
+.lienzo{display:flex;flex-wrap:wrap;justify-content:center;gap:2.5rem;padding:2rem 1rem 3rem}
+.lienzo > header{flex-basis:100%;text-align:center}
+.lienzo > header h1{margin:0;font:600 1.5rem/1.2 var(--display)}
+.lienzo > header p{margin:.4rem auto 0;max-width:46ch;color:var(--txt-suave)}
+figure{margin:0}
+figcaption{text-align:center;margin-bottom:.75rem;font-weight:600;color:var(--txt-suave)}
+
+.tel{
+  position:relative;width:390px;height:844px;overflow:hidden;
+  border-radius:44px;background:var(--suelo);
+  box-shadow:0 0 0 10px #2A211A,0 30px 60px -20px rgba(42,33,26,.5);
+  display:flex;flex-direction:column;
+}
+.pantalla{flex:1;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.pantalla::-webkit-scrollbar{display:none}
+
+.banda{
+  background:var(--marron);color:var(--marron-txt);
+  padding:3.25rem 1rem 4.5rem;
+}
+.barra{
+  display:flex;align-items:center;gap:.75rem;
+  background:var(--blanco);color:var(--txt);border-radius:var(--r);
+  padding:.5rem .5rem .5rem 1rem;box-shadow:var(--sombra);
+}
+.barra .marca{display:flex;align-items:center;gap:.5rem;font:600 1.05rem var(--display);margin-right:auto}
+.barra .marca svg{color:var(--terra)}
+.avatar{
+  width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;
+  display:grid;place-items:center;background:var(--terra-sv);color:var(--marron);
+  font-weight:700;font-size:.95rem;letter-spacing:.02em;
+}
+.saludo{margin:1.5rem .25rem 0}
+.saludo h2{margin:0;font:600 2rem/1.1 var(--display);letter-spacing:-.02em}
+.saludo p{margin:.35rem 0 0;color:var(--marron-txt-sv)}
+
+.proxima{
+  margin:-3.25rem 1rem 0;position:relative;
+  background:var(--blanco);border-radius:20px;box-shadow:var(--sombra);
+  padding:1.25rem;
+}
+.proxima h3{margin:0 0 .9rem;font:600 1.05rem var(--display);color:var(--terra-dp)}
+.cuando{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem}
+.cuando .dia{margin:0;font:600 1.45rem/1.15 var(--display)}
+.cuando .hora{margin:0;font:700 2.1rem/1 var(--texto);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.datos{list-style:none;margin:1rem 0 0;padding:1rem 0 0;border-top:1px solid var(--linea);display:grid;gap:.55rem}
+.datos li{display:flex;align-items:center;gap:.6rem;color:var(--txt-suave)}
+.datos svg{color:var(--terra)}
+.estado{
+  display:inline-flex;align-items:center;gap:.35rem;margin-left:auto;
+  background:var(--piz-sv);color:var(--piz-dp);border-radius:999px;
+  padding:.15rem .7rem;font-size:.875rem;font-weight:600;
+}
+.estado svg{width:16px;height:16px;color:var(--piz)}
+.acciones{display:flex;align-items:center;gap:1rem;margin-top:1.1rem}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:48px;padding:0 1.25rem;border:0;border-radius:999px;cursor:pointer;
+  background:var(--piz);color:#fff;font-weight:600;font-size:1rem;
+  transition:background var(--paso),transform 120ms ease-out;
+}
+.btn:active{transform:scale(.97)}
+.btn:disabled{background:#C9D1D8;color:#5E6B76;cursor:not-allowed}
+.enlace{color:var(--piz);font-weight:600;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--piz-borde);min-height:44px;display:inline-flex;align-items:center}
+
+.atajos{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1rem}
+.atajo{
+  display:flex;align-items:center;gap:.55rem;min-height:64px;padding:.75rem;white-space:nowrap;
+  background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r);
+  text-decoration:none;color:var(--txt);font-weight:600;
+}
+.atajo .burbuja{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:var(--piz-sv);color:var(--piz)}
+.atajo:last-child .burbuja{background:var(--terra-sv);color:var(--terra-dp)}
+
+.bloque{margin:1.5rem 1rem 0}
+.bloque > h3{margin:0 0 .6rem;font:600 1.1rem var(--display)}
+.tarjeta{
+  display:flex;align-items:center;gap:.9rem;padding:1rem;border-radius:var(--r);
+  background:var(--blanco);border:1px solid var(--linea);
+}
+.tarjeta + .tarjeta{margin-top:.6rem}
+.tarjeta .burbuja{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.t-paquete{background:var(--terra-sv);border-color:transparent}
+.t-paquete .burbuja{background:var(--blanco);color:var(--terra-dp)}
+.t-historial .burbuja{background:var(--piz-sv);color:var(--piz)}
+.tarjeta .txt{flex:1;min-width:0}
+.tarjeta strong{display:block;font-weight:600}
+.tarjeta small{display:block;color:var(--txt-suave);font-size:.9rem}
+.tarjeta .cifra{font:700 1.5rem/1 var(--texto);font-variant-numeric:tabular-nums;text-align:right}
+.tarjeta .cifra small{font:400 .8rem var(--texto)}
+.medidor{height:6px;border-radius:99px;background:rgba(140,98,70,.18);margin-top:.5rem;overflow:hidden}
+.medidor span{display:block;height:100%;width:33%;background:var(--terra);border-radius:inherit}
+
+.nav{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  background:var(--blanco);border-top:1px solid var(--linea);
+  padding:.35rem .5rem calc(.35rem + 18px);
+}
+.nav a{
+  display:flex;flex-direction:column;align-items:center;gap:.15rem;min-height:52px;justify-content:center;
+  text-decoration:none;color:var(--txt-suave);font-size:.8rem;font-weight:600;border-radius:12px;
+}
+.nav a[aria-current="page"]{color:var(--piz)}
+.nav a[aria-current="page"] svg{background:var(--piz-sv);border-radius:99px;width:52px;padding:2px 14px;box-sizing:content-box;height:22px}
+.nav a.central svg{color:var(--terra-dp)}
+
+.appbar{
+  background:var(--marron);color:var(--marron-txt);
+  padding:3.1rem .5rem .75rem;display:flex;align-items:center;gap:.25rem;
+}
+.appbar h2{margin:0 auto 0 .25rem;font:600 1.2rem var(--display)}
+.icono-btn{
+  width:44px;height:44px;border-radius:50%;border:0;background:none;color:inherit;cursor:pointer;
+  display:grid;place-items:center;
+}
+.icono-btn:active{background:rgba(255,246,232,.14)}
+.pasos{
+  background:var(--marron);padding:0 1.25rem 1.1rem;
+}
+.pasos ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);position:relative}
+.pasos ol::before{content:"";position:absolute;top:14px;left:16.66%;right:16.66%;height:2px;background:rgba(255,246,232,.22)}
+.pasos li{position:relative;display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--marron-txt-sv);font-size:.85rem}
+.pasos .n{
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:#7A5C42;color:var(--marron-txt);font-weight:700;font-size:.9rem;font-variant-numeric:tabular-nums;
+}
+.pasos li[aria-current="step"]{color:var(--marron-txt);font-weight:600}
+.pasos li[aria-current="step"] .n{background:var(--blanco);color:var(--marron);box-shadow:0 0 0 4px rgba(255,246,232,.2)}
+.pasos li.hecho .n{background:var(--terra-sv);color:var(--terra-dp)}
+.pasos li.hecho .n svg{width:16px;height:16px;stroke-width:2.5}
+
+.hoja{
+  background:var(--suelo);border-radius:22px 22px 0 0;margin-top:-10px;position:relative;
+  padding:1.25rem 1rem 7.5rem;min-height:100%;
+}
+.hoja h3{margin:0 0 .65rem;font:600 1.1rem var(--display)}
+.hoja section + section{margin-top:1.5rem}
+.lista{display:grid;gap:.5rem}
+.op{
+  display:flex;align-items:center;gap:.85rem;width:100%;min-height:60px;padding:.8rem 1rem;
+  background:var(--blanco);border:1px solid var(--linea);border-radius:14px;
+  text-align:left;cursor:pointer;transition:border-color var(--paso),background var(--paso);
+}
+.op .txt{flex:1;min-width:0}
+.op strong{display:block;font-weight:600}
+.op small{display:block;color:var(--txt-suave);font-size:.9rem}
+.op .burbuja{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--terra-sv);color:var(--terra-dp);flex:none}
+.op .marca-sel{
+  width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;
+  border:2px solid var(--terra);transition:background var(--paso),border-color var(--paso);
+}
+.op .marca-sel svg{width:14px;height:14px;stroke-width:3;color:#fff;opacity:0}
+.op[aria-checked="true"]{border-color:var(--piz-borde);background:var(--piz-sv)}
+.op[aria-checked="true"] strong{color:var(--piz-dp)}
+.op[aria-checked="true"] .marca-sel{background:var(--piz);border-color:var(--piz)}
+.op[aria-checked="true"] .marca-sel svg{opacity:1}
+.precio{font:700 1.15rem var(--texto);font-variant-numeric:tabular-nums;color:var(--terra-dp);white-space:nowrap}
+.ahorro{display:inline-block;margin-top:.15rem;font-size:.85rem;font-weight:600;color:var(--terra-dp)}
+.nota{margin:.6rem .25rem 0;font-size:.9rem;color:var(--txt-suave);display:flex;gap:.5rem;align-items:flex-start}
+.nota svg{width:18px;height:18px;color:var(--terra);margin-top:.15rem}
+
+.pie-fijo{
+  position:absolute;left:0;right:0;bottom:0;
+  background:var(--blanco);border-top:1px solid var(--linea);
+  padding:.75rem 1rem calc(.75rem + 18px);
+}
+.pie-fijo .btn{width:100%}
+.pie-fijo p{margin:0 0 .5rem;text-align:center;font-size:.85rem;color:var(--txt-suave)}
+.pie-fijo p a{color:var(--piz);text-underline-offset:2px}
+
+.resumen{
+  display:flex;align-items:center;gap:.5rem;margin:0 0 1.1rem;padding:0 .5rem 0 1rem;
+  background:var(--blanco);border:1px solid var(--linea);border-radius:999px;font-size:.9rem;color:var(--txt-suave);
+}
+.resumen span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.resumen a{color:var(--piz);font-weight:600;text-decoration:none;min-height:44px;display:inline-flex;align-items:center;padding:0 .35rem}
+
+.cal{background:var(--blanco);border-radius:18px;border:1px solid var(--linea);padding:.75rem .6rem .9rem}
+.cal-cab{display:flex;align-items:center;padding:0 .25rem .4rem .5rem}
+.cal-cab h3{margin:0 auto 0 0;font:600 1.1rem var(--display)}
+.cal-cab .icono-btn{color:var(--piz)}
+.cal-cab .icono-btn:disabled{color:#B9C2CA;cursor:default}
+.cal table{width:100%;border-collapse:collapse;table-layout:fixed}
+.cal th{font-size:.8rem;font-weight:600;color:var(--txt-suave);padding:.25rem 0 .35rem}
+.cal td{padding:2px;text-align:center}
+.dia-btn{
+  width:44px;height:44px;margin:0 auto;border-radius:50%;border:0;background:none;cursor:pointer;
+  display:grid;place-items:center;position:relative;
+  font:500 1.05rem var(--texto);font-variant-numeric:tabular-nums;color:var(--txt);
+  transition:background var(--paso),color var(--paso);
+}
+.dia-btn[aria-disabled="true"]{color:#B4BCC4;cursor:default}
+.dia-btn.hoy::after{content:"";position:absolute;bottom:6px;width:4px;height:4px;border-radius:50%;background:var(--terra)}
+.dia-btn[aria-pressed="true"]{background:var(--piz);color:#fff;font-weight:700}
+.dia-btn[aria-pressed="true"].hoy::after{background:#fff}
+.cal-nota{margin:.4rem .5rem 0;font-size:.85rem;color:var(--txt-suave)}
+
+.horas{margin-top:1.25rem}
+.horas h3 span{display:block;font:400 .9rem var(--texto);color:var(--txt-suave);margin-top:.1rem}
+.franja{margin-top:.9rem}
+.franja h4{margin:0 0 .45rem;font-size:.85rem;font-weight:600;color:var(--terra-dp)}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.chip{
+  min-height:48px;border-radius:12px;border:1px solid var(--piz-borde);background:var(--blanco);cursor:pointer;
+  font:600 1.05rem var(--texto);font-variant-numeric:tabular-nums;color:var(--piz-dp);
+  transition:background var(--paso),color var(--paso),transform 120ms ease-out;
+}
+.chip:active{transform:scale(.97)}
+.chip[aria-pressed="true"]{background:var(--piz);border-color:var(--piz);color:#fff}
+
+.aviso-suave{display:flex;gap:.6rem;align-items:flex-start;margin:0;padding:.85rem 1rem;border-radius:14px;background:var(--terra-sv);color:var(--marron);font-size:.95rem}
+.aviso-suave svg{width:20px;height:20px;color:var(--terra-dp);margin-top:.1rem}
+.importe{border:1px solid var(--linea);border-radius:18px;padding:1.1rem 1.25rem;background:var(--blanco);display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.importe .etq{margin:0;font-size:.9rem;font-weight:600;color:var(--terra-dp)}
+.importe .cifra{margin:.15rem 0 .1rem;font:700 2.2rem/1.1 var(--texto);font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.importe .cifra small{font-size:1.1rem;font-weight:600;margin-left:.3rem;color:var(--txt-suave)}
+.importe .ref{margin:0;color:var(--txt-suave);font-size:.9rem;font-variant-numeric:tabular-nums}
+.copiar{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:44px;padding:0 1rem;border-radius:999px;border:1px solid var(--piz-borde);background:var(--blanco);color:var(--piz);font-weight:600;cursor:pointer;transition:background var(--paso)}
+.copiar:hover{background:var(--piz-sv)}
+.copiar svg{width:18px;height:18px}
+.copiar[data-hecho]{background:var(--piz-sv);border-color:transparent}
+.titulo-paso{display:flex;align-items:center;gap:.6rem;margin:0 0 .75rem;font:600 1.1rem var(--display)}
+.titulo-paso .num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--terra-sv);color:var(--marron);font:700 .85rem var(--texto)}
+.cuenta-banco{border:1px solid var(--linea);border-radius:18px;overflow:hidden;background:var(--blanco)}
+.cuenta-cab{display:flex;align-items:center;gap:.75rem;padding:.9rem 1rem;border-bottom:1px solid var(--linea)}
+.sello{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#A3302A;color:#fff;font-weight:700;font-size:.8rem;flex:none}
+.cuenta-cab strong{display:block;font-weight:600}
+.cuenta-cab small{display:block;color:var(--txt-suave);font-size:.875rem}
+.dato{display:flex;align-items:center;gap:1rem;padding:.55rem .6rem .55rem 1rem}
+.dato + .dato{border-top:1px solid var(--linea)}
+.dato > span{flex:1;min-width:0}
+.dato small{display:block;font-size:.85rem;color:var(--txt-suave)}
+.dato b{font-weight:600;font-variant-numeric:tabular-nums;font-size:1.05rem}
+.form-pago{display:grid;gap:1.05rem}
+.campo{display:grid;gap:.35rem;min-width:0;align-content:start}
+.campo label,.campo .lbl{font-weight:600;font-size:.95rem}
+.campo input,.campo select{width:100%;min-height:48px;border:1px solid rgba(166,123,91,.45);border-radius:12px;padding:0 .9rem;font:inherit;color:var(--txt);background:var(--blanco)}
+.campo input{font-variant-numeric:tabular-nums}
+.campo input::placeholder{color:#8A96A1}
+.campo input:focus,.campo select:focus{outline:2px solid var(--piz);outline-offset:1px;border-color:var(--piz)}
+.campo .ayuda{font-size:.85rem;color:var(--txt-suave);margin:0}
+.seg{display:flex;flex-wrap:wrap;gap:.5rem}
+.seg button{min-height:44px;padding:0 1.1rem;border-radius:999px;border:1px solid var(--piz-borde);background:var(--blanco);color:var(--piz-dp);font-weight:600;cursor:pointer;transition:background var(--paso),color var(--paso)}
+.seg button[aria-checked="true"]{background:var(--piz);border-color:var(--piz);color:#fff}
+.subir{position:relative;display:flex;align-items:center;gap:.85rem;padding:1rem;border:1.5px dashed rgba(166,123,91,.55);border-radius:14px;cursor:pointer;background:var(--fondo-suave)}
+.subir:hover{border-color:var(--piz-borde)}
+.subir:focus-within{outline:2px solid var(--piz);outline-offset:2px}
+.subir .burbuja{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--piz-sv);color:var(--piz);flex:none}
+.subir strong{display:block;color:var(--piz);font-weight:600}
+.subir small{display:block;color:var(--txt-suave);font-size:.875rem}
+.subir input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.auxilio{margin:0;font-size:.9rem;color:var(--txt-suave);text-align:center}
+.auxilio a{color:var(--piz);font-weight:600;text-underline-offset:2px}
+.hoja .bloque-pago{margin-top:1.5rem}
+.hoja .importe{margin-top:1rem}
+
+.banda,.cabeza-app{
+  position:relative;overflow:hidden;isolation:isolate;
+  background:linear-gradient(155deg,#7A5638 0%,#5E442C 46%,#3F2C1C 100%);
+}
+.banda::before,.cabeza-app::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    repeating-linear-gradient(38deg,rgba(255,246,232,.075) 0 16px,rgba(255,246,232,0) 30px 74px),
+    repeating-linear-gradient(-49deg,rgba(255,246,232,.055) 0 12px,rgba(255,246,232,0) 26px 66px);
+  -webkit-mask-image:radial-gradient(80% 120% at 100% 0%,#000 0%,rgba(0,0,0,.55) 40%,transparent 80%);
+  mask-image:radial-gradient(80% 120% at 100% 0%,#000 0%,rgba(0,0,0,.55) 40%,transparent 80%);
+}
+.banda::after,.cabeza-app::after{
+  content:"";position:absolute;z-index:-1;pointer-events:none;
+  width:420px;height:420px;right:-140px;top:-220px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(232,196,150,.28),rgba(232,196,150,0));
+}
+.cabeza-app .appbar,.cabeza-app .pasos{background:none}
+
+.caja{border:1px solid var(--linea);border-radius:18px;overflow:hidden;background:var(--blanco)}
+.caja-cab{
+  position:relative;display:flex;align-items:center;gap:.75rem;padding:.9rem 1.1rem;
+  border-bottom:1px solid var(--linea);
+}
+.caja-cab::after{
+  content:"";position:absolute;top:0;right:0;bottom:0;width:46%;pointer-events:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 70%);
+  mask-image:linear-gradient(90deg,transparent,#000 70%);
+}
+.caja-cab .num{
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;
+  font:700 .9rem var(--texto);position:relative;z-index:1;
+}
+.caja-cab div{position:relative;z-index:1}
+.caja-cab h3{margin:0;font:600 1.1rem/1.2 var(--display)}
+.caja-cab small{display:block;font-size:.9rem;margin-top:.1rem}
+.caja-pago .caja-cab{background:var(--terra-sv)}
+.caja-pago .caja-cab::after{background-image:radial-gradient(circle,rgba(140,98,70,.32) 1.3px,transparent 1.8px);background-size:11px 11px}
+.caja-pago .caja-cab .num{background:var(--terra-dp);color:#fff}
+.caja-pago .caja-cab h3{color:var(--marron)}
+.caja-pago .caja-cab small{color:#6B5340}
+.caja-form .caja-cab{background:var(--piz-sv)}
+.caja-form .caja-cab::after{background-image:repeating-linear-gradient(135deg,rgba(61,85,104,.2) 0 1px,transparent 1px 8px)}
+.caja-form .caja-cab .num{background:var(--piz);color:#fff}
+.caja-form .caja-cab h3{color:var(--piz-dp)}
+.caja-form .caja-cab small{color:#4A5F70}
+.caja-cuerpo{padding:1.1rem}
+.caja-cuerpo > * + *{margin-top:1rem}
+
+.importe{border:0;border-radius:0;padding:0 0 1rem;border-bottom:1px solid var(--linea)}
+.lbl-suelta{display:block;margin:0 0 .5rem;font-weight:600;font-size:.95rem}
+.bancos{display:flex;flex-wrap:wrap;gap:.5rem}
+.banco-op{
+  display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:0 .9rem 0 .4rem;
+  border-radius:999px;border:1px solid var(--linea);background:var(--blanco);cursor:pointer;
+  font-weight:600;color:var(--txt);transition:border-color var(--paso),background var(--paso);
+}
+.banco-op .sello{width:32px;height:32px;font-size:.7rem}
+.banco-op[aria-checked="true"]{border-color:var(--piz);background:var(--piz-sv);color:var(--piz-dp);box-shadow:inset 0 0 0 1px var(--piz)}
+.cuenta-banco{margin-top:.75rem}
+
+.subir{
+  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  gap:.35rem;min-height:190px;padding:1.5rem 1.25rem;
+  border:1.5px dashed rgba(61,85,104,.4);border-radius:16px;background:var(--fondo-suave);cursor:pointer;
+  transition:border-color var(--paso),background var(--paso);
+}
+.subir:hover,.subir[data-encima]{border-color:var(--piz);background:var(--piz-sv)}
+.subir:focus-within{outline:2px solid var(--piz);outline-offset:2px}
+.subir input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.subir-ic{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--blanco);color:var(--piz);box-shadow:0 0 0 6px rgba(61,85,104,.08);margin-bottom:.4rem}
+.subir-ic svg{width:26px;height:26px}
+.subir strong{display:block;font-weight:600;font-size:1.05rem;color:var(--txt)}
+.subir small{display:block;color:var(--txt-suave);font-size:.9rem;max-width:38ch;text-wrap:balance}
+.titular{margin:0;padding:.7rem 1rem;border-bottom:1px solid var(--linea);font-size:.9rem;color:var(--txt-suave);background:var(--fondo-suave)}
+.titular strong{color:var(--txt);font-weight:600}
+.subir .falso-btn{
+  display:inline-flex;align-items:center;min-height:44px;padding:0 1.2rem;margin-top:.6rem;border-radius:999px;
+  background:var(--blanco);box-shadow:inset 0 0 0 1px var(--piz-borde);color:var(--piz);font-weight:600;
+}
+.previa{display:flex;align-items:center;gap:.9rem;padding:.75rem;border:1px solid var(--piz-borde);border-radius:16px;background:var(--piz-sv)}
+.previa img,.previa .pdf{width:72px;height:72px;border-radius:12px;object-fit:cover;flex:none;background:var(--blanco);display:grid;place-items:center;color:var(--piz);font-weight:700}
+.previa .txt{flex:1;min-width:0}
+.previa strong{display:flex;align-items:center;gap:.35rem;font-weight:600;color:var(--piz-dp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.previa strong svg{width:18px;height:18px;flex:none;stroke-width:2.5}
+.previa small{display:block;color:var(--txt-suave);font-size:.875rem}
+.previa button{min-height:44px;padding:0 1rem;border-radius:999px;border:0;background:var(--blanco);color:var(--piz);font-weight:600;cursor:pointer;box-shadow:inset 0 0 0 1px var(--piz-borde)}
+.pila-pago{display:grid;gap:1rem;margin-top:1rem}
+
+.subir{
+  display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.85rem;row-gap:.1rem;
+  align-items:center;justify-items:start;text-align:left;min-height:0;padding:.7rem .7rem .7rem .7rem;
+  border:1px solid var(--piz-borde);border-radius:16px;background:var(--blanco);
+}
+.subir:hover,.subir[data-encima]{background:var(--piz-sv);border-color:var(--piz)}
+.subir-ic{
+  grid-row:1 / 3;position:relative;width:60px;height:60px;margin:0;border-radius:14px;box-shadow:none;
+  background:var(--piz-sv) radial-gradient(circle,rgba(61,85,104,.22) 1.1px,transparent 1.6px) 0 0/9px 9px;
+  color:var(--piz);display:grid;place-items:center;
+}
+.subir-ic > svg{width:26px;height:26px}
+.subir-ic .mas{
+  position:absolute;right:-5px;bottom:-5px;width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;background:var(--piz);color:#fff;box-shadow:0 0 0 2px var(--blanco);
+}
+.subir-ic .mas svg{width:14px;height:14px;stroke-width:2.5}
+.subir strong{grid-column:2;align-self:end;font-size:1rem;color:var(--piz)}
+.subir small{grid-column:2;align-self:start;max-width:none;font-size:.85rem}
+.subir .falso-btn{grid-column:3;grid-row:1 / 3;margin:0;min-height:44px;padding:0 .9rem;background:var(--piz);color:#fff;box-shadow:none}
+.previa{padding:.7rem;border-radius:16px}
+.previa[hidden],.subir[hidden]{display:none}
+.previa img,.previa .pdf{width:60px;height:60px;border-radius:14px}
+
+@media (max-width:440px){
+  body{background:var(--suelo)}
+  .lienzo{padding:0;gap:0}
+  .lienzo > header{padding:1.25rem 1rem}
+  figure{width:100%}
+  figcaption{padding:.75rem 0;background:#E6DACB}
+  .tel{width:100%;border-radius:0;box-shadow:none;height:100svh}
+}
+@media (prefers-reduced-motion:reduce){
+  .btn,.chip,.op,.dia-btn{transition:background 1ms,color 1ms}
+  .btn:active,.chip:active{transform:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-atras" viewBox="0 0 24 24"><path d="M15 6l-6 6l6 6"/></symbol>
+  <symbol id="i-sig" viewBox="0 0 24 24"><path d="M9 6l6 6l-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></symbol>
+  <symbol id="i-cal-mas" viewBox="0 0 24 24"><path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M16 19h6"/><path d="M19 16v6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276z"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5l10 -10"/></symbol>
+  <symbol id="i-casa" viewBox="0 0 24 24"><path d="M5 12h-2l9 -9l9 9h-2"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></symbol>
+  <symbol id="i-paquete" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9z"/><path d="M12 12l8 -4.5"/><path d="M12 12v9"/><path d="M12 12l-8 -4.5"/></symbol>
+  <symbol id="i-historial" viewBox="0 0 24 24"><path d="M12 8v4l2 2"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></symbol>
+  <symbol id="i-duda" viewBox="0 0 24 24"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293z"/></symbol>
+  <symbol id="i-hoja" viewBox="0 0 24 24"><path d="M5 21c.5 -4.5 2.5 -8 7 -10"/><path d="M9 18c6.218 0 10.5 -3.288 11 -12v-2h-4.014c-9 0 -11.986 4 -12 9c0 1 0 3 2 5h3z"/></symbol>
+  <symbol id="i-copiar" viewBox="0 0 24 24"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></symbol>
+  <symbol id="i-subir" viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4v12"/></symbol>
+  <symbol id="i-foto" viewBox="0 0 24 24"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+</svg>
+
+<main class="lienzo">
+  <header>
+    <h1>Psicconsciente en el móvil</h1>
+    <p>Maqueta con datos de ejemplo. Toca los días, las horas y las opciones: responden.</p>
+  </header>
+
+  <figure>
+    <figcaption>1 · Mis consultas</figcaption>
+    <div class="tel">
+      <div class="pantalla">
+        <div class="banda">
+          <div class="barra">
+            <span class="marca"><svg class="ic"><use href="#i-hoja"/></svg>Psicconsciente</span>
+            <button class="avatar" type="button" aria-label="Tu cuenta">ED</button>
+          </div>
+          <div class="saludo">
+            <h2>Hola, Edgar</h2>
+            <p>Lunes, 19 de octubre</p>
+          </div>
+        </div>
+
+        <article class="proxima" aria-labelledby="tProx">
+          <h3 id="tProx">Tu próxima consulta</h3>
+          <div class="cuando">
+            <p class="dia">Jueves 22<br>de octubre</p>
+            <p class="hora">19:00</p>
+          </div>
+          <ul class="datos">
+            <li><svg class="ic"><use href="#i-video"/></svg>Online · videollamada<span class="estado"><svg class="ic"><use href="#i-check"/></svg>Confirmada</span></li>
+            <li><svg class="ic"><use href="#i-reloj"/></svg>60 minutos · faltan 3 días</li>
+          </ul>
+          <div class="acciones">
+            <button class="btn" type="button">Cambiar de horario</button>
+            <a class="enlace" href="#">Ver o cancelar</a>
+          </div>
+        </article>
+
+        <nav class="atajos" aria-label="Accesos rápidos">
+          <a class="atajo" href="#"><span class="burbuja"><svg class="ic"><use href="#i-cal-mas"/></svg></span>Reservar cita</a>
+          <a class="atajo" href="#"><span class="burbuja"><svg class="ic"><use href="#i-user"/></svg></span>Mis datos</a>
+        </nav>
+
+        <section class="bloque" aria-labelledby="tRes">
+          <h3 id="tRes">Tu resumen</h3>
+          <div class="tarjeta t-paquete">
+            <span class="burbuja"><svg class="ic"><use href="#i-paquete"/></svg></span>
+            <div class="txt">
+              <strong>Paquete de 3 consultas</strong>
+              <small>Vence en 41 días</small>
+              <div class="medidor" aria-hidden="true"><span></span></div>
+            </div>
+            <p class="cifra">2<small><br>por agendar</small></p>
+          </div>
+          <div class="tarjeta t-historial">
+            <span class="burbuja"><svg class="ic"><use href="#i-historial"/></svg></span>
+            <div class="txt">
+              <strong>Historial</strong>
+              <small>Última: 8 de octubre</small>
+            </div>
+            <p class="cifra">4<small><br>consultas</small></p>
+          </div>
+        </section>
+        <div style="height:1.5rem"></div>
+      </div>
+      <nav class="nav" aria-label="Principal">
+        <a href="#" aria-current="page"><svg class="ic"><use href="#i-casa"/></svg>Consultas</a>
+        <a href="#" class="central"><svg class="ic"><use href="#i-cal-mas"/></svg>Reservar</a>
+        <a href="#"><svg class="ic"><use href="#i-user"/></svg>Mis datos</a>
+      </nav>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>2 · Reserva, paso 1</figcaption>
+    <div class="tel">
+      <div class="pantalla">
+        <div class="cabeza-app"><header class="appbar">
+          <button class="icono-btn" type="button" aria-label="Volver a mis consultas"><svg class="ic"><use href="#i-atras"/></svg></button>
+          <h2>Nueva reserva</h2>
+          <button class="icono-btn" type="button" aria-label="Tengo una duda: escribir por WhatsApp"><svg class="ic"><use href="#i-duda"/></svg></button>
+        </header>
+        <nav class="pasos" aria-label="Pasos de la reserva">
+          <ol>
+            <li aria-current="step"><span class="n">1</span>Reserva</li>
+            <li><span class="n">2</span>Fecha</li>
+            <li><span class="n">3</span>Pago</li>
+          </ol>
+        </nav></div>
+        <div class="hoja">
+          <section aria-labelledby="tModo">
+            <h3 id="tModo">Cómo quieres tu consulta</h3>
+            <div class="lista" role="radiogroup" aria-labelledby="tModo" data-grupo="modo">
+              <button class="op" type="button" role="radio" aria-checked="true">
+                <span class="burbuja"><svg class="ic"><use href="#i-video"/></svg></span>
+                <span class="txt"><strong>Online</strong><small>Desde donde estés · 60 min</small></span>
+                <span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span>
+              </button>
+              <button class="op" type="button" role="radio" aria-checked="false">
+                <span class="burbuja"><svg class="ic"><use href="#i-pin"/></svg></span>
+                <span class="txt"><strong>Presencial</strong><small>Barquisimeto · 60 min</small></span>
+                <span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span>
+              </button>
+            </div>
+          </section>
+
+          <section aria-labelledby="tServ">
+            <h3 id="tServ">Qué quieres trabajar</h3>
+            <div class="lista" role="radiogroup" aria-labelledby="tServ" data-grupo="serv">
+              <button class="op" type="button" role="radio" aria-checked="true"><span class="txt"><strong>Superar la Ansiedad</strong></span><span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span></button>
+              <button class="op" type="button" role="radio" aria-checked="false"><span class="txt"><strong>Fortalecer tu Autoestima</strong></span><span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span></button>
+              <button class="op" type="button" role="radio" aria-checked="false"><span class="txt"><strong>Acompañamiento en el Duelo</strong></span><span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span></button>
+              <button class="op" type="button" role="radio" aria-checked="false"><span class="txt"><strong>Terapia de Pareja</strong></span><span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span></button>
+            </div>
+          </section>
+
+          <section aria-labelledby="tPlan">
+            <h3 id="tPlan">Consulta o paquete</h3>
+            <div class="lista" role="radiogroup" aria-labelledby="tPlan" data-grupo="plan">
+              <button class="op" type="button" role="radio" aria-checked="false">
+                <span class="txt"><strong>1 consulta</strong></span>
+                <span class="precio">30 $</span>
+                <span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span>
+              </button>
+              <button class="op" type="button" role="radio" aria-checked="true">
+                <span class="txt"><strong>3 consultas</strong><span class="ahorro">Ahorras 15 $</span></span>
+                <span class="precio">75 $</span>
+                <span class="marca-sel"><svg class="ic"><use href="#i-check"/></svg></span>
+              </button>
+            </div>
+            <p class="nota"><svg class="ic"><use href="#i-cal"/></svg>Tienes 60 días para agendar tus consultas.</p>
+          </section>
+        </div>
+      </div>
+      <div class="pie-fijo">
+        <button class="btn" type="button">Ver horarios</button>
+      </div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>3 · Reserva, paso 2</figcaption>
+    <div class="tel">
+      <div class="pantalla">
+        <div class="cabeza-app"><header class="appbar">
+          <button class="icono-btn" type="button" aria-label="Volver al paso 1"><svg class="ic"><use href="#i-atras"/></svg></button>
+          <h2>Nueva reserva</h2>
+          <button class="icono-btn" type="button" aria-label="Tengo una duda: escribir por WhatsApp"><svg class="ic"><use href="#i-duda"/></svg></button>
+        </header>
+        <nav class="pasos" aria-label="Pasos de la reserva">
+          <ol>
+            <li class="hecho"><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Reserva</li>
+            <li aria-current="step"><span class="n">2</span>Fecha</li>
+            <li><span class="n">3</span>Pago</li>
+          </ol>
+        </nav></div>
+        <div class="hoja">
+          <p class="resumen"><span>Online · Superar la Ansiedad · 3 consultas</span><a href="#">Cambiar</a></p>
+
+          <section class="cal" aria-labelledby="tMes">
+            <div class="cal-cab">
+              <h3 id="tMes" aria-live="polite">Octubre 2026</h3>
+              <button class="icono-btn" type="button" aria-label="Mes anterior" disabled><svg class="ic"><use href="#i-atras"/></svg></button>
+              <button class="icono-btn" type="button" aria-label="Mes siguiente"><svg class="ic"><use href="#i-sig"/></svg></button>
+            </div>
+            <table>
+              <thead><tr><th abbr="lunes">L</th><th abbr="martes">M</th><th abbr="miércoles">X</th><th abbr="jueves">J</th><th abbr="viernes">V</th><th abbr="sábado">S</th><th abbr="domingo">D</th></tr></thead>
+              <tbody id="calDias"></tbody>
+            </table>
+            <p class="cal-nota">Los días en gris no tienen horarios libres.</p>
+          </section>
+
+          <section class="horas" aria-labelledby="tDia">
+            <h3 id="tDia">Lunes, 19 de octubre<span>Hora de Caracas</span></h3>
+            <div class="franja">
+              <h4>Tarde</h4>
+              <div class="chips"><button class="chip" type="button" aria-pressed="false">17:00</button></div>
+            </div>
+            <div class="franja">
+              <h4>Noche</h4>
+              <div class="chips">
+                <button class="chip" type="button" aria-pressed="true">19:00</button>
+                <button class="chip" type="button" aria-pressed="false">20:00</button>
+                <button class="chip" type="button" aria-pressed="false">21:00</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="pie-fijo">
+        <p>Al reservar aceptas el <a href="#">consentimiento informado</a>.</p>
+        <button class="btn" type="button" id="reservar">Reservar lunes 19 · 19:00</button>
+      </div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>4 · Reserva, paso 3</figcaption>
+    <div class="tel">
+      <div class="pantalla">
+        <div class="cabeza-app"><header class="appbar">
+          <button class="icono-btn" type="button" aria-label="Volver al paso 2"><svg class="ic"><use href="#i-atras"/></svg></button>
+          <h2>Nueva reserva</h2>
+          <button class="icono-btn" type="button" aria-label="Tengo una duda: escribir por WhatsApp"><svg class="ic"><use href="#i-duda"/></svg></button>
+        </header>
+        <nav class="pasos" aria-label="Pasos de la reserva">
+          <ol>
+            <li class="hecho"><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Reserva</li>
+            <li class="hecho"><span class="n"><svg class="ic"><use href="#i-check"/></svg></span>Fecha</li>
+            <li aria-current="step"><span class="n">3</span>Pago</li>
+          </ol>
+        </nav></div>
+        <div class="hoja">
+          <p class="resumen"><span>Lunes 19 · 19:00 · Online · 3 consultas</span></p>
+          <p class="aviso-suave"><svg class="ic"><use href="#i-reloj"/></svg><span>Te guardamos el horario hasta las <strong>8:15 p. m.</strong> para que pagues con calma.</span></p>
+          <div class="pila-pago">
+          <section class="caja caja-pago" aria-labelledby="mtPago">
+            <header class="caja-cab"><span class="num">1</span><div><h3 id="mtPago">Datos para pagar</h3><small>Haz el pago móvil a una de estas cuentas</small></div></header>
+            <div class="caja-cuerpo">
+              <div class="importe">
+                <div>
+                  <p class="etq">Transfiere</p>
+                  <p class="cifra">16.155,00<small>Bs</small></p>
+                  <p class="ref">75 $ · tasa BCV 215,40 Bs por dólar</p>
+                </div>
+                <button class="copiar" type="button" data-copiar="16155.00"><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar monto</span></button>
+              </div>
+              <div>
+                <span class="lbl-suelta" id="mlblBanco">Elige la cuenta</span>
+                <div class="bancos" role="radiogroup" aria-labelledby="mlblBanco"></div>
+                <div class="cuenta-banco"></div>
+              </div>
+            </div>
+          </section>
+          <section class="caja caja-form" aria-labelledby="mtForm">
+            <header class="caja-cab"><span class="num">2</span><div><h3 id="mtForm">Cuéntanos del pago</h3><small>Con esto Daryeli lo encuentra en su banco</small></div></header>
+            <form class="caja-cuerpo form-pago" onsubmit="return false">
+              <div class="campo">
+                <label for="mbanco">Banco desde el que pagaste</label>
+                <select id="mbanco"><option>Selecciona tu banco</option><option>Banco de Venezuela</option><option>Banesco</option><option>Mercantil</option><option>Provincial</option></select>
+              </div>
+              <div class="campo">
+                <label for="mref">Número de referencia</label>
+                <input id="mref" type="text" inputmode="numeric" placeholder="000123456789" autocomplete="off">
+                <p class="ayuda">Los dígitos que salen en el comprobante.</p>
+              </div>
+              <div class="campo">
+                <label for="mmonto">Monto en bolívares</label>
+                <input id="mmonto" type="text" inputmode="decimal" value="16.155,00">
+                <p class="ayuda">Ya viene puesto. Cámbialo si tu banco cobró otra cifra.</p>
+              </div>
+              <div class="campo">
+                <span class="lbl" id="mlblCuando">¿Cuándo lo pagaste?</span>
+                <div class="seg" role="radiogroup" aria-labelledby="mlblCuando">
+                  <button type="button" role="radio" aria-checked="true">Hoy</button>
+                  <button type="button" role="radio" aria-checked="false">Ayer</button>
+                  <button type="button" role="radio" aria-checked="false">Otra fecha</button>
+                </div>
+              </div>
+              <div class="campo zona-captura">
+                <span class="lbl" id="mlblCap">Captura del comprobante</span>
+                <label class="subir">
+                  <input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" aria-labelledby="mlblCap">
+                  <span class="subir-ic"><svg class="ic"><use href="#i-foto"/></svg><i class="mas" aria-hidden="true"><svg class="ic"><use href="#i-mas"/></svg></i></span>
+                  <strong>Sube la captura</strong>
+                  <small>JPG, PNG o PDF · 5 MB</small>
+                </label>
+                <div class="previa" hidden></div>
+              </div>
+            </form>
+          </section>
+          </div>
+        </div>
+      </div>
+      <div class="pie-fijo">
+        <button class="btn" type="button">Enviar comprobante</button>
+        <p class="auxilio" style="margin:.5rem 0 0">¿Algo no cuadra? <a href="#">Escríbele a Daryeli</a></p>
+      </div>
+    </div>
+  </figure>
+</main>
+
+<script>
+(function () {
+  document.querySelectorAll('[role="radiogroup"]').forEach(function (g) {
+    g.addEventListener('click', function (e) {
+      var b = e.target.closest('.op');
+      if (!b) return;
+      g.querySelectorAll('.op').forEach(function (x) { x.setAttribute('aria-checked', String(x === b)); });
+    });
+  });
+
+  var DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  var cuerpo = document.getElementById('calDias');
+  var primero = new Date(2026, 9, 1);
+  var hueco = (primero.getDay() + 6) % 7;
+  var elegido = 19;
+  var fila = document.createElement('tr');
+  for (var i = 0; i < hueco; i++) fila.appendChild(document.createElement('td'));
+  for (var d = 1; d <= 31; d++) {
+    var f = new Date(2026, 9, d);
+    var td = document.createElement('td');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'dia-btn' + (d === 19 ? ' hoy' : '');
+    b.textContent = d;
+    b.dataset.d = d;
+    var cerrado = d < 19 || f.getDay() === 0;
+    if (cerrado) b.setAttribute('aria-disabled', 'true');
+    else b.setAttribute('aria-pressed', String(d === elegido));
+    b.setAttribute('aria-label', DIAS[f.getDay()] + ', ' + d + ' de octubre' + (cerrado ? ', sin horarios' : ''));
+    td.appendChild(b);
+    fila.appendChild(td);
+    if ((hueco + d) % 7 === 0) { cuerpo.appendChild(fila); fila = document.createElement('tr'); }
+  }
+  if (fila.children.length) cuerpo.appendChild(fila);
+
+  var hora = '19:00';
+  var boton = document.getElementById('reservar');
+  function pintar() {
+    var f = new Date(2026, 9, elegido);
+    document.getElementById('tDia').firstChild.nodeValue =
+      DIAS[f.getDay()].replace(/^./, function (c) { return c.toUpperCase(); }) + ', ' + elegido + ' de octubre';
+    boton.textContent = hora ? 'Reservar ' + DIAS[f.getDay()] + ' ' + elegido + ' · ' + hora : 'Elige una hora';
+    boton.disabled = !hora;
+  }
+  cuerpo.addEventListener('click', function (e) {
+    var b = e.target.closest('.dia-btn');
+    if (!b || b.getAttribute('aria-disabled') === 'true') return;
+    elegido = Number(b.dataset.d);
+    cuerpo.querySelectorAll('.dia-btn[aria-pressed]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    hora = null;
+    document.querySelectorAll('.chip').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+    pintar();
+  });
+  document.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      hora = c.textContent;
+      document.querySelectorAll('.chip').forEach(function (x) { x.setAttribute('aria-pressed', String(x === c)); });
+      pintar();
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest('.copiar');
+    if (c) {
+      try { navigator.clipboard.writeText(c.dataset.copiar); } catch (x) {}
+      var et = c.querySelector('span');
+      var antes = et ? et.textContent : '';
+      c.setAttribute('data-hecho', '');
+      if (et) et.textContent = 'Copiado';
+      setTimeout(function () { c.removeAttribute('data-hecho'); if (et) et.textContent = antes; }, 1600);
+      return;
+    }
+    var s = e.target.closest('.seg button');
+    if (s) s.parentNode.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-checked', String(x === s)); });
+  });
+
+  var BANCOS = [
+    { sig: 'BDV', nombre: 'Banco de Venezuela', color: '#A3302A', ced: 'V-12.345.678', tel: '0412-000.00.00' },
+    { sig: 'BAN', nombre: 'Banesco', color: '#1E6B45', ced: 'V-12.345.678', tel: '0414-000.00.00' },
+    { sig: 'MER', nombre: 'Mercantil', color: '#1F4E8C', ced: 'V-12.345.678', tel: '0424-000.00.00' }
+  ];
+  function copiarBtn(v, et) {
+    return '<button class="copiar" type="button" data-copiar="' + v.replace(/\D/g, '') + '" aria-label="Copiar ' + et.toLowerCase() + '"><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>';
+  }
+  function pintarBanco(caja, i) {
+    var b = BANCOS[i];
+    caja.querySelector('.cuenta-banco').innerHTML =
+      '<p class="titular">Pago móvil a nombre de <strong>Daryeli Romero</strong></p>' +
+      '<div class="dato"><span><small>Cédula</small><b>' + b.ced + '</b></span>' + copiarBtn(b.ced, 'Cédula') + '</div>' +
+      '<div class="dato"><span><small>Teléfono</small><b>' + b.tel + '</b></span>' + copiarBtn(b.tel, 'Teléfono') + '</div>';
+  }
+  document.querySelectorAll('.caja-pago').forEach(function (caja) {
+    var g = caja.querySelector('.bancos');
+    g.innerHTML = BANCOS.map(function (b, i) {
+      return '<button class="banco-op" type="button" role="radio" aria-checked="' + (i === 0) + '" data-i="' + i + '"><span class="sello" style="background:' + b.color + '" aria-hidden="true">' + b.sig + '</span>' + b.nombre + '</button>';
+    }).join('');
+    g.addEventListener('click', function (e) {
+      var o = e.target.closest('.banco-op');
+      if (!o) return;
+      g.querySelectorAll('.banco-op').forEach(function (x) { x.setAttribute('aria-checked', String(x === o)); });
+      pintarBanco(caja, Number(o.dataset.i));
+    });
+    pintarBanco(caja, 0);
+  });
+
+  function tam(n) { return n > 1048576 ? (n / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.round(n / 1024) + ' KB'; }
+  document.querySelectorAll('.zona-captura').forEach(function (z) {
+    var lab = z.querySelector('.subir');
+    var inp = lab.querySelector('input');
+    var prev = z.querySelector('.previa');
+    function mostrar(f) {
+      if (!f) return;
+      var es = /^image\//.test(f.type);
+      prev.innerHTML = (es ? '<img alt="" src="' + URL.createObjectURL(f) + '">' : '<span class="pdf">PDF</span>') +
+        '<span class="txt"><strong><svg class="ic"><use href="#i-check"/></svg>' + f.name + '</strong><small>' + tam(f.size) + ' · lista para enviar</small></span>' +
+        '<button type="button">Cambiar</button>';
+      prev.hidden = false; lab.hidden = true;
+      prev.querySelector('button').addEventListener('click', function () { inp.value = ''; prev.hidden = true; lab.hidden = false; inp.click(); });
+    }
+    inp.addEventListener('change', function () { mostrar(inp.files[0]); });
+    ['dragenter', 'dragover'].forEach(function (t) { lab.addEventListener(t, function () { lab.setAttribute('data-encima', ''); }); });
+    ['dragleave', 'drop'].forEach(function (t) { lab.addEventListener(t, function () { lab.removeAttribute('data-encima'); }); });
+  });
+})();
+</script>
+</body>
+</html>

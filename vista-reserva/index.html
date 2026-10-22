@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reserva tu consulta · Psicconsciente</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- El menu lateral. Es el unico archivo de fuera que se usa, y no hace falta
+     tocarlo para diseñar esta vista. -->
+<link rel="stylesheet" href="../panel.css">
+<!-- LA HOJA VIVE EN reservar/. Se escribio aqui, pero desde el porte la usa
+     la pagina de verdad, asi que es ella quien la posee; esta vista sigue
+     siendo el taller y apunta al mismo archivo para que no haya dos copias
+     separandose. -->
+<!-- LA CASCARA, solo del taller: el fondo, el titular, las pestanas y la
+     tarjeta. En la pagina real todo eso lo pone reservar.css, porque envuelve
+     los tres pasos. -->
+<link rel="stylesheet" href="cascara-taller.css">
+
+<!-- Y EL PASO 1, que es la hoja de verdad: la misma que usa la pagina real, sin
+     copia. Se escribio aqui y desde el porte vive en reservar/. -->
+<link rel="stylesheet" href="../reservar/paso1.css">
+</head>
+
+<!--
+  VISTA DE RESERVA · PASO 1
+  =========================
+  Punto de partida limpio para diseñar. Tres archivos y nada mas:
+
+      index.html    esto: solo estructura, ni un estilo ni un script dentro
+      reserva.css   todo el aspecto, por secciones
+      reserva.js    el comportamiento, con los datos arriba para cambiarlos
+
+  NO HAY BACKEND. Los servicios, los planes y los precios estan en `DATOS`, al
+  principio de reserva.js, para poder diseñar sin sesion y sin Supabase. En la
+  pagina real esos datos llegan de la base; la forma es la misma.
+
+  ESTRUCTURA DE LA PANTALLA
+
+      .pnl                        rejilla de dos columnas
+      ├── nav.pnl-menu            el menu marron (estatico aqui)
+      └── .pnl-lienzo             el lienzo
+          └── .hoja
+              ├── h1
+              ├── .tira           las tres pestañas
+              ├── .tarjeta        la carpeta
+              │   ├── .rejilla    modalidad | que trabajar
+              │   ├── .planes-zona
+              │   └── .pie        total + continuar
+              └── .legal
+
+  SEMANTICA. Cada grupo de opciones es un `fieldset` con su `legend`, y cada
+  opcion un `label` con su `input type="radio"` dentro. El `div` se reserva para
+  maquetacion. Los radios son nativos a proposito: el teclado, el nombre
+  accesible y el estado los da el navegador sin una linea de JavaScript.
+-->
+
+<body>
+
+<div class="pnl" data-menu="si">
+
+  <!-- ============ MENU ============
+       Estatico en esta vista. En la pagina real lo pinta ../panel.js dentro de
+       un hueco vacio, para que haya una sola definicion del menu. -->
+  <nav class="pnl-menu" aria-label="Tu cuenta">
+    <a class="pnl-marca" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/><path d="M9 20h6M10.2 22.2h3.6"/></svg>
+      <span>Psicconsciente</span>
+    </a>
+
+    <a class="pnl-reservar" href="#" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      <span>Reservar cita</span>
+    </a>
+
+    <div class="pnl-vistas">
+      <a class="pnl-vista" href="../cuenta/#consultas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>
+        <span>Mis consultas</span>
+      </a>
+      <a class="pnl-vista" href="../cuenta/#datos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></svg>
+        <span>Mis datos</span>
+      </a>
+    </div>
+
+    <button type="button" class="pnl-salir">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v2M11 12h10M18 9l3 3-3 3"/></svg>
+      <span>Cerrar sesión</span>
+    </button>
+  </nav>
+
+  <div class="pnl-lienzo pnl-lienzo-ancho">
+    <div class="hoja">
+
+      <h1 id="titulo">Reserva tu consulta</h1>
+
+      <!-- ============ PESTAÑAS ============
+           "Reserva · Fecha · Pago" dice QUE es cada paso. Se abren al
+           contestarse: reserva.js las gobierna. -->
+      <div class="tira" role="tablist" aria-label="Pasos de la reserva">
+
+        <button type="button" role="tab" class="pest" id="pest1"
+                aria-selected="true" aria-controls="vista1">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h9"/></svg>
+          <span>Reserva</span>
+        </button>
+
+        <button type="button" role="tab" class="pest" id="pest2"
+                aria-selected="false" aria-controls="vista2" aria-disabled="true">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>
+          <span>Fecha</span>
+        </button>
+
+        <button type="button" role="tab" class="pest" id="pest3"
+                aria-selected="false" aria-controls="vista3" aria-disabled="true">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/></svg>
+          <span>Pago</span>
+        </button>
+      </div>
+
+      <!-- LA REGION VIVA. Solo la oye quien usa lector de pantalla, y hace falta
+           por la apertura progresiva: al elegir modalidad APARECE UNA PREGUNTA
+           ENTERA, y sin esto no hay forma de enterarse. Es el criterio 4.1.3 de
+           WCAG, nivel AA.
+
+           `aria-live="polite"` y no `assertive`: el anuncio espera a que el
+           lector termine lo que esta diciendo en vez de cortarle. Interrumpir a
+           alguien justo cuando acaba de elegir una opcion es peor que esperar
+           medio segundo.
+
+           Va FUERA de la tarjeta y vacia de salida: una region viva anuncia sus
+           CAMBIOS, asi que si nace con texto, ese texto no se anuncia nunca. -->
+      <p class="solo-lector" role="status" aria-live="polite" id="anuncio"></p>
+
+      <!-- ============ LA CARPETA ============ -->
+      <section class="tarjeta" id="vista1" role="tabpanel"
+               aria-labelledby="pest1" tabindex="0">
+
+        <div class="rejilla">
+
+          <!-- ---- modalidad ---- -->
+          <fieldset class="grupo">
+            <!-- EL ECO. Al lado del rotulo va lo que llevas elegido, y si no hay
+                 nada dice "sin elegir". Hace dos cosas de una: avisa de que
+                 aqui se contesta algo, y deja ver de un vistazo que te falta
+                 sin tener que recorrer las listas. Lo escribe reserva.js. -->
+            <legend class="rotulo">Cómo quieres tu consulta<span class="eco" id="ecoModo" aria-hidden="true"></span></legend>
+
+            <div class="opciones" id="grupoModo"></div>
+
+            <!-- LA NOTA DE LA MODALIDAD. Esta columna tiene dos opciones contra
+                 las cuatro de al lado, asi que sobraban unos 130 px de aire sin
+                 funcion. Aqui entra el dato que corresponde a lo elegido: en
+                 linea, cuanto dura y por donde; presencial, la direccion.
+
+                 No es relleno para tapar el hueco: es informacion que la
+                 persona necesita justo en el momento de elegir. Lo escribe
+                 reserva.js segun la modalidad. -->
+            <p class="modo-nota" id="modoNota"></p>
+          </fieldset>
+
+          <!-- ---- que quieres trabajar ----
+
+               Envuelto en `.abre` para poder colapsarlo. La estructura son dos
+               capas y las dos hacen falta:
+
+                 .abre     es una rejilla de una fila que pasa de `0fr` a `1fr`.
+                           Ese es el truco que permite animar de cero a la
+                           altura del contenido SIN medirla con JavaScript, que
+                           es lo unico que `height:auto` no sabe hacer.
+                 .abre-in  recorta lo que sobra mientras la fila mide menos que
+                           su contenido. Sin el, el texto se sale por debajo. -->
+          <div class="abre" id="abreServ" aria-hidden="true" inert>
+            <div class="abre-in">
+              <fieldset class="grupo">
+                <legend class="rotulo">Qué quieres trabajar<span class="eco" id="ecoServicio" aria-hidden="true"></span></legend>
+                <div class="opciones" id="grupoServicio"></div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- planes ---- -->
+        <div class="abre" id="bloquePlanes" aria-hidden="true" inert>
+          <div class="abre-in">
+            <fieldset class="grupo planes-zona">
+              <legend class="rotulo">Consulta o paquete<span class="eco" id="ecoPlan" aria-hidden="true"></span></legend>
+
+              <div class="planes" id="grupoPlan"></div>
+
+              <!-- LA NOTA DEL PLAZO tampoco sale de entrada: solo cuando hay
+                   plan elegido, y su texto depende de cual. Lo escribe
+                   reserva.js; `hidden` de salida. -->
+              <p class="nota" id="notaPlazo" hidden></p>
+            </fieldset>
+          </div>
+        </div>
+
+        <!-- ---- pie ----
+
+             SIN TOTAL. Lo llevaba, y era el MISMO numero que el precio del plan
+             elegido tres centimetros mas arriba: "3 Consultas · 90 $" y luego
+             "TOTAL 90 $". No es un dato nuevo, es el mismo repetido, y la
+             certeza de cuanto se va a pagar ya la da la fila elegida, que esta
+             resaltada y en negrita.
+
+             El pie se queda en lo que es: el aviso de que falta algo, y la
+             accion. -->
+        <div class="pie">
+
+          <!-- El aviso dice POR QUE el boton esta apagado. Un boton muerto sin
+               explicacion deja a la persona sin saber que le falta. -->
+          <p class="falta" id="falta">Elige en qué trabajar y cuántas consultas.</p>
+
+          <!-- EL ICONO, A LA DERECHA del texto. Un calendario dice "elige un
+               dia", que es literalmente el paso siguiente, y detras del verbo
+               acompaña a la accion en el sentido de la lectura: primero lo que
+               vas a hacer, luego a donde te lleva.
+
+               Es el candidato 2 de la comparativa: calendario simple, sin
+               puntos ni marcas dentro, porque a 18 px los interiores se
+               empastan. Y a trazo, que es la familia de los tres iconos de las
+               pestañas. -->
+          <button type="button" class="seguir" id="seguir"
+                  aria-describedby="falta" disabled>
+            Ver horario
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10.2h18M8 3v4M16 3v4"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Los paneles de los otros dos pasos existen para que las pestañas
+           tengan a donde apuntar. Se diseñan despues. -->
+      <section class="tarjeta" id="vista2" role="tabpanel"
+               aria-labelledby="pest2" tabindex="0" hidden>
+        <p class="pendiente">El paso de la fecha se diseña aparte.</p>
+      </section>
+
+      <section class="tarjeta" id="vista3" role="tabpanel"
+               aria-labelledby="pest3" tabindex="0" hidden>
+        <p class="pendiente">El paso del pago se diseña aparte.</p>
+      </section>
+
+      <p class="legal"><a href="../reservar/privacidad.html">Privacidad y consentimiento</a></p>
+
+    </div>
+  </div>
+</div>
+
+<script src="reserva.js"></script>
+</body>
+</html>

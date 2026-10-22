@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar · Psicconsciente</title>
+<meta name="description" content="Entra en tu cuenta de Psicconsciente para gestionar tus consultas con Daryeli Romero.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+
+<link rel="stylesheet" href="entrar.css?v=11">
+
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ojo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="i-ojo-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2.5 12S6 5.5 12 5.5c1.5 0 2.8.4 4 1M21.5 12S18 18.5 12 18.5c-1.5 0-2.8-.4-4-1"/><path d="m4 4 16 16"/>
+  </symbol>
+  <symbol id="i-candado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>
+  </symbol>
+  <symbol id="i-volver" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 12H5M11 18l-6-6 6-6"/>
+  </symbol>
+</svg>
+
+<!-- El estado de la pantalla se anuncia aparte: al enviar, el boton cambia de
+     rotulo pero un rotulo que cambia no lo lee un lector de pantalla. -->
+<p class="sr-only" id="anuncio" role="status" aria-live="polite"></p>
+
+<main class="puerta" id="puerta" data-modo="entrar">
+
+
+  <!-- ============ ENTRAR · mitad izquierda ============ -->
+  <form class="cara" id="vEntrar" novalidate>
+    <div class="panel">
+      <header class="encabezado">
+        <h1>¡Hola de nuevo!</h1>
+        <p>Qué bueno tenerte por aquí. Entra para gestionar tus consultas.</p>
+      </header>
+
+      <div class="campos anima">
+        <div class="campo" style="--i:1">
+          <label for="eMail">Correo electrónico</label>
+          <input type="email" id="eMail" name="correo" autocomplete="email" inputmode="email"
+                 autocapitalize="none" spellcheck="false" enterkeyhint="next"
+                 placeholder="maria@correo.com" required aria-describedby="eeCorreo">
+          <span class="err" id="eeCorreo" role="alert"><span></span></span>
+        </div>
+
+        <div class="campo" style="--i:2">
+          <label for="eClaveIn">Contraseña</label>
+          <span class="clave">
+            <input type="password" id="eClaveIn" name="clave" autocomplete="current-password"
+                   enterkeyhint="go" placeholder="Tu contraseña" required aria-describedby="eeClave">
+            <button type="button" class="ojo" data-ojo="eClaveIn" aria-pressed="false" aria-label="Mostrar la contraseña">
+              <svg class="abierto" aria-hidden="true"><use href="#i-ojo"/></svg>
+              <svg class="tachado" aria-hidden="true"><use href="#i-ojo-no"/></svg>
+            </button>
+          </span>
+          <span class="err" id="eeClave" role="alert"><span></span></span>
+        </div>
+
+        <p class="aviso" role="alert" hidden></p>
+
+        <button type="submit" class="btn" style="--i:3">
+          <span class="rotulo">Entrar</span>
+          <span class="rueda" aria-hidden="true"></span>
+        </button>
+
+        <p class="pie-panel" style="--i:4"><a href="#">No recuerdo mi contraseña</a></p>
+      </div>
+    </div>
+  </form>
+
+  <!-- ============ CREAR CUENTA · mitad derecha ============ -->
+  <form class="cara" id="vRegistro" novalidate>
+    <div class="panel">
+      <header class="encabezado">
+        <h1>Crea tu cuenta</h1>
+        <p>Solo lo imprescindible para poder reservar y avisarte de tu consulta.</p>
+      </header>
+
+      <div class="campos anima">
+        <div class="campo" style="--i:1">
+          <label for="rNombre">Nombre y apellido</label>
+          <input type="text" id="rNombre" name="nombre" autocomplete="name" enterkeyhint="next"
+                 placeholder="María Fernández" required aria-describedby="eNombre">
+          <span class="err" id="eNombre" role="alert"><span></span></span>
+        </div>
+
+        <div class="campo" style="--i:2">
+          <label for="rCorreo">Correo electrónico</label>
+          <input type="email" id="rCorreo" name="correo" autocomplete="email" inputmode="email"
+                 autocapitalize="none" spellcheck="false" enterkeyhint="next"
+                 placeholder="maria@correo.com" required aria-describedby="eCorreo">
+          <span class="err" id="eCorreo" role="alert"><span></span></span>
+        </div>
+
+        <div class="campo" style="--i:3">
+          <label for="rClave">Contraseña</label>
+          <span class="clave">
+            <!-- Sin bloquear el pegado y con autocomplete: es lo que permite que
+                 un gestor de contrasenas la rellene y la guarde. Bloquearlo
+                 incumple el criterio 3.3.8 de la WCAG 2.2. -->
+            <input type="password" id="rClave" name="clave" autocomplete="new-password"
+                   enterkeyhint="next" placeholder="Mínimo 8 caracteres" minlength="8"
+                   required aria-describedby="pistaClave eClave">
+            <button type="button" class="ojo" data-ojo="rClave" aria-pressed="false" aria-label="Mostrar la contraseña">
+              <svg class="abierto" aria-hidden="true"><use href="#i-ojo"/></svg>
+              <svg class="tachado" aria-hidden="true"><use href="#i-ojo-no"/></svg>
+            </button>
+          </span>
+          <!-- La regla se dice ANTES de escribir, no despues de fallar. -->
+          <span class="pista" id="pistaClave">Ocho caracteres o más.</span>
+          <span class="err" id="eClave" role="alert"><span></span></span>
+        </div>
+
+        <div class="campo" style="--i:4">
+          <label for="rTel">Teléfono</label>
+          <span class="tel">
+            <!-- El prefijo es un control propio y no una etiqueta fija: alguien
+                 que vive en Espana puede conservar su numero venezolano. -->
+            <label class="sr-only" for="rPrefijo">Código de país del teléfono</label>
+            <select class="prefijo" id="rPrefijo" name="prefijo"></select>
+            <input type="tel" id="rTel" name="telefono" autocomplete="tel-national" inputmode="tel"
+                   enterkeyhint="next" placeholder="412 123 4567" required aria-describedby="eTel">
+          </span>
+          <span class="err" id="eTel" role="alert"><span></span></span>
+        </div>
+
+      <!-- Nacionalidad y pais comparten linea: son la misma pregunta en dos mitades -->
+        <div class="fila-doble">
+          <div class="campo" style="--i:5">
+            <label for="rNac">Nacionalidad</label>
+            <select id="rNac" name="nacionalidad" required></select>
+          </div>
+
+          <div class="campo" style="--i:6">
+            <label for="rPais">País donde vives</label>
+            <select id="rPais" name="pais" autocomplete="country" required></select>
+          </div>
+        </div>
+
+        <p class="aviso" role="alert" hidden></p>
+
+        <button type="submit" class="btn" style="--i:7">
+          <span class="rotulo">Crear cuenta</span>
+          <span class="rueda" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- ============ EL PANEL QUE VIAJA ============ -->
+  <aside class="banda" aria-label="Psicconsciente">
+
+    <!-- El logo es el camino de vuelta. En una pantalla de acceso es la unica
+         salida que la gente busca por costumbre; sin enlace, quien llega aqui
+         por error se queda encerrado. -->
+    <a class="logo" href="../index.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+        <path d="M9 20h6M10.2 22.2h3.6"/>
+        <path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+      </svg>
+      <span>Psicconsciente</span>
+      <span class="volver" aria-hidden="true"><svg><use href="#i-volver"/></svg></span>
+      <span class="sr-only">— volver al inicio</span>
+    </a>
+
+    <div class="invita" id="invita">
+      <h2 id="invitaTit">¿Primera vez aquí?</h2>
+      <p id="invitaSub">Crea tu cuenta y reserva tu consulta en dos minutos.</p>
+      <button type="button" id="cambiar">Crear cuenta</button>
+    </div>
+
+    <p class="banda-pie">
+      <svg aria-hidden="true"><use href="#i-candado"/></svg>
+      <span>Solo se guardan tu nombre, tu correo y tu teléfono. Nada de lo que hables en consulta se registra aquí.</span>
+    </p>
+  </aside>
+
+  <!-- En movil la invitacion y la nota de privacidad se mudan aqui: debajo del
+       formulario, que es donde se buscan en un telefono. El JavaScript las
+       trae y las devuelve al panel al cruzar los 60rem. Vacio en escritorio. -->
+  <footer class="zocalo" id="zocalo"></footer>
+
+</main>
+
+<script src="../supabase.js?v=44"></script>
+<script src="entrar.js?v=8"></script>
+</body>
+</html>

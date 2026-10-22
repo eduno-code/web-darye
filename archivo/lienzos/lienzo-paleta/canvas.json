@@ -1,0 +1,25 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1180, "h": 1620, "title": "La paleta completa" },
+    { "file": "Salvia.dc.html", "x": 0, "y": 1780, "w": 520, "h": 760 },
+    { "file": "Tinta.dc.html", "x": 620, "y": 1780, "w": 520, "h": 760 },
+    { "file": "Malva.dc.html", "x": 1240, "y": 1780, "w": 520, "h": 760 }
+  ],
+  "annotations": [
+    {
+      "id": "nota-recomendacion",
+      "x": 1280,
+      "y": 0,
+      "w": 300,
+      "text": "Mi recomendación es la de la izquierda: no tira nada de lo que ya aprobaste — el terracota que dibuja y el azul #55697A que te gustó — sino que le añade los estados que faltan.\n\nLas tres de abajo son alternativas de verdad, no matices. Cada una cambia el polo frío y trae su propio precio a pagar."
+    },
+    {
+      "id": "nota-estados",
+      "x": 1280,
+      "y": 300,
+      "w": 300,
+      "text": "Lo importante no son los tonos, es la lista.\n\nOcupado, pendiente, verificado, rechazado, urgencia, error e inerte son siete estados que las vistas 2, 3 y 4 van a necesitar. Hoy no tienen color asignado, así que se improvisan al llegar — y ahí fue donde nació la colisión del verde que ya arreglamos una vez."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

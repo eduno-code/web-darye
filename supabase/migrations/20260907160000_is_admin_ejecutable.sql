@@ -1,0 +1,50 @@
+-- ============================================================
+-- QUE is_admin() SE PUEDA EJECUTAR
+--
+-- Tercer daño colateral del mismo revoke en bloque. 20260826160000 hizo esto
+-- para no dejar colgando la firma vieja de create_booking:
+--
+--     revoke execute on all functions in schema app from public, anon, authenticated;
+--
+-- ...y después volvió a conceder las de `public` una por una. Ninguna de `app`.
+-- app.is_admin() se quedó sin permiso para `authenticated`, y ese detalle
+-- rompe mucho más de lo que parece.
+--
+-- POR QUÉ ROMPE TANTO. Once tablas tienen una política de administración que
+-- pregunta por app.is_admin(): services, packages, banks, appointments,
+-- clients, client_packages, payments, consents, settings, availability_rules y
+-- availability_exceptions. Postgres evalúa TODAS las políticas permisivas que
+-- apliquen al rol, no solo la que acabaría dejando pasar la fila. Así que un
+-- usuario autenticado que lea la lista de servicios —algo público, con su
+-- propia política de lectura abierta— acaba llamando igualmente a is_admin(),
+-- y recibe:
+--
+--     42501: permission denied for function is_admin
+--
+-- La tabla entera se vuelve ilegible. Para TODO usuario con sesión.
+--
+-- POR QUÉ NADIE LO VIO. Hasta hoy en la web pública no se autenticaba nadie:
+-- se reservaba de forma anónima, y `anon` no tiene políticas de administración,
+-- así que nunca llegaba a evaluar is_admin(). El fallo llevaba ahí desde el 26
+-- de agosto esperando al primer usuario con sesión. Apareció el mismo día que
+-- se activaron las cuentas, y apareció como un 403 al cargar la página de
+-- reserva: sin servicios, sin paquetes y sin bancos.
+--
+-- Y habría dejado el panel de Daryeli completamente muerto: es authenticated
+-- como cualquiera, así que no habría podido leer ni una de las once tablas.
+--
+-- LO QUE NO SE CONCEDE, Y POR QUÉ. Solo is_admin(), y solo a authenticated.
+-- Las demás funciones de `app` se invocan desde funciones security definer,
+-- que corren como su dueño y no necesitan que quien llama tenga permiso; darlo
+-- sería abrir la cocina sin motivo. Y a `anon` tampoco: sus políticas no
+-- mencionan is_admin(), así que no le hace falta.
+--
+-- ¿ES SEGURO? Sí. is_admin() responde una sola pregunta —"¿es administrador
+-- QUIEN ESTÁ LLAMANDO?"— comparando auth.uid() contra admin_profiles. No
+-- acepta parámetros, así que no se le puede preguntar por otra persona: lo
+-- máximo que averigua alguien es algo que ya sabe de sí mismo. Y sin este
+-- permiso las políticas no se pueden ni evaluar, así que la alternativa no es
+-- "más seguro", es "no funciona".
+-- ============================================================
+
+grant execute on function app.is_admin() to authenticated;

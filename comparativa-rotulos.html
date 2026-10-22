@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Que los rótulos se lean como opciones · cuatro formas</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     EL PROBLEMA, dicho con precision: los rotulos se leen como ENCABEZADOS DE
+     SECCION y no como ETIQUETAS DE CAMPO. Un encabezado rotula contenido; una
+     etiqueta anuncia que se espera una respuesta. Es otra clase de elemento y
+     pide otras señales.
+
+     Las cuatro formas de darlas. Las tres primeras cambian palabras, la cuarta
+     no cambia ninguna y solo mueve espacio.
+
+     Cada una se dibuja con el contenido real y a la medida real de la tarjeta,
+     que es la unica forma de juzgarlas.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50; --acc-sv:#E8EDE6;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-chico:8px; --r-pill:999px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--suelo);color:var(--txt);
+     font-family:var(--texto);font-size:16px;line-height:1.55;
+     -webkit-font-smoothing:antialiased}
+
+header{position:sticky;top:0;z-index:5;padding:.9rem 2rem;
+  background:rgba(237,226,210,.95);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--linea)}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--texto);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+
+.caso{padding:1.75rem 2rem 2.5rem}
+.etq{display:flex;align-items:baseline;gap:.7rem;margin:0 0 .9rem;
+  font-size:.85rem;color:var(--txt-suave)}
+.etq b{font-family:var(--display);font-size:1.1rem;color:var(--txt)}
+
+.tarjeta{max-width:59rem;background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 14px 36px -14px rgba(110,76,54,.2);
+  padding:2rem 2.25rem}
+.rejilla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.75rem;
+  align-items:start}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{padding:0}
+
+/* ---- el rotulo, forma base ---- */
+.rot{margin:0 0 1.1rem;font-family:var(--display);font-size:1.05rem;
+  font-weight:600;letter-spacing:-.01em;color:var(--marca)}
+
+/* ---- las opciones, iguales en las cuatro ---- */
+.ops{display:flex;flex-direction:column;gap:.3rem}
+.op{display:flex;align-items:center;gap:.85rem;min-height:46px;
+  padding:0 .6rem;margin:0 -.6rem;border-radius:var(--r-chico);
+  cursor:pointer;font-size:1rem}
+.op input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.dot{flex:none;width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--marca-cl);box-sizing:border-box}
+.op:has(input:checked) .dot{border-color:var(--marca);background:var(--marca);
+  box-shadow:inset 0 0 0 3.5px var(--blanco)}
+.op:hover,.op:has(input:checked){background:var(--fila-viva)}
+.op:has(input:checked){font-weight:600}
+
+/* ==========================================================================
+   C · EL ROTULO CON SU RESPUESTA AL LADO
+   ========================================================================== */
+.c .rot{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.c .rot .eco{font-family:var(--texto);font-size:.79rem;font-weight:500;
+  padding:.18rem .65rem;border-radius:var(--r-pill);
+  background:var(--acc-sv);color:var(--acc-dp)}
+.c .rot .eco.vacio{background:none;color:var(--txt-suave);padding:0;
+  font-style:italic}
+
+/* ==========================================================================
+   D · PROXIMIDAD. Ni una palabra nueva.
+   El rotulo se pega a sus opciones y los grupos se separan entre si. La ley de
+   agrupacion mas vieja que hay: lo que esta cerca se lee como una unidad.
+   Medido en la version de ahora: 17,6 px entre rotulo y opciones contra 44
+   entre grupos. Poca diferencia para que el ojo sepa que va con que.
+   Aqui pasa a 8 contra 76.
+   ========================================================================== */
+.d .rot{margin-bottom:.5rem}
+.d .rejilla{gap:4.75rem}
+.d .planes-zona{margin-top:3rem;padding-top:2.75rem}
+
+/* ---- la fila de planes, comun ---- */
+.planes-zona{margin-top:2rem;padding-top:1.75rem;border-top:1px solid var(--linea)}
+.planes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;
+  margin:0 -.8rem}
+.plan{display:grid;grid-template-columns:18px auto 1fr;align-items:baseline;
+  gap:.2rem .8rem;padding:.85rem .8rem;border-radius:var(--r-chico);cursor:pointer}
+.plan input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.plan .dot{grid-column:1;grid-row:1;align-self:center}
+.plan-nom{grid-column:2 / -1;grid-row:1}
+.plan:has(input:checked) .plan-nom{font-weight:600}
+.plan-precio{grid-column:2;grid-row:2;font-variant-numeric:tabular-nums;
+  color:var(--txt-suave)}
+.plan:has(input:checked) .plan-precio{color:var(--txt)}
+.plan-ahorro{grid-column:3;grid-row:2;justify-self:start;margin-left:.35rem;
+  padding:.18rem .65rem;border-radius:var(--r-pill);background:var(--acc-sv);
+  font-size:.79rem;font-weight:500;color:var(--acc-dp);white-space:nowrap}
+.plan:hover,.plan:has(input:checked){background:var(--fila-viva)}
+
+.notas{padding:0 2rem 3rem;display:grid;gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(19rem,1fr))}
+.nota{padding:1.15rem 1.3rem;background:var(--blanco);border-radius:14px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 10px 28px -14px rgba(110,76,54,.2);
+  font-size:.88rem;line-height:1.6}
+.nota h2{margin:0 0 .5rem;font-family:var(--display);font-size:1.05rem}
+.nota p{margin:0 0 .5rem}
+.nota p:last-child{margin:0}
+.si{color:#4A5E50;font-weight:600}
+.no{color:#A33A2E;font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Que los rótulos se lean como opciones · cuatro formas<small>Tres cambian palabras. La cuarta no cambia ninguna y solo mueve espacio.</small></h1>
+</header>
+
+<div id="zona"></div>
+
+<div class="notas">
+  <div class="nota"><h2>A · El interrogativo</h2>
+    <p>El signo de pregunta es la señal más directa de que se espera una respuesta.</p>
+    <p><span class="si">A favor:</span> nadie duda de que hay que contestar.</p>
+    <p><span class="no">En contra:</span> es lo que quitamos antes. Tres preguntas seguidas del mismo largo se leen como un molde rellenado tres veces.</p></div>
+
+  <div class="nota"><h2>B · El verbo delante</h2>
+    <p>«Elige…» en voz activa: dice qué hacer, no qué es.</p>
+    <p><span class="si">A favor:</span> tan claro como la pregunta y sin la cadencia repetida. Es lo que recomienda la disciplina de copy de interfaz: el control dice exactamente qué pasa cuando se usa.</p>
+    <p><span class="no">En contra:</span> «Elige» tres veces también repite. Se puede variar el verbo, pero entonces se pierde el paralelismo.</p></div>
+
+  <div class="nota"><h2>C · El rótulo con su respuesta</h2>
+    <p>La pastilla al lado del rótulo dice qué llevas elegido, y si no hay nada dice «sin elegir».</p>
+    <p><span class="si">A favor:</span> es el único que además <b>resuelve otra cosa</b>: de un vistazo sabes qué te falta sin tener que recorrer las listas. Es lo que hacen los formularios largos.</p>
+    <p><span class="no">En contra:</span> añade tres elementos más a la pantalla, y la pastilla compite con la del ahorro que acabamos de poner abajo.</p></div>
+
+  <div class="nota"><h2>D · Proximidad</h2>
+    <p>Ni una palabra nueva. El rótulo se pega a sus opciones —de 17,6&nbsp;px a 8— y los grupos se separan entre sí —de 44 a 76.</p>
+    <p><span class="si">A favor:</span> la agrupación se ve sin leer, que es como funciona de verdad. Y no añade nada: es el más barato de mantener y el que menos ensucia.</p>
+    <p><span class="no">En contra:</span> dice «esto va junto», no dice «esto se contesta». Si el problema es que no se entiende que hay que elegir, la proximidad sola no lo arregla.</p></div>
+</div>
+
+<script>
+(function () {
+  var SERV = ['Superar la Ansiedad', 'Fortalecer tu Autoestima',
+              'Sanar en Pareja', 'Acompañar un Duelo'];
+  var MODOS = ['En línea', 'Presencial'];
+  var PLANES = [['1 Consulta', '30 $', ''],
+                ['3 Consultas', '75 $', 'Ahorras 15 $'],
+                ['5 Consultas', '125 $', 'Ahorras 25 $']];
+
+  /* Los cuatro juegos de rotulos. `eco` solo lo usa la C. */
+  var FORMAS = {
+    a: { nom: 'A · El interrogativo', clase: 'a',
+         rot: ['¿Cómo quieres tu consulta?', '¿Qué quieres trabajar?', '¿Una consulta o un proceso?'] },
+    b: { nom: 'B · El verbo delante', clase: 'b',
+         rot: ['Elige cómo quieres tu consulta', 'Elige en qué quieres trabajar', 'Elige una consulta o un proceso'] },
+    c: { nom: 'C · El rótulo con su respuesta', clase: 'c',
+         rot: ['Cómo quieres tu consulta', 'Qué quieres trabajar', 'Una consulta o un proceso'],
+         eco: ['En línea', 'Superar la Ansiedad', 'sin elegir'] },
+    d: { nom: 'D · Proximidad', clase: 'd',
+         rot: ['Cómo quieres tu consulta', 'Qué quieres trabajar', 'Una consulta o un proceso'] }
+  };
+
+  function ops(grupo, lista, marcada) {
+    return lista.map(function (n, i) {
+      return '<label class="op"><input type="radio" name="' + grupo + '"' +
+        (i === marcada ? ' checked' : '') + '><span class="dot"></span><span>' + n + '</span></label>';
+    }).join('');
+  }
+
+  function planes(id) {
+    return PLANES.map(function (p, i) {
+      return '<label class="plan"><input type="radio" name="plan-' + id + '"' +
+        (i === 0 ? ' checked' : '') + '>' +
+        '<span class="dot"></span>' +
+        '<span class="plan-nom">' + p[0] + '</span>' +
+        '<span class="plan-precio">' + p[1] + '</span>' +
+        (p[2] ? '<span class="plan-ahorro">' + p[2] + '</span>' : '<span></span>') +
+      '</label>';
+    }).join('');
+  }
+
+  function rotulo(f, i) {
+    if (!f.eco) return '<legend class="rot">' + f.rot[i] + '</legend>';
+    var e = f.eco[i];
+    var vacio = e === 'sin elegir';
+    return '<legend class="rot">' + f.rot[i] +
+      '<span class="eco' + (vacio ? ' vacio' : '') + '">' + e + '</span></legend>';
+  }
+
+  function caso(k) {
+    var f = FORMAS[k];
+    return '<section class="caso ' + f.clase + '">' +
+      '<p class="etq"><b>' + f.nom + '</b></p>' +
+      '<div class="tarjeta">' +
+        '<div class="rejilla">' +
+          '<fieldset>' + rotulo(f, 0) + '<div class="ops">' + ops('modo-' + k, MODOS, 0) + '</div></fieldset>' +
+          '<fieldset>' + rotulo(f, 1) + '<div class="ops">' + ops('serv-' + k, SERV, 0) + '</div></fieldset>' +
+        '</div>' +
+        '<fieldset class="planes-zona">' + rotulo(f, 2) +
+          '<div class="planes">' + planes(k) + '</div>' +
+        '</fieldset>' +
+      '</div>' +
+    '</section>';
+  }
+
+  document.getElementById('zona').innerHTML = ['a','b','c','d'].map(caso).join('');
+})();
+</script>
+</body>
+</html>

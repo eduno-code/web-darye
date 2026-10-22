@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vista 1 · móvil y escritorio</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  --papel:#EFE9E0; --tinta:#2E332E; --suave:#5C635A;
+  --arcilla:#C6A783; --arcilla-dp:#8A6746; --salvia:#5A7060;
+  --paso:180ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font:400 14px/1.5 Inter,"Segoe UI",system-ui,sans-serif}
+
+/* ---------- barra de control ---------- */
+.barra{position:sticky;top:0;z-index:5;display:flex;align-items:center;
+  gap:1rem;flex-wrap:wrap;padding:.7rem 1.1rem;
+  background:rgba(239,233,224,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--arcilla)}
+.barra h1{margin:0;font-size:.95rem;font-weight:600;letter-spacing:-.01em}
+.barra h1 small{display:block;font-size:.72rem;font-weight:400;color:var(--suave);
+  letter-spacing:.04em;text-transform:uppercase}
+
+.modos{display:flex;gap:.3rem;padding:.2rem;border-radius:999px;
+  border:1px solid var(--arcilla);background:#fff}
+.modos button{appearance:none;border:0;background:none;cursor:pointer;
+  padding:.4rem .95rem;border-radius:999px;font:inherit;font-size:.82rem;
+  color:var(--suave);transition:background var(--paso),color var(--paso)}
+.modos button[aria-pressed="true"]{background:var(--salvia);color:#fff;font-weight:500}
+.modos button:focus-visible{outline:2px solid var(--salvia);outline-offset:2px}
+
+.suelto{margin-left:auto;display:flex;align-items:center;gap:1rem}
+.suelto a{color:var(--arcilla-dp);font-size:.82rem;text-decoration:none;
+  border-bottom:1px solid rgba(138,103,70,.4);padding-bottom:1px}
+.suelto a:hover{border-bottom-color:var(--arcilla-dp)}
+
+/* ---------- el escenario ---------- */
+.escena{display:flex;align-items:flex-start;justify-content:center;
+  gap:2.5rem;flex-wrap:wrap;padding:2rem 1.1rem 3rem}
+figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+figcaption{order:-1;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--suave)}
+figcaption b{color:var(--tinta);font-weight:600}
+
+/* La caja reserva el sitio ya escalado; el lienzo va dentro a tamaño real y se
+   encoge con transform, que es lo único que no reflowea la maqueta: el iframe
+   sigue creyendo que mide 390 o 1280 px y dispara sus media queries de verdad. */
+.caja{overflow:hidden;border-radius:var(--radio,20px);
+  border:1px solid var(--arcilla);background:#fff}
+.lienzo{transform-origin:0 0}
+iframe{display:block;border:0;background:#fff}
+
+.movil{--radio:22px}
+.pc{--radio:10px}
+body[data-modo="movil"] .pc,
+body[data-modo="pc"] .movil{display:none}
+</style>
+</head>
+<body data-modo="dos">
+
+<header class="barra">
+  <h1>Vista 1 · reserva<small>maqueta salvia y arcilla</small></h1>
+
+  <nav class="modos" aria-label="Qué pantalla se ve">
+    <button type="button" data-ver="dos"   aria-pressed="true">Las dos</button>
+    <button type="button" data-ver="movil" aria-pressed="false">Móvil</button>
+    <button type="button" data-ver="pc"    aria-pressed="false">Escritorio</button>
+  </nav>
+
+  <p class="suelto">
+    <a href="maqueta-vista1-salvia.html" target="_blank" rel="noopener">Abrir sola, a pantalla completa ↗</a>
+  </p>
+</header>
+
+<main class="escena">
+  <figure class="movil">
+    <figcaption><b>Móvil</b> · 390 × 844</figcaption>
+    <div class="caja" data-ancho="390" data-alto="844" data-fijo="si">
+      <div class="lienzo">
+        <iframe src="maqueta-vista1-salvia.html?v=0903k" width="390" height="844" title="Vista 1 a 390 px"></iframe>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="pc">
+    <figcaption><b>Escritorio</b> · 1280 × 880</figcaption>
+    <div class="caja" data-ancho="1280" data-alto="880">
+      <div class="lienzo">
+        <iframe src="maqueta-vista1-salvia.html?v=0903k" width="1280" height="880" title="Vista 1 a 1280 px"></iframe>
+      </div>
+    </div>
+  </figure>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var cuerpo = document.body;
+  var cajas = Array.prototype.slice.call(document.querySelectorAll('.caja'));
+
+  /* LA BARRA DE DESPLAZAMIENTO NO EXISTE EN UN TELEFONO.
+     Chrome de escritorio le pone al iframe una barra clasica que se come 20 px de
+     ancho, asi que el panel de "390" estaba enseniando 369 px utiles: la maqueta se
+     veia mas estrecha de lo que sera, y ademas con una barra gris al lado que no va
+     a estar ahi. En un movil de verdad la barra flota encima y ocupa cero.
+     La solucion no toca la maqueta —seria mentir sobre la pagina que se esta
+     revisando— sino el visor: al iframe se le dan 390 mas lo que mida la barra, y
+     la caja lo recorta a 390 con su overflow. Asi el contenido se maqueta con 390
+     px utiles de verdad y la barra queda fuera del recorte.
+     Se mide DENTRO del propio iframe y no con una sonda en esta pagina: una sonda
+     aqui devolvia 0 porque Chrome le da barra flotante a un div suelto, mientras
+     que al documento del iframe le pone la clasica. El unico numero que vale es la
+     diferencia entre su innerWidth y el clientWidth de su raiz. */
+  function quitarBarraMovil(f) {
+    try {
+      var base = +f.closest('.caja').dataset.ancho;
+      var barra = f.contentWindow.innerWidth - f.contentDocument.documentElement.clientWidth;
+      if (barra > 0) { f.style.width = (base + barra) + 'px'; f.width = base + barra; }
+    } catch (e) { /* en file:// no se puede mirar dentro; se queda como estaba */ }
+  }
+
+  /* En el instante del `load` la maqueta todavia no es mas alta que su ventana, asi
+     que aun no hay barra y la medida sale cero. Hay que volver a mirar cuando el
+     contenido ya esta colocado. Es idempotente: una vez ensanchado a 390+barra, la
+     diferencia sigue valiendo lo mismo y el calculo devuelve el mismo numero. */
+  function ajustarMovilCuandoAsiente(f) {
+    quitarBarraMovil(f);
+    requestAnimationFrame(function () { quitarBarraMovil(f); });
+    setTimeout(function () { quitarBarraMovil(f); }, 400);
+  }
+
+  /* El movil se ve SIEMPRE a tamano real: 390 px caben en cualquier pantalla y
+     encogerlo seria tirar justo el detalle que hay que revisar. Lo que se encoge
+     es el escritorio, que es el que no cabe. El pie de cada figura dice a que
+     escala esta, para que no se juzgue un tamano de letra que no es el real. */
+  function encajar() {
+    var visibles = cajas.filter(function (c) { return c.offsetParent !== null; });
+    var hueco = window.innerWidth - 2 * 18 - (visibles.length > 1 ? 40 : 0);
+    var gastado = 0;
+
+    visibles.forEach(function (c) {
+      if (c.dataset.fijo === 'si') gastado += +c.dataset.ancho;
+    });
+
+    visibles.forEach(function (c) {
+      var a = +c.dataset.ancho, h = +c.dataset.alto;
+      var e = c.dataset.fijo === 'si' ? 1 : Math.min(1, (hueco - gastado) / a);
+      c.style.width  = Math.round(a * e) + 'px';
+      c.style.height = Math.round(h * e) + 'px';
+      c.firstElementChild.style.transform = 'scale(' + e + ')';
+      /* Solo el movil: en escritorio la barra si es real y hay que verla, porque
+         ahi la maqueta se va a ver en un navegador con barra. */
+      if (c.dataset.fijo === 'si') quitarBarraMovil(c.querySelector('iframe'));
+      var pie = c.parentElement.querySelector('figcaption');
+      pie.dataset.base = pie.dataset.base || pie.innerHTML;
+      pie.innerHTML = pie.dataset.base + (e < .999 ? ' · al ' + Math.round(e * 100) + ' %' : '');
+    });
+  }
+
+  /* El escritorio no lleva barra fija, asi que en vez de darle una ventana con
+     scroll propio se le da el alto exacto de su contenido: la pagina se ve
+     entera de un vistazo, que es de lo que se trata. El movil NO: ahi los 844 px
+     son la ventana de verdad, y sin ella la barra fija no se apoya en nada. */
+  function estirarPC() {
+    var c = document.querySelector('.pc .caja');
+    var f = c.querySelector('iframe');
+    try {
+      var alto = f.contentDocument.documentElement.scrollHeight;
+      if (alto > 200) { c.dataset.alto = alto; f.height = alto; }
+    } catch (e) { /* si el navegador no deja leer dentro, se queda el alto fijo */ }
+    encajar();
+  }
+  document.querySelector('.pc iframe').addEventListener('load', estirarPC);
+  var fMovil = document.querySelector('.movil iframe');
+  fMovil.addEventListener('load', function () { ajustarMovilCuandoAsiente(fMovil); });
+
+  document.querySelector('.modos').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button[data-ver]');
+    if (!b) return;
+    cuerpo.dataset.modo = b.dataset.ver;
+    this.querySelectorAll('button').forEach(function (o) {
+      o.setAttribute('aria-pressed', String(o === b));
+    });
+    encajar();
+  });
+
+  /* ROMPE-CACHE. El servidor estatico responde 200 con Last-Modified y Chrome
+     guarda la maqueta por su cuenta, asi que al recargar el visor despues de
+     editar el archivo se veia todavia la version anterior. Anadir la marca de
+     tiempo de esta carga obliga a pedirla de nuevo cada vez, que es justo lo que
+     hace falta mientras se itera. */
+  var sello = '?v=' + Date.now();
+  document.querySelectorAll('iframe').forEach(function (f) {
+    f.src = f.getAttribute('src').split('?')[0] + sello;
+  });
+
+  window.addEventListener('resize', encajar);
+  encajar();
+}());
+</script>
+</body>
+</html>

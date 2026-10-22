@@ -90,6 +90,11 @@
 
 /* ---------- 1. TOKENS ---------- */
 :root{
+  /* El sitio es claro, y se dice explicitamente. Sin esto, en un sistema en
+     oscuro el navegador pinta los controles nativos —desplegables, campos,
+     barras de scroll— con SU paleta oscura sobre nuestro fondo claro. */
+  color-scheme:only light;
+
   /* Color — paleta original de la marca */
   --primary:#A67B5B;
   --primary-light:#C4A484;

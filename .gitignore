@@ -19,3 +19,14 @@ Thumbs.db
 
 # Servidores locales y dependencias, por si algún día se usan aquí
 node_modules/
+
+# Datos que no deben salir del disco de Edgar: cuentas de cobro de Daryeli y
+# claves del proyecto. El .example correspondiente sí se versiona, para que se
+# sepa qué hay que rellenar.
+supabase/datos-privados.sql
+.env
+.env.local
+.env.supabase
+
+# Caché local de la CLI de Supabase
+supabase/.temp/

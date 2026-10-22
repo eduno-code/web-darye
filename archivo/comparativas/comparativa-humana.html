@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa · quitarle la cara de IA a la vista 1</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  --suelo:#FFFFFF; --sup:#FFFFFF; --sup-cal:#FAF3EA; --sup-eleg:#F2E7D9;
+  --marca:#A8825F; --linea:#C6A783; --linea-int:rgba(168,130,95,.22);
+  --txt:#2E332E; --txt-suave:#5C635A;
+  --acc:#5A7060; --acc-dp:#3E4F44; --acc-sv:#E8EDE6;
+  --inerte:#E6E1D7;
+  --r:14px;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#EFE9E1;color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:var(--r)}
+
+.envoltorio{max-width:64rem;margin:0 auto;padding:2rem 1.25rem 4rem}
+h1{font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .4rem}
+.entrada{color:var(--txt-suave);margin:0 0 2.25rem;line-height:1.65;font-size:.92rem;max-width:44rem}
+
+/* ---------- las dos columnas ---------- */
+.par{display:grid;grid-template-columns:1fr;gap:1.75rem;justify-items:center}
+@media(min-width:880px){.par{grid-template-columns:390px 390px;justify-content:center}}
+.col-eti{margin:0 0 .7rem;display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap}
+.col-eti b{font-size:.95rem;font-weight:600}
+.col-eti em{font-style:normal;font-size:.74rem;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--txt-suave)}
+.col-eti.buena em{color:var(--acc-dp)}
+/* La columna mide 390 exactos: es el ancho del telefono donde esto se va a ver. */
+.tel{width:390px;max-width:100%;background:var(--suelo);border:1px solid var(--linea);
+  border-radius:18px;overflow:hidden}
+
+/* ---------- cabecera de la vista ---------- */
+.top{background:var(--sup);border-bottom:1px solid var(--linea)}
+.top-in{padding:.9rem 1.25rem;display:flex;align-items:center;gap:.8rem}
+.avatar{width:42px;height:42px;border-radius:50%;flex:none;background:var(--acc);
+  display:grid;place-items:center;color:#fff;font-weight:600;font-size:.9rem}
+/* La foto ya existe en el proyecto: reservar/index.html la usa a 38 px.
+   Aqui va a 42 con el mismo encuadre, que centra la cara y no el torso. */
+.avatar-foto{width:42px;height:42px;flex:none;border-radius:50%;object-fit:cover;
+  object-position:center 18%;border:2px solid #fff;box-shadow:0 0 0 1px var(--linea)}
+.top-txt strong{display:block;font-size:.95rem;font-weight:600;line-height:1.25}
+.top-txt span{display:block;font-size:.78rem;color:var(--txt-suave);line-height:1.4}
+.wa{margin-left:auto;display:inline-flex;align-items:center;gap:.4rem;
+  padding:.5rem .85rem;border-radius:999px;border:1px solid rgba(90,112,96,.45);
+  background:var(--sup);color:var(--acc-dp);font-size:.8rem;font-weight:500;
+  text-decoration:none;min-height:44px}
+.wa svg{width:16px;height:16px;flex:none}
+
+.cuerpo{padding:1.5rem 1.25rem 1.75rem}
+.grupo{margin-bottom:2rem}
+.grupo:last-child{margin-bottom:0}
+.grupo-tit{font-size:1.05rem;font-weight:600;letter-spacing:-.012em;margin:0 0 1rem;
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.grupo-nota{font-size:.82rem;font-weight:400;color:var(--txt-suave);letter-spacing:0}
+.grupo-sep{border-top:1px solid var(--linea);padding-top:1.75rem}
+
+/* ---------- tarjeta base, igual que en la maqueta ---------- */
+.card{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);
+  transition:border-color var(--paso),background var(--paso)}
+.card[aria-checked="true"]{border:1.5px solid var(--linea);background:var(--sup-eleg)}
+.circ{flex:none;border-radius:50%;border:1.5px solid var(--acc);background:var(--acc);
+  display:grid;place-items:center;color:#fff;
+  transition:border-color var(--paso),background var(--paso)}
+.card[aria-checked="true"] .circ{border-width:2.5px;border-color:var(--acc);
+  background:#fff;color:var(--acc)}
+
+/* ---------- ANTES · motivos en rejilla 2x2 ---------- */
+.servicios{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.servicios .card{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.7rem;min-height:128px;padding:1.1rem .75rem;text-align:center}
+.servicios .circ{width:44px;height:44px}
+.servicios .circ svg{width:21px;height:21px}
+.serv-nom{font-weight:500;font-size:.94rem;line-height:1.4}
+
+/* ---------- DESPUES · motivos en lista ---------- */
+/* Cuatro tarjetas pasan a ser UNA caja con cuatro filas. Ese solo cambio quita
+   tres cajas con borde de la pantalla, que es de donde venia la sensacion de
+   "todo es el mismo rectangulo". Y como la fila no centra nada, el nombre que
+   ocupa dos lineas deja de descolocar al icono de su vecino. */
+.lista{border:1px solid var(--linea);border-radius:var(--r);overflow:hidden;background:var(--sup)}
+.fila{position:relative;display:flex;align-items:center;gap:.9rem;width:100%;
+  min-height:56px;padding:.9rem 1rem;border:0;border-top:1px solid var(--linea-int);
+  background:transparent;font:inherit;color:var(--txt);text-align:left;cursor:pointer;
+  transition:background var(--paso)}
+.fila:first-child{border-top:0}
+.fila:hover{background:var(--sup-cal)}
+.fila[aria-checked="true"]{background:var(--sup-eleg)}
+/* El canto de salvia es la marca de elegido. Hace el mismo trabajo que el disco
+   invertido de las tarjetas —color de accion, dentro del elemento, sin levantarlo
+   del papel— pero en el formato que le toca a una lista. */
+.fila[aria-checked="true"]::before{content:"";position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--acc)}
+.fila svg{width:20px;height:20px;flex:none;color:var(--txt-suave);
+  transition:color var(--paso)}
+.fila[aria-checked="true"] svg{color:var(--acc-dp)}
+.fila-nom{font-size:.95rem;font-weight:500;line-height:1.35}
+.fila[aria-checked="true"] .fila-nom{font-weight:600}
+
+/* ---------- tarjetas de consulta, en movil ---------- */
+.planes{display:grid;grid-template-columns:1fr;gap:1.25rem}
+.planes .card{position:relative;display:flex;flex-direction:column;overflow:hidden;
+  text-align:left;padding:1.35rem 1.25rem;gap:.9rem}
+.planes .card.sugerida{border-color:var(--marca)}
+.plan-cab{display:flex;align-items:center;gap:.6rem}
+.plan-cifra{width:34px;height:34px;font-size:1.05rem;font-weight:600;line-height:1;
+  font-variant-numeric:tabular-nums}
+.plan-nom{font-weight:600;font-size:.94rem;line-height:1.3;letter-spacing:-.01em}
+.plan-eti{margin-left:auto;flex:none;font-size:.74rem;font-weight:500;color:var(--acc-dp);
+  white-space:nowrap;display:inline-flex;align-items:center;gap:.35rem}
+.plan-eti::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--acc);flex:none}
+.plan-cuerpo{display:flex;align-items:center;gap:.45rem;font-size:.8rem;
+  color:var(--txt-suave);line-height:1.55}
+.plan-cuerpo svg{width:15px;height:15px;flex:none;color:var(--acc)}
+.plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem .6rem;flex-wrap:wrap;padding:.9rem 0 0}
+.plan-pie::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:var(--linea-int)}
+.plan-precio{font-size:1.55rem;font-weight:600;letter-spacing:-.035em;line-height:1;
+  color:var(--txt);white-space:nowrap;font-variant-numeric:tabular-nums}
+.plan-ahorro{display:inline-flex;align-items:center;transform:translateY(1.5px);
+  padding:.28rem .5rem;border-radius:7px;background:var(--acc-dp);color:#fff;
+  font-size:.72rem;font-weight:500;line-height:1.3;white-space:nowrap}
+/* El badge de venta se cambia por el dato que de verdad ayuda a comparar: lo que
+   sale cada consulta. Ademas ocupa el hueco que quedaba vacio en "1 Consulta". */
+.plan-unidad{font-size:.8rem;color:var(--txt-suave);transform:translateY(1.5px);
+  white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ---------- notas ---------- */
+.notas{margin:2.75rem auto 0;max-width:44rem}
+.notas h2{font-size:1.05rem;font-weight:600;margin:0 0 1rem;letter-spacing:-.01em}
+.nota{background:#fff;border:1px solid var(--linea);border-radius:var(--r);
+  padding:1rem 1.2rem;margin-bottom:.85rem}
+.nota b{display:block;font-size:.92rem;margin-bottom:.3rem}
+.nota p{margin:0;font-size:.85rem;color:var(--txt-suave);line-height:1.65}
+.nota code{font-size:.82em;background:var(--sup-cal);padding:.1em .35em;border-radius:4px}
+
+/* ---------- decisiones abiertas ---------- */
+.abiertas{margin:2.75rem auto 0;max-width:44rem}
+.abiertas h2{font-size:1.05rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+.abiertas>p{margin:0 0 1.25rem;font-size:.85rem;color:var(--txt-suave);line-height:1.65}
+.duo{display:grid;grid-template-columns:1fr;gap:1rem;margin-bottom:1.75rem}
+@media(min-width:640px){.duo{grid-template-columns:1fr 1fr}}
+.opc{background:#fff;border:1px solid var(--linea);border-radius:var(--r);
+  padding:1rem 1.1rem 1.2rem}
+.opc-eti{margin:0 0 .8rem;font-size:.78rem;font-weight:600;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--txt-suave)}
+.opc-nota{margin:.85rem 0 0;font-size:.82rem;color:var(--txt-suave);line-height:1.6}
+.opc .card,.opc .fila{cursor:default}
+
+/* ---------- escritorio: la fila de motivos ---------- */
+.escritorio{margin:2.75rem auto 0;max-width:64rem}
+.escritorio h2{font-size:1.05rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+.escritorio>p{margin:0 0 1.25rem;font-size:.85rem;color:var(--txt-suave);line-height:1.65}
+.fila-esc{background:#fff;border:1px solid var(--linea);border-radius:var(--r);
+  padding:1.2rem;margin-bottom:1rem}
+.fila-esc .servicios{grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem}
+/* En escritorio la rejilla se queda —cuatro cosas en fila se comparan bien—, pero
+   el disco macizo se va: el icono en tinta pesa lo justo para acompanar al nombre
+   sin convertirse en el protagonista de la tarjeta. */
+.tinta .circ{width:auto;height:auto;border:0;background:none;color:var(--txt-suave)}
+.tinta .circ svg{width:24px;height:24px}
+.tinta .card[aria-checked="true"] .circ{border:0;background:none;color:var(--acc-dp)}
+</style>
+</head>
+<body>
+<div class="envoltorio">
+
+  <header>
+    <h1>Quitarle la cara de IA a la vista&nbsp;1</h1>
+    <p class="entrada">Los tres cambios que salieron de la auditoría, aplicados sobre el móvil
+      de 390&nbsp;px, que es donde más se nota: la foto de Daryeli en lugar de sus iniciales,
+      los cuatro motivos como lista en lugar de rejilla con discos de color, y las tarjetas de
+      precio sin lenguaje de tienda. La maqueta no está tocada — esto vive en su propio archivo.</p>
+  </header>
+
+  <div class="par">
+    <section>
+      <p class="col-eti"><b>Ahora</b> <em>lo que hay en la maqueta</em></p>
+      <div class="tel" id="antes"></div>
+    </section>
+    <section>
+      <p class="col-eti buena"><b>Propuesta</b> <em>los tres cambios</em></p>
+      <div class="tel" id="despues"></div>
+    </section>
+  </div>
+
+  <section class="notas">
+    <h2>Qué cambia y por qué</h2>
+
+    <div class="nota">
+      <b>1 · La foto en lugar de «DR»</b>
+      <p>Un avatar de iniciales es lo que genera un sistema cuando no tiene foto, y era lo
+         primero que se veía. La imagen ya está en el proyecto — <code>darye-foto-pro-450.webp</code>,
+         la misma que usa la landing— y <code>reservar/index.html</code> ya la sirve a 38&nbsp;px.
+         Quien está a punto de contarle a alguien que no puede dormir necesita verle la cara.</p>
+    </div>
+
+    <div class="nota">
+      <b>2 · Los motivos, en lista</b>
+      <p>La rejilla 2×2 de tarjetas con icono en círculo es el patrón móvil más reconocible de
+         una interfaz generada. La lista quita tres cajas con borde de la pantalla, se lee de
+         arriba abajo de un vistazo y no parte «Fortalecer tu Autoestima» en dos líneas.
+         De paso desaparece un defecto real: en la rejilla, «Sanar en Pareja» ocupa una línea y
+         «Acompañar un Duelo» dos, y como el contenido va centrado los dos iconos quedaban a
+         <b>844,1 y 833,6&nbsp;px</b> — 10,5&nbsp;px de desfase entre dos círculos vecinos.
+         Cada fila mide 56&nbsp;px de alto, por encima del mínimo táctil de 44.</p>
+    </div>
+
+    <div class="nota">
+      <b>3 · Las tarjetas de precio, sin lenguaje de tienda</b>
+      <p>Fuera «Sugerida» y fuera los badges «Ahorras&nbsp;15&nbsp;$». En su lugar, lo que sale
+         cada consulta, que es el dato con el que de verdad se compara — y que además llena el
+         hueco que quedaba vacío en la tarjeta de una consulta. También sobra la línea
+         «Los paquetes salen más baratos por consulta»: los números ya lo dicen.</p>
+    </div>
+
+    <div class="nota">
+      <b>Un hallazgo que sale de escribir el precio por unidad</b>
+      <p>En individual, <b>tres y cinco consultas salen a 25&nbsp;$ cada una</b>: 75÷3 y 125÷5 dan
+         exactamente lo mismo. El badge «Ahorras 25&nbsp;$» hacía parecer que el de cinco era mejor
+         trato, y por consulta no lo es. En pareja sí hay diferencia (33,33&nbsp;$ frente a 30&nbsp;$).
+         Esto es de negocio, no de diseño: conviene comentarlo con Daryeli antes de publicar el
+         precio por unidad.</p>
+    </div>
+  </section>
+
+  <section class="abiertas">
+    <h2>Dos decisiones que te dejo a ti</h2>
+    <p>Las dos van renderizadas para que se vean, no para leerlas.</p>
+
+    <div class="duo">
+      <div class="opc">
+        <p class="opc-eti">A · Precio por unidad</p>
+        <div id="opcUnidad"></div>
+        <p class="opc-nota">Informa y deja comparar. Enseña que tres y cinco cuestan lo mismo por consulta.</p>
+      </div>
+      <div class="opc">
+        <p class="opc-eti">B · Ahorro en llano</p>
+        <div id="opcAhorro"></div>
+        <p class="opc-nota">Mantiene el argumento de venta pero sin pastilla de color. Sigue siendo lenguaje de descuento.</p>
+      </div>
+    </div>
+
+    <div class="duo">
+      <div class="opc">
+        <p class="opc-eti">A · Lista con icono</p>
+        <div id="opcConIcono"></div>
+        <p class="opc-nota">El icono ayuda a barrer la lista, aunque estos cuatro no se adivinan sin leer el nombre.</p>
+      </div>
+      <div class="opc">
+        <p class="opc-eti">B · Lista sin icono</p>
+        <div id="opcSinIcono"></div>
+        <p class="opc-nota">Lo más limpio y lo menos parecido a una plantilla. Si el icono no informa, quitarlo no cuesta nada.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="escritorio">
+    <h2>Y en escritorio</h2>
+    <p>Ahí la rejilla de cuatro se queda —cuatro cosas en fila se comparan bien—, pero el disco
+       macizo se va y el icono pasa a tinta. El nombre vuelve a ser el protagonista de la tarjeta.</p>
+    <div class="fila-esc" id="escAntes"></div>
+    <div class="fila-esc tinta" id="escDespues"></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function svg(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.6) +
+           '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    ansiedad:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    autoestima:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    pareja:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    duelo:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    wa:'<path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/>'
+  };
+
+  var SERVICIOS = [
+    {nom:'Superar la Ansiedad',      ico:I.ansiedad},
+    {nom:'Fortalecer tu Autoestima', ico:I.autoestima},
+    {nom:'Sanar en Pareja',          ico:I.pareja},
+    {nom:'Acompañar un Duelo',       ico:I.duelo}
+  ];
+  var PLANES = [
+    {cifra:'1', nom:'Consulta',  det:'Una cita puntual',    ico:I.reloj, precio:30,  ahorro:0,  unidad:'30 $ la consulta'},
+    {cifra:'3', nom:'Consultas', det:'A tu ritmo, 60 días', ico:I.cal,   precio:75,  ahorro:15, unidad:'25 $ cada una', sugerida:true},
+    {cifra:'5', nom:'Consultas', det:'A tu ritmo, 60 días', ico:I.cal,   precio:125, ahorro:25, unidad:'25 $ cada una'}
+  ];
+
+  var ELEGIDO = 0;   /* "Superar la Ansiedad", igual en las dos columnas */
+
+  function cabecera(conFoto) {
+    var retrato = conFoto
+      ? '<img class="avatar-foto" src="darye-foto-pro-450.webp" width="42" height="42" alt="Daryeli Romero" decoding="async">'
+      : '<span class="avatar" aria-hidden="true">DR</span>';
+    return '<header class="top"><div class="top-in">' + retrato +
+      '<span class="top-txt"><strong>Daryeli Romero</strong>' +
+      '<span>Psicóloga · Barquisimeto y online</span></span>' +
+      '<a class="wa" href="#" onclick="return false">' + svg(I.wa, 1.7) + 'Tengo una duda</a>' +
+      '</div></header>';
+  }
+
+  function rejilla(grupo) {
+    var h = '<div class="servicios" role="radiogroup" aria-label="Motivo">';
+    SERVICIOS.forEach(function (s, i) {
+      h += '<button type="button" class="card" role="radio" aria-checked="' + (i === ELEGIDO) + '"' +
+           ' tabindex="' + (i === ELEGIDO ? 0 : -1) + '" data-g="' + grupo + '">' +
+           '<span class="circ" aria-hidden="true">' + svg(s.ico) + '</span>' +
+           '<span class="serv-nom">' + s.nom + '</span></button>';
+    });
+    return h + '</div>';
+  }
+
+  function lista(grupo, conIcono) {
+    var h = '<div class="lista" role="radiogroup" aria-label="Motivo">';
+    SERVICIOS.forEach(function (s, i) {
+      h += '<button type="button" class="fila" role="radio" aria-checked="' + (i === ELEGIDO) + '"' +
+           ' tabindex="' + (i === ELEGIDO ? 0 : -1) + '" data-g="' + grupo + '">' +
+           (conIcono ? svg(s.ico) : '') +
+           '<span class="fila-nom">' + s.nom + '</span></button>';
+    });
+    return h + '</div>';
+  }
+
+  /* remate: 'badge' es lo que hay hoy, 'unidad' el precio por consulta,
+     'llano' el ahorro dicho sin pastilla. */
+  function planes(remate, conSugerida) {
+    var h = '<div class="planes" role="radiogroup" aria-label="Cuántas consultas">';
+    PLANES.forEach(function (p) {
+      var der = '';
+      if (remate === 'badge' && p.ahorro) der = '<span class="plan-ahorro">Ahorras ' + p.ahorro + ' $</span>';
+      if (remate === 'unidad')            der = '<span class="plan-unidad">' + p.unidad + '</span>';
+      if (remate === 'llano' && p.ahorro) der = '<span class="plan-unidad">' + p.ahorro + ' $ menos</span>';
+      h += '<button type="button" class="card' + (conSugerida && p.sugerida ? ' sugerida' : '') +
+           '" role="radio" aria-checked="false" tabindex="-1">' +
+           '<span class="plan-cab"><span class="circ plan-cifra">' + p.cifra + '</span>' +
+           '<span class="plan-nom">' + p.nom + '</span>' +
+           (conSugerida && p.sugerida ? '<span class="plan-eti">Sugerida</span>' : '') + '</span>' +
+           '<span class="plan-cuerpo">' + svg(p.ico) + p.det + '</span>' +
+           '<span class="plan-pie"><span class="plan-precio">' + p.precio + ' $</span>' + der + '</span>' +
+           '</button>';
+    });
+    return h + '</div>';
+  }
+
+  document.getElementById('antes').innerHTML = cabecera(false) +
+    '<div class="cuerpo">' +
+      '<section class="grupo"><h2 class="grupo-tit">¿En qué quieres trabajar?</h2>' + rejilla('a') + '</section>' +
+      '<section class="grupo grupo-sep"><h2 class="grupo-tit">¿Una consulta o un proceso?' +
+        '<span class="grupo-nota">Los paquetes salen más baratos por consulta</span></h2>' +
+        planes('badge', true) + '</section>' +
+    '</div>';
+
+  document.getElementById('despues').innerHTML = cabecera(true) +
+    '<div class="cuerpo">' +
+      '<section class="grupo"><h2 class="grupo-tit">¿En qué quieres trabajar?</h2>' + lista('b', true) + '</section>' +
+      '<section class="grupo grupo-sep"><h2 class="grupo-tit">¿Una consulta o un proceso?</h2>' +
+        planes('unidad', false) + '</section>' +
+    '</div>';
+
+  document.getElementById('opcUnidad').innerHTML   = planes('unidad', false);
+  document.getElementById('opcAhorro').innerHTML   = planes('llano', false);
+  document.getElementById('opcConIcono').innerHTML = lista('c', true);
+  document.getElementById('opcSinIcono').innerHTML = lista('d', false);
+
+  document.getElementById('escAntes').innerHTML   = rejilla('e');
+  document.getElementById('escDespues').innerHTML = rejilla('f');
+
+  /* Un solo manejador para todos los grupos: cada boton lleva su grupo escrito,
+     asi elegir en una columna no mueve la otra. */
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-g]');
+    if (!b) return;
+    var hermanos = document.querySelectorAll('[data-g="' + b.dataset.g + '"]');
+    [].forEach.call(hermanos, function (h) {
+      var yo = h === b;
+      h.setAttribute('aria-checked', String(yo));
+      h.tabIndex = yo ? 0 : -1;
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+/* ============================================================
+   MIS CONSULTAS · el panel del paciente
+
+   Se apoya en ../style.css, que ya trae la paleta de la marca, la tipografia y
+   los botones. Aqui solo va lo propio de esta pantalla.
+
+   NO SE CARGA reservar.css: son casi dos mil lineas de estilos del asistente,
+   peso muerto y riesgo de colision por unos pocos tokens. De el se copian abajo
+   los cuatro de estado, con sus valores y contrastes ya medidos, y anotado de
+   donde vienen.
+
+   LA IDEA: no es un panel de control, es el sitio donde mirar cuando es tu
+   proxima consulta. El menu tiene UNA ACCION y DOS VISTAS, dibujadas distinto
+   porque son cosas distintas: reservar sale del panel, las otras se quedan.
+   Y en el contenido casi todo son filas sobre lineas finas; lo unico con peso
+   es la proxima cita, y quien lo carga es la FECHA, no un recuadro de color.
+   ============================================================ */
+
+:root {
+  /* Estados. Valores de reservar/reservar.css:112-116, donde estan medidos. */
+  --ok:#5A7060;      --ok-sv:#E8EDE6;    /* 5,30:1 sobre blanco */
+  --pend:#7A5B12;    --pend-sv:#FAF0DC;
+  --mal:#A33A2E;     --mal-sv:#FBEAE8;
+  --inerte:#E6E1D7;  --inerte-txt:#625E56; /* 4,94:1 */
+
+  /* Los del menú (--pnl-*, --celosia*, --r-chico, --r-medio) viven en
+     ../panel.css, que lo comparten esta página y el asistente. */
+
+  --cta-linea:rgba(166,123,91,.20);
+
+}
+
+html { color-scheme:only light; }
+
+body.cuenta {
+  margin:0;
+  background:var(--bg-main);
+  color:var(--text-dark);
+  font-family:var(--font-body);
+  font-size:var(--text-base);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+
+/* La envoltura, el menú y la columna de contenido están en ../panel.css */
+
+.cta-cargando {
+  padding:3rem 0; text-align:center;
+  color:var(--text-soft); font-size:var(--text-sm);
+}
+
+.cta-saludo {
+  margin:0 0 1.75rem;
+  font-family:var(--font-display); font-weight:600;
+  font-size:var(--text-2xl); line-height:1.2;
+  text-wrap:balance;
+}
+
+.cta-bloque { margin-bottom:2.75rem; }
+.cta-bloque:last-child { margin-bottom:0; }
+
+/* El rotulo de seccion: pequeno, espaciado y en voz baja. Ordena sin competir
+   con lo que rotula. */
+.cta-rotulo {
+  margin:0 0 .9rem;
+  font-family:var(--font-body); font-weight:600;
+  font-size:.74rem; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--text-soft);
+}
+
+
+/* ---------- LA PRÓXIMA CONSULTA ---------- */
+
+/* Lo unico del contenido con superficie propia. */
+.cta-destacada {
+  padding:1.6rem clamp(1.1rem,4vw,1.75rem);
+  background:var(--white);
+  border:1px solid var(--cta-linea);
+  border-radius:var(--r-medio);
+}
+.cta-destacada > * { margin:0; }
+.cta-destacada > * + * { margin-top:.55rem; }
+
+/* La fecha es el dato por el que se entra en esta pagina. Se le da el tamano
+   que le corresponde por eso, y no por decorar. */
+.cta-destacada-dia {
+  font-family:var(--font-display); font-weight:600;
+  font-size:var(--text-xl); line-height:1.25;
+  text-wrap:balance;
+}
+.cta-destacada-dia time::first-letter { text-transform:uppercase; }
+
+/* La hora de Caracas al lado. Daryeli trabaja en su hora y sus pacientes estan
+   repartidos: quien mira desde Madrid necesita las dos para no dudar. */
+.cta-destacada-otra { font-size:var(--text-sm); color:var(--text-soft); }
+.cta-destacada-que  { font-size:var(--text-sm); color:var(--text-soft); }
+.cta-punto { color:var(--primary-light); }
+
+.cta-destacada-acciones {
+  display:flex; align-items:center; gap:1.1rem; flex-wrap:wrap;
+  margin-top:1.4rem !important;
+}
+
+
+/* ---------- FILAS ---------- */
+
+/* Lista sin punto y sin recuadro. La linea fina separa; el borde y la sombra
+   dirian "objeto aparte", y estas no lo son: son renglones de una lista. */
+.cta-filas { list-style:none; margin:0; padding:0; }
+.cta-fila + .cta-fila { border-top:1px solid var(--cta-linea); }
+
+.cta-fila-enlace {
+  display:flex; align-items:center; gap:.9rem;
+  min-height:56px; padding:.75rem .25rem;
+  color:inherit; text-decoration:none;
+}
+a.cta-fila-enlace:hover { background:var(--bg-secondary); border-radius:var(--r-chico); }
+
+.cta-fila-cuando {
+  flex:0 0 auto;
+  font-variant-numeric:tabular-nums;
+  font-size:var(--text-sm); font-weight:600;
+}
+
+/* El unico que puede crecer y el unico que puede recortarse: el nombre del
+   servicio es lo mas largo y lo mas prescindible de la fila. */
+.cta-fila-que {
+  flex:1 1 auto; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-size:var(--text-sm); color:var(--text-soft);
+}
+
+.cta-fila-flecha { flex:0 0 auto; display:flex; color:var(--primary-light); }
+.cta-fila-flecha svg { width:18px; height:18px; }
+a.cta-fila-enlace:hover .cta-fila-flecha { color:var(--primary-deep); }
+
+/* El historial no lleva enlace ni flecha: una consulta pasada no se toca. */
+.cta-filas-quietas .cta-fila-enlace { cursor:default; }
+
+
+/* ---------- LOS BONOS ---------- */
+
+/* CON CONTENEDOR, al reves que el historial. No es incoherencia: un bono es un
+   OBJETO que se posee —tiene saldo, caduca, se puede gastar— y merece bordes.
+   El historial son renglones de una lista de cosas que ya pasaron, y ahi el
+   recuadro sobraria. La caja se gana por lo que es la cosa, no por costumbre.
+
+   Ademas resuelve lo que se veia: una o dos filas sueltas bajo un rotulo, sin
+   nada alrededor, quedaban flotando en el aire. */
+.cta-bonos {
+  padding:.35rem 1.15rem;
+  background:var(--bg-secondary);
+  border:1px solid var(--cta-linea);
+  border-radius:var(--r-medio);
+}
+
+.cta-fila-bono .cta-fila-enlace { flex-wrap:wrap; }
+.cta-bono-txt { flex:1 1 12rem; min-width:0; display:flex; flex-direction:column; }
+.cta-bono-txt strong { font-size:var(--text-sm); }
+.cta-bono-txt small  { font-size:var(--text-xs); color:var(--text-soft); }
+
+
+/* ---------- MARCAS DE ESTADO ---------- */
+
+/* Una etiqueta compacta que se parte en dos lineas es un defecto, asi que no
+   se parte. Y como no crece ni encoge, tampoco empuja a nadie. */
+.cta-marca {
+  flex:0 0 auto;
+  display:inline-block;
+  padding:.24rem .62rem;
+  border-radius:var(--radius-pill);
+  font-size:var(--text-xs); font-weight:600; line-height:1.5;
+  white-space:nowrap;
+  background:var(--inerte); color:var(--inerte-txt);
+}
+.cta-marca[data-tono="ok"]   { background:var(--ok-sv);   color:var(--ok); }
+.cta-marca[data-tono="pend"] { background:var(--pend-sv); color:var(--pend); }
+.cta-marca[data-tono="mal"]  { background:var(--mal-sv);  color:var(--mal); }
+
+
+/* ---------- TUS DATOS ---------- */
+
+.cta-ficha {
+  padding:1.1rem 1.15rem;
+  background:var(--bg-secondary);
+  border:1px solid var(--cta-linea);
+  border-radius:var(--r-medio);
+}
+.cta-ficha-nombre {
+  margin:0 0 .6rem;
+  font-family:var(--font-display); font-size:1.05rem; font-weight:600;
+}
+
+/* Rejilla de dos columnas: la etiqueta con ancho fijo alinea los valores. En
+   una sola columna, "Correo" y "Telefono" empujan cada valor a una sangria
+   distinta y las dos filas se leen como texto corrido. */
+.cta-ficha-datos {
+  display:grid; grid-template-columns:5.5rem 1fr; gap:.2rem .8rem;
+  margin:0;
+}
+.cta-ficha-datos dt {
+  font-size:var(--text-xs); letter-spacing:.05em; text-transform:uppercase;
+  color:var(--text-soft); padding-top:.15rem;
+}
+.cta-ficha-datos dd {
+  margin:0; font-size:var(--text-sm);
+  overflow-wrap:anywhere;      /* un correo largo se parte, no desborda */
+}
+
+/* Parece un enlace de texto pero mide 44px de alto: es el minimo que se puede
+   tocar con el dedo sin fallar. La altura no se ve, solo se nota al apuntar. */
+.cta-enlace {
+  display:inline-flex; align-items:center;
+  min-height:44px;
+  margin:0; padding:0;
+  border:0; background:none; cursor:pointer;
+  font:inherit; font-size:var(--text-sm);
+  color:var(--primary-deep);
+  text-decoration:underline; text-underline-offset:3px;
+}
+.cta-enlace:hover { color:var(--primary-darkest); }
+.cta-ficha .cta-enlace { margin-top:.4rem; }
+
+
+/* ---------- CORREGIR ---------- */
+
+.cta-edicion:not([hidden]) {
+  display:flex; flex-direction:column; gap:1rem;
+  padding:1.15rem;
+  background:var(--bg-secondary);
+  border:1px solid var(--border-strong);
+  border-radius:var(--r-medio);
+}
+
+.cta-campo { display:flex; flex-direction:column; gap:.35rem; margin:0; }
+.cta-campo label { font-size:var(--text-sm); font-weight:600; }
+
+.cta-campo input {
+  min-height:48px; padding:0 .8rem;
+  border:1px solid var(--border-strong); border-radius:var(--r-chico);
+  background:var(--white); color:var(--text-dark);
+  font:inherit; font-size:var(--text-sm);
+}
+/* El foco del menú lo pone ../panel.css, con el color que se ve sobre el
+   marrón; aquí solo el del contenido, sobre crema. */
+.cta-campo input:focus-visible,
+.cta-enlace:focus-visible,
+.cta-fila-enlace:focus-visible {
+  outline:2px solid var(--primary-deep); outline-offset:2px;
+}
+
+.cta-ayuda { margin:0; font-size:var(--text-xs); color:var(--text-soft); }
+
+.cta-acciones { display:flex; gap:.6rem; flex-wrap:wrap; margin:0; }
+.cta-acciones .btn { min-height:46px; padding:0 1.3rem; font-size:var(--text-sm); }
+
+.cta-error:not([hidden]) {
+  display:block; margin:0;
+  font-size:var(--text-xs); color:var(--mal);
+}
+.cta-campo input[aria-invalid="true"] { border-color:var(--mal); background:var(--mal-sv); }
+
+
+/* ---------- SIN NADA TODAVÍA ---------- */
+
+/* Una frase, una explicacion y la accion. Una pantalla vacia con secciones
+   vacias es peor que una frase. */
+.cta-vacio { padding:3rem 0 1rem; max-width:32rem; }
+.cta-vacio h1 {
+  margin:0 0 .7rem;
+  font-family:var(--font-display); font-weight:600;
+  font-size:var(--text-xl); line-height:1.25; text-wrap:balance;
+}
+.cta-vacio p { margin:0 0 1.6rem; color:var(--text-soft); font-size:var(--text-sm); }
+
+
+/* ---------- ENTRADA ---------- */
+
+/* Un desvanecido corto al aparecer. Corto porque no es un efecto: solo evita
+   el salto seco de "Buscando…" a la pagina entera. */
+@media (prefers-reduced-motion:no-preference) {
+  .cta-contenido:not([hidden]),
+  .cta-vacio:not([hidden]) {
+    animation:cta-entra 260ms cubic-bezier(.23,1,.32,1) both;
+  }
+}
+@keyframes cta-entra {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:none; }
+}
+
+
+/* ============================================================
+   MÓVIL · PROVISIONAL
+
+   El panel de movil esta SIN DISENAR todavia: quedo apartado a proposito para
+   hacerlo bien y aparte, no como el de escritorio encogido. Lo de aqui abajo
+   es lo minimo para que la pagina funcione en un telefono mientras tanto: la
+   columna marron pasa a ser una cabecera y las dos vistas, dos pestanas.
+
+   Nada de esto pretende ser la version definitiva. Cuando se disene el panel
+   de movil, este bloque se sustituye entero.
+   ============================================================ */
+
+@media (max-width:44rem) {
+  .cta-saludo { font-size:var(--text-xl); }
+
+  /* La marca de estado baja a su propia linea: en pantalla estrecha, tres
+     piezas en fila dejan el nombre del servicio en dos caracteres y puntos. */
+  .cta-fila-enlace { flex-wrap:wrap; row-gap:.3rem; }
+  .cta-fila-que    { flex-basis:100%; order:3; }
+  .cta-fila-flecha { order:2; margin-left:auto; }
+  .cta-marca       { order:4; }
+
+  .cta-ficha-datos { grid-template-columns:1fr; gap:0; }
+  .cta-ficha-datos dt { margin-top:.5rem; }
+
+  .cta-acciones .btn { flex:1 1 auto; }
+}

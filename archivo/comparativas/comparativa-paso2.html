@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paso 2 · tres direcciones para la agenda</title>
+<link rel="icon" href="favicon.svg">
+
+<!-- LAS MISMAS FUENTES QUE LA PAGINA REAL. Va primero y va completo a proposito:
+     la vez anterior se copio solo el <style> y no los <link>, y la comparativa
+     salio en Segoe UI y Times, o sea comparando algo que no era el diseno. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+
+<!-- Y LAS MISMAS HOJAS. Asi los tokens, la escala y el modo oscuro son los de
+     verdad, no una copia que se queda vieja en cuanto se toca reservar.css. -->
+<link rel="stylesheet" href="style.css?v=40">
+<link rel="stylesheet" href="reservar/reservar.css?v=40">
+
+<style>
+/* ---------- el armazon de la comparativa, no del diseno ---------- */
+.cmp-top{
+  position:sticky;top:0;z-index:10;
+  background:var(--suelo);border-bottom:1px solid var(--linea-int);
+  padding:1rem 1.25rem;
+}
+.cmp-top-in{max-width:76rem;margin:0 auto;display:flex;align-items:baseline;gap:1.25rem;flex-wrap:wrap}
+.cmp-top h1{font-family:var(--display);font-size:var(--t-tit);font-weight:600;margin:0}
+.cmp-top p{margin:0;font-size:var(--t-nota);color:var(--txt-suave)}
+.cmp-top a{margin-left:auto;font-size:var(--t-nota);color:var(--marca-dp)}
+
+.cmp-lista{max-width:76rem;margin:0 auto;padding:2rem 1.25rem 5rem;display:grid;gap:3.5rem}
+
+.cmp-op{display:grid;gap:1rem}
+.cmp-cab{display:grid;gap:.35rem;max-width:46rem}
+.cmp-letra{
+  display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;
+  background:var(--acc);color:var(--acc-txt);
+  font-family:var(--display);font-size:var(--t-nota);font-weight:600;
+}
+.cmp-titulo{display:flex;align-items:center;gap:.6rem;font-family:var(--display);
+  font-size:var(--t-tit);font-weight:600;margin:0}
+.cmp-por{margin:0;font-size:var(--t-aux);color:var(--txt-suave);line-height:1.6}
+.cmp-contra{margin:0;font-size:var(--t-nota);color:var(--pend)}
+
+/* El lienzo imita el ancho real del contenido de la pagina: 50rem menos su
+   relleno. Sin esto se juzgarian los huecos a una anchura que no existe. */
+.cmp-lienzo{
+  /* EL ANCHO ES PARTE DE LA PRUEBA. La pagina real da 760 px de contenido
+     (50rem menos su relleno), asi que el lienzo se para ahi. Sin este tope los
+     paneles se estiraban a 1176 px y las rejillas se juzgaban a una anchura que
+     no existe: la B parecia comoda y en la pagina real no cabria igual. */
+  width:min(100%,818px);
+  background:var(--sup);border:1px solid var(--linea-int);border-radius:var(--r);
+  padding:1.75rem;overflow:hidden;
+}
+
+/* ---------- piezas comunes a las tres ---------- */
+.ag-cab{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}
+.ag-rango{font-family:var(--display);font-size:var(--t-tit);font-weight:600;margin:0;line-height:1.3}
+.ag-sub{margin:.15rem 0 0;font-size:var(--t-nota);color:var(--txt-suave)}
+.ag-nav{display:flex;gap:.4rem;flex:none}
+.ag-flecha{
+  width:44px;height:44px;display:grid;place-items:center;
+  background:var(--sup);border:1px solid var(--linea);border-radius:var(--r-sm);
+  color:var(--txt);cursor:pointer;transition:background var(--paso),border-color var(--paso);
+}
+.ag-flecha:hover:not(:disabled){border-color:var(--linea-f);background:var(--sup-cal)}
+.ag-flecha:disabled{opacity:.35;cursor:not-allowed}
+.ag-flecha svg{width:19px;height:19px}
+
+/* La hora: el control que de verdad se pulsa. Cuerpo entero, no letra chica. */
+.hora{
+  min-height:46px;padding:.5rem .35rem;
+  display:grid;place-items:center;
+  background:var(--sup);border:1px solid var(--linea);border-radius:var(--r-sm);
+  font:inherit;font-size:var(--t-base);font-weight:500;color:var(--txt);
+  font-variant-numeric:tabular-nums;cursor:pointer;
+  transition:background var(--paso),border-color var(--paso),box-shadow var(--paso);
+}
+.hora:hover{border-color:var(--linea-f);background:var(--sup-cal)}
+.hora[aria-checked="true"]{
+  border-color:var(--linea-f);box-shadow:inset 0 0 0 2px var(--linea-f);
+  background:var(--sup-eleg);font-weight:600;
+}
+
+/* ================= A · COLUMNAS COMPLETAS ================= */
+.a-rejilla{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.6rem}
+.a-col{display:flex;flex-direction:column;min-width:0}
+.a-dia{
+  text-align:center;padding-bottom:.5rem;margin-bottom:.7rem;
+  border-bottom:1px solid var(--linea-int);
+}
+.a-dia b{display:block;font-family:var(--display);font-size:var(--t-tit);font-weight:600;line-height:1.2}
+.a-dia span{display:block;font-size:var(--t-nota);color:var(--txt-suave);
+  text-transform:uppercase;letter-spacing:.06em}
+.a-horas{display:flex;flex-direction:column;gap:.4rem}
+/* Todas las horas a la vista. El bloque entero es el que se desplaza, con las
+   cabeceras quietas: asi la silueta es un rectangulo y no una sierra. */
+.a-scroll{max-height:19rem;overflow-y:auto;padding-right:.35rem}
+.a-hoy b{color:var(--acc-dp)}
+/* El dia sin huecos se apaga ENTERO, en vez de dejar una pildora flotando
+   arriba y 285 px de vacio debajo. */
+.a-vacio{background:var(--inerte);border-radius:var(--r-sm);
+  display:grid;place-items:center;padding:1rem .5rem;min-height:8rem;
+  font-size:var(--t-nota);color:var(--inerte-txt);text-align:center;line-height:1.4}
+
+/* ================= B · FRANJAS DEL DIA ================= */
+.b-tabla{display:grid;grid-template-columns:5.5rem repeat(5,minmax(0,1fr));gap:.55rem .6rem;align-items:start}
+.b-esquina{}
+.b-dia{text-align:center;padding-bottom:.5rem;border-bottom:1px solid var(--linea-int)}
+.b-dia b{display:block;font-family:var(--display);font-size:var(--t-tit);font-weight:600;line-height:1.2}
+.b-dia span{display:block;font-size:var(--t-nota);color:var(--txt-suave);
+  text-transform:uppercase;letter-spacing:.06em}
+.b-dia-off b,.b-dia-off span{color:var(--inerte-txt)}
+/* La franja es la etiqueta de la fila: informacion, no adorno. Dice cuando del
+   dia, que es la mitad de la pregunta que se esta haciendo la persona. */
+.b-franja{
+  padding-top:.55rem;font-size:var(--t-nota);font-weight:500;color:var(--txt-suave);
+  text-transform:uppercase;letter-spacing:.06em;line-height:1.3;
+}
+.b-celda{display:flex;flex-direction:column;gap:.4rem;min-width:0}
+/* Sin huecos en esa franja: una raya, no una caja. Una caja vacia pesa lo mismo
+   que una llena y ensucia la retícula. */
+.b-nada{height:1px;background:var(--linea-int);margin:1.4rem .6rem 0}
+.b-sep{grid-column:1/-1;height:1px;background:var(--linea-int);margin:.5rem 0}
+
+/* ================= C · UN DIA A LA VEZ ================= */
+.c-riel{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.c-dia{
+  flex:1 1 0;min-width:5.5rem;padding:.7rem .5rem;
+  display:grid;gap:.15rem;justify-items:center;
+  background:var(--sup);border:1px solid var(--linea);border-radius:var(--r-sm);
+  font:inherit;color:var(--txt);cursor:pointer;
+  transition:background var(--paso),border-color var(--paso),box-shadow var(--paso);
+}
+.c-dia:hover:not(:disabled){border-color:var(--linea-f);background:var(--sup-cal)}
+.c-dia[aria-checked="true"]{border-color:var(--linea-f);box-shadow:inset 0 0 0 2px var(--linea-f);
+  background:var(--sup-eleg)}
+.c-dia:disabled{background:var(--inerte);border-color:transparent;color:var(--inerte-txt);cursor:not-allowed}
+.c-dia span{font-size:var(--t-nota);text-transform:uppercase;letter-spacing:.06em;color:var(--txt-suave)}
+.c-dia:disabled span{color:var(--inerte-txt)}
+.c-dia b{font-family:var(--display);font-size:var(--t-tit);font-weight:600;line-height:1.15}
+/* Cuantas horas quedan, en palabras y no en un punto de color: el punto obliga
+   a aprenderse un codigo, la cifra se lee sola. */
+.c-dia i{font-style:normal;font-size:var(--t-nota);color:var(--txt-suave)}
+.c-dia[aria-checked="true"] i{color:var(--acc-dp);font-weight:500}
+.c-dia:disabled i{color:var(--inerte-txt)}
+.c-grupo{margin-bottom:1.1rem}
+.c-franja{font-size:var(--t-nota);font-weight:500;color:var(--txt-suave);
+  text-transform:uppercase;letter-spacing:.06em;margin:0 0 .5rem}
+.c-horas{display:grid;grid-template-columns:repeat(auto-fill,minmax(6.5rem,1fr));gap:.5rem}
+
+@media (max-width:700px){
+  .a-rejilla{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .b-tabla{grid-template-columns:4.2rem repeat(3,minmax(0,1fr))}
+  .cmp-lienzo{padding:1rem}
+}
+</style>
+</head>
+<body class="wz-body">
+
+<header class="cmp-top">
+  <div class="cmp-top-in">
+    <h1>Paso 2 · tres direcciones para la agenda</h1>
+    <p>Los datos son los de verdad: 30 huecos reales de Daryeli, con el jueves casi cerrado,
+       el domingo vacío y el sábado solo de mañanas.</p>
+    <a href="reservar/index.html?demo=2" target="_blank" rel="noopener">Ver el paso 2 actual ↗</a>
+  </div>
+</header>
+
+<main class="cmp-lista" id="lista"></main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* Los cinco días tal y como los devolvió Supabase el 4 de septiembre. Se
+     escriben aquí para que las tres direcciones enseñen EXACTAMENTE la misma
+     disponibilidad: si una parece mejor, que no sea porque le tocaron horas
+     más fáciles. */
+  var DIAS = [
+    { dia:'jue', num:3, hoy:true,  horas:['20:00','21:00'] },
+    { dia:'vie', num:4, horas:['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','19:00','20:00','21:00'] },
+    { dia:'sáb', num:5, horas:['08:00','09:00','10:00','11:00'] },
+    { dia:'dom', num:6, horas:[] },
+    { dia:'lun', num:7, horas:['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','19:00','20:00','21:00'] }
+  ];
+
+  var FRANJAS = [
+    { nom:'Mañana', desde:0,  hasta:12 },
+    { nom:'Tarde',  desde:12, hasta:18 },
+    { nom:'Noche',  desde:18, hasta:24 }
+  ];
+  function enFranja(h, f) { var n = parseInt(h, 10); return n >= f.desde && n < f.hasta; }
+
+  var FLECHAS =
+    '<div class="ag-nav">' +
+      '<button type="button" class="ag-flecha" disabled aria-label="Días anteriores">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>' +
+      '</button>' +
+      '<button type="button" class="ag-flecha" aria-label="Días siguientes">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>' +
+      '</button>' +
+    '</div>';
+
+  function cabecera(sub) {
+    return '<div class="ag-cab"><div>' +
+      '<h2 class="ag-rango">3 sept a 7 sept</h2>' +
+      '<p class="ag-sub">' + sub + '</p>' +
+      '</div>' + FLECHAS + '</div>';
+  }
+
+  function hora(h, grupo) {
+    return '<button type="button" class="hora" role="radio" aria-checked="false" data-g="' + grupo + '">' + h + '</button>';
+  }
+
+  /* ---------- A ---------- */
+  function pintarA() {
+    var cols = DIAS.map(function (d) {
+      var cab = '<div class="a-dia' + (d.hoy ? ' a-hoy' : '') + '"><span>' + d.dia + '</span><b>' + d.num + '</b></div>';
+      if (!d.horas.length) {
+        return '<div class="a-col">' + cab + '<div class="a-vacio">Sin horarios<br>este día</div></div>';
+      }
+      return '<div class="a-col">' + cab +
+        '<div class="a-horas">' + d.horas.map(function (h) { return hora(h, 'a'); }).join('') + '</div></div>';
+    }).join('');
+    return cabecera('Sesiones de 1 hora · 30 huecos libres') +
+      '<div class="a-scroll"><div class="a-rejilla" role="radiogroup" aria-label="Horarios disponibles">' + cols + '</div></div>';
+  }
+
+  /* ---------- B ---------- */
+  function pintarB() {
+    var celdas = '<div class="b-esquina"></div>';
+    celdas += DIAS.map(function (d) {
+      return '<div class="b-dia' + (d.horas.length ? '' : ' b-dia-off') + '"><span>' + d.dia + '</span><b>' + d.num + '</b></div>';
+    }).join('');
+
+    FRANJAS.forEach(function (f) {
+      var hay = DIAS.some(function (d) { return d.horas.some(function (h) { return enFranja(h, f); }); });
+      if (!hay) return;
+      celdas += '<div class="b-sep"></div>';
+      celdas += '<div class="b-franja">' + f.nom + '</div>';
+      celdas += DIAS.map(function (d) {
+        var hs = d.horas.filter(function (h) { return enFranja(h, f); });
+        if (!hs.length) return '<div class="b-celda"><div class="b-nada"></div></div>';
+        return '<div class="b-celda">' + hs.map(function (h) { return hora(h, 'b'); }).join('') + '</div>';
+      }).join('');
+    });
+
+    return cabecera('Sesiones de 1 hora · 30 huecos libres') +
+      '<div class="b-tabla" role="radiogroup" aria-label="Horarios disponibles">' + celdas + '</div>';
+  }
+
+  /* ---------- C ---------- */
+  function pintarC(elegido) {
+    var riel = DIAS.map(function (d, i) {
+      var n = d.horas.length;
+      var etq = n === 0 ? 'sin huecos' : (n === 1 ? '1 hora' : n + ' horas');
+      return '<button type="button" class="c-dia" role="radio" data-c="' + i + '"' +
+        (n ? '' : ' disabled') +
+        ' aria-checked="' + (i === elegido) + '">' +
+        '<span>' + d.dia + '</span><b>' + d.num + '</b><i>' + etq + '</i></button>';
+    }).join('');
+
+    var d = DIAS[elegido];
+    var cuerpo = FRANJAS.map(function (f) {
+      var hs = d.horas.filter(function (h) { return enFranja(h, f); });
+      if (!hs.length) return '';
+      return '<div class="c-grupo"><p class="c-franja">' + f.nom + '</p>' +
+        '<div class="c-horas">' + hs.map(function (h) { return hora(h, 'c'); }).join('') + '</div></div>';
+    }).join('');
+
+    return cabecera('Sesiones de 1 hora · elige primero el día') +
+      '<div class="c-riel" role="radiogroup" aria-label="Elige el día">' + riel + '</div>' +
+      '<div id="cCuerpo" role="radiogroup" aria-label="Horarios de ese día">' + cuerpo + '</div>';
+  }
+
+  var OPCIONES = [
+    { letra:'A', titulo:'Columnas completas',
+      por:'La rejilla que ya hay, pero honesta: se ven las 30 horas, no 14. Las cabeceras de día se quedan quietas y el bloque entero se desplaza, así que la silueta es un rectángulo y no una sierra. El domingo se apaga entero en vez de dejar una píldora flotando.',
+      contra:'Sigue siendo una pared de cajas iguales: se ve todo, pero nada guía la mirada. Es la más compacta de las tres (426 px).',
+      html: pintarA },
+    { letra:'B', titulo:'Franjas del día',
+      por:'Las filas son mañana, tarde y noche. Eso no es decoración: es la otra mitad de la pregunta que se está haciendo la persona, porque casi nadie busca "una hora", busca "una tarde". La retícula queda regular por construcción y donde no hay huecos va una raya, no una caja vacía.',
+      contra:'Se hace alta. Medido: 936 px contra los 426 de la A, porque una tarde con seis huecos los apila en vertical dentro de su celda. Y necesita el ancho entero, o sea sacar el resumen de la columna izquierda.',
+      html: pintarB },
+    { letra:'C', titulo:'Un día a la vez',
+      por:'Primero el día, con cuántas horas tiene escrito en palabras, y debajo ese día entero con las horas grandes y agrupadas. Es el patrón de Doctoralia y es idéntico en móvil y en escritorio, así que se mantiene una sola pieza en vez de dos.',
+      contra:'Se pierde la comparación entre días: para saber si el sábado va mejor hay que ir a mirarlo. El riel lo compensa a medias, porque dice cuántas horas tiene cada uno.',
+      html: pintarC.bind(null, 1) }
+  ];
+
+  document.getElementById('lista').innerHTML = OPCIONES.map(function (o) {
+    return '<section class="cmp-op">' +
+      '<div class="cmp-cab">' +
+        '<h2 class="cmp-titulo"><span class="cmp-letra">' + o.letra + '</span>' + o.titulo + '</h2>' +
+        '<p class="cmp-por">' + o.por + '</p>' +
+        '<p class="cmp-contra"><b>A cambio:</b> ' + o.contra + '</p>' +
+      '</div>' +
+      '<div class="cmp-lienzo">' + o.html() + '</div>' +
+    '</section>';
+  }).join('');
+
+  /* Se puede pulsar: una hora elegida se ve distinta a una hora libre, y eso es
+     justo lo que hay que juzgar. Cada bloque lleva su propio grupo. */
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('.hora');
+    if (b) {
+      var g = b.dataset.g;
+      document.querySelectorAll('.hora[data-g="' + g + '"]').forEach(function (o) {
+        o.setAttribute('aria-checked', String(o === b));
+      });
+      return;
+    }
+    var d = ev.target.closest('.c-dia');
+    if (d && !d.disabled) {
+      var i = Number(d.dataset.c);
+      var caja = d.closest('.cmp-lienzo');
+      caja.innerHTML = pintarC(i);
+    }
+  });
+}());
+</script>
+</body>
+</html>

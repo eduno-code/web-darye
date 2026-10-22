@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrar en móvil · tres tratamientos</title>
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   TRES TRATAMIENTOS PARA LA PANTALLA DE ENTRAR EN MOVIL
+
+   Las tres llevan EXACTAMENTE el mismo formulario y las mismas medidas de
+   control (46 px de alto, 44x44 el ojo). Lo unico que cambia es como se
+   relaciona el formulario con la foto, que es la pregunta que hay encima de
+   la mesa. Asi la comparacion es honesta: no gana una porque le hayan puesto
+   mejores botones.
+
+   Debajo de cada una va su contraste medido, porque en una pantalla donde se
+   teclea una contrasena a las dos de la manana eso no es un detalle.
+   ============================================================ */
+
+:root{
+  --papel:#EFE9E0; --tinta:#2E332E; --suave:#5C635A;
+  --arcilla:#C6A783; --arcilla-dp:#8A6746; --salvia:#5A7060;
+  --ok:#3E6B4F; --regular:#8A6A14; --mal:#A33A2E;
+  color-scheme:only light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font:400 14px/1.55 Inter,"Segoe UI",system-ui,sans-serif}
+
+header.barra{padding:1.4rem 1.4rem .2rem;max-width:70rem;margin-inline:auto}
+header.barra h1{margin:0 0 .3rem;font:600 1.15rem/1.2 Fraunces,Georgia,serif;letter-spacing:-.02em}
+header.barra p{margin:0;color:var(--suave);max-width:60ch}
+
+.escena{display:flex;gap:2.5rem;flex-wrap:wrap;justify-content:center;
+  align-items:flex-start;padding:2rem 1.4rem 4rem}
+
+figure{margin:0;width:390px;display:flex;flex-direction:column;gap:.9rem}
+figcaption{display:flex;flex-direction:column;gap:.25rem}
+figcaption b{font:600 .95rem/1.3 Inter,sans-serif}
+figcaption .que{font-size:.8rem;color:var(--suave)}
+.telefono{width:390px;height:844px;border-radius:26px;overflow:hidden;
+  border:1px solid var(--arcilla);background:#fff;position:relative;isolation:isolate}
+
+.veredicto{font-size:.78rem;line-height:1.5;border-left:2px solid currentColor;
+  padding-left:.7rem;margin:0}
+.veredicto.si{color:var(--ok)} .veredicto.regular{color:var(--regular)} .veredicto.no{color:var(--mal)}
+.veredicto b{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.veredicto span{color:var(--tinta);display:block;margin-top:.2rem}
+
+/* ---------- piezas comunes del formulario ---------- */
+.forma{display:flex;flex-direction:column;gap:1rem}
+.forma h2{margin:0;font:600 1.6rem/1.08 Fraunces,Georgia,serif;letter-spacing:-.03em}
+.forma .lema{margin:.35rem 0 0;font-size:.88rem;line-height:1.5}
+.grupo{display:flex;flex-direction:column;gap:.35rem}
+.grupo label{font-size:.8rem;font-weight:500;letter-spacing:.01em}
+.control{position:relative}
+.control input{width:100%;min-height:46px;padding:.6rem .85rem;font:inherit;font-size:1rem;
+  border-radius:10px;border:1px solid;background:#fff;color:#2E332E}
+.control.clave input{padding-right:3.35rem}
+.ojo{position:absolute;right:3px;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;display:grid;place-items:center;border:0;background:none;
+  border-radius:10px;cursor:pointer}
+.ojo svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.cta{appearance:none;border:0;width:100%;min-height:48px;border-radius:999px;
+  font:600 1rem Inter,sans-serif;cursor:pointer;display:grid;place-items:center}
+.olvide{margin:0;text-align:center;font-size:.8rem}
+.olvide a{text-underline-offset:2px}
+.pie{margin:0;text-align:center;font-size:.82rem}
+.pie a{font-weight:600;text-underline-offset:2px}
+.marca{display:flex;align-items:center;gap:.5rem;font-size:.8rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase}
+.marca svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.1;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ============================================================
+   A · HOJA CURVA  (el patron del movil del centro de la referencia)
+   La foto ocupa el tercio de arriba y la hoja opaca SUBE por encima con el
+   borde superior curvado. El formulario cae sobre superficie solida, asi que
+   su contraste no depende de lo que haya en la foto detras.
+   ============================================================ */
+#a .fondo{position:absolute;inset:0 0 auto;height:330px;overflow:hidden}
+#a .fondo img{width:100%;height:100%;object-fit:cover;object-position:50% 58%}
+/* Un velo calido, no gris: oscurecer con negro apaga el tono de la foto.
+   Solo arriba, que es donde se apoya la marca — abajo la foto queda limpia. */
+#a .fondo::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(94,68,44,.48) 0%,rgba(94,68,44,.10) 42%,rgba(94,68,44,0) 100%)}
+#a .marca{position:absolute;top:1.6rem;left:1.5rem;z-index:2;color:#FAF3EA}
+
+/* El titulo va DENTRO de la hoja, como en la referencia. Sobre la foto solo se
+   queda la marca: un titular sobre una imagen depende de que la zona que le
+   toca detras sea oscura, y eso deja de ser cierto en cuanto se cambia la
+   foto o se recorta distinto en otra pantalla. */
+#a .hoja{position:absolute;left:0;right:0;top:262px;bottom:0;background:#fff;
+  /* El radio eliptico asimetrico da una curva organica, no un arco de compas.
+     Es la diferencia entre que parezca papel levantandose y que parezca un
+     rectangulo con las esquinas limadas. */
+  border-radius:64% 36% 0 0 / 66px 46px 0 0;
+  padding:3rem 1.5rem 1.6rem;display:flex;flex-direction:column;gap:1.15rem;
+  box-shadow:0 -16px 38px -18px rgba(46,42,36,.5)}
+#a .hoja h2{margin:0;font:600 1.75rem/1.08 Fraunces,Georgia,serif;letter-spacing:-.03em;color:#2E332E}
+#a .hoja .lema{color:#6B665D}
+#a .grupo label{color:#6B665D}
+#a .control input{border-color:#A8825F}
+#a .ojo{color:#6B665D}
+#a .cta{background:#8A6746;color:#FAF3EA}
+#a .olvide a,#a .pie a{color:#3E4F44}
+#a .pie{color:#6B665D;margin-top:auto}
+
+/* ============================================================
+   B · CRISTAL SOBRE FOTO OSCURECIDA  (lo que preguntabas)
+   Para que el cristal se lea hay que hundir la foto: brillo al 42% y un velo
+   marron encima. El precio es que la foto deja de contarse — la reja de luz
+   sobre el hormigon desaparece y queda una mancha oscura.
+   ============================================================ */
+#b .fondo{position:absolute;inset:0;overflow:hidden}
+#b .fondo img{width:100%;height:100%;object-fit:cover;object-position:50% 55%;
+  filter:brightness(.42) saturate(.75) contrast(1.05)}
+#b .fondo::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(41,30,20,.45) 0%,rgba(41,30,20,.72) 100%)}
+#b .capa{position:absolute;inset:0;z-index:2;padding:1.6rem 1.25rem;
+  display:flex;flex-direction:column;gap:1.4rem;color:#FAF3EA}
+#b .marca{color:#FAF3EA}
+#b .vidrio{margin-top:auto;margin-bottom:auto;
+  background:rgba(255,255,255,.13);
+  -webkit-backdrop-filter:blur(20px) saturate(1.2);
+  backdrop-filter:blur(20px) saturate(1.2);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:22px;padding:1.6rem 1.35rem;
+  display:flex;flex-direction:column;gap:1.05rem;
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.6)}
+#b h2{color:#FAF3EA}
+#b .lema{color:#E2D5C4}
+#b .grupo label{color:#E2D5C4}
+#b .control input{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.30);color:#FAF3EA}
+#b .control input::placeholder{color:rgba(250,243,234,.55)}
+#b .ojo{color:#E2D5C4}
+#b .cta{background:#FAF3EA;color:#3E2E20}
+#b .olvide a,#b .pie a{color:#E2D5C4}
+#b .olvide,#b .pie{color:#C9B9A4}
+
+/* ============================================================
+   C · CRISTAL CALIDO SOBRE LA FOTO TAL CUAL  (el termino medio)
+   El cristal no se apoya en una foto oscura sino en la clara, y por eso la
+   tarjeta puede ser casi opaca: 78% de blanco. Conserva el efecto —los bordes
+   de la foto se siguen adivinando por detras y por los lados— sin apagar la
+   imagen ni poner el texto sobre un desenfoque que cambia de tono.
+   ============================================================ */
+#c .fondo{position:absolute;inset:0;overflow:hidden}
+#c .fondo img{width:100%;height:100%;object-fit:cover;object-position:50% 58%}
+#c .fondo::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(94,68,44,.30) 0%,rgba(94,68,44,.06) 40%,rgba(94,68,44,.22) 100%)}
+#c .capa{position:absolute;inset:0;z-index:2;padding:1.5rem 1.1rem;
+  display:flex;flex-direction:column;gap:1.2rem}
+#c .marca{color:#FAF3EA;text-shadow:0 1px 12px rgba(60,42,26,.7)}
+#c .vidrio{margin-top:auto;margin-bottom:auto;
+  background:rgba(255,255,255,.78);
+  -webkit-backdrop-filter:blur(24px) saturate(1.15);
+  backdrop-filter:blur(24px) saturate(1.15);
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:24px;padding:1.7rem 1.4rem;
+  display:flex;flex-direction:column;gap:1.05rem;
+  box-shadow:0 20px 44px -22px rgba(60,42,26,.55)}
+#c h2{color:#2E332E}
+#c .lema{color:#5C635A}
+#c .grupo label{color:#5C635A}
+#c .control input{border-color:#A8825F;background:rgba(255,255,255,.9)}
+#c .ojo{color:#6B665D}
+#c .cta{background:#8A6746;color:#FAF3EA}
+#c .olvide a,#c .pie a{color:#3E4F44}
+#c .olvide,#c .pie{color:#5C635A}
+/* El pie entra en la tarjeta: sobre la foto clara quedaba gris sobre beige y
+   no habia forma de que pasara. Un filete lo separa del resto. */
+#c .pie{border-top:1px solid rgba(122,90,60,.22);padding-top:.9rem;margin-top:.2rem}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ojo" viewBox="0 0 24 24">
+    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="bombilla" viewBox="0 0 24 24">
+    <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+    <path d="M9 20h6M10.2 22.2h3.6"/>
+    <path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+  </symbol>
+</svg>
+
+<header class="barra">
+  <h1>Entrar en móvil · tres tratamientos con tu foto</h1>
+  <p>Las tres llevan el mismo formulario y los mismos tamaños de control. Lo único que cambia es cómo se apoya el formulario sobre la foto. Debajo de cada una, el contraste medido del texto más pequeño.</p>
+</header>
+
+<main class="escena">
+
+  <!-- ==================== A ==================== -->
+  <figure id="a">
+    <figcaption>
+      <b>A · Hoja curva</b>
+      <span class="que">La foto arriba y una hoja opaca que sube por encima con el borde curvado. Es el móvil del centro de tu referencia.</span>
+    </figcaption>
+
+    <div class="telefono">
+      <div class="fondo"><img src="puerta-b-banco.jpg" alt="" decoding="async"></div>
+
+      <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+
+      <div class="hoja">
+        <div class="forma">
+          <div>
+            <h2>¡Hola de nuevo!</h2>
+            <p class="lema">Entra para gestionar tus consultas.</p>
+          </div>
+          <div class="grupo">
+            <label for="a1">Correo electrónico</label>
+            <span class="control"><input id="a1" type="email" placeholder="maria@correo.com"></span>
+          </div>
+          <div class="grupo">
+            <label for="a2">Contraseña</label>
+            <span class="control clave">
+              <input id="a2" type="password" placeholder="Tu contraseña">
+              <button class="ojo" type="button" aria-label="Mostrar la contraseña"><svg><use href="#ojo"/></svg></button>
+            </span>
+          </div>
+          <button class="cta" type="button">Entrar</button>
+          <p class="olvide"><a href="#">No recuerdo mi contraseña</a></p>
+        </div>
+        <p class="pie">¿Primera vez aquí? <a href="#">Crea tu cuenta</a></p>
+      </div>
+    </div>
+
+    <p class="veredicto si"><b>Contraste · pasa</b>
+      <span>Todo el texto cae sobre blanco opaco: 12,9:1 el campo, 5,7:1 la etiqueta, 4,6:1 el botón. No depende de la foto.</span></p>
+  </figure>
+
+  <!-- ==================== B ==================== -->
+  <figure id="b">
+    <figcaption>
+      <b>B · Cristal sobre foto oscurecida</b>
+      <span class="que">Lo que preguntabas. Para que el cristal se lea hay que bajar la foto al 42 % de brillo y ponerle un velo encima.</span>
+    </figcaption>
+
+    <div class="telefono">
+      <div class="fondo"><img src="puerta-b-banco.jpg" alt="" decoding="async"></div>
+
+      <div class="capa">
+        <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+
+        <div class="vidrio">
+          <div class="forma">
+            <div>
+              <h2>¡Hola de nuevo!</h2>
+              <p class="lema">Entra para gestionar tus consultas.</p>
+            </div>
+            <div class="grupo">
+              <label for="b1">Correo electrónico</label>
+              <span class="control"><input id="b1" type="email" placeholder="maria@correo.com"></span>
+            </div>
+            <div class="grupo">
+              <label for="b2">Contraseña</label>
+              <span class="control clave">
+                <input id="b2" type="password" placeholder="Tu contraseña">
+                <button class="ojo" type="button" aria-label="Mostrar la contraseña"><svg><use href="#ojo"/></svg></button>
+              </span>
+            </div>
+            <button class="cta" type="button">Entrar</button>
+            <p class="olvide"><a href="#">No recuerdo mi contraseña</a></p>
+          </div>
+        </div>
+
+        <p class="pie">¿Primera vez aquí? <a href="#">Crea tu cuenta</a></p>
+      </div>
+    </div>
+
+    <p class="veredicto no"><b>Contraste · no pasa</b>
+      <span>El texto se apoya en un desenfoque que cambia de tono según lo que tenga detrás, así que el contraste no es un número fijo: cambia al hacer scroll y con cada foto. Y la foto ya no cuenta nada — la reja de luz sobre el hormigón desaparece.</span></p>
+  </figure>
+
+  <!-- ==================== C ==================== -->
+  <figure id="c">
+    <figcaption>
+      <b>C · Cristal cálido sobre la foto tal cual</b>
+      <span class="que">El término medio. La tarjeta es cristal pero al 78 % de blanco, así que la foto se mantiene clara y el texto tiene suelo firme.</span>
+    </figcaption>
+
+    <div class="telefono">
+      <div class="fondo"><img src="puerta-b-banco.jpg" alt="" decoding="async"></div>
+
+      <div class="capa">
+        <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+
+        <div class="vidrio">
+          <div class="forma">
+            <div>
+              <h2>¡Hola de nuevo!</h2>
+              <p class="lema">Entra para gestionar tus consultas.</p>
+            </div>
+            <div class="grupo">
+              <label for="c1">Correo electrónico</label>
+              <span class="control"><input id="c1" type="email" placeholder="maria@correo.com"></span>
+            </div>
+            <div class="grupo">
+              <label for="c2">Contraseña</label>
+              <span class="control clave">
+                <input id="c2" type="password" placeholder="Tu contraseña">
+                <button class="ojo" type="button" aria-label="Mostrar la contraseña"><svg><use href="#ojo"/></svg></button>
+              </span>
+            </div>
+            <button class="cta" type="button">Entrar</button>
+            <p class="olvide"><a href="#">No recuerdo mi contraseña</a></p>
+            <p class="pie">¿Primera vez aquí? <a href="#">Crea tu cuenta</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="veredicto regular"><b>Contraste · pasa, con una condición</b>
+      <span>Al 78 % de blanco el texto está a salvo, pero el efecto cristal casi no se nota: es una tarjeta blanca con la foto asomando por los bordes. Si la subes de opacidad deja de ser cristal, y si la bajas deja de leerse.</span></p>
+  </figure>
+
+</main>
+</body>
+</html>

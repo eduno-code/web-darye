@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa · la simetría en escritorio</title>
+<link rel="icon" href="favicon.svg">
+<style>
+:root{
+  --sup:#FFFFFF; --sup-cal:#FAF3EA; --sup-eleg:#F2E7D9;
+  --marca:#A8825F; --linea:#C6A783; --linea-f:#C6A783; --linea-int:rgba(168,130,95,.22);
+  --txt:#2E332E; --txt-suave:#5C635A;
+  --acc:#5A7060; --acc-dp:#3E4F44;
+  --r:14px; --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#EFE9E1;color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:var(--r)}
+
+.envoltorio{max-width:58rem;margin:0 auto;padding:2rem 1.25rem 4rem}
+h1{font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .4rem}
+.entrada{color:var(--txt-suave);margin:0 0 2.5rem;line-height:1.65;font-size:.92rem;max-width:44rem}
+
+.caso{margin-bottom:2.5rem}
+.caso-eti{margin:0 0 .2rem;display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap}
+.caso-eti b{font-size:1rem;font-weight:600}
+.caso-eti em{font-style:normal;font-size:.72rem;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--txt-suave)}
+.caso-eti.buena em{color:var(--acc-dp)}
+.caso-nota{margin:0 0 1rem;font-size:.85rem;color:var(--txt-suave);line-height:1.65;max-width:44rem}
+/* 800 px es la medida real de la columna de la vista (50rem). */
+.lienzo{width:800px;max-width:100%;background:#fff;border:1px solid var(--linea);
+  border-radius:18px;padding:1.75rem}
+
+.grupo{margin-bottom:2rem}
+.grupo:last-child{margin-bottom:0}
+.grupo-sep{border-top:1px solid var(--linea);padding-top:1.75rem}
+.grupo-tit{font-size:1.05rem;font-weight:600;letter-spacing:-.012em;margin:0 0 1rem}
+
+/* ---------- modalidad · el control segmentado, tal cual ---------- */
+.segs{position:relative;width:min(100%,22rem);padding:4px;background:var(--sup);
+  border:1px solid var(--linea);border-radius:999px}
+.segs-in{position:relative;display:flex;gap:20px}
+.seg{position:relative;z-index:2;flex:1 1 0;display:inline-flex;align-items:center;
+  justify-content:center;gap:.5rem;padding:0 1rem;min-height:44px;border-radius:999px;
+  border:1px solid transparent;background:none;font:inherit;font-size:.9rem;
+  font-weight:500;color:var(--txt-suave);cursor:pointer;white-space:nowrap}
+.seg svg{width:18px;height:18px;flex:none}
+.seg-ind{position:absolute;z-index:1;top:0;bottom:0;left:0;width:calc(50% - 10px);
+  border-radius:999px;border:2.5px solid var(--acc)}
+.seg-copia{position:absolute;z-index:3;inset:0;display:flex;gap:20px;
+  pointer-events:none;color:var(--acc);clip-path:inset(0 50% 0 0)}
+.seg-copia .seg{color:inherit}
+.seg-hilo{position:absolute;z-index:0;left:50%;top:9px;bottom:9px;width:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(to bottom,transparent 0%,var(--linea) 35%,
+    var(--linea) 65%,transparent 100%)}
+
+/* ---------- A · la barra de una pieza (lo que hay hoy) ---------- */
+.barra4{display:flex;background:var(--sup);border:1px solid var(--linea);
+  border-radius:var(--r);overflow:hidden}
+.barra4 .celda{flex:1 1 0;min-width:0;border-left:1px solid var(--linea-int)}
+.barra4 .celda:first-child{border-left:0}
+
+/* ---------- B · cuatro celdas sueltas ---------- */
+.rejilla4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem}
+.rejilla4 .celda{background:var(--sup);border:1px solid var(--linea);
+  border-radius:var(--r);overflow:hidden}
+
+/* la celda, comun a las dos */
+.celda{position:relative;display:flex;align-items:center;gap:.9rem;width:100%;
+  min-height:72px;padding:1rem 1.1rem;border:0;background:transparent;font:inherit;
+  color:var(--txt);text-align:left;cursor:pointer;transition:background var(--paso)}
+.celda:hover{background:var(--sup-cal)}
+.celda[aria-checked="true"]{background:var(--sup-eleg)}
+.celda[aria-checked="true"]::before{content:"";position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--acc)}
+.celda svg{width:20px;height:20px;flex:none;color:var(--txt-suave)}
+.celda[aria-checked="true"] svg{color:var(--acc-dp)}
+.celda-nom{font-weight:500;font-size:.94rem;line-height:1.35}
+.celda[aria-checked="true"] .celda-nom{font-weight:600}
+
+/* ---------- C · la modalidad tambien en cajas ---------- */
+.rejilla2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.1rem;
+  max-width:36rem}
+.rejilla2 .celda{background:var(--sup);border:1px solid var(--linea);
+  border-radius:var(--r);overflow:hidden;justify-content:center;min-height:56px}
+
+/* ---------- consultas ---------- */
+.card{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);text-align:left}
+.card[aria-checked="true"]{border:1.5px solid var(--linea-f);background:var(--sup-eleg)}
+.circ{flex:none;border-radius:50%;border:1.5px solid var(--acc);background:var(--acc);
+  display:grid;place-items:center;color:#fff}
+.card[aria-checked="true"] .circ{border-width:2.5px;border-color:var(--acc);
+  background:#fff;color:var(--acc)}
+.planes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}
+.planes .card{display:flex;flex-direction:column;overflow:hidden;padding:0}
+.planes .card.sugerida{border-color:var(--marca)}
+.plan-cab{display:flex;align-items:center;gap:.6rem;padding:1.2rem 0 .8rem;margin:0 1.05rem;
+  border-bottom:1px solid var(--linea-int)}
+.card[aria-checked="true"] .plan-cab{border-bottom-color:var(--linea-f)}
+.plan-cifra{width:34px;height:34px;font-size:1.05rem;font-weight:600;line-height:1;
+  font-variant-numeric:tabular-nums}
+.plan-nom{font-weight:600;font-size:.94rem;line-height:1.3;letter-spacing:-.01em}
+.plan-eti{margin-left:auto;flex:none;font-size:.74rem;font-weight:500;color:var(--acc-dp);
+  white-space:nowrap;display:inline-flex;align-items:center;gap:.35rem}
+.plan-eti::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--acc);flex:none}
+.plan-cuerpo{flex:1;display:flex;align-items:center;gap:.45rem;padding:.9rem 1.05rem;
+  font-size:.8rem;color:var(--txt-suave);line-height:1.55}
+.plan-cuerpo svg{width:15px;height:15px;flex:none;color:var(--acc)}
+.plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem .6rem;flex-wrap:wrap;padding:.9rem 1.05rem 1.2rem;margin-top:auto}
+.plan-pie::before{content:"";position:absolute;top:0;left:1.05rem;right:1.05rem;height:1px;
+  background:var(--linea-int)}
+.card[aria-checked="true"] .plan-pie::before{background:var(--linea-f)}
+.plan-precio{font-size:1.8rem;font-weight:600;letter-spacing:-.035em;line-height:1;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.plan-ahorro{display:inline-flex;align-items:center;transform:translateY(1.5px);
+  padding:.28rem .5rem;border-radius:7px;background:var(--acc-dp);color:#fff;
+  font-size:.72rem;font-weight:500;line-height:1.3;white-space:nowrap}
+
+.cierre{margin:3rem 0 0;max-width:44rem}
+.cierre h2{font-size:1.05rem;font-weight:600;margin:0 0 1rem;letter-spacing:-.01em}
+.nota{background:#fff;border:1px solid var(--linea);border-radius:var(--r);
+  padding:1rem 1.2rem;margin-bottom:.85rem}
+.nota b{display:block;font-size:.92rem;margin-bottom:.3rem}
+.nota p{margin:0;font-size:.85rem;color:var(--txt-suave);line-height:1.65}
+</style>
+</head>
+<body>
+<div class="envoltorio">
+
+  <header>
+    <h1>La simetría en escritorio</h1>
+    <p class="entrada">Tienes razón: hoy se encadenan tres formas distintas — una píldora corta,
+      una barra larga de una pieza y tres cajas. Los tres casos van a 800&nbsp;px, que es la medida
+      real de la columna de la vista. En móvil no cambia nada: ahí la lista se queda como está.</p>
+  </header>
+
+  <section class="caso">
+    <p class="caso-eti"><b>A · Lo que hay hoy</b> <em>píldora, barra, cajas</em></p>
+    <p class="caso-nota">La barra de los motivos es una sola pieza de 800&nbsp;px que no se parece
+      ni a la píldora de arriba ni a las tarjetas de abajo. Es el eslabón que rompe el ritmo.</p>
+    <div class="lienzo" id="lA"></div>
+  </section>
+
+  <section class="caso">
+    <p class="caso-eti buena"><b>B · Los motivos, en cuatro cajas</b> <em>mi recomendación</em></p>
+    <p class="caso-nota">La barra se separa en cuatro celdas con el mismo radio, el mismo borde y
+      la misma separación que las tarjetas de consulta. Los dos bloques de elegir riman entre sí, y
+      la píldora se queda como lo único distinto — que es correcto, porque es lo único que no es
+      elegir de una lista sino accionar un interruptor de dos posiciones.</p>
+    <div class="lienzo" id="lB"></div>
+  </section>
+
+  <section class="caso">
+    <p class="caso-eti"><b>C · Simetría total</b> <em>se pierde la costura</em></p>
+    <p class="caso-nota">La modalidad deja de ser píldora y pasa a dos cajas iguales. Todo queda en
+      la misma familia: 2, 4 y 3 cajas del mismo radio. A cambio desaparecen el control segmentado,
+      la costura de hilo y el barrido de color, y volvemos a dos tarjetas para una decisión que es
+      un interruptor.</p>
+    <div class="lienzo" id="lC"></div>
+  </section>
+
+  <section class="cierre">
+    <h2>Por qué la B y no la C</h2>
+
+    <div class="nota">
+      <b>La asimetría que molesta es la del medio, no la de arriba</b>
+      <p>Una píldora pequeña seguida de dos bloques de cajas se lee como «un interruptor y luego dos
+         elecciones». Lo que hoy no encaja es la barra de una pieza: es el único objeto de la página
+         que abarca los 800&nbsp;px sin dividirse en piezas separadas.</p>
+    </div>
+
+    <div class="nota">
+      <b>El interruptor debe parecer un interruptor</b>
+      <p>En la C, «Online» y «Presencial» vuelven a ser dos cajas del mismo aspecto que los cuatro
+         motivos, y entonces parecen cuatro-más-dos opciones del mismo tipo cuando no lo son:
+         la modalidad cambia lo que se ve debajo. Además se tira el trabajo de la costura y del
+         barrido de color, que es de lo poco de la vista que no parece plantilla.</p>
+    </div>
+
+    <div class="nota">
+      <b>Y en móvil no cambia nada</b>
+      <p>Ahí la lista de una pieza funciona porque es una columna: cuatro filas apiladas leen de
+         arriba abajo y no compiten con nada. El problema aparece solo cuando se tumba a 800&nbsp;px.
+         Es el mismo componente con dos disposiciones, que es lo normal.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function svg(d) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    video:'<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>',
+    pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+    ansiedad:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    autoestima:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    pareja:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    duelo:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>'
+  };
+
+  var SERV = [
+    {nom:'Superar la Ansiedad',      ico:I.ansiedad},
+    {nom:'Fortalecer tu Autoestima', ico:I.autoestima},
+    {nom:'Sanar en Pareja',          ico:I.pareja},
+    {nom:'Acompañar un Duelo',       ico:I.duelo}
+  ];
+  var PLANES = [
+    {cifra:'1', nom:'Consulta',  det:'Una cita puntual',    ico:I.reloj, precio:30,  ahorro:0},
+    {cifra:'3', nom:'Consultas', det:'A tu ritmo, 60 días', ico:I.cal,   precio:75,  ahorro:15, sugerida:true},
+    {cifra:'5', nom:'Consultas', det:'A tu ritmo, 60 días', ico:I.cal,   precio:125, ahorro:25}
+  ];
+
+  function segmentado() {
+    var uno = '<button type="button" class="seg">' + svg(I.video) + 'Online</button>' +
+              '<button type="button" class="seg">' + svg(I.pin) + 'Presencial</button>';
+    return '<div class="segs"><i class="seg-hilo" aria-hidden="true"></i>' +
+      '<div class="segs-in">' + uno + '</div>' +
+      '<i class="seg-ind" aria-hidden="true"></i>' +
+      '<div class="seg-copia" aria-hidden="true">' + uno + '</div></div>';
+  }
+
+  function modalidadCajas(g) {
+    var d = [{nom:'Online', ico:I.video}, {nom:'Presencial', ico:I.pin}];
+    var h = '<div class="rejilla2" role="radiogroup" aria-label="Modalidad">';
+    d.forEach(function (o, i) {
+      h += '<button type="button" class="celda" role="radio" aria-checked="' + (i === 0) + '"' +
+        ' tabindex="' + (i === 0 ? 0 : -1) + '" data-g="' + g + '">' + svg(o.ico) +
+        '<span class="celda-nom">' + o.nom + '</span></button>';
+    });
+    return h + '</div>';
+  }
+
+  function motivos(g, envase) {
+    var h = '<div class="' + envase + '" role="radiogroup" aria-label="Motivo">';
+    SERV.forEach(function (s, i) {
+      h += '<button type="button" class="celda" role="radio" aria-checked="' + (i === 0) + '"' +
+        ' tabindex="' + (i === 0 ? 0 : -1) + '" data-g="' + g + '">' + svg(s.ico) +
+        '<span class="celda-nom">' + s.nom + '</span></button>';
+    });
+    return h + '</div>';
+  }
+
+  function planes(g) {
+    var h = '<div class="planes" role="radiogroup" aria-label="Cuántas consultas">';
+    PLANES.forEach(function (p, i) {
+      h += '<button type="button" class="card' + (p.sugerida ? ' sugerida' : '') + '" role="radio"' +
+        ' aria-checked="' + (i === 1) + '" tabindex="' + (i === 1 ? 0 : -1) + '" data-g="' + g + '">' +
+        '<span class="plan-cab"><span class="circ plan-cifra">' + p.cifra + '</span>' +
+        '<span class="plan-nom">' + p.nom + '</span>' +
+        (p.sugerida ? '<span class="plan-eti">Sugerida</span>' : '') + '</span>' +
+        '<span class="plan-cuerpo">' + svg(p.ico) + p.det + '</span>' +
+        '<span class="plan-pie"><span class="plan-precio">' + p.precio + ' $</span>' +
+        (p.ahorro ? '<span class="plan-ahorro">Ahorras ' + p.ahorro + ' $</span>' : '') +
+        '</span></button>';
+    });
+    return h + '</div>';
+  }
+
+  function vista(g, arriba, envase) {
+    return '<section class="grupo"><h2 class="grupo-tit">¿Cómo prefieres la consulta?</h2>' +
+             arriba + '</section>' +
+           '<section class="grupo grupo-sep"><h2 class="grupo-tit">¿En qué quieres trabajar?</h2>' +
+             motivos(g + 's', envase) + '</section>' +
+           '<section class="grupo grupo-sep"><h2 class="grupo-tit">¿Una consulta o un proceso?</h2>' +
+             planes(g + 'p') + '</section>';
+  }
+
+  document.getElementById('lA').innerHTML = vista('a', segmentado(), 'barra4');
+  document.getElementById('lB').innerHTML = vista('b', segmentado(), 'rejilla4');
+  document.getElementById('lC').innerHTML = vista('c', modalidadCajas('cm'), 'rejilla4');
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-g]');
+    if (!b) return;
+    var hermanos = document.querySelectorAll('[data-g="' + b.dataset.g + '"]');
+    [].forEach.call(hermanos, function (h) {
+      var yo = h === b;
+      h.setAttribute('aria-checked', String(yo));
+      h.tabIndex = yo ? 0 : -1;
+    });
+  });
+})();
+</script>
+</body>
+</html>

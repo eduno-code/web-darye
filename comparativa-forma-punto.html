@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La forma de la marca · el círculo es el intruso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     LA FORMA DE LA MARCA DE SELECCION.
+
+     EL HALLAZGO, medido sobre paso1.css: en toda la hoja hay exactamente DOS
+     `border-radius:50%`, y los dos son el punto del radio. Todo lo demas es
+     8 px, 14 px o pildora. El circulo es la unica forma circular de la
+     pantalla.
+
+     Por eso el punto se siente ajeno, y por eso ni aclararlo ni afinarlo ni
+     encogerlo convencian: ninguna de esas toca la causa. No pesa demasiado —
+     no pertenece al sistema de formas.
+
+     Aqui la marca pasa a ser un cuadrado de esquina redondeada, que es el
+     vocabulario que ya usa todo lo demas: el eco a 8, las filas a 14, las
+     pestanas a 14, la tarjeta a 18, el boton del mapa a 8.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A; --aro:#A87453;
+  --acc:#5A7060; --acc-dp:#4A5E50; --acc-sv:#E8EDE6;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-nota:.79rem; --t-aux:.88rem; --t-base:1rem; --t-rotulo:1.05rem;
+  --r-chico:8px; --r-medio:14px; --r-pill:999px;
+  --canto:2px;
+  --paso:180ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--suelo);color:var(--txt);
+  font-family:var(--texto);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+header{padding:1.5rem 2rem 1rem}
+h1{margin:0 0 .3rem;font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+header p{margin:0;max-width:64rem;font-size:var(--t-aux);color:var(--txt-suave)}
+header b{color:var(--txt)}
+
+.caso{
+  margin:1.25rem 2rem;padding:1.4rem 1.5rem 1.6rem;
+  background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+.caso h2{margin:0 0 .2rem;font-size:1rem;font-weight:600}
+.caso .dice{margin:0 0 1.2rem;max-width:60rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.caso .dice b{color:var(--txt)}
+
+.par{display:flex;flex-wrap:wrap;gap:3rem}
+.lado{width:370px}
+.lado > h3{
+  margin:0 0 .7rem;font-size:var(--t-nota);font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--txt-suave);
+}
+.rotulo{
+  display:block;margin:1.4rem 0 .5rem;
+  font-family:var(--display);font-size:var(--t-rotulo);font-weight:600;color:var(--marca);
+}
+.rotulo:first-child{margin-top:0}
+.opciones{display:flex;flex-direction:column;gap:.3rem}
+
+/* ---------- la fila ---------- */
+.op{
+  display:flex;align-items:center;gap:.85rem;
+  min-height:46px;padding:0 .6rem;margin:0 -.6rem;
+  border-radius:var(--r-medio);
+  cursor:pointer;font-size:var(--t-base);
+  transition:background var(--paso), box-shadow var(--paso);
+}
+.op input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.op:hover{background:var(--fila-viva)}
+.op:has(input:checked){background:var(--fila-viva);font-weight:600;box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+.op:has(input:focus-visible){outline:2px solid var(--acc);outline-offset:1px}
+
+.marca{
+  flex:none;box-sizing:border-box;
+  transition:border-color var(--paso), background var(--paso), box-shadow var(--paso);
+}
+
+/* ============ HOY · el circulo ============ */
+.hoy .marca{
+  width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--marca-cl);
+}
+.hoy .op:has(input:checked) .marca{
+  border-color:var(--marca);background:var(--marca);
+  box-shadow:inset 0 0 0 3.5px var(--blanco);
+}
+
+/* ============ A · el cuadrado, con hueco dentro ============
+   16 px con radio de 5: la misma familia que el eco a 8 y las filas a 14,
+   escalada al tamano de la marca. Un radio de 5 sobre 16 px guarda la misma
+   proporcion que 8 sobre 24. */
+.una .marca{
+  width:16px;height:16px;border-radius:5px;
+  border:1px solid var(--aro);
+}
+.una .op:has(input:checked) .marca{
+  border-color:var(--acc);background:var(--acc);
+  box-shadow:inset 0 0 0 3px var(--blanco);
+}
+
+/* ============ B · el cuadrado macizo ============
+   Al elegir se llena entero y el aro desaparece: la marca deja de tener
+   contorno de control y pasa a ser solo una forma llena. */
+.dos .marca{
+  width:16px;height:16px;border-radius:5px;
+  border:1px solid var(--aro);
+}
+.dos .op:has(input:checked) .marca{
+  border-color:var(--acc);background:var(--acc);
+  box-shadow:none;
+}
+
+/* ---------- los planes ---------- */
+.planes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin:0 -.8rem}
+.plan{
+  position:relative;display:grid;grid-template-columns:18px auto 1fr;
+  align-items:baseline;gap:.2rem .8rem;
+  padding:.85rem .8rem;border-radius:var(--r-medio);
+  cursor:pointer;transition:background var(--paso), box-shadow var(--paso);
+}
+.plan input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.plan:hover{background:var(--fila-viva)}
+.plan:has(input:checked){background:var(--fila-viva);box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+.plan .marca{grid-column:1;grid-row:1;align-self:center}
+.plan-nom{grid-column:2 / -1;grid-row:1;font-size:var(--t-base)}
+.plan:has(input:checked) .plan-nom{font-weight:600}
+.plan-precio{grid-column:2;grid-row:2;font-size:var(--t-base);color:var(--txt-suave);white-space:nowrap}
+.plan:has(input:checked) .plan-precio{color:var(--txt)}
+.plan-ahorro:not(:empty){
+  grid-column:3;grid-row:2;justify-self:start;margin-left:.35rem;
+  padding:.18rem .65rem;border-radius:var(--r-pill);background:var(--acc-sv);
+  font-size:var(--t-nota);font-weight:500;color:var(--acc-dp);white-space:nowrap;
+}
+
+/* ---------- el inventario de formas ---------- */
+.formas{
+  margin:1.25rem 2rem 0;padding:1.2rem 1.5rem 1.4rem;
+  background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+.formas h2{margin:0 0 .2rem;font-size:1rem;font-weight:600}
+.formas .dice{margin:0 0 1.2rem;max-width:60rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.piezas{display:flex;flex-wrap:wrap;gap:1.6rem}
+.pieza{display:flex;flex-direction:column;align-items:center;gap:.5rem;font-size:var(--t-nota);color:var(--txt-suave)}
+.pieza b{color:var(--txt);font-weight:600}
+.muestra{
+  width:66px;height:42px;
+  background:var(--fila-viva);
+  box-shadow:inset 0 0 0 1px var(--linea);
+}
+.m-8{border-radius:8px}
+.m-14{border-radius:14px}
+.m-18{border-radius:18px}
+.m-pill{border-radius:999px}
+.m-circ{width:42px;border-radius:50%;background:var(--marca);box-shadow:inset 0 0 0 5px var(--blanco)}
+.pieza.intruso b{color:#8C2F2F}
+
+.cierre{padding:1.25rem 2rem 4rem;max-width:64rem;font-size:var(--t-aux);line-height:1.7;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+.cierre p{margin:0 0 .9rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>La forma de la marca</h1>
+  <p>En toda la hoja hay <b>exactamente dos <code>border-radius:50%</code></b>, y los dos son el punto del radio. <b>El círculo es la única forma circular de la pantalla</b> — por eso se siente ajeno, y por eso ni aclararlo ni encogerlo lo arreglaban.</p>
+</header>
+
+<section class="formas">
+  <h2>El sistema de formas que ya existe</h2>
+  <p class="dice">Todas las piezas de la vista, con su radio. Mira cuál no encaja.</p>
+  <div class="piezas">
+    <div class="pieza"><span class="muestra m-8"></span><span>el eco, el botón del mapa<br><b>8 px</b></span></div>
+    <div class="pieza"><span class="muestra m-14"></span><span>las filas, los planes, las pestañas<br><b>14 px</b></span></div>
+    <div class="pieza"><span class="muestra m-18"></span><span>la tarjeta<br><b>18 px</b></span></div>
+    <div class="pieza"><span class="muestra m-pill"></span><span>el ahorro, «Ver horario»<br><b>píldora</b></span></div>
+    <div class="pieza intruso"><span class="muestra m-circ"></span><span>el punto del radio<br><b>50 % · el intruso</b></span></div>
+  </div>
+</section>
+
+<div id="zona"></div>
+
+<div class="cierre">
+  <p><b>Mi apuesta es la A.</b> El cuadrado de 16&nbsp;px con radio 5 entra en la familia que ya existe —5 sobre 16 guarda la misma proporción que 8 sobre 24— y conserva el hueco blanco dentro, que es lo que hace que se lea como «marcado» y no como un simple bloque de color. Se va el aire de formulario sin perder ni la señal ni el aviso de que la fila es elegible, que es donde se caían todas las opciones anteriores.</p>
+
+  <p><b>El riesgo que tienes que saber, y es real:</b> en la web un cuadrado suele significar «elige varias» y un círculo «elige una». Aquí el control sigue siendo un <code>radio</code> nativo, así que el teclado y el lector de pantalla lo anuncian bien igual; el riesgo es solo para quien mira con el ratón. Lo que lo desactiva es el comportamiento: al elegir otra, la anterior se apaga sola, y eso se aprende en el primer clic.</p>
+
+  <p>La <b>B</b> llena el cuadrado entero al elegir y el aro desaparece. Es más callada todavía y la marca deja de tener contorno de control — pero pierde el hueco blanco, que es justo lo que decía «esto está marcado» en vez de «esto es un cuadradito de color».</p>
+</div>
+
+<script>
+(function () {
+  var SERV = [['ansiedad','Superar la Ansiedad'],['autoestima','Fortalecer tu Autoestima'],
+              ['pareja','Sanar en Pareja'],['duelo','Acompañar un Duelo']];
+
+  function fila(grupo, v, n, elegido) {
+    return '<label class="op">' +
+      '<input type="radio" name="' + grupo + '" value="' + v + '"' + (elegido ? ' checked' : '') + '>' +
+      '<span class="marca" aria-hidden="true"></span>' +
+      '<span>' + n + '</span></label>';
+  }
+
+  function plan(grupo, v, n, precio, ahorro, elegido) {
+    return '<label class="plan">' +
+      '<input type="radio" name="' + grupo + '" value="' + v + '"' + (elegido ? ' checked' : '') + '>' +
+      '<span class="marca" aria-hidden="true"></span>' +
+      '<span class="plan-nom">' + n + '</span>' +
+      '<span class="plan-precio">' + precio + ' $</span>' +
+      '<span class="plan-ahorro">' + (ahorro ? 'Ahorras ' + ahorro + ' $' : '') + '</span>' +
+      '</label>';
+  }
+
+  function grupo(id, elegido) {
+    var s = '<span class="rotulo">Qué quieres trabajar</span><div class="opciones">';
+    SERV.forEach(function (x, i) { s += fila(id, x[0], x[1], elegido && i === 0); });
+    s += '</div><span class="rotulo">Consulta o paquete</span><div class="planes">' +
+      plan(id + '-p', '1', '1 Consulta', '30', 0, false) +
+      plan(id + '-p', '3', '3 Consultas', '75', '15', elegido) +
+      '</div>';
+    return s;
+  }
+
+  var CASOS = [
+    { clase:'hoy', titulo:'Como está ahora · el círculo',
+      dice:'La única forma circular de la pantalla, en una hoja donde todo lo demás es rectángulo redondeado.' },
+
+    { clase:'una', titulo:'A · el cuadrado, con hueco dentro',
+      dice:'16&nbsp;px con radio 5, la misma familia que el resto escalada al tamaño de la marca. Al elegir, relleno salvia con el hueco blanco dentro: <b>se lee como marcado</b>.' },
+
+    { clase:'dos', titulo:'B · el cuadrado macizo',
+      dice:'Igual, pero al elegir se llena entero y el aro desaparece. Más callado; a cambio pierde el hueco que decía «marcado».' }
+  ];
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c, i) {
+    return '<section class="caso ' + c.clase + '">' +
+      '<h2>' + c.titulo + '</h2>' +
+      '<p class="dice">' + c.dice + '</p>' +
+      '<div class="par">' +
+        '<div class="lado"><h3>Con algo elegido</h3>' + grupo('a' + i, true) + '</div>' +
+        '<div class="lado"><h3>Sin nada elegido</h3>' + grupo('b' + i, false) + '</div>' +
+      '</div>' +
+    '</section>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

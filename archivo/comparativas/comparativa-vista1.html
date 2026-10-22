@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa — ¿En qué quieres trabajar?</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="reservar/reservar.css">
+<style>
+  body{background:var(--papel);font-family:var(--font-display);margin:0;padding:2rem 1.25rem 4rem}
+  .cab{max-width:80rem;margin:0 auto 1.75rem}
+  .cab h1{font-size:1.45rem;margin:0 0 .4rem}
+  .cab p{color:var(--text-soft);margin:0;max-width:48rem;line-height:1.65}
+  .cab code{background:#fff;border:1px solid var(--linea);border-radius:6px;padding:.1rem .35rem;font-size:.85em}
+
+  .seccion{max-width:80rem;margin:0 auto 2.5rem}
+  .seccion > h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft);
+    margin:0 0 .9rem;padding-bottom:.5rem;border-bottom:1px solid var(--linea)}
+  .rejilla{display:grid;gap:1.25rem;grid-template-columns:1fr}
+  @media(min-width:900px){.rejilla{grid-template-columns:repeat(3,1fr)}}
+  .col{background:#fff;border:1px solid var(--linea);border-radius:18px;padding:1.25rem;display:flex;flex-direction:column}
+  .col.gana{border-color:var(--primary-deep);box-shadow:var(--elev-2)}
+  .col-cab{padding-bottom:.7rem;margin-bottom:1.1rem;border-bottom:1px solid var(--linea)}
+  .col-cab h3{font-size:1rem;margin:.15rem 0 0}
+  .col-cab .et{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-soft);font-weight:700}
+  .col.gana .col-cab .et{color:var(--primary-deep)}
+  .nota{font-size:.83rem;color:var(--text-soft);line-height:1.6;margin:1.1rem 0 0}
+  .medida{margin-top:auto;padding-top:.9rem;border-top:1px dashed var(--linea);font-size:.78rem;color:var(--text-soft)}
+  .medida b{color:var(--primary-deep);font-variant-numeric:tabular-nums}
+
+  /* marco de móvil real, 390 px */
+  .moviles{display:flex;gap:1.5rem;flex-wrap:wrap}
+  .movil{width:390px;max-width:100%;background:#fff;border:1px solid var(--linea-fuerte);border-radius:22px;
+    padding:1.1rem;box-shadow:var(--elev-2)}
+  .movil-et{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-soft);
+    font-weight:700;margin:0 0 .8rem}
+
+  /* ---- lista vertical ---- */
+  .v-lista{display:flex;flex-direction:column;gap:.5rem}
+  .v-fila{display:flex;align-items:center;width:100%;padding:.85rem 1rem;background:#fff;
+    border:1px solid var(--linea);border-radius:14px;cursor:pointer;text-align:left;font:inherit;
+    font-weight:600;font-size:.94rem;line-height:1.3;transition:border-color 160ms,background 160ms}
+  .v-fila:hover{border-color:var(--border-strong)}
+  .v-fila[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-1)}
+
+  /* ---- rejilla de tarjetas ---- */
+  .v-rejilla{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  .v-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
+    min-height:88px;padding:1rem .7rem;background:#fff;border:1px solid var(--linea);border-radius:14px;
+    cursor:pointer;font:inherit;text-align:center;transition:border-color 160ms,background 160ms}
+  .v-card:hover{border-color:var(--border-strong)}
+  .v-card[aria-checked="true"]{border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-1)}
+  .v-card svg{width:23px;height:23px;color:var(--primary-deep);flex:none}
+  .v-card-n{font-weight:600;font-size:.88rem;line-height:1.3}
+  .v-card-solo{min-height:74px}
+</style>
+</head>
+<body>
+
+<div class="cab">
+  <h1>¿En qué quieres trabajar? — sin duración ni precio</h1>
+  <p>Fuera el <code>1 h · 30 $</code>: eso ya sale en el bloque de sesiones que va justo debajo.
+     Con eso quitado, cada opción se queda solo con su nombre, que es lo único que la distingue.
+     La decisión que queda es <b>con icono o sin icono</b>.</p>
+</div>
+
+<div class="seccion">
+  <h2>Escritorio</h2>
+  <div class="rejilla">
+
+    <div class="col gana">
+      <div class="col-cab"><span class="et">Opción C1 · recomendada</span><h3>Tarjetas con icono</h3></div>
+      <div class="wz-grupo" id="bC1">
+        <h2 class="wz-grupo-titulo">¿En qué quieres trabajar?</h2>
+        <div class="v-rejilla" role="radiogroup">
+          <button type="button" class="v-card" role="radio" aria-checked="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/></svg>
+            <span class="v-card-n">Superar la Ansiedad</span>
+          </button>
+          <button type="button" class="v-card" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/></svg>
+            <span class="v-card-n">Fortalecer tu Autoestima</span>
+          </button>
+          <button type="button" class="v-card" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/></svg>
+            <span class="v-card-n">Sanar en Pareja</span>
+          </button>
+          <button type="button" class="v-card" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/></svg>
+            <span class="v-card-n">Acompañar un Duelo</span>
+          </button>
+        </div>
+      </div>
+      <p class="nota">El icono da calidez y hace que cada tarjeta se reconozca de un
+         vistazo sin leerla entera. Trazo fino y del verde de la página, para que
+         acompañe y no grite.</p>
+      <p class="medida" data-mide="bC1">Alto: <b>—</b></p>
+    </div>
+
+    <div class="col">
+      <div class="col-cab"><span class="et">Opción C2</span><h3>Tarjetas sin icono</h3></div>
+      <div class="wz-grupo" id="bC2">
+        <h2 class="wz-grupo-titulo">¿En qué quieres trabajar?</h2>
+        <div class="v-rejilla" role="radiogroup">
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="true"><span class="v-card-n">Superar la Ansiedad</span></button>
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="false"><span class="v-card-n">Fortalecer tu Autoestima</span></button>
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="false"><span class="v-card-n">Sanar en Pareja</span></button>
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="false"><span class="v-card-n">Acompañar un Duelo</span></button>
+        </div>
+      </div>
+      <p class="nota">Más sobrio y ocupa menos. Pero cuatro cajas con solo texto dentro
+         se parecen mucho entre sí, y el ojo tiene que leer las cuatro para elegir.</p>
+      <p class="medida" data-mide="bC2">Alto: <b>—</b></p>
+    </div>
+
+    <div class="col">
+      <div class="col-cab"><span class="et">Opción B · descartada</span><h3>Lista vertical</h3></div>
+      <div class="wz-grupo" id="bB">
+        <h2 class="wz-grupo-titulo">¿En qué quieres trabajar?</h2>
+        <div class="v-lista" role="radiogroup">
+          <button type="button" class="v-fila" role="radio" aria-checked="true">Superar la Ansiedad</button>
+          <button type="button" class="v-fila" role="radio" aria-checked="false">Fortalecer tu Autoestima</button>
+          <button type="button" class="v-fila" role="radio" aria-checked="false">Sanar en Pareja</button>
+          <button type="button" class="v-fila" role="radio" aria-checked="false">Acompañar un Duelo</button>
+        </div>
+      </div>
+      <p class="nota">Sin el precio a la derecha la lista pierde su ventaja: eran las
+         cifras alineadas lo que la hacía fácil de comparar. Ahora es una columna de
+         cuatro barras y ocupa más alto que la rejilla.</p>
+      <p class="medida" data-mide="bB">Alto: <b>—</b></p>
+    </div>
+
+  </div>
+</div>
+
+<div class="seccion">
+  <h2>Móvil real · 390 px — que es donde se va a usar</h2>
+  <div class="moviles">
+    <div class="movil">
+      <p class="movil-et">C1 · con icono</p>
+      <div class="wz-grupo" id="mC1">
+        <h2 class="wz-grupo-titulo">¿En qué quieres trabajar?</h2>
+        <div class="v-rejilla" role="radiogroup">
+          <button type="button" class="v-card" role="radio" aria-checked="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/></svg>
+            <span class="v-card-n">Superar la Ansiedad</span>
+          </button>
+          <button type="button" class="v-card" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/></svg>
+            <span class="v-card-n">Fortalecer tu Autoestima</span>
+          </button>
+          <button type="button" class="v-card" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/></svg>
+            <span class="v-card-n">Sanar en Pareja</span>
+          </button>
+          <button type="button" class="v-card" role="radio" aria-checked="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/></svg>
+            <span class="v-card-n">Acompañar un Duelo</span>
+          </button>
+        </div>
+      </div>
+      <p class="medida" data-mide="mC1">Alto: <b>—</b></p>
+    </div>
+
+    <div class="movil">
+      <p class="movil-et">C2 · sin icono</p>
+      <div class="wz-grupo" id="mC2">
+        <h2 class="wz-grupo-titulo">¿En qué quieres trabajar?</h2>
+        <div class="v-rejilla" role="radiogroup">
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="true"><span class="v-card-n">Superar la Ansiedad</span></button>
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="false"><span class="v-card-n">Fortalecer tu Autoestima</span></button>
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="false"><span class="v-card-n">Sanar en Pareja</span></button>
+          <button type="button" class="v-card v-card-solo" role="radio" aria-checked="false"><span class="v-card-n">Acompañar un Duelo</span></button>
+        </div>
+      </div>
+      <p class="medida" data-mide="mC2">Alto: <b>—</b></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-mide]').forEach(function (p) {
+    var el = document.getElementById(p.dataset.mide);
+    p.querySelector('b').textContent = Math.round(el.getBoundingClientRect().height) + ' px';
+  });
+  document.querySelectorAll('[role="radiogroup"]').forEach(function (g) {
+    g.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[role="radio"]');
+      if (!b) return;
+      g.querySelectorAll('[role="radio"]').forEach(function (o) { o.setAttribute('aria-checked', String(o === b)); });
+    });
+  });
+</script>
+</body>
+</html>

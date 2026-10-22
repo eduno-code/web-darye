@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel · A o B</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:only light;
+  --tinta:#2C3E50; --suave:#55697A;
+  --fondo:#EFEAE3; --carta:#FFFFFF;
+  --linea:rgba(166,123,91,.28);
+  --marca:#8C6246; --marca-dk:#6E4C36;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--fondo);color:var(--tinta);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+header{
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  padding:.9rem 1.25rem;
+  background:rgba(239,234,227,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--linea);
+}
+h1{margin:0;font-size:.95rem;font-weight:600;letter-spacing:.01em}
+h1 small{display:block;font-weight:400;font-size:.78rem;color:var(--suave)}
+
+.grupo{display:flex;gap:.3rem;background:#E4DDD3;padding:.25rem;border-radius:999px}
+.grupo button{
+  min-height:36px;padding:0 .95rem;border:0;border-radius:999px;
+  background:none;font:inherit;font-size:.83rem;color:var(--suave);cursor:pointer;
+}
+.grupo button[aria-pressed="true"]{background:var(--carta);color:var(--marca-dk);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+main{display:flex;gap:1.25rem;align-items:flex-start;padding:1.25rem;overflow-x:auto}
+.lado{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:.6rem}
+body[data-lado="a"] .lado[data-cual="b"],
+body[data-lado="b"] .lado[data-cual="a"]{display:none}
+
+.etq{
+  display:flex;align-items:baseline;gap:.55rem;
+  font-size:.82rem;color:var(--suave);padding-left:.15rem;
+}
+.etq b{font-size:.95rem;color:var(--tinta)}
+
+.marco{
+  background:var(--carta);border:1px solid var(--linea);border-radius:14px;
+  overflow:hidden;box-shadow:0 2px 10px -6px rgba(46,42,36,.35);
+}
+/* Los dos marcos se centran cuando estan en modo movil, que es mucho mas
+   estrecho que la columna que les toca. */
+body[data-disp="movil"] .marco{margin:0 auto;width:392px;max-width:100%}
+
+iframe{display:block;border:0;width:100%;background:#FDFAF7}
+/* zoom y no transform:scale: escala tambien la caja, asi no hay que
+   compensar el hueco que dejaria el elemento a su tamano original. */
+body[data-disp="escritorio"] iframe{width:1180px;height:820px;zoom:var(--z,.52)}
+body[data-disp="movil"] iframe{width:390px;height:800px}
+
+.nota{
+  margin:0;padding:0 1.25rem 2rem;max-width:70ch;
+  font-size:.86rem;line-height:1.65;color:var(--suave);
+}
+.nota b{color:var(--tinta)}
+</style>
+</head>
+<body data-disp="escritorio" data-lado="dos">
+
+<header>
+  <h1>El panel del paciente<small>Lo único que cambia entre A y B es el menú</small></h1>
+
+  <div class="grupo" role="group" aria-label="Dispositivo">
+    <button type="button" data-disp="escritorio" aria-pressed="true">Escritorio</button>
+    <button type="button" data-disp="movil" aria-pressed="false">Móvil</button>
+  </div>
+
+  <div class="grupo" role="group" aria-label="Dirección">
+    <button type="button" data-lado="dos" aria-pressed="true">Las dos</button>
+    <button type="button" data-lado="a" aria-pressed="false">Solo A</button>
+    <button type="button" data-lado="b" aria-pressed="false">Solo B</button>
+  </div>
+</header>
+
+<main>
+  <div class="lado" data-cual="a">
+    <p class="etq"><b>A · Menú sólido</b> marrón con celosía, como el panel de entrar</p>
+    <div class="marco"><iframe title="Dirección A" src="lienzo-panel/panel.html?dir=a"></iframe></div>
+  </div>
+
+  <div class="lado" data-cual="b">
+    <p class="etq"><b>B · Menú discreto</b> rail sobre crema, el color solo en lo pulsable</p>
+    <div class="marco"><iframe title="Dirección B" src="lienzo-panel/panel.html?dir=b"></iframe></div>
+  </div>
+</main>
+
+<p class="nota">
+  <b>En móvil las dos se ven igual</b>, y es la respuesta correcta: ahí no hay
+  menú lateral que decidir. La cabecera de color con la hoja curva encima es el
+  mismo recurso que ya elegiste para el móvil de <b>entrar</b>, con la misma
+  curva exacta, así que entrar en la cuenta y estar dentro usan la misma forma.
+</p>
+
+<script>
+(function(){
+  var b = document.body;
+
+  /* El zoom se calcula para que un escritorio de 1180px quepa en la columna
+     que le toca. Se recalcula al cambiar de modo y al mover la ventana. */
+  function ajustar(){
+    if (b.dataset.disp !== 'escritorio') return;
+    var lados = b.dataset.lado === 'dos' ? 2 : 1;
+    var hueco = 1.25 * 16 * (lados + 1);          // el padding y el gap
+    var ancho = (document.documentElement.clientWidth - hueco) / lados;
+    b.style.setProperty('--z', Math.min(1, Math.max(.3, ancho / 1180)).toFixed(3));
+  }
+
+  document.querySelectorAll('.grupo').forEach(function (g) {
+    g.addEventListener('click', function (ev) {
+      var bt = ev.target.closest('button'); if (!bt) return;
+      var clave = bt.dataset.disp ? 'disp' : 'lado';
+      g.querySelectorAll('button').forEach(function (o) {
+        o.setAttribute('aria-pressed', String(o === bt));
+      });
+      b.dataset[clave] = bt.dataset[clave];
+      ajustar();
+    });
+  });
+
+  addEventListener('resize', ajustar);
+  ajustar();
+})();
+</script>
+</body>
+</html>

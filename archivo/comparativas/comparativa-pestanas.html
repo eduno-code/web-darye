@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La letra de las pestañas · cinco opciones</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="panel.css?v=5">
+
+<!-- ============================================================
+     CINCO LETRAS PARA LAS PESTAÑAS.
+
+     Cada opcion se dibuja CON LA SIDEBAR DE VERDAD al lado —la misma panel.css
+     que carga la pagina—, porque la pregunta de Edgar es exactamente esa: cual
+     combina con la letra del menu. Comparar las pestañas entre ellas sin el
+     menu delante no responde nada.
+
+     El proyecto solo tiene dos letras y eso es lo que hay que repartir:
+       · FRAUNCES, serif variable, la de marca. La usan el h1, los titulos y
+         "Psicconsciente" arriba del menu.
+       · INTER, la de cuerpo. La usan los enlaces del menu, los rotulos de
+         bloque y todo lo que se lee de reojo.
+
+     La pregunta de fondo no es de gusto: ¿una pestaña es NAVEGACION, y entonces
+     le toca Inter como a los enlaces del menu, o es un ROTULO de sitio, y
+     entonces le toca Fraunces como al titulo? Las cinco opciones son las cinco
+     respuestas posibles a eso.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --tinte:#F6EFE7; --blanco:#FFFFFF;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --trazo:#6E4C36; --trazo-fino:#C9B49A;
+  --elegido:#FBF4EA;
+  --pest-off:#E7DACA; --pest-lock:#EDE3D6; --pest-lock-txt:#8C7A66;
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-display:var(--display);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tinte);color:var(--txt);
+     font-family:var(--texto);font-size:16px;line-height:1.55}
+
+header{
+  position:sticky;top:0;z-index:5;
+  padding:.9rem 2rem;background:rgba(246,239,231,.95);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--trazo-fino);
+}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--texto);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+
+.caso{display:grid;grid-template-columns:11.5rem 1fr;align-items:start;
+  border-bottom:1px solid var(--trazo-fino)}
+.caso:last-child{border-bottom:0}
+
+/* la sidebar de verdad, recortada a lo que hace falta ver */
+.menu-falso{
+  padding:1.5rem .85rem;background:#5E442C;color:#FAF3EA;
+  display:flex;flex-direction:column;gap:.9rem;min-height:15rem;
+}
+.menu-falso .m-marca{display:flex;align-items:center;gap:.5rem;
+  font-family:var(--display);font-weight:600;font-size:1rem}
+.menu-falso .m-marca svg{width:21px;height:21px}
+.menu-falso .m-btn{display:inline-flex;align-self:start;align-items:center;gap:.4rem;
+  min-height:36px;padding:0 .8rem;border-radius:999px;background:#C6A783;
+  color:#241C17;font-weight:600;font-size:.875rem}
+.menu-falso .m-btn svg{width:15px;height:15px}
+.menu-falso .m-vistas{display:flex;flex-direction:column;gap:.15rem}
+.menu-falso .m-vista{display:flex;align-items:center;gap:.6rem;min-height:44px;
+  padding:0 .6rem;border-radius:10px;color:#E2D5C4;font-size:.9375rem}
+.menu-falso .m-vista svg{width:18px;height:18px;opacity:.75}
+.menu-falso .m-vista.on{background:rgba(255,246,232,.13);color:#FAF3EA;font-weight:600}
+
+.lado{padding:1.5rem 2rem 2rem;min-width:0}
+.etq{display:flex;align-items:baseline;gap:.6rem;margin:0 0 .9rem;
+  font-size:.82rem;color:var(--txt-suave)}
+.etq b{font-family:var(--display);font-size:1.05rem;color:var(--txt)}
+.etq code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem}
+
+/* ---------- la carpeta, igual que en la pagina ---------- */
+.tira{display:flex;align-items:flex-end;padding-left:1.25rem;max-width:56rem}
+.pest{
+  display:flex;align-items:center;gap:.5rem;min-height:44px;padding:0 1.35rem;
+  border:2px solid var(--trazo);border-bottom:0;border-radius:12px 12px 0 0;
+  background:var(--pest-off);color:var(--trazo);
+}
+.pest .ico{width:17px;height:17px;flex:none}
+.pest.on{background:var(--blanco);min-height:50px;
+  margin-bottom:-2px;padding-bottom:2px;position:relative;z-index:2}
+.pest.off{background:var(--pest-lock);color:var(--pest-lock-txt);
+  border-color:var(--trazo-fino);margin-left:-14px}
+
+.carp{max-width:56rem;padding:1.35rem 1.75rem;background:var(--blanco);
+  border:2px solid var(--trazo);border-radius:0 20px 20px 20px}
+.carp h2{margin:0;font-family:var(--display);font-size:1.6rem;font-weight:600;
+  letter-spacing:-.02em;line-height:1.12}
+.carp p{margin:.35rem 0 0;font-size:.88rem;color:var(--txt-suave)}
+
+/* ==========================================================================
+   LAS CINCO LETRAS
+   ========================================================================== */
+
+/* 1 · INTER 15, exacta a los enlaces del menu. Una pestaña es navegacion, y la
+      navegacion de este proyecto va en Inter a 15 px. */
+.v1 .pest{font-family:var(--texto);font-size:.9375rem}
+.v1 .pest.on{font-weight:600}
+
+/* 2 · FRAUNCES 15. La letra de "Psicconsciente", en el tamaño de los enlaces. */
+.v2 .pest{font-family:var(--display);font-size:.9375rem}
+.v2 .pest.on{font-weight:600}
+
+/* 3 · FRAUNCES 17, con mas presencia. Si la pestaña es el rotulo de donde
+      estas, es media hermana del titulo y puede permitirse tamaño. */
+.v3 .pest{font-family:var(--display);font-size:1.0625rem}
+.v3 .pest.on{font-weight:600}
+
+/* 4 · INTER EN MAYUSCULAS pequeñas con espaciado, la forma que ya usan los
+      rotulos de los bloques de dentro de la carpeta. Rima con el interior. */
+.v4 .pest{font-family:var(--texto);font-size:.78rem;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase}
+.v4 .pest.on{font-weight:600}
+
+/* 5 · MEZCLA: Fraunces solo en la activa, Inter en las dormidas. La letra
+      distingue donde estas antes que el color. */
+.v5 .pest{font-family:var(--texto);font-size:.9375rem}
+.v5 .pest.on{font-family:var(--display);font-size:1.0625rem;font-weight:600}
+
+.notas{padding:1.5rem 2rem 3rem;display:grid;gap:.9rem;
+  grid-template-columns:repeat(auto-fit,minmax(18rem,1fr))}
+.nota{padding:1rem 1.15rem;background:var(--blanco);
+  border:2px solid var(--trazo);border-radius:14px;font-size:.86rem;line-height:1.6}
+.nota h3{margin:0 0 .45rem;font-family:var(--display);font-size:1rem}
+.nota p{margin:0}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>La letra de las pestañas · cinco opciones<small>Cada una con la sidebar de verdad al lado, que es contra lo que hay que compararla</small></h1>
+</header>
+
+<div id="zona"></div>
+
+<div class="notas">
+  <div class="nota"><h3>1 · Inter 15</h3>
+    <p>Exacta a «Mis consultas». Una pestaña es navegación, y la navegación de este proyecto va en Inter a 15&nbsp;px. Es la que está puesta ahora mismo en la página.</p></div>
+  <div class="nota"><h3>2 · Fraunces 15</h3>
+    <p>La letra de «Psicconsciente», en el tamaño de los enlaces. El serif entra en la carpeta, donde ya viven los nombres de las terapias.</p></div>
+  <div class="nota"><h3>3 · Fraunces 17</h3>
+    <p>Si la pestaña es el rótulo de dónde estás, es media hermana del titular y puede permitirse tamaño. La más presente de las cinco.</p></div>
+  <div class="nota"><h3>4 · Inter en mayúsculas</h3>
+    <p>La misma forma que los rótulos de los bloques de dentro —«CÓMO QUIERES TU CONSULTA»—, así que rima con el interior de la carpeta en vez de con el menú.</p></div>
+  <div class="nota"><h3>5 · Mezcla</h3>
+    <p>Fraunces solo en la activa, Inter en las dormidas. La letra dice dónde estás antes que el color, que es el truco más viejo y más fino de una pestaña.</p></div>
+</div>
+
+<script>
+(function () {
+  var ICO = {
+    lista: '<svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M96,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H104A8,8,0,0,1,96,64Zm120,56H104a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H104a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM56,56A12,12,0,1,0,68,68,12,12,0,0,0,56,56Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,56,120Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,56,184Z"/></svg>',
+    cal:   '<svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></svg>',
+    tarj:  '<svg class="ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48Zm0,16V88H32V64ZM32,192V104H224v88Z"/></svg>'
+  };
+  var MENU = '<nav class="menu-falso">' +
+    '<span class="m-marca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true"><path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/><path d="M9 20h6M10.2 22.2h3.6"/></svg>Psicconsciente</span>' +
+    '<span class="m-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Reservar cita</span>' +
+    '<span class="m-vistas">' +
+      '<span class="m-vista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>Mis consultas</span>' +
+      '<span class="m-vista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></svg>Mis datos</span>' +
+    '</span></nav>';
+
+  var OPC = [
+    ['1', 'Inter 15 · igual que el menú', 'font-family:Inter; font-size:.9375rem'],
+    ['2', 'Fraunces 15', 'font-family:Fraunces; font-size:.9375rem'],
+    ['3', 'Fraunces 17', 'font-family:Fraunces; font-size:1.0625rem'],
+    ['4', 'Inter en mayúsculas', 'font-size:.78rem; letter-spacing:.09em; uppercase'],
+    ['5', 'Mezcla · Fraunces solo en la activa', 'activa Fraunces 17, dormidas Inter 15']
+  ];
+
+  document.getElementById('zona').innerHTML = OPC.map(function (o) {
+    return '<section class="caso v' + o[0] + '">' + MENU +
+      '<div class="lado">' +
+        '<p class="etq"><b>' + o[0] + ' · ' + o[1] + '</b><code>' + o[2] + '</code></p>' +
+        '<div class="tira">' +
+          '<span class="pest on">' + ICO.lista + 'Reserva</span>' +
+          '<span class="pest off">' + ICO.cal + 'Fecha</span>' +
+          '<span class="pest off">' + ICO.tarj + 'Pago</span>' +
+        '</div>' +
+        '<div class="carp"><h2>Reserva tu consulta</h2>' +
+          '<p>Así se ve la pestaña contra el titular que tiene justo debajo.</p></div>' +
+      '</div></section>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dónde va el botón del mapa · cinco sitios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     DONDE VA EL BOTON DE "COMO LLEGAR".
+
+     El problema, tal como se ve en la pagina: el boton esta pegado al canto
+     derecho de la columna y la direccion arriba a la izquierda, asi que entre
+     los dos queda un hueco y el boton no pertenece a nada. Esta desterrado.
+
+     Las cinco variantes se dibujan A ESCALA REAL: 402 px de columna, que es lo
+     que mide en la pagina con el menu abierto, sobre la tarjeta blanca y con
+     los mismos tamanos de letra. Lo que se ve aqui es lo que se vera alli.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-nota:.79rem; --t-aux:.88rem;
+  --r-chico:8px; --r-medio:14px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--suelo);
+  color:var(--txt);
+  font-family:var(--texto);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+header{padding:1.5rem 2rem 1rem}
+h1{
+  margin:0 0 .3rem;
+  font-family:var(--texto);
+  font-size:1.35rem;
+  font-weight:600;
+  letter-spacing:-.02em;
+}
+header p{margin:0;max-width:56rem;font-size:var(--t-aux);color:var(--txt-suave)}
+
+.zona{display:flex;flex-wrap:wrap;gap:1.25rem;padding:1.5rem 2rem 3rem}
+
+/* Cada ficha reproduce la columna de la modalidad a su ancho real. */
+.caso{
+  width:442px;   /* 402 de columna + 20 de aire a cada lado */
+  background:var(--blanco);
+  border-radius:18px;
+  padding:1.25rem 1.25rem 1.5rem;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+.caso h2{
+  margin:0 0 .15rem;
+  font-family:var(--texto);
+  font-size:.92rem;
+  font-weight:600;
+}
+.caso .dice{margin:0 0 1.1rem;font-size:var(--t-nota);color:var(--txt-suave);min-height:2.4em}
+
+/* la columna, a 402 px justos */
+.col{width:402px}
+
+/* ---------- la nota, igual que en la pagina ---------- */
+.nota{
+  display:flex;
+  align-items:flex-start;
+  gap:.6rem;
+  margin:0;
+  padding-top:1.25rem;
+  border-top:1px solid var(--linea);
+  font-size:var(--t-aux);
+  line-height:1.6;
+  color:var(--txt-suave);
+}
+.nota .pin{width:1em;height:1em;flex:none;font-size:17px;color:var(--marca);margin-top:.15rem}
+.nota > .txt{display:flex;flex-direction:column;align-items:flex-start;flex:1;min-width:0}
+.nota strong{display:block;margin-bottom:.4rem;font-weight:600;color:var(--txt)}
+
+/* ---------- el boton ---------- */
+.mapa{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  width:38px;
+  height:38px;
+  border-radius:var(--r-chico);
+  background:var(--acc);
+  color:#fff;
+  text-decoration:none;
+  box-shadow:0 0 0 3px var(--blanco),0 1px 4px rgba(110,76,54,.28);
+}
+.mapa svg{width:17px;height:17px;fill:currentColor;transform:rotate(45deg)}
+.mapa:hover{background:var(--acc-dp)}
+
+/* ============ HOY ============ */
+.hoy .mapa{align-self:flex-end;margin-top:.9rem}
+
+/* ============ A · centrado con la direccion ============ */
+/* SOLO EL BOTON se centra, no la fila entera. `align-items:center` en la fila
+   centraba tambien la chincheta y la apartaba del nombre del centro, que es
+   justo lo que senala. Centrando unicamente el boton, el pin se queda arriba
+   con el nombre y el boton queda a la altura media de la direccion. */
+.a .nota{align-items:flex-start}
+.a .mapa{align-self:center}
+
+/* ============ B · arriba, con el nombre ============ */
+/* El hueco para el boton se reserva con `padding-right` en el texto. Sin el,
+   el boton absoluto se montaba encima del final de la direccion y tapaba
+   "estado Lara": la opcion parecia mala por un fallo de la maqueta, no por la
+   idea. */
+.b .nota{position:relative}
+.b .txt{padding-right:52px}
+.b .mapa{position:absolute;top:1.25rem;right:0}
+
+/* ============ C · en la ultima linea ============ */
+.c .dir-fila{display:flex;align-items:center;gap:1rem;width:100%}
+.c .dir-fila span{flex:1;min-width:0}
+
+/* ============ D · debajo, alineado con el texto ============ */
+.d .mapa{margin-top:.9rem}
+
+/* ============ E · boton con palabras ============ */
+.e .mapa-txt{
+  display:inline-flex;
+  align-items:center;
+  gap:.45rem;
+  margin-top:.9rem;
+  padding:.5rem .9rem;
+  border-radius:var(--r-chico);
+  background:var(--acc);
+  color:#fff;
+  font-size:var(--t-nota);
+  font-weight:600;
+  text-decoration:none;
+  box-shadow:0 1px 4px rgba(110,76,54,.22);
+}
+.e .mapa-txt svg{width:14px;height:14px;fill:currentColor;transform:rotate(45deg)}
+.e .mapa-txt:hover{background:var(--acc-dp)}
+
+/* ============ F y G · EL BOTON QUE SE ABRE ============
+
+   En reposo es el cuadrado de 38 px con la flecha; al pasar por encima crece y
+   ensena "Como llegar".
+
+   COMO SE ANIMA UN ANCHO QUE NO SE CONOCE. `width:auto` no se puede animar, asi
+   que la etiqueta vive en una rejilla de una columna y lo que se anima es
+   `grid-template-columns` de `0fr` a `1fr`. El navegador interpola la fraccion
+   y la columna crece hasta el ancho real del texto sin que nadie lo mida. Es
+   EXACTAMENTE el mismo truco que usa la apertura progresiva de esta pantalla
+   —alli con filas—, asi que no entra una tecnica nueva al proyecto.
+
+   `min-width:0` y `overflow:hidden` en la etiqueta son obligatorios: sin ellos
+   el texto se niega a bajar de su ancho minimo y la columna no colapsa.
+
+   EL TEXTO SIGUE EN EL ARBOL DE ACCESIBILIDAD estando recortado, porque
+   `overflow:hidden` no saca nada de ahi —a diferencia de `display:none`—. Por
+   eso el nombre accesible del boton es "Como llegar" siempre, se pase o no el
+   raton por encima.                                                          */
+
+.abrible{
+  display:inline-flex;
+  align-items:center;
+  width:auto;
+  height:38px;
+  padding:0;
+  margin-top:.9rem;
+  border-radius:var(--r-chico);
+  background:var(--acc);
+  color:#fff;
+  text-decoration:none;
+  box-shadow:0 1px 4px rgba(110,76,54,.28);
+  transition:background 180ms ease;
+}
+.abrible:hover{background:var(--acc-dp)}
+
+/* La flecha: su caja es cuadrada y de 38, asi que en reposo el boton entero es
+   el cuadrado de siempre. `flex:none` para que no se deforme al crecer. */
+.abrible .flecha{
+  display:grid;
+  place-items:center;
+  flex:none;
+  width:38px;
+  height:38px;
+}
+.abrible .flecha svg{width:17px;height:17px;fill:currentColor;transform:rotate(45deg)}
+
+/* La etiqueta. La rejilla de una columna es lo que se anima. */
+.abrible .et{
+  display:grid;
+  grid-template-columns:0fr;
+  transition:grid-template-columns 260ms cubic-bezier(.2,.8,.3,1);
+}
+/* EL RECORTADOR NO LLEVA RELLENO, y esto costo encontrarlo: con el relleno
+   aqui, el boton cerrado medIa 55 px en vez de 38. El motivo es que una
+   columna `0fr` se resuelve como `minmax(auto, 0fr)`, y ese minimo `auto`
+   incluye el relleno del elemento — asi que la columna nunca llegaba a cero.
+   `min-width:0` no lo arregla: limita la caja de contenido, no el relleno.
+
+   Por eso el aire va en un elemento de dentro. Es la misma forma que `.abre` y
+   `.abre-in` en la pagina: uno recorta, el otro lleva el contenido. */
+.abrible .et > span{
+  overflow:hidden;
+  min-width:0;
+}
+.abrible .et .lbl{
+  display:block;
+  white-space:nowrap;
+  font-size:var(--t-nota);
+  font-weight:600;
+}
+/* `:focus-visible` va junto al hover y no es un anadido: quien navega con el
+   teclado llega aqui y, sin esto, se encuentra una flecha sin nombre. */
+.abrible:hover .et,
+.abrible:focus-visible .et{grid-template-columns:1fr}
+
+/* F · el texto delante, como en la imagen. La flecha viaja a la derecha. */
+.f .abrible .et .lbl{padding-left:.9rem;padding-right:.15rem}
+
+/* G · la flecha delante y quieta; el texto sale por detrás. */
+.g .abrible{flex-direction:row-reverse}
+.g .abrible .et .lbl{padding-right:.9rem;padding-left:.15rem}
+
+/* EN TACTIL NACE ABIERTO. En un telefono no hay raton que pasar por encima, y
+   una flecha sola no dice "como llegar". Sin esto, en movil el boton se
+   quedaria para siempre siendo un cuadrado con un simbolo. */
+@media (hover:none){
+  .abrible .et{grid-template-columns:1fr}
+}
+
+/* Con movimiento reducido la etiqueta APARECE, no desaparece: es informacion,
+   no decoracion. Lo que se quita es el recorrido, no el resultado. */
+@media (prefers-reduced-motion:reduce){
+  .abrible .et{transition:none}
+}
+
+.cierre{padding:0 2rem 4rem;max-width:56rem;font-size:var(--t-aux);line-height:1.7;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+
+/* Recortado a un pixel en vez de `display:none`, que lo sacaria del arbol de
+   accesibilidad y entonces no se oiria — que es lo contrario de lo que se
+   busca. */
+.solo-lector{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;
+}
+.cierre p{margin:0 0 .8rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Dónde va el botón del mapa</h1>
+  <p>Las cinco a escala real: 402&nbsp;px de columna, que es lo que mide en la página con el menú abierto. La primera es la de ahora.</p>
+</header>
+
+<div class="zona" id="zona"></div>
+
+<div class="cierre">
+  <p><b>Lo que falla hoy</b> no es el botón, es que está solo. Pegado al canto derecho y con la dirección arriba a la izquierda, entre los dos queda un hueco vacío y el botón deja de pertenecer al bloque: parece que se cayó ahí.</p>
+  <p><b>Mi apuesta es la A.</b> Con la fila centrada, el botón y la dirección quedan en la misma línea óptica y se leen como una sola pieza: «esto es el sitio, y esto te lleva». No añade nada nuevo a la pantalla y arregla el hueco por geometría, no por decoración.</p>
+  <p>Si prefieres que el botón no se mueva de arriba, la <b>B</b> lo cuelga a la altura del nombre del centro, que es lo que nombra el lugar. La <b>E</b> es la más explícita —dice «Cómo llegar» con palabras— pero mete un segundo botón con relleno en una pantalla donde el único relleno era el del pie, y esa era una decisión deliberada.</p>
+
+  <p><b>La F y la G son tu idea:</b> en reposo el cuadrado, y al pasar por encima se abre. Resuelven el hueco y el icono a la vez, porque la base está a la izquierda —creciendo desde el canto derecho se saldría de la columna—. <b>Pásales el ratón por encima, y después llega a ellas con el tabulador:</b> también se abren con el teclado, o quien navegue así se encontraría una flecha sin nombre. En un móvil nacen abiertas, porque allí no hay ratón que pasar.</p>
+
+  <p>Entre las dos, <b>me quedo con la F</b>, la de tu imagen: es una flecha de navegación, y que se desplace mientras la etiqueta se despliega refuerza el «vamos allá». La <b>G</b> es la opción tranquila — no se mueve ni un píxel de sitio, solo aparece el texto.</p>
+</div>
+
+<script>
+(function () {
+  var FLECHA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 21 12 17 4 21Z"/></svg>';
+  var PIN = '<svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>';
+
+  var NOMBRE = 'Centro Humanista Intellego';
+  var DIR = 'Calle 19, entre carreras 28 y 29. Barquisimeto, estado Lara.';
+
+  function boton() {
+    return '<a class="mapa" href="#" title="Cómo llegar" ' +
+      'aria-label="Cómo llegar, se abre el mapa en una pestaña nueva">' + FLECHA + '</a>';
+  }
+
+  var CASOS = [
+    ['hoy', 'Como está ahora',
+     'El botón al canto derecho y la dirección arriba a la izquierda: queda un hueco entre los dos y el botón no pertenece a nada.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' + DIR + boton() + '</span></p>'],
+
+    ['a', 'A · centrado con la dirección',
+     'La fila entera se centra, así que el botón queda a la misma altura óptica que la dirección. Se leen como una pieza.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' + DIR + '</span>' + boton() + '</p>'],
+
+    ['b', 'B · arriba, con el nombre',
+     'Colgado a la altura del nombre del centro, que es lo que nombra el lugar. El botón no se mueve de arriba.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' + DIR + '</span>' + boton() + '</p>'],
+
+    ['c', 'C · en la última línea',
+     'En la misma línea que acaba la dirección. Lo más compacto, pero su posición depende de por dónde corte el texto.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' +
+       '<span class="dir-fila"><span>' + DIR + '</span>' + boton() + '</span></span></p>'],
+
+    ['d', 'D · debajo, con el texto',
+     'Debajo y alineado a la izquierda, pegado a la dirección en vez de irse al canto. Sin hueco, pero deja aire a la derecha.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' + DIR + boton() + '</span></p>'],
+
+    ['e', 'E · con palabras',
+     'Dice «Cómo llegar» y no depende de que se entienda el icono. A cambio mete un segundo botón con relleno en la pantalla.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' + DIR +
+       '<a class="mapa-txt" href="#">Cómo llegar' + FLECHA + '</a></span></p>']
+  ];
+
+  /* El boton que se abre. El texto visible ES el nombre accesible, asi que no
+     lleva `aria-label`: con etiqueta a la vista, un aria-label distinto haria
+     que lo que se ve y lo que se oye no coincidan —criterio 2.5.3 de WCAG, el
+     del nombre en la etiqueta—. El aviso de la pestana nueva se queda como
+     texto que solo oye el lector de pantalla. */
+  function abrible() {
+    return '<a class="abrible" href="#" target="_blank" rel="noopener noreferrer">' +
+             '<span class="et"><span><span class="lbl">Cómo llegar' +
+               '<span class="solo-lector">, se abre el mapa en una pestaña nueva</span>' +
+             '</span></span></span>' +
+             '<span class="flecha" aria-hidden="true">' + FLECHA + '</span>' +
+           '</a>';
+  }
+
+  CASOS.push(
+    ['f', 'F · se abre, con la flecha al final',
+     'En reposo es el cuadrado. Al pasar por encima crece y la flecha VIAJA a la derecha, como en tu imagen. Pruébalo con el ratón y con el tabulador.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' + DIR + abrible() + '</span></p>'],
+
+    ['g', 'G · se abre, con la flecha quieta',
+     'Lo mismo, pero la flecha se queda donde estaba y el texto sale por detrás. Nada se desplaza.',
+     '<p class="nota">' + PIN + '<span class="txt"><strong>' + NOMBRE + '</strong>' + DIR + abrible() + '</span></p>']
+  );
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c) {
+    return '<section class="caso ' + c[0] + '">' +
+      '<h2>' + c[1] + '</h2>' +
+      '<p class="dice">' + c[2] + '</p>' +
+      '<div class="col">' + c[3] + '</div>' +
+    '</section>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuánto pesa el punto · tres pesos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     CUANTO PESA EL PUNTO.
+
+     El punto se queda —Salt y Carbon coinciden en que el indicador tiene que
+     estar, y Carbon ademas volvio del visto al radio a proposito—, pero se le
+     puede bajar el volumen. Eso es lo que molestaba de verdad: el aire de
+     formulario, no que exista.
+
+     Y HAY UNA RESTRICCION MEDIDA QUE DECIDE COMO: el aro de ahora, #C9B49A, da
+     2,00:1 contra la tarjeta blanca y 1,57:1 contra el tinte. WCAG 1.4.11 pide
+     3:1 para el limite visual de un control de formulario, asi que YA ESTA POR
+     DEBAJO. Aclararlo mas no es una opcion.
+
+     Lo que si lo calla es la GEOMETRIA: mas pequeno y mas fino. Y un trazo fino
+     oscuro se lee mas discreto que uno gordo palido, ademas de cumplir.
+
+     La tira de abajo repite las tres en escala de grises, que es el argumento
+     de Salt: si lo elegido solo se distingue por color, en grises desaparece.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50; --acc-sv:#E8EDE6;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-nota:.79rem; --t-aux:.88rem; --t-base:1rem; --t-rotulo:1.05rem;
+  --r-medio:14px; --r-pill:999px;
+  --canto:2px;
+  --paso:180ms ease;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--suelo);color:var(--txt);
+  font-family:var(--texto);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+header{padding:1.5rem 2rem 1rem}
+h1{margin:0 0 .3rem;font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+header p{margin:0;max-width:62rem;font-size:var(--t-aux);color:var(--txt-suave)}
+
+.caso{
+  margin:1.25rem 2rem;padding:1.4rem 1.5rem 1.6rem;
+  background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+.caso h2{margin:0 0 .2rem;font-size:1rem;font-weight:600}
+.caso .dice{margin:0 0 .9rem;max-width:58rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.caso .dice b{color:var(--txt)}
+.ficha{
+  display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;
+  margin:0 0 1.2rem;font-size:var(--t-nota);color:var(--txt-suave);
+  font-variant-numeric:tabular-nums;
+}
+.ficha span b{color:var(--txt);font-weight:600}
+.mal{color:#8C2F2F;font-weight:600}
+.bien{color:var(--acc-dp);font-weight:600}
+
+.par{display:flex;flex-wrap:wrap;gap:3rem}
+.lado{width:360px}
+.lado > h3{
+  margin:0 0 .7rem;font-size:var(--t-nota);font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--txt-suave);
+}
+.opciones{display:flex;flex-direction:column;gap:.3rem}
+
+/* ---------- la fila ---------- */
+.op{
+  display:flex;align-items:center;gap:.85rem;
+  min-height:46px;padding:0 .6rem;margin:0 -.6rem;
+  border-radius:var(--r-medio);
+  cursor:pointer;font-size:var(--t-base);
+  transition:background var(--paso), box-shadow var(--paso);
+}
+.op input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.op:hover{background:var(--fila-viva)}
+.op:has(input:checked){background:var(--fila-viva);font-weight:600;box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+
+.dot{
+  flex:none;border-radius:50%;box-sizing:border-box;
+  transition:border-color var(--paso), background var(--paso), box-shadow var(--paso);
+}
+
+/* ============ HOY ============
+   18 px, aro de 1,5 y #C9B49A: 2,00:1 contra blanco. Al elegir, relleno marron
+   macizo con el hueco blanco dentro — la pieza mas oscura de la fila, y la que
+   compite con el canto de salvia. */
+.hoy .dot{width:18px;height:18px;border:1.5px solid var(--marca-cl)}
+.hoy .op:has(input:checked) .dot{
+  border-color:var(--marca);background:var(--marca);
+  box-shadow:inset 0 0 0 3.5px var(--blanco);
+}
+
+/* ============ 1 · LIGERO ============
+   16 px y trazo de 1, en el marron de la marca: 7,64:1 contra blanco y 5,97
+   contra el tinte, asi que cumple de sobra. Un trazo fino oscuro se lee mas
+   discreto que uno gordo palido.
+   Al elegir, el relleno pasa a SALVIA: acompana al canto en vez de competir
+   con el, y la fila deja de tener dos colores fuertes peleandose. */
+.una .dot{width:16px;height:16px;border:1px solid var(--marca)}
+.una .op:has(input:checked) .dot{
+  border-color:var(--acc);background:var(--acc);
+  box-shadow:inset 0 0 0 3px var(--blanco);
+}
+
+/* ============ 2 · MINIMO ============
+   14 px, trazo de 1. Y al elegir, un punto macizo de salvia SIN el hueco
+   blanco: es la marca mas simple que sigue siendo una marca. Se va el aro
+   exterior entero, asi que lo elegido no tiene contorno de control, solo un
+   punto. */
+.dos .dot{width:14px;height:14px;border:1px solid var(--marca)}
+.dos .op:has(input:checked) .dot{
+  border-color:transparent;background:none;
+  box-shadow:inset 0 0 0 7px var(--acc);
+}
+
+/* ============ 3 · LO MAS CLARO QUE CUMPLE ============
+   #A87453 es el marron mas claro de la rampa de la marca que todavia da 3:1
+   sobre los DOS fondos: 3,97 sobre la tarjeta blanca y 3,10 sobre el tinte. Se
+   busco recorriendo la rampa de luminosidad de --marca hacia el claro y
+   quedandose con el ultimo que aguanta el umbral.
+
+   Es la respuesta honesta a "que se calle": no hay nada mas discreto que esto
+   sin salirse de lo que WCAG permite para el limite de un control. */
+.tres .dot{width:16px;height:16px;border:1px solid #A87453}
+.tres .op:has(input:checked) .dot{
+  border-color:var(--acc);background:var(--acc);
+  box-shadow:inset 0 0 0 3px var(--blanco);
+}
+
+/* ---------- la tira en grises ---------- */
+.grises{margin:1.25rem 2rem 0;padding:1.2rem 1.5rem 1.4rem;
+  background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2)}
+.grises h2{margin:0 0 .2rem;font-size:1rem;font-weight:600}
+.grises .dice{margin:0 0 1.1rem;max-width:58rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.tira{display:flex;flex-wrap:wrap;gap:2.5rem;filter:grayscale(1)}
+.tira .lado{width:300px}
+
+.cierre{padding:1.25rem 2rem 4rem;max-width:62rem;font-size:var(--t-aux);line-height:1.7;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+.cierre p{margin:0 0 .9rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Cuánto pesa el punto</h1>
+  <p>El punto se queda —Salt y Carbon coinciden—, pero se le baja el volumen. Cada peso, con algo elegido y sin nada elegido.</p>
+</header>
+
+<div id="zona"></div>
+
+<section class="grises">
+  <h2>Las tres en escala de grises</h2>
+  <p class="dice">Es el argumento de Salt, para que lo veas en vez de leerlo: <b>si lo elegido solo se distinguiera por color, aquí desaparecería.</b> Mira si en cada una sigues sabiendo cuál está elegida.</p>
+  <div class="tira" id="grises"></div>
+</section>
+
+<div class="cierre">
+  <p><b>La restricción que decidió las variantes:</b> el aro de ahora es <code>#C9B49A</code> y da <b class="mal">2,00:1</b> contra la tarjeta y <b class="mal">1,57:1</b> contra el tinte. WCAG&nbsp;1.4.11 pide 3:1 para el límite visual de un control, así que ya está por debajo — aclararlo más no era una opción. Por eso las dos variantes van al marrón de la marca, que da <b class="bien">7,64:1</b>, y bajan el peso con el tamaño y el grosor.</p>
+
+  <p><b>Mi apuesta es la 1.</b> Aro de 1&nbsp;px en vez de 1,5 y 16&nbsp;px en vez de 18: se lee como un contorno delicado y no como un control de formulario. Y al elegir, el relleno pasa a <b>salvia</b> en vez de marrón oscuro, que es el cambio que más se nota — hoy el punto es la pieza más oscura de la fila y compite con el canto; en salvia lo acompaña, y la fila deja de tener dos colores fuertes peleándose.</p>
+
+  <p>La <b>3</b> es la más callada de las cuatro: al elegir se va el aro entero y queda solo un punto macizo de salvia, sin contorno de control. Es la que más se acerca a lo que pedías. El riesgo es el de siempre, en la columna de la derecha: a 14&nbsp;px el círculo vacío empieza a costar de ver.</p>
+</div>
+
+<script>
+(function () {
+  var SERV = [['ansiedad','Superar la Ansiedad'],['autoestima','Fortalecer tu Autoestima'],
+              ['pareja','Sanar en Pareja'],['duelo','Acompañar un Duelo']];
+
+  function fila(grupo, v, n, elegido) {
+    return '<label class="op">' +
+      '<input type="radio" name="' + grupo + '" value="' + v + '"' + (elegido ? ' checked' : '') + '>' +
+      '<span class="dot" aria-hidden="true"></span>' +
+      '<span>' + n + '</span></label>';
+  }
+
+  function grupo(id, elegido, cuantas) {
+    var s = '<div class="opciones">';
+    SERV.slice(0, cuantas || 4).forEach(function (x, i) {
+      s += fila(id, x[0], x[1], elegido && i === 0);
+    });
+    return s + '</div>';
+  }
+
+  /* Cada caso: clase, titulo, explicacion, y la ficha de datos medidos. */
+  var CASOS = [
+    { clase:'hoy', titulo:'Como está ahora',
+      dice:'Aro de 1,5&nbsp;px en <code>#C9B49A</code> y, al elegir, relleno marrón macizo. <b>Es la pieza más oscura de la fila</b> y compite con el canto de salvia.',
+      diametro:'18 px', trazo:'1,5 px', color:'#C9B49A', contraste:'2,00:1', pasa:false },
+
+    { clase:'una', titulo:'1 · ligero',
+      dice:'Aro de 1&nbsp;px en el marrón de la marca y 16&nbsp;px. Al elegir, el relleno pasa a <b>salvia</b>: acompaña al canto en vez de competir.',
+      diametro:'16 px', trazo:'1 px', color:'--marca', contraste:'7,64:1', pasa:true },
+
+    { clase:'tres', titulo:'2 · lo más claro que cumple',
+      dice:'Mismo tamaño y grosor que la 1, pero el aro en <code>#A87453</code>: <b>el marrón más claro que todavía da 3:1</b> sobre los dos fondos. Es lo más discreto posible sin salirse de lo permitido.',
+      diametro:'16 px', trazo:'1 px', color:'#A87453', contraste:'3,97:1', pasa:true },
+
+    { clase:'dos', titulo:'3 · mínimo',
+      dice:'Igual de fino y 14&nbsp;px. Al elegir <b>se va el aro entero</b> y queda solo un punto macizo de salvia, sin contorno de control.',
+      diametro:'14 px', trazo:'1 px', color:'--marca', contraste:'7,64:1', pasa:true }
+  ];
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c, i) {
+    return '<section class="caso ' + c.clase + '">' +
+      '<h2>' + c.titulo + '</h2>' +
+      '<p class="dice">' + c.dice + '</p>' +
+      '<p class="ficha">' +
+        '<span>diámetro <b>' + c.diametro + '</b></span>' +
+        '<span>trazo <b>' + c.trazo + '</b></span>' +
+        '<span>color del aro <b>' + c.color + '</b></span>' +
+        '<span>sobre la tarjeta <b class="' + (c.pasa ? 'bien' : 'mal') + '">' + c.contraste +
+          (c.pasa ? '' : ' — por debajo de 3:1') + '</b></span>' +
+      '</p>' +
+      '<div class="par">' +
+        '<div class="lado"><h3>Con algo elegido</h3>' + grupo('a' + i, true) + '</div>' +
+        '<div class="lado"><h3>Sin nada elegido</h3>' + grupo('b' + i, false) + '</div>' +
+      '</div>' +
+    '</section>';
+  }).join('');
+
+  document.getElementById('grises').innerHTML = CASOS.map(function (c, i) {
+    return '<div class="lado ' + c.clase + '"><h3>' + c.titulo.replace(/ · .*/, '') + '</h3>' +
+      grupo('g' + i, true, 2) + '</div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

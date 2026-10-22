@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dos construcciones de la carpeta</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     DOS CONSTRUCCIONES DE LA MISMA PANTALLA.
+
+     No son dos estilos: son dos formas OPUESTAS de dibujar una carpeta, y solo
+     se puede elegir una.
+
+     A · TRAZO. Lo que hay hoy, y lo que pidio Edgar el 14 de septiembre:
+         "todo el borde hacerlo con un solid grueso en el color marron fuerte".
+         El dibujo lo hacen bordes de 2 px. La pestaña activa tapa el borde
+         superior de la carpeta para que no haya costura.
+
+     B · SUPERFICIE. La construccion de la referencia que Edgar mando (panel de
+         gestion de tareas, UIUX). Ahi NO HAY NI UN BORDE:
+           · la tarjeta es blanca sobre fondo tintado, con sombra suave,
+           · las pestañas van DENTRO de la tarjeta, no colgando de ella,
+           · son formas planas con el canto derecho INCLINADO, solapadas, y
+             cada una mas clara que la anterior,
+           · debajo de la tira corre una linea de un pixel y la pestaña activa
+             la interrumpe: eso es lo que hace el efecto carpeta,
+           · dentro de la tarjeta no hay cajas; el contenido se apoya en el
+             blanco y se separa con divisorias finas.
+
+     Las dos llevan los mismos colores de marca, el mismo contenido real y las
+     mismas medidas. Lo unico que cambia es COMO se dibuja.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --tinte:#F6EFE7; --blanco:#FFFFFF;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --trazo:#6E4C36; --trazo-fino:#C9B49A;
+  --elegido:#FBF4EA;
+  --acc:#5A7060;
+  --pnl:#5E442C; --pnl-txt:#FAF3EA; --pnl-txt-sv:#E2D5C4; --pnl-claro:#C6A783;
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tinte);color:var(--txt);
+     font-family:var(--texto);font-size:16px;line-height:1.55;
+     -webkit-font-smoothing:antialiased}
+
+header{
+  position:sticky;top:0;z-index:9;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  padding:.9rem 2rem;background:rgba(246,239,231,.95);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--trazo-fino);
+}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--texto);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+.grupo{display:flex;gap:.3rem;background:#E7DACA;padding:.25rem;border-radius:999px}
+.grupo button{min-height:34px;padding:0 1rem;border:0;border-radius:999px;
+  background:none;font:inherit;font-size:.83rem;color:var(--trazo);cursor:pointer}
+.grupo button[aria-pressed="true"]{background:var(--blanco);font-weight:600;
+  box-shadow:0 1px 2px rgba(110,76,54,.14)}
+
+.caso{padding:1.5rem 0 3rem}
+.rotulo{display:flex;align-items:baseline;gap:.7rem;margin:0 0 1rem;padding:0 2rem;
+  font-size:.85rem;color:var(--txt-suave)}
+.rotulo b{font-family:var(--display);font-size:1.15rem;color:var(--txt)}
+
+/* la pagina de verdad: menu + lienzo */
+.pnl{display:grid;grid-template-columns:11.5rem 1fr;min-height:34rem}
+.menu{padding:1.5rem .85rem;background:var(--pnl);color:var(--pnl-txt);
+  display:flex;flex-direction:column;gap:.9rem;position:relative;overflow:hidden}
+.menu::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(38deg,rgba(255,246,232,.065) 0 16px,rgba(255,246,232,0) 30px 74px),
+    repeating-linear-gradient(-49deg,rgba(255,246,232,.048) 0 12px,rgba(255,246,232,0) 26px 66px)}
+.menu > *{position:relative}
+.m-marca{display:flex;align-items:center;gap:.5rem;font-family:var(--display);
+  font-weight:600;font-size:1rem}
+.m-marca svg{width:21px;height:21px}
+.m-btn{display:inline-flex;align-self:start;align-items:center;gap:.4rem;
+  min-height:36px;padding:0 .8rem;border-radius:999px;background:var(--pnl-claro);
+  color:#241C17;font-weight:600;font-size:.875rem}
+.m-btn svg{width:15px;height:15px}
+.m-vista{display:flex;align-items:center;gap:.6rem;min-height:44px;padding:0 .6rem;
+  border-radius:10px;color:var(--pnl-txt-sv);font-size:.9375rem}
+.m-vista svg{width:18px;height:18px;opacity:.75}
+.m-salir{margin-top:auto;display:flex;align-items:center;gap:.6rem;min-height:46px;
+  padding:0 .6rem;border:1px solid rgba(255,246,232,.18);border-radius:10px;
+  color:var(--pnl-txt-sv);font-size:.9375rem}
+.m-salir svg{width:16px;height:16px}
+
+.lienzo{background:var(--tinte);padding:0 0 3rem}
+.titulo{margin:2rem 2.5rem 1.5rem;font-size:1.65rem;font-weight:600;letter-spacing:-.02em}
+
+/* contenido compartido */
+.rot-bloque{margin:0 0 1rem;font-size:.78rem;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--txt-suave)}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{padding:0}
+.op{display:flex;align-items:center;gap:.85rem;min-height:48px;padding:0 .5rem;
+  margin:0 -.5rem;border-radius:8px;cursor:pointer;font-size:1rem}
+.op input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.dot{flex:none;width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--trazo-fino);box-sizing:border-box}
+.op:has(input:checked) .dot{border-color:var(--trazo);background:var(--trazo);
+  box-shadow:inset 0 0 0 3.5px var(--blanco)}
+.op:has(input:checked){font-weight:600}
+.op + .op{box-shadow:inset 0 1px 0 var(--trazo-fino)}
+.op:hover{background:var(--tinte)}
+
+.planes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.plan-cab{display:flex;align-items:baseline;gap:.35rem;font-size:.88rem;color:var(--txt-suave)}
+.plan-eti{padding:.05rem .4rem;border:1px solid var(--trazo-fino);border-radius:999px;
+  font-size:.78rem}
+.plan-precio{font-size:1.45rem;font-weight:600;font-variant-numeric:tabular-nums;
+  letter-spacing:-.01em;line-height:1.2}
+.plan-ahorro{font-size:.78rem;color:var(--acc)}
+.nota{display:flex;align-items:center;gap:.4rem;margin:.9rem 0 0;
+  font-size:.78rem;color:var(--txt-suave)}
+.nota svg{width:14px;height:14px}
+
+.pie{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  flex-wrap:wrap}
+.total{display:flex;align-items:baseline;gap:.6rem}
+.total span{font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--txt-suave)}
+.total b{font-size:1.65rem;font-weight:600;font-variant-numeric:tabular-nums}
+.seguir{display:flex;align-items:center;gap:.6rem;min-height:48px;padding:0 1.6rem;
+  border:0;border-radius:999px;background:var(--acc);color:#fff;
+  font:inherit;font-size:.97rem;font-weight:600;cursor:pointer}
+.seguir svg{width:18px;height:18px}
+
+/* ==========================================================================
+   A · TRAZO — lo que hay hoy
+   ========================================================================== */
+.a-tira{display:flex;align-items:flex-end;padding-left:1.25rem;margin:0 2.5rem;max-width:70rem}
+.a-pest{display:flex;align-items:center;gap:.5rem;min-height:44px;padding:0 1.35rem;
+  border:2px solid var(--trazo);border-bottom:0;border-radius:12px 12px 0 0;
+  background:#E7DACA;color:var(--trazo);font-size:.9375rem}
+.a-pest svg{width:17px;height:17px;flex:none}
+.a-pest.on{background:var(--blanco);font-weight:600;min-height:50px;
+  margin-bottom:-2px;padding-bottom:2px;position:relative;z-index:3}
+.a-pest.off{background:#EDE3D6;color:#8C7A66;border-color:var(--trazo-fino);margin-left:-14px}
+.a-carp{margin:0 2.5rem;max-width:70rem;padding:1.75rem;background:var(--blanco);
+  border:2px solid var(--trazo);border-radius:0 20px 20px 20px}
+.a-rejilla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;align-items:start}
+.a-bloque{border:2px solid var(--trazo);border-radius:14px;padding:1.25rem 1.35rem;min-width:0}
+.a-ancho{grid-column:1/-1}
+.a-plan{padding:1rem 1.1rem;border:1px solid var(--trazo-fino);border-radius:12px;
+  display:flex;flex-direction:column;gap:.15rem;cursor:pointer;position:relative}
+.a-plan input{position:absolute;opacity:0;width:1px;height:1px}
+.a-plan:has(input:checked){border:2px solid var(--trazo);background:var(--elegido);
+  padding:calc(1rem - 1px) calc(1.1rem - 1px)}
+.a-pie{margin-top:1.5rem;padding-top:1.35rem;border-top:2px solid var(--trazo)}
+
+/* ==========================================================================
+   B · SUPERFICIE — la construccion de la referencia
+   ========================================================================== */
+.b-tarjeta{
+  margin:0 2.5rem;max-width:70rem;
+  background:var(--blanco);border:0;border-radius:16px;
+  /* La sombra va TEÑIDA hacia el marron, no negra: una sombra neutra sobre un
+     fondo calido se ve gris y sucia. */
+  box-shadow:0 1px 2px rgba(110,76,54,.05), 0 12px 32px -12px rgba(110,76,54,.18);
+  overflow:hidden;
+}
+
+/* LA TIRA DE PESTAÑAS, dentro de la tarjeta. La linea de un pixel que corre por
+   debajo es lo que hace el efecto: la activa la interrumpe porque se apoya en
+   el mismo blanco y no lleva linea propia. */
+.b-tira{display:flex;align-items:flex-end;padding:.65rem 1.25rem 0;
+  box-shadow:inset 0 -1px 0 rgba(166,123,91,.28)}
+.b-pest{
+  display:flex;align-items:center;gap:.5rem;min-height:40px;padding:0 1.5rem;
+  border:0;background:none;font:inherit;font-size:.9375rem;color:#8C7A66;
+  cursor:pointer;position:relative;
+}
+.b-pest svg{width:16px;height:16px;flex:none}
+
+/* EL CANTO INCLINADO. Es lo que distingue estas pestañas de tres botones: el
+   lado derecho de cada una se corta en diagonal y la siguiente se mete debajo.
+   Va en un pseudo-elemento con `clip-path` para no deformar el texto —con un
+   `transform: skew` en el propio boton, las letras saldrian torcidas. */
+.b-pest::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:#EFE4D5;
+  border-radius:9px 9px 0 0;
+  clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+}
+.b-pest + .b-pest{margin-left:-12px}
+.b-pest:nth-child(2)::before{background:#F1E8DC}
+.b-pest:nth-child(3)::before{background:#F4EDE4}
+.b-pest:nth-child(1){z-index:3}
+.b-pest:nth-child(2){z-index:2}
+.b-pest:nth-child(3){z-index:1}
+
+/* La activa: mismo blanco que la tarjeta, sin canto inclinado —es la unica
+   recta, porque es la que esta "delante"— y sin la linea de abajo. */
+.b-pest.on{color:var(--trazo);font-weight:600;min-height:44px;z-index:4}
+.b-pest.on::before{
+  background:var(--blanco);
+  clip-path:none;
+  border-radius:10px 10px 0 0;
+  box-shadow:0 -1px 0 rgba(166,123,91,.16), -1px 0 0 rgba(166,123,91,.16), 1px 0 0 rgba(166,123,91,.16);
+}
+
+.b-cuerpo{padding:1.75rem}
+/* SIN CAJAS DENTRO. Las dos preguntas se separan con una divisoria vertical de
+   un pixel, y la de planes con una horizontal. Nada mas. */
+.b-rejilla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.25rem;
+  align-items:start}
+.b-rejilla > div:first-child{box-shadow:1px 0 0 rgba(166,123,91,.2);padding-right:2.25rem}
+.b-planes-zona{margin-top:1.75rem;padding-top:1.75rem;
+  box-shadow:inset 0 1px 0 rgba(166,123,91,.2)}
+.b-plan{padding:1rem 1.1rem;border-radius:12px;background:#FBF7F1;
+  display:flex;flex-direction:column;gap:.15rem;cursor:pointer;position:relative}
+.b-plan input{position:absolute;opacity:0;width:1px;height:1px}
+.b-plan:has(input:checked){background:var(--elegido);
+  box-shadow:inset 0 0 0 1.5px var(--trazo)}
+.b-pie{margin-top:1.75rem;padding-top:1.35rem;box-shadow:inset 0 1px 0 rgba(166,123,91,.2)}
+
+.notas{padding:0 2rem 4rem;display:grid;gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(20rem,1fr))}
+.nota-caja{padding:1.15rem 1.3rem;background:var(--blanco);border-radius:14px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 10px 28px -14px rgba(110,76,54,.2);
+  font-size:.88rem;line-height:1.6}
+.nota-caja h2{margin:0 0 .5rem;font-family:var(--display);font-size:1.05rem}
+.nota-caja p{margin:0 0 .5rem}
+.nota-caja p:last-child{margin:0}
+.si{color:#4A5E50;font-weight:600}
+.no{color:#A33A2E;font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Dos construcciones de la misma pantalla<small>Mismos colores, mismo contenido, mismas medidas. Solo cambia cómo se dibuja.</small></h1>
+  <div class="grupo" role="group" aria-label="Ver">
+    <button type="button" data-v="todas" aria-pressed="true">Las dos</button>
+    <button type="button" data-v="a" aria-pressed="false">A · Trazo</button>
+    <button type="button" data-v="b" aria-pressed="false">B · Superficie</button>
+  </div>
+</header>
+
+<div id="zona"></div>
+
+<div class="notas">
+  <div class="nota-caja">
+    <h2>A · Trazo</h2>
+    <p>Lo que hay hoy en la página. El dibujo lo hacen bordes de 2&nbsp;px en marrón fuerte, y es literalmente lo que pediste: <i>«todo el borde hacerlo con un solid grueso en el color marrón fuerte»</i>.</p>
+    <p><span class="si">A favor:</span> el trazo es lo más reconocible que tiene la pantalla y no se parece a ningún panel de plantilla. Aguanta cualquier fondo y no depende de sombras.</p>
+    <p><span class="no">En contra:</span> es la razón por la que no se parece a tu referencia. Cinco rectángulos anidados con el mismo trazo hacen mucho ruido, y el marrón a 2&nbsp;px pesa en una pantalla que quiere bajar el pulso.</p>
+  </div>
+  <div class="nota-caja">
+    <h2>B · Superficie</h2>
+    <p>La construcción de tu referencia, traducida a los colores de Daryeli. Cero bordes: una tarjeta blanca con sombra templada, las pestañas dentro con el canto derecho inclinado y solapadas, una línea de un píxel debajo que la activa interrumpe, y ninguna caja dentro.</p>
+    <p><span class="si">A favor:</span> es lo que llevas tres mensajes pidiendo. Mucho más tranquila, y el efecto carpeta se lee mejor porque lo hace la superficie, no el contorno.</p>
+    <p><span class="no">En contra:</span> se apoya en sombras, así que es más «panel de aplicación» y menos marca propia. Y las divisorias de un píxel exigen que el espaciado esté fino, porque ya no hay borde que disimule.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var I = {
+    marca:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/><path d="M9 20h6M10.2 22.2h3.6"/></svg>',
+    mas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>',
+    user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></svg>',
+    salir:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v2M11 12h10M18 9l3 3-3 3"/></svg>',
+    lista:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h9"/></svg>',
+    tarj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/></svg>',
+    flecha:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg>'
+  };
+
+  var MENU =
+    '<nav class="menu">' +
+      '<span class="m-marca">' + I.marca + 'Psicconsciente</span>' +
+      '<span class="m-btn">' + I.mas + 'Reservar cita</span>' +
+      '<span class="m-vista">' + I.cal + 'Mis consultas</span>' +
+      '<span class="m-vista">' + I.user + 'Mis datos</span>' +
+      '<span class="m-salir">' + I.salir + 'Cerrar sesión</span>' +
+    '</nav>';
+
+  var SERV = ['Superar la Ansiedad','Fortalecer tu Autoestima','Sanar en Pareja','Acompañar un Duelo'];
+
+  function opciones(id, nombres, marcada) {
+    return nombres.map(function (n, i) {
+      return '<label class="op"><input type="radio" name="' + id + '"' +
+        (i === marcada ? ' checked' : '') + '><span class="dot"></span><span>' + n + '</span></label>';
+    }).join('');
+  }
+
+  function planes(clase, id) {
+    var P = [['1','Consulta','30 $',''],['3','Consultas','75 $','Ahorras 15 $'],['5','Consultas','125 $','Ahorras 25 $']];
+    return P.map(function (p, i) {
+      return '<label class="' + clase + '"><input type="radio" name="' + id + '"' + (i === 0 ? ' checked' : '') + '>' +
+        '<span class="plan-cab"><span>' + p[0] + '</span><span>' + p[1] + '</span>' +
+        (i === 1 ? '<span class="plan-eti">Sugerida</span>' : '') + '</span>' +
+        '<span class="plan-precio">' + p[2] + '</span>' +
+        '<span class="plan-ahorro">' + p[3] + '</span></label>';
+    }).join('');
+  }
+
+  var PIE =
+    '<p class="total"><span>Total</span><b>30 $</b></p>' +
+    '<button type="button" class="seguir">Ver horarios' + I.flecha + '</button>';
+
+  /* ---------- A · TRAZO ---------- */
+  var A =
+    '<section class="caso" data-cual="a">' +
+      '<p class="rotulo"><b>A · Trazo</b>bordes de 2 px en marrón fuerte — lo que hay hoy</p>' +
+      '<div class="pnl">' + MENU + '<div class="lienzo">' +
+        '<h2 class="titulo">Reserva tu consulta</h2>' +
+        '<div class="a-tira">' +
+          '<span class="a-pest on">' + I.lista + 'Reserva</span>' +
+          '<span class="a-pest off">' + I.cal + 'Fecha</span>' +
+          '<span class="a-pest off">' + I.tarj + 'Pago</span>' +
+        '</div>' +
+        '<div class="a-carp"><div class="a-rejilla">' +
+          '<section class="a-bloque"><fieldset><legend class="rot-bloque">Cómo quieres tu consulta</legend>' +
+            opciones('a-modo', ['En línea','Presencial'], 0) + '</fieldset></section>' +
+          '<section class="a-bloque"><fieldset><legend class="rot-bloque">Qué quieres trabajar</legend>' +
+            opciones('a-serv', SERV, 0) + '</fieldset></section>' +
+          '<section class="a-bloque a-ancho"><fieldset><legend class="rot-bloque">Una consulta o un proceso</legend>' +
+            '<div class="planes">' + planes('a-plan', 'a-plan') + '</div>' +
+            '<p class="nota">' + I.cal + '60 días para agendar tus consultas</p></fieldset></section>' +
+        '</div>' +
+        '<div class="pie a-pie">' + PIE + '</div>' +
+        '</div>' +
+      '</div></div>' +
+    '</section>';
+
+  /* ---------- B · SUPERFICIE ---------- */
+  var B =
+    '<section class="caso" data-cual="b">' +
+      '<p class="rotulo"><b>B · Superficie</b>cero bordes, pestañas dentro con el canto inclinado y una línea de 1 px — la construcción de tu referencia</p>' +
+      '<div class="pnl">' + MENU + '<div class="lienzo">' +
+        '<h2 class="titulo">Reserva tu consulta</h2>' +
+        '<div class="b-tarjeta">' +
+          '<div class="b-tira">' +
+            '<button type="button" class="b-pest on">' + I.lista + 'Reserva</button>' +
+            '<button type="button" class="b-pest">' + I.cal + 'Fecha</button>' +
+            '<button type="button" class="b-pest">' + I.tarj + 'Pago</button>' +
+          '</div>' +
+          '<div class="b-cuerpo">' +
+            '<div class="b-rejilla">' +
+              '<div><fieldset><legend class="rot-bloque">Cómo quieres tu consulta</legend>' +
+                opciones('b-modo', ['En línea','Presencial'], 0) + '</fieldset></div>' +
+              '<div><fieldset><legend class="rot-bloque">Qué quieres trabajar</legend>' +
+                opciones('b-serv', SERV, 0) + '</fieldset></div>' +
+            '</div>' +
+            '<div class="b-planes-zona"><fieldset><legend class="rot-bloque">Una consulta o un proceso</legend>' +
+              '<div class="planes">' + planes('b-plan', 'b-plan') + '</div>' +
+              '<p class="nota">' + I.cal + '60 días para agendar tus consultas</p></fieldset></div>' +
+            '<div class="pie b-pie">' + PIE + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div></div>' +
+    '</section>';
+
+  var zona = document.getElementById('zona');
+  zona.innerHTML = A + B;
+
+  document.querySelector('.grupo').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function (o) {
+      o.setAttribute('aria-pressed', String(o === b));
+    });
+    var v = b.dataset.v;
+    zona.querySelectorAll('.caso').forEach(function (c) {
+      c.hidden = (v !== 'todas' && c.dataset.cual !== v);
+    });
+  });
+})();
+</script>
+</body>
+</html>

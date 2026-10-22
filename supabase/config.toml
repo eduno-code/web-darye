@@ -1,0 +1,8 @@
+# Configuración del CLI de Supabase para el proyecto "psicconsciente".
+# Solo se usa para aplicar migraciones y desplegar Edge Functions; no se
+# levanta Supabase en local, así que no hace falta nada de Docker.
+project_id = "psicconsciente"
+
+[db]
+# La versión de Postgres del proyecto en la nube.
+major_version = 17

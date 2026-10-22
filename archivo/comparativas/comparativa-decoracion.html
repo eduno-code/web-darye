@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seis decoraciones para el panel</title>
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   SEIS DECORACIONES PARA EL PANEL
+
+   Ninguna es forma por forma. Cada una sale de algo que ya existe en el
+   proyecto: la luz de las fotos que elegiste, la celosia de puerta-b-banco,
+   la espiral del logo, o el "papel" que pide el propio design system cuando
+   dice que la pagina se lee como una carta bien compuesta.
+
+   Todas cumplen la misma regla dura: no pueden bajar el contraste del texto.
+   Por eso ninguna aclara el fondo por debajo del texto — o oscurecen, o van
+   tan tenues que no mueven la medida.
+   ============================================================ */
+:root{
+  --papel:#EFE9E0; --tinta:#2E332E; --suave:#5C635A;
+  --arcilla:#C6A783; --arcilla-dp:#8A6746; --salvia:#5A7060;
+  --panel-fondo:#5E442C; --panel-txt:#FAF3EA; --panel-txt-sv:#E2D5C4;
+  --panel-linea:#B99A78;
+  color-scheme:only light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font:400 14px/1.55 Inter,"Segoe UI",system-ui,sans-serif}
+
+header.barra{padding:1.4rem 1.4rem .2rem;max-width:78rem;margin-inline:auto}
+header.barra h1{margin:0 0 .3rem;font:600 1.15rem/1.2 Fraunces,Georgia,serif;letter-spacing:-.02em}
+header.barra p{margin:0;color:var(--suave);max-width:66ch}
+
+.escena{display:flex;gap:1.8rem;flex-wrap:wrap;justify-content:center;
+  align-items:flex-start;padding:2rem 1.4rem 4rem;max-width:78rem;margin-inline:auto}
+figure{margin:0;width:330px;display:flex;flex-direction:column;gap:.7rem}
+figcaption b{display:block;font:600 .95rem/1.3 Inter,sans-serif}
+figcaption .que{display:block;font-size:.8rem;color:var(--suave);margin-top:.15rem}
+
+.panel{width:330px;height:500px;position:relative;overflow:hidden;border-radius:10px;
+  background:var(--panel-fondo);color:var(--panel-txt);
+  padding:1.4rem;display:flex;flex-direction:column;gap:1.1rem;isolation:isolate}
+.panel > *{position:relative;z-index:2}
+.capa{position:absolute;inset:0;z-index:0;pointer-events:none}
+
+.marca{display:flex;align-items:center;gap:.5rem;margin:0;font-size:.76rem;
+  font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.marca svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.1;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+.invita{margin:auto 0;display:flex;flex-direction:column;align-items:center;
+  gap:.75rem;text-align:center}
+.invita h2{margin:0;font:600 1.5rem/1.08 Fraunces,Georgia,serif;letter-spacing:-.03em}
+.invita p{margin:0;font-size:.84rem;color:var(--panel-txt-sv);max-width:25ch}
+.invita button{appearance:none;cursor:pointer;font:inherit;font-size:.84rem;font-weight:600;
+  color:var(--panel-txt);background:transparent;border:1px solid var(--panel-linea);
+  border-radius:999px;padding:.6rem 1.6rem;min-height:44px}
+.pie{margin:0;display:flex;gap:.55rem;align-items:flex-start;font-size:.76rem;
+  line-height:1.5;color:var(--panel-txt-sv);border-left:2px solid var(--salvia);
+  padding-left:.75rem}
+.pie svg{flex:none;width:14px;height:14px;margin-top:.2rem;color:var(--salvia)}
+
+.dato{margin:0;font-size:.78rem;line-height:1.5;border-left:2px solid var(--arcilla-dp);
+  padding-left:.7rem}
+.dato b{display:block;font-size:.71rem;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--arcilla-dp)}
+.dato span{display:block;margin-top:.2rem}
+
+/* ============================================================
+   A · LUZ DE VENTANA
+   Un solo degradado suave, sin una sola parada dura. Es de donde venia la
+   idea de las fotos: luz calida entrando por arriba. Como no hay borde, no
+   hay nada que se pueda ver pixelado.
+   ============================================================ */
+#a .panel{background:
+  radial-gradient(115% 80% at 12% -8%, #6E5133 0%, #5E442C 52%, #513A24 100%)}
+
+/* ============================================================
+   B · CELOSIA
+   La reja de luz de puerta-b-banco.jpg, abstraida a dos familias de bandas
+   cruzadas. Las paradas llevan rampa de 14 px —no son cortes— asi que no
+   escalonan. Y va enmascarada en diagonal para vivir solo en la esquina de
+   arriba, lejos del texto.
+   ============================================================ */
+#b .capa{
+  background-image:
+    repeating-linear-gradient(38deg,  rgba(255,246,232,.075) 0 16px, rgba(255,246,232,0) 30px 74px),
+    repeating-linear-gradient(-49deg, rgba(255,246,232,.055) 0 12px, rgba(255,246,232,0) 26px 66px);
+  -webkit-mask-image:linear-gradient(148deg, #000 0%, rgba(0,0,0,.55) 30%, transparent 58%);
+  mask-image:linear-gradient(148deg, #000 0%, rgba(0,0,0,.55) 30%, transparent 58%);
+}
+
+/* ============================================================
+   C · LA ESPIRAL DE LA MARCA
+   El propio dibujo del logo, a 460 px y saliendose por la esquina. La
+   decoracion deja de ser una forma cualquiera y pasa a SER la marca. Es lo
+   que hace una revista cuando repite su letra capital enorme al margen.
+   ============================================================ */
+#c .capa svg{position:absolute;right:-118px;bottom:-96px;width:430px;height:430px;
+  fill:none;stroke:rgba(250,243,234,.10);stroke-width:.55;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* ============================================================
+   D · GRANO DE PAPEL
+   Sin ninguna forma: solo la textura. El design system dice que la pagina se
+   lee "como una carta bien compuesta, con buen papel" — esto es exactamente
+   eso, y no anade ni un elemento nuevo que explicar.
+   ============================================================ */
+#d .panel{background:
+  linear-gradient(168deg, #674B30 0%, #5E442C 46%, #533B25 100%)}
+#d .capa{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  opacity:.16;mix-blend-mode:overlay}
+
+/* ============================================================
+   E · FILETE EDITORIAL
+   Cero formas y cero texturas: un filete fino por dentro del panel y una
+   firma vertical en el canto. Es el recurso mas de revista de los seis, y el
+   unico que no depende de que el navegador dibuje bien nada.
+   ============================================================ */
+#e .capa{border:1px solid rgba(250,243,234,.16);inset:14px;border-radius:4px}
+#e .firma{position:absolute;z-index:2;left:24px;bottom:96px;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-size:.64rem;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(250,243,234,.5);margin:0}
+
+/* ============================================================
+   F · SOMBRA DE HOJA
+   La otra foto, puerta-a-luz.jpg: sombras de hojas sobre una pared. Dos
+   elipses muy tenues y desenfocadas, sin borde que pueda escalonar, en la
+   franja de arriba.
+   ============================================================ */
+#f .capa::before,#f .capa::after{content:"";position:absolute;border-radius:50% 50% 48% 52% / 62% 58% 42% 38%;
+  background:rgba(30,18,8,.30);filter:blur(26px)}
+#f .capa::before{width:230px;height:180px;right:-40px;top:-30px;transform:rotate(-18deg)}
+#f .capa::after{width:150px;height:120px;right:96px;top:96px;transform:rotate(24deg);
+  background:rgba(30,18,8,.22)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bombilla" viewBox="0 0 24 24">
+    <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+    <path d="M9 20h6M10.2 22.2h3.6"/>
+    <path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+  </symbol>
+  <symbol id="candado" viewBox="0 0 24 24">
+    <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/>
+    <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<header class="barra">
+  <h1>Seis decoraciones para el panel</h1>
+  <p>Ninguna es forma por forma. Cada una sale de algo que ya existe: la luz de las fotos que elegiste, la celosía de <code>puerta-b-banco.jpg</code>, la espiral de tu logo, o el «buen papel» que pide tu propio design system. Todas mantienen el contraste del texto.</p>
+</header>
+
+<main class="escena">
+
+  <figure id="a">
+    <figcaption><b>A · Luz de ventana</b><span class="que">Un solo degradado suave, sin ninguna parada dura. Luz cálida entrando por arriba a la izquierda.</span></figcaption>
+    <div class="panel">
+      <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+      <div class="invita"><h2>¿Primera vez aquí?</h2><p>Crea tu cuenta y reserva tu consulta en dos minutos.</p><button type="button">Crear cuenta</button></div>
+      <p class="pie"><svg><use href="#candado"/></svg><span>Solo se guardan tu nombre, tu correo y tu teléfono.</span></p>
+    </div>
+    <p class="dato"><b>Lo que gana</b><span>Al no tener borde, no hay nada que se pueda ver pixelado. Y no es un elemento nuevo: es el mismo marrón con volumen.</span></p>
+  </figure>
+
+  <figure id="b">
+    <figcaption><b>B · Celosía</b><span class="que">La reja de luz de tu foto, abstraída a bandas cruzadas y enmascarada para vivir solo en la esquina.</span></figcaption>
+    <div class="panel">
+      <div class="capa"></div>
+      <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+      <div class="invita"><h2>¿Primera vez aquí?</h2><p>Crea tu cuenta y reserva tu consulta en dos minutos.</p><button type="button">Crear cuenta</button></div>
+      <p class="pie"><svg><use href="#candado"/></svg><span>Solo se guardan tu nombre, tu correo y tu teléfono.</span></p>
+    </div>
+    <p class="dato"><b>Lo que gana</b><span>Trae la foto sin la foto. Si algún día pones imagen, el lenguaje ya está puesto y encaja solo.</span></p>
+  </figure>
+
+  <figure id="c">
+    <figcaption><b>C · La espiral de la marca</b><span class="que">Tu propio logo a 430 px, saliéndose por la esquina, al 10 % de opacidad.</span></figcaption>
+    <div class="panel">
+      <div class="capa">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+          <path d="M9 20h6M10.2 22.2h3.6"/>
+          <path d="M12 9.6A.8.8 0 0 1 12 8A1.7 1.7 0 0 1 12 11.4A3 3 0 0 1 12 5.4"/>
+        </svg>
+      </div>
+      <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+      <div class="invita"><h2>¿Primera vez aquí?</h2><p>Crea tu cuenta y reserva tu consulta en dos minutos.</p><button type="button">Crear cuenta</button></div>
+      <p class="pie"><svg><use href="#candado"/></svg><span>Solo se guardan tu nombre, tu correo y tu teléfono.</span></p>
+    </div>
+    <p class="dato"><b>Lo que gana</b><span>La decoración deja de ser una forma cualquiera y pasa a <em>ser</em> la marca. Es lo que hace una revista con su capitular al margen.</span></p>
+  </figure>
+
+  <figure id="d">
+    <figcaption><b>D · Grano de papel</b><span class="que">Sin ninguna forma: solo textura, sobre un degradado de profundidad muy leve.</span></figcaption>
+    <div class="panel">
+      <div class="capa"></div>
+      <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+      <div class="invita"><h2>¿Primera vez aquí?</h2><p>Crea tu cuenta y reserva tu consulta en dos minutos.</p><button type="button">Crear cuenta</button></div>
+      <p class="pie"><svg><use href="#candado"/></svg><span>Solo se guardan tu nombre, tu correo y tu teléfono.</span></p>
+    </div>
+    <p class="dato"><b>Lo que gana</b><span>Tu design system dice que la página se lee «como una carta bien compuesta, con buen papel». Esto es literalmente eso, y no añade nada que explicar.</span></p>
+  </figure>
+
+  <figure id="e">
+    <figcaption><b>E · Filete editorial</b><span class="que">Cero formas y cero texturas: un filete fino por dentro y la firma en vertical al canto.</span></figcaption>
+    <div class="panel">
+      <div class="capa"></div>
+      <p class="firma">Daryeli Romero · Psicología</p>
+      <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+      <div class="invita"><h2>¿Primera vez aquí?</h2><p>Crea tu cuenta y reserva tu consulta en dos minutos.</p><button type="button">Crear cuenta</button></div>
+      <p class="pie"><svg><use href="#candado"/></svg><span>Solo se guardan tu nombre, tu correo y tu teléfono.</span></p>
+    </div>
+    <p class="dato"><b>Lo que gana</b><span>El único de los seis que no depende de que el navegador dibuje bien nada. Y el más de revista.</span></p>
+  </figure>
+
+  <figure id="f">
+    <figcaption><b>F · Sombra de hoja</b><span class="que">La otra foto, <code>puerta-a-luz.jpg</code>: dos manchas desenfocadas como sombras vegetales en la pared.</span></figcaption>
+    <div class="panel">
+      <div class="capa"></div>
+      <p class="marca"><svg><use href="#bombilla"/></svg>Psicconsciente</p>
+      <div class="invita"><h2>¿Primera vez aquí?</h2><p>Crea tu cuenta y reserva tu consulta en dos minutos.</p><button type="button">Crear cuenta</button></div>
+      <p class="pie"><svg><use href="#candado"/></svg><span>Solo se guardan tu nombre, tu correo y tu teléfono.</span></p>
+    </div>
+    <p class="dato"><b>Ojo</b><span>Van desenfocadas 26 px, así que no hay borde que escalone. Pero es la más «orgánica» y la que más puede envejecer.</span></p>
+  </figure>
+
+</main>
+</body>
+</html>

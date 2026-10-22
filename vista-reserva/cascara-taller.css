@@ -1,0 +1,155 @@
+/* ==========================================================================
+   LA CASCARA DEL TALLER
+   ==========================================================================
+
+   Solo para `vista-reserva/`, que es la superficie de diseno. Aqui vive lo que
+   en la pagina real ponen style.css y reservar.css: el fondo, el titular, la
+   tira de pestanas y la tarjeta blanca.
+
+   POR QUE ESTA SEPARADO. Todo esto envuelve LOS TRES PASOS de la pagina real,
+   no solo el primero, asi que no puede vivir en `paso1.css`: una hoja del paso
+   1 no debe decidir como se ven los pasos 2 y 3. Mientras esos dos no esten
+   redisenados, la cascara de la pagina real es de reservar.css, y esta es la
+   copia que mantiene el taller en pie.
+
+   EL DIA QUE LOS TRES PASOS ESTEN HECHOS este archivo es la plantilla de lo que
+   se lleva a la pagina real, y reservar.css desaparece.
+   ========================================================================== */
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--suelo);
+  color:var(--txt);
+  font-family:var(--texto);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+.pnl-lienzo-ancho{background:var(--suelo)}
+
+.hoja{
+  padding:2.25rem 2.5rem 3.5rem;
+  max-width:64rem;   /* 1024 px. No se estira: mide lo que pide su contenido */
+}
+
+/* El titular vive FUERA de la tarjeta, encima de las pestanas, porque nombra
+   las tres y no solo el paso 1. Alineado al mismo borde que la tira y la
+   tarjeta. */
+h1{
+  margin:0 0 1.25rem;
+  font-family:var(--texto);
+  font-size:var(--t-h1);
+  font-weight:600;
+  letter-spacing:-.02em;
+  line-height:1.15;
+}
+h1:focus{outline:none}   /* el foco al cambiar de paso es programatico */
+
+/* Los iconos del taller crecen con la letra. En la pagina real esta regla va
+   acotada a #vista1, porque alli hay iconos de otros pasos que miden fijo. */
+.ico{width:1em;height:1em;flex:none}
+
+
+/* ---------- LAS PESTANAS ----------
+
+   LAS TRES SON LA MISMA PIEZA: misma altura, mismo radio, mismo relleno. Lo
+   unico que distingue a la activa es el relleno blanco y que se funde con la
+   tarjeta de abajo.
+
+   Se probo antes un canto inclinado con `skewX` y solape negativo, imitando los
+   separadores de un archivador. No funcionaba: el sesgo deformaba las esquinas
+   redondeadas, el solape escondia el canto de la de en medio y la primera no
+   llegaba a encajar con la tarjeta. Decision de Edgar: simetria y fluidez.   */
+
+.tira{
+  display:flex;
+  align-items:flex-end;
+  gap:var(--pest-hueco);
+  margin:0;
+  padding:0;
+}
+
+.pest{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  height:var(--pest-alto);
+  padding:0 var(--pest-aire);
+  border:0;
+  background:none;
+  font-family:var(--texto);
+  font-size:var(--t-aux);
+  font-weight:600;
+  letter-spacing:-.01em;
+  color:var(--pest-txt);
+  cursor:pointer;
+  transition:color var(--paso);
+}
+.pest .ico{font-size:16px}
+
+/* La forma va en el pseudo-elemento y no en el boton: asi el relleno puede
+   bajar 2 px por debajo del boton para coser la costura con la tarjeta sin
+   mover el texto. */
+.pest::before{
+  content:"";
+  position:absolute;
+  inset:0 0 -2px;
+  border-radius:var(--pest-radio) var(--pest-radio) 0 0;
+  background:var(--pest-off);
+  z-index:-1;
+  transition:background var(--paso);
+}
+.pest[aria-selected="true"]{color:var(--marca)}
+.pest[aria-selected="true"]::before{background:var(--blanco)}
+.pest[aria-disabled="true"]{color:var(--pest-txt-off);cursor:default}
+.pest:hover:not([aria-disabled="true"]):not([aria-selected="true"])::before{
+  background:var(--marca-cl);
+}
+.pest:focus-visible{outline:2px solid var(--marca);outline-offset:3px}
+
+
+/* ---------- LA TARJETA ----------
+
+   Sin borde: el dibujo lo hace la superficie mas la sombra. La esquina de
+   arriba a la izquierda se queda recta porque ahi entra la primera pestana.
+
+   OJO CON EL SELECTOR de la regla que la devuelve: la tira NO es antepasada de
+   la tarjeta, es su hermana. Escrito como `.tarjeta:has(.pest...)` no se aplica
+   nunca.                                                                     */
+
+.tarjeta{
+  background:var(--blanco);
+  border:0;
+  border-radius:0 var(--r-grande) var(--r-grande) var(--r-grande);
+  box-shadow:var(--sombra);
+  padding:2rem 2.25rem 1.75rem;
+}
+.tira:has(.pest:nth-of-type(1):not([aria-selected="true"])) + .tarjeta{
+  border-top-left-radius:var(--r-grande);
+}
+.tarjeta:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+
+
+/* ---------- LOS DOS PANELES SIN DISENAR ---------- */
+.pendiente{margin:0;color:var(--txt-suave)}
+
+/* SOLO PARA LECTOR DE PANTALLA. No se puede usar `display:none` ni
+   `visibility:hidden`: las dos sacan el elemento del arbol de accesibilidad y
+   entonces no se anuncia nada, que es justo lo contrario de lo que se busca.
+
+   En la pagina real esto lo hace `.sr-only`, de reservar.css. */
+.solo-lector{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}

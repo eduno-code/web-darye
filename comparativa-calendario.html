@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El calendario del paso 2 · tres composiciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     EL CALENDARIO DEL PASO 2.
+
+     CON DATOS REALES, pedidos a `get_available_slots` para el mes que viene:
+     279 huecos en 27 dias de 31. Solo cierran los domingos. 12 horas los dias
+     de semana, 4 los sabados, y un hueco a las 18:00.
+
+     ESO DECIDE DOS COSAS:
+
+     1. "Marcar los dias disponibles" no informa de nada: se encenderia casi
+        toda la rejilla. Lo que el calendario tiene que marcar es lo CONTRARIO
+        —el domingo cerrado— y que hoy ya casi no queda.
+
+     2. Doce horas no son una lista, son tres franjas. Agrupadas en manana,
+        tarde y noche se leen de un vistazo, y el hueco de las 18:00 pasa de
+        parecer un error a ser el corte entre dos franjas.
+
+     Las tres composiciones van al ancho real del lienzo con el menu abierto.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --aro:#A87453; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50; --acc-sv:#E8EDE6;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-nota:.79rem; --t-aux:.88rem; --t-base:1rem; --t-rotulo:1.05rem; --t-h1:1.6rem;
+  --r-chico:8px; --r-medio:14px; --r-grande:18px; --r-pill:999px;
+  --canto:2px;
+  --paso:180ms cubic-bezier(.2,.8,.3,1);
+  --sombra:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--suelo);color:var(--txt);
+  font-family:var(--texto);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+header{padding:1.5rem 2rem 1rem}
+h1{margin:0 0 .3rem;font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+header p{margin:0;max-width:66rem;font-size:var(--t-aux);color:var(--txt-suave)}
+header b{color:var(--txt)}
+
+.caso{margin:1.5rem 2rem}
+.caso > h2{margin:0 0 .2rem;font-size:1.05rem;font-weight:600}
+.caso > .dice{margin:0 0 1rem;max-width:62rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.caso > .dice b{color:var(--txt)}
+
+/* la tarjeta, como la del paso 1 */
+.hoja{
+  background:var(--blanco);
+  border-radius:var(--r-grande);
+  box-shadow:var(--sombra);
+  padding:2rem 2.25rem 1.75rem;
+  width:1050px;max-width:100%;
+}
+.rotulo{
+  display:block;margin:0 0 1rem;
+  font-family:var(--display);font-size:var(--t-rotulo);font-weight:600;
+  color:var(--marca);
+}
+
+/* ---------- la composicion ---------- */
+.dos-columnas{display:grid;grid-template-columns:400px 1fr;gap:2.75rem;align-items:start}
+.una-columna{display:block}
+
+/* ---------- el calendario ---------- */
+.cal-cab{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;margin:0 0 1rem;
+}
+.cal-mes{
+  font-family:var(--display);font-size:1.15rem;font-weight:600;
+  color:var(--txt);text-transform:capitalize;
+}
+.cal-nav{display:flex;gap:.35rem}
+.cal-nav button{
+  display:grid;place-items:center;
+  width:34px;height:34px;padding:0;
+  border:1px solid var(--linea);border-radius:var(--r-chico);
+  background:none;color:var(--marca);cursor:pointer;
+  transition:background var(--paso), border-color var(--paso);
+}
+.cal-nav button:hover:not(:disabled){background:var(--fila-viva);border-color:var(--aro)}
+.cal-nav button:disabled{color:var(--marca-cl);cursor:default}
+.cal-nav svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.cal-semana{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:.25rem;
+  margin:0 0 .4rem;
+}
+.cal-semana span{
+  text-align:center;font-size:.7rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--txt-suave);
+}
+.cal-dias{display:grid;grid-template-columns:repeat(7,1fr);gap:.25rem}
+
+.dia{
+  position:relative;
+  aspect-ratio:1;
+  display:grid;place-items:center;
+  border:0;padding:0;
+  background:none;
+  font-family:var(--display);
+  font-size:1rem;font-weight:500;
+  color:var(--txt);
+  border-radius:var(--r-chico);
+  cursor:pointer;
+  transition:background var(--paso), box-shadow var(--paso), color var(--paso);
+}
+.dia:disabled{color:var(--marca-cl);cursor:default}
+.dia.fuera{visibility:hidden}
+
+/* hoy: una marca discreta bajo el numero */
+.dia.hoy::after{
+  content:"";position:absolute;bottom:6px;left:50%;
+  width:4px;height:4px;margin-left:-2px;border-radius:50%;
+  background:var(--marca);
+}
+.dia[aria-pressed="true"]::after{background:var(--blanco)}
+
+.dia[aria-pressed="true"]{
+  background:var(--acc);color:var(--blanco);
+}
+
+/* ---------- las horas ---------- */
+.horas-cab{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:1rem;margin:0 0 1rem;flex-wrap:wrap;
+}
+.horas-dia{font-family:var(--display);font-size:1.05rem;font-weight:600;color:var(--txt)}
+.horas-zona{font-size:var(--t-nota);color:var(--txt-suave)}
+
+.franja{margin:0 0 1.15rem}
+.franja > h4{
+  margin:0 0 .5rem;
+  font-size:var(--t-nota);font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--txt-suave);
+}
+.franja-horas{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:.4rem}
+.hora{
+  padding:.6rem .4rem;
+  border:1px solid var(--linea);border-radius:var(--r-chico);
+  background:none;
+  font-family:var(--texto);font-size:var(--t-aux);font-weight:500;
+  font-variant-numeric:tabular-nums;
+  color:var(--txt);cursor:pointer;
+  transition:background var(--paso), box-shadow var(--paso), border-color var(--paso);
+}
+.hora:hover{background:var(--fila-viva);border-color:var(--aro)}
+.hora[aria-pressed="true"]{
+  background:var(--acc);border-color:var(--acc);color:var(--blanco);
+}
+
+/* ---------- el pie ---------- */
+.pie{
+  display:flex;align-items:center;gap:1rem 1.5rem;flex-wrap:wrap;
+  margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--linea);
+}
+.consiente{display:flex;align-items:flex-start;gap:.6rem;flex:1;min-width:16rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.consiente input{margin:.25rem 0 0;width:16px;height:16px;accent-color:var(--acc)}
+.consiente a{color:var(--marca)}
+.seguir{
+  display:inline-flex;align-items:center;gap:.55rem;
+  padding:.85rem 1.6rem;border:0;border-radius:var(--r-pill);
+  background:var(--acc);color:var(--blanco);
+  font-family:var(--texto);font-size:var(--t-base);font-weight:600;
+  cursor:pointer;box-shadow:0 1px 3px rgba(74,94,80,.3);
+}
+.atras{
+  border:0;background:none;padding:.85rem 0;
+  font-family:var(--texto);font-size:var(--t-aux);font-weight:500;
+  color:var(--txt-suave);cursor:pointer;text-decoration:underline;text-underline-offset:3px;
+}
+
+/* ============ B · sin rejilla ============ */
+.b .cal-dias{gap:.15rem}
+.b .dia{font-size:1.05rem}
+.b .dia:not(:disabled):hover{background:var(--fila-viva)}
+
+/* ============ A · rejilla tenue ============ */
+.a .dia:not(.fuera){box-shadow:inset 0 0 0 1px var(--linea)}
+.a .dia:disabled{box-shadow:inset 0 0 0 1px rgba(166,123,91,.10)}
+.a .dia[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--acc)}
+.a .dia:not(:disabled):hover{background:var(--fila-viva)}
+
+/* ============ C · horas abajo ============ */
+.c .cal{max-width:400px;margin:0 auto 2rem}
+.c .franjas{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;padding-top:1.5rem;border-top:1px solid var(--linea)}
+.c .franja{margin:0}
+
+.nota-dom{
+  margin:.9rem 0 0;font-size:var(--t-nota);color:var(--txt-suave);
+  display:flex;align-items:center;gap:.4rem;
+}
+.nota-dom svg{width:13px;height:13px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--marca)}
+
+.cierre{padding:1rem 2rem 4rem;max-width:66rem;font-size:var(--t-aux);line-height:1.7;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+.cierre p{margin:0 0 .9rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>El calendario del paso 2</h1>
+  <p>Con la disponibilidad <b>real</b> de Daryeli: 279 huecos en 27 días de 31, solo cierra los domingos. 12 horas de lunes a viernes, 4 los sábados. Elige un día y una hora en las tres.</p>
+</header>
+
+<div id="zona"></div>
+
+<div class="cierre">
+  <p><b>Lo que los datos reales cambiaron.</b> El patrón de referencia dice «marca los días disponibles», y aquí eso no informa de nada: 27 de 31 se encenderían. Así que la rejilla marca <b>lo contrario</b> —el domingo apagado— y deja el número de hoy con su punto. Es menos decoración y más información.</p>
+
+  <p><b>Y las horas ganaron peso.</b> Doce huecos en una columna son una lista que hay que leer entera; en tres franjas —mañana, tarde, noche— se ven de un vistazo, y el salto de las 18:00 pasa de parecer un error a ser el corte entre la tarde y la noche.</p>
+
+  <p><b>Mi apuesta es la B.</b> Sin rejilla, el mes se lee como una página de agenda y no como una tabla: los números respiran, y lo único que pinta color es el día elegido. Es lo más cerca de «que el calendario sea lo más bonito posible» sin añadir ni una línea que no haga falta — y las líneas de la A, con 42 celdas, son 42 rectángulos compitiendo con el único que importa.</p>
+
+  <p>La <b>A</b> es la misma composición con la rejilla dibujada. Se lee más como un calendario de pared, que puede ser justo lo que quieras: es más reconocible de un golpe, a cambio de más ruido.</p>
+
+  <p>La <b>C</b> cambia la composición: el mes centrado y estrecho arriba, y las tres franjas a lo ancho abajo. Da mucho aire y hace el calendario claramente protagonista, pero obliga a bajar la vista para elegir la hora — el día y la hora dejan de verse a la vez, que es justo lo que el patrón de referencia recomienda evitar.</p>
+</div>
+
+<script>
+(function () {
+  /* ---------- LA DISPONIBILIDAD REAL ----------
+     Pedida a get_available_slots para el mes que viene. Los domingos no
+     aparecen; los sabados traen 4 horas y los demas 12, con el hueco de las
+     18:00 entre la tarde y la noche. */
+  var HOY = new Date(2026, 8, 15);          // 15 de septiembre de 2026, martes
+  var SEMANA = 12, SABADO = 4;
+
+  var DIA_HORAS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','19:00','20:00','21:00'];
+  var SAB_HORAS = ['09:00','10:00','11:00','12:00'];
+
+  function horasDe(d) {
+    var s = d.getDay();
+    if (s === 0) return [];                  // domingo cerrado
+    if (s === 6) return SAB_HORAS;
+    if (d.getDate() === HOY.getDate() && d.getMonth() === HOY.getMonth()) {
+      return ['20:00','21:00'];              // hoy ya casi no queda
+    }
+    return DIA_HORAS;
+  }
+
+  /* LOS CORTES SALEN DEL IDIOMA Y DE LOS DATOS, no de dividir el dia en tres.
+     Las 12:00 son manana en espanol —es mediodia—, asi que el corte va DESPUES
+     de las 12 y no antes. Con la agenda real esto reparte 09-12 en manana (4),
+     13-17 en tarde (5) y 19-21 en noche (3), y el hueco de las 18:00 cae
+     exactamente en la frontera en vez de partir un grupo. */
+  var FRANJAS = [
+    { t:'Mañana', de:6,  a:13 },
+    { t:'Tarde',       de:13, a:19 },
+    { t:'Noche',       de:19, a:24 }
+  ];
+
+  var FLECHA_I = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+  var FLECHA_D = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+  var INFO = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.5"/></svg>';
+
+  function calendario(id, elegido) {
+    var primero = new Date(2026, 8, 1);
+    var hueco = (primero.getDay() + 6) % 7;      // la semana arranca en lunes
+    var dias = new Date(2026, 9, 0).getDate();
+
+    var celdas = '';
+    for (var i = 0; i < hueco; i++) celdas += '<span class="dia fuera"></span>';
+
+    for (var n = 1; n <= dias; n++) {
+      var d = new Date(2026, 8, n);
+      var pasado = d < HOY;
+      var libres = horasDe(d).length;
+      var esHoy = n === HOY.getDate();
+      var puesto = n === elegido;
+      celdas += '<button type="button" class="dia' + (esHoy ? ' hoy' : '') + '"' +
+        ' aria-pressed="' + puesto + '"' +
+        (pasado || !libres ? ' disabled' : '') +
+        ' aria-label="' + n + ' de septiembre' +
+          (libres ? ', ' + libres + (libres === 1 ? ' hueco' : ' huecos') : ', sin huecos') + '">' +
+        n + '</button>';
+    }
+
+    return '<div class="cal">' +
+      '<div class="cal-cab">' +
+        '<span class="cal-mes">septiembre 2026</span>' +
+        '<span class="cal-nav">' +
+          '<button type="button" disabled aria-label="Mes anterior">' + FLECHA_I + '</button>' +
+          '<button type="button" aria-label="Mes siguiente">' + FLECHA_D + '</button>' +
+        '</span>' +
+      '</div>' +
+            /* X para miercoles, como en los calendarios en espanol: con dos M
+         seguidas nadie sabe cual columna es cual. */
+      '<div class="cal-semana"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>' +
+      '<div class="cal-dias">' + celdas + '</div>' +
+      '<p class="nota-dom">' + INFO + '<span>Los domingos no hay consulta</span></p>' +
+    '</div>';
+  }
+
+  function franjas(elegido, horaPuesta) {
+    var d = new Date(2026, 8, elegido);
+    var libres = horasDe(d);
+
+    var bloques = FRANJAS.map(function (f) {
+      var suyas = libres.filter(function (h) {
+        var hh = Number(h.slice(0, 2));
+        return hh >= f.de && hh < f.a;
+      });
+      if (!suyas.length) return '';
+      return '<div class="franja"><h4>' + f.t + '</h4><div class="franja-horas">' +
+        suyas.map(function (h) {
+          return '<button type="button" class="hora" aria-pressed="' + (h === horaPuesta) + '">' + h + '</button>';
+        }).join('') + '</div></div>';
+    }).join('');
+
+    var fmt = new Intl.DateTimeFormat('es', { weekday:'long', day:'numeric', month:'long' });
+    return '<div class="horas">' +
+      '<div class="horas-cab">' +
+        '<span class="horas-dia">' + fmt.format(d) + '</span>' +
+        '<span class="horas-zona">Horas de Caracas, tu zona</span>' +
+      '</div>' + bloques + '</div>';
+  }
+
+  function pie() {
+    return '<div class="pie">' +
+      '<label class="consiente">' +
+        '<input type="checkbox">' +
+        '<span>He leído y acepto el <a href="#">consentimiento informado y la política de privacidad</a>.</span>' +
+      '</label>' +
+      '<button type="button" class="atras">Atrás</button>' +
+      '<button type="button" class="seguir">Reservar el horario</button>' +
+    '</div>';
+  }
+
+  var CASOS = [
+    { clase:'a', titulo:'A · rejilla tenue',
+      dice:'El mes con sus celdas dibujadas, mes a la izquierda y horas a la derecha. Se lee como un calendario de pared: <b>más reconocible de un golpe, más ruido</b>.',
+      html: function () {
+        return '<div class="dos-columnas">' + calendario('a', 17) + franjas(17, '11:00') + '</div>' + pie();
+      } },
+
+    { clase:'b', titulo:'B · sin rejilla',
+      dice:'La misma composición sin una sola línea de celda. Los números respiran y <b>lo único que pinta color es el día elegido</b>.',
+      html: function () {
+        return '<div class="dos-columnas">' + calendario('b', 17) + franjas(17, '11:00') + '</div>' + pie();
+      } },
+
+    { clase:'c', titulo:'C · el mes arriba, las franjas abajo',
+      dice:'Otra composición: el mes centrado y estrecho, y las tres franjas a lo ancho. Más aire y el calendario claramente protagonista, pero <b>el día y la hora dejan de verse a la vez</b>.',
+      html: function () {
+        var d = new Date(2026, 8, 17);
+        var libres = horasDe(d);
+        var bloques = FRANJAS.map(function (f) {
+          var suyas = libres.filter(function (h) { var hh = Number(h.slice(0,2)); return hh >= f.de && hh < f.a; });
+          if (!suyas.length) return '';
+          return '<div class="franja"><h4>' + f.t + '</h4><div class="franja-horas">' +
+            suyas.map(function (h) { return '<button type="button" class="hora" aria-pressed="' + (h === '11:00') + '">' + h + '</button>'; }).join('') +
+            '</div></div>';
+        }).join('');
+        var fmt = new Intl.DateTimeFormat('es', { weekday:'long', day:'numeric', month:'long' });
+        return '<div class="una-columna">' + calendario('c', 17) +
+          '<div class="horas-cab" style="margin-top:1.5rem">' +
+            '<span class="horas-dia">' + fmt.format(d) + '</span>' +
+            '<span class="horas-zona">Horas de Caracas, tu zona</span>' +
+          '</div>' +
+          '<div class="franjas">' + bloques + '</div>' +
+        '</div>' + pie();
+      } }
+  ];
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c) {
+    return '<section class="caso ' + c.clase + '">' +
+      '<h2>' + c.titulo + '</h2>' +
+      '<p class="dice">' + c.dice + '</p>' +
+      '<div class="hoja"><span class="rotulo">Elige el día y la hora</span>' + c.html() + '</div>' +
+    '</section>';
+  }).join('');
+
+  /* Los botones funcionan: elegir dia repinta las horas, elegir hora la marca.
+     Una comparativa de calendario que no se puede pulsar no dice nada. */
+  document.getElementById('zona').addEventListener('click', function (ev) {
+    var b = ev.target.closest('.dia:not(:disabled), .hora');
+    if (!b) return;
+    var caso = b.closest('.caso');
+    if (b.classList.contains('hora')) {
+      caso.querySelectorAll('.hora').forEach(function (h) { h.setAttribute('aria-pressed', String(h === b)); });
+      return;
+    }
+    var n = Number(b.textContent);
+    caso.querySelectorAll('.dia').forEach(function (d) { d.setAttribute('aria-pressed', String(d === b)); });
+
+    var d = new Date(2026, 8, n);
+    var libres = horasDe(d);
+    var bloques = FRANJAS.map(function (f) {
+      var suyas = libres.filter(function (h) { var hh = Number(h.slice(0,2)); return hh >= f.de && hh < f.a; });
+      if (!suyas.length) return '';
+      return '<div class="franja"><h4>' + f.t + '</h4><div class="franja-horas">' +
+        suyas.map(function (h) { return '<button type="button" class="hora" aria-pressed="false">' + h + '</button>'; }).join('') +
+        '</div></div>';
+    }).join('');
+    var fmt = new Intl.DateTimeFormat('es', { weekday:'long', day:'numeric', month:'long' });
+    caso.querySelector('.horas-dia').textContent = fmt.format(d);
+    var donde = caso.querySelector('.franjas') || caso.querySelector('.horas');
+    if (donde.classList.contains('franjas')) donde.innerHTML = bloques;
+    else donde.innerHTML = donde.querySelector('.horas-cab').outerHTML + bloques;
+  });
+})();
+</script>
+</body>
+</html>

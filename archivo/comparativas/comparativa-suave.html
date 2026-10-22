@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa · bajar el registro</title>
+<style>
+:root{
+  --bg:#FDFAF7; --bg-2:#FAF4EE; --sup:#FFFFFF; --sel:#F3E9DE;
+  --marca:#A67B5B; --marca-cl:#C4A484; --marca-dp:#8C6246; --marca-dk:#6E4C36;
+  --acc:#22303E; --txt:#2C3E50; --txt-suave:#55697A;
+  --inerte:#EDE7E0;
+  --r:14px;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#F4EFEA;color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--marca-dp);outline-offset:3px;border-radius:var(--r)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms !important}}
+
+.envoltorio{max-width:56rem;margin:0 auto;padding:2rem 1.25rem 5rem}
+.cabecera h1{font-size:1.5rem;margin:0 0 .35rem;letter-spacing:-.015em}
+.cabecera p{color:var(--txt-suave);margin:0 0 2rem;font-size:.92rem;line-height:1.65;max-width:40rem}
+
+.reg{margin-bottom:2.5rem}
+.reg-cab{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;margin:0 0 .2rem}
+.reg-cab b{font-size:1.05rem;letter-spacing:-.01em}
+.reg-cab em{font-style:normal;font-size:.75rem;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--marca-dp)}
+.reg-nota{margin:0 0 1rem;font-size:.83rem;color:var(--txt-suave);line-height:1.65;max-width:44rem}
+.lienzo{background:var(--bg);border:1px solid rgba(166,123,91,.22);border-radius:18px;
+  padding:1.5rem 1.5rem 1.75rem}
+
+/* ============================================================
+   REGISTRO A — el actual. Casi-negro solido en siete sitios.
+   ============================================================ */
+.v{--linea:rgba(166,123,91,.42);--linea-f:#C4A484;--linea-int:rgba(166,123,91,.28)}
+.v .barra{height:4px;background:var(--inerte);border-radius:999px;overflow:hidden;margin-bottom:1.4rem}
+.v .barra i{display:block;height:100%;width:25%;border-radius:999px;background:var(--acc)}
+.v .grupo{margin-bottom:1.5rem}
+.v .grupo-tit{font-size:.95rem;font-weight:700;margin:0 0 .8rem;display:flex;
+  align-items:baseline;gap:.55rem;flex-wrap:wrap}
+.v .grupo-nota{font-size:.78rem;font-weight:400;color:var(--txt-suave)}
+.v .sep{border-top:1px solid var(--linea);padding-top:1.5rem}
+
+.v .card{background:var(--sup);border:1.5px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);box-shadow:0 1px 2px rgba(44,62,80,.06);
+  transition:border-color var(--paso),background var(--paso),box-shadow var(--paso)}
+.v .card:hover{border-color:var(--linea-f)}
+.v .card[aria-checked="true"]{border-color:var(--acc);background:var(--sel);
+  box-shadow:0 6px 18px -6px rgba(44,62,80,.18)}
+
+.v .circ{flex:none;border-radius:50%;border:2.5px solid var(--sel);display:grid;place-items:center;
+  color:var(--acc);transition:border-color var(--paso),background var(--paso),color var(--paso)}
+.v .card:hover .circ{border-color:var(--marca-cl)}
+.v .card[aria-checked="true"] .circ{border-color:var(--acc);background:var(--acc);color:#fff}
+
+.v .modos{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.v .servicios{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+@media(min-width:700px){.v .servicios{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.v .modos .card,.v .servicios .card{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:.55rem;min-height:104px;padding:.9rem .6rem;text-align:center}
+.v .modos .circ,.v .servicios .circ{width:40px;height:40px}
+.v .circ svg{width:20px;height:20px}
+.v .nom{font-weight:600;font-size:.86rem;line-height:1.3}
+
+.v .planes{display:grid;grid-template-columns:1fr;gap:1.1rem}
+@media(min-width:640px){.v .planes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.v .planes .card{position:relative;display:flex;flex-direction:column;overflow:hidden;text-align:left}
+.v .plan-cab{display:flex;align-items:center;gap:.5rem;padding:1rem 0 .65rem;margin:0 1.05rem;
+  border-bottom:1px solid var(--linea-int)}
+.v .card[aria-checked="true"] .plan-cab{border-bottom-color:var(--linea-f)}
+.v .plan-cifra{width:31px;height:31px;font-size:.92rem;font-weight:700;line-height:1;
+  font-variant-numeric:tabular-nums}
+.v .card[aria-checked="true"] .plan-cifra{color:#fff}
+.v .plan-nom{font-weight:700;font-size:.98rem;line-height:1.2;letter-spacing:-.01em}
+.v .plan-eti{margin-left:auto;flex:none;padding:.18rem .42rem;border-radius:5px;
+  background:var(--acc);color:#fff;font-size:.6rem;font-weight:700;letter-spacing:.03em;
+  text-transform:uppercase;line-height:1.3;white-space:nowrap}
+.v .plan-cuerpo{flex:1;display:flex;align-items:center;gap:.42rem;padding:.8rem 1.05rem;
+  font-size:.79rem;color:var(--txt-suave);line-height:1.5}
+.v .plan-cuerpo svg{width:14px;height:14px;flex:none;color:var(--marca)}
+.v .plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.45rem;flex-wrap:wrap;padding:.8rem 1.05rem 1.05rem;margin-top:auto}
+.v .plan-pie::before{content:"";position:absolute;top:0;left:1.05rem;right:1.05rem;height:1px;
+  background:var(--linea-int)}
+.v .card[aria-checked="true"] .plan-pie::before{background:var(--linea-f)}
+.v .plan-precio{font-size:1.55rem;font-weight:700;letter-spacing:-.025em;line-height:1;
+  color:var(--marca-dk);white-space:nowrap}
+.v .plan-der{display:flex;align-items:center;gap:.42rem;flex:none}
+.v .plan-ahorro{display:inline-flex;align-items:center;padding:.22rem .42rem;border-radius:6px;
+  background:#EAECEE;color:var(--acc);font-size:.68rem;font-weight:700;white-space:nowrap}
+.v .card[aria-checked="true"] .plan-ahorro{background:var(--sup)}
+.v .plan-check{flex:none;width:21px;height:21px;border-radius:50%;background:var(--acc);
+  display:grid;place-items:center;opacity:0;transform:scale(.6);
+  transition:opacity var(--paso),transform var(--paso)}
+.v .plan-check svg{width:12px;height:12px;color:#fff}
+.v .card[aria-checked="true"] .plan-check{opacity:1;transform:scale(1)}
+.v .plan-cinta{position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc)}
+
+.v .btn{margin-top:1.6rem;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.8rem 1.5rem;border-radius:999px;font:inherit;font-weight:600;font-size:.92rem;
+  border:1.5px solid transparent;cursor:pointer;min-height:48px;width:100%;max-width:24rem;
+  background:var(--acc);color:#fff;transition:background var(--paso)}
+.v .btn svg{width:16px;height:16px}
+
+/* ============================================================
+   REGISTRO B — bajo. Fuera el casi-negro como relleno.
+   Queda UN solo elemento solido en toda la vista: el check.
+   La pizarra sigue presente, pero como tipografia, no como tinta.
+   ============================================================ */
+.v-b{--linea:rgba(166,123,91,.30);--linea-f:rgba(166,123,91,.58);--linea-int:rgba(166,123,91,.20)}
+.v-b .barra{background:#F1E8E0}
+.v-b .barra i{background:var(--marca-cl)}
+.v-b .card{border-width:1px;box-shadow:none}
+.v-b .card:hover{background:#FEFCFA}
+.v-b .card[aria-checked="true"]{border:1.5px solid var(--marca);background:#FBF6F1;
+  box-shadow:0 2px 12px -6px rgba(140,98,70,.28)}
+.v-b .circ{border:1.5px solid rgba(166,123,91,.32);color:var(--marca-dp)}
+.v-b .card:hover .circ{border-color:var(--marca)}
+.v-b .card[aria-checked="true"] .circ{border-color:var(--marca);background:var(--sel);
+  color:var(--marca-dk)}
+.v-b .card[aria-checked="true"] .plan-cifra{color:var(--marca-dk)}
+.v-b .plan-eti{background:none;color:var(--marca-dk);text-transform:none;letter-spacing:0;
+  font-size:.74rem;font-weight:600;padding:0;display:inline-flex;align-items:center;gap:.32rem}
+.v-b .plan-eti::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--marca-cl)}
+.v-b .plan-precio{font-size:1.4rem;font-weight:600;color:var(--txt)}
+.v-b .plan-ahorro{background:none;padding:0;color:var(--marca-dp);font-size:.73rem;font-weight:600}
+.v-b .card[aria-checked="true"] .plan-ahorro{background:none}
+.v-b .plan-check{background:var(--marca-dp);width:20px;height:20px}
+.v-b .plan-cinta{display:none}
+.v-b .btn{background:var(--marca-dp)}
+.v-b .btn:hover{background:var(--marca-dk)}
+
+/* ============================================================
+   REGISTRO C — muy bajo. Casi sin cajas: fuera los bordes en
+   reposo y las sombras, y el circulo pasa a ser un tinte sin aro.
+   Solo la tarjeta elegida dibuja un contorno.
+   ============================================================ */
+.v-c{--linea:transparent;--linea-f:rgba(166,123,91,.35);--linea-int:rgba(166,123,91,.16)}
+.v-c .barra{background:#F1E8E0}
+.v-c .barra i{background:var(--marca-cl)}
+.v-c .sep{border-top-color:rgba(166,123,91,.20)}
+.v-c .card{border:1px solid transparent;box-shadow:none;background:var(--sup)}
+.v-c .card:hover{background:#FCF8F4;border-color:rgba(166,123,91,.28)}
+.v-c .card[aria-checked="true"]{border:1px solid var(--marca-cl);background:#F7EFE7;box-shadow:none}
+.v-c .circ{border:none;background:#F5EDE5;color:var(--marca-dp)}
+.v-c .card:hover .circ{background:#F0E5DA}
+.v-c .card[aria-checked="true"] .circ{background:#E7D6C5;color:var(--marca-dk);border:none}
+.v-c .card[aria-checked="true"] .plan-cifra{color:var(--marca-dk)}
+.v-c .plan-eti{background:none;color:var(--txt-suave);text-transform:none;letter-spacing:0;
+  font-size:.73rem;font-weight:500;font-style:italic;padding:0}
+.v-c .plan-precio{font-size:1.3rem;font-weight:600;color:var(--txt)}
+.v-c .plan-ahorro{background:none;padding:0;color:var(--txt-suave);font-size:.72rem;font-weight:500}
+.v-c .card[aria-checked="true"] .plan-ahorro{background:none;color:var(--marca-dp)}
+.v-c .plan-check{background:none;border:1.5px solid var(--marca-dp);width:21px;height:21px}
+.v-c .plan-check svg{color:var(--marca-dp);width:11px;height:11px}
+.v-c .plan-cinta{display:none}
+.v-c .btn{background:var(--marca-dp)}
+.v-c .btn:hover{background:var(--marca-dk)}
+</style>
+</head>
+<body>
+<div class="envoltorio">
+
+  <header class="cabecera">
+    <h1>Bajar el registro de la vista 1</h1>
+    <p>El mismo contenido y la misma estructura en tres intensidades. Cambia únicamente
+       cuánto relleno sólido hay, cuánto pesan las líneas y cuánto grita la tipografía.
+       Todo se puede pulsar: mira sobre todo cómo se siente <b>lo elegido</b> en cada uno.</p>
+  </header>
+
+  <section class="reg">
+    <p class="reg-cab"><b>A · El actual</b> <em>referencia</em></p>
+    <p class="reg-nota">Casi-negro sólido en siete sitios: la barra de progreso, el círculo
+       elegido, «Sugerida», el check, la cinta, el botón y el borde de la tarjeta elegida.
+       Y sombra en todas las tarjetas, también en reposo.</p>
+    <div class="lienzo"><div class="v v-a" data-v="a"></div></div>
+  </section>
+
+  <section class="reg">
+    <p class="reg-cab"><b>B · Bajo</b> <em>mi recomendación</em></p>
+    <p class="reg-nota">Fuera el casi-negro como relleno. Queda <b>un solo elemento sólido en
+       toda la vista: el check de 20&nbsp;px</b>. Lo elegido se dice con un borde terracota y un
+       crema apenas perceptible, no con un marco negro. «Sugerida» pierde la caja, las
+       mayúsculas y el peso: pasa a ser un punto y una palabra. El precio baja de 1,55&nbsp;rem/700
+       a 1,4/600 y se pone en el gris azulado del texto, para que no compita con el nombre de la
+       tarjeta. La pizarra no desaparece — sigue siendo el color de cada letra de la página.</p>
+    <div class="lienzo"><div class="v v-b" data-v="b"></div></div>
+  </section>
+
+  <section class="reg">
+    <p class="reg-cab"><b>C · Muy bajo</b> <em>casi sin cajas</em></p>
+    <p class="reg-nota">Las tarjetas en reposo no tienen borde: son superficies blancas sobre
+       crema, separadas solo por el aire. El círculo pierde el aro y pasa a ser un tinte. El
+       check es un contorno, no un disco. Solo lo elegido dibuja un contorno.</p>
+    <div class="lienzo"><div class="v v-c" data-v="c"></div></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function ico(d, w) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.6) +
+      '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+  var I = {
+    video:'<rect x="2.6" y="6.4" width="13.2" height="11.2" rx="2.6"/><path d="m15.8 11.2 5.6-3.2v8l-5.6-3.2Z"/>',
+    pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+    ansiedad:'<path d="M3 9h9.5a2.75 2.75 0 1 0-2.75-2.75"/><path d="M3 14h13a3 3 0 1 1-3 3"/><path d="M3 19h6.5"/>',
+    autoestima:'<path d="M12 21v-7"/><path d="M12 14c0-3 2-5.5 5-6-.3 3.4-2.2 5.6-5 6Z"/><path d="M12 16c0-2.6-1.8-4.8-4.5-5.4C7.8 13.7 9.5 15.5 12 16Z"/><path d="M8 21h8"/>',
+    pareja:'<circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.5"/><path d="M3 19a5.5 5.5 0 0 1 11 0"/><path d="M14.5 19a4.2 4.2 0 0 1 6.5-3.5"/>',
+    duelo:'<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/><path d="M12 13.5c2.4-1.4 3.6-3.2 3.6-5.1A3.6 3.6 0 0 0 12 4.8a3.6 3.6 0 0 0-3.6 3.6c0 1.9 1.2 3.7 3.6 5.1Z"/>',
+    reloj:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/>',
+    cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/>',
+    check:'<path d="m4 12 5.5 5.5L20 7"/>'
+  };
+  var MODOS = [{v:'online',n:'Online',d:I.video},{v:'presencial',n:'Presencial',d:I.pin}];
+  var SERVICIOS = [
+    {slug:'ansiedad',nom:'Superar la Ansiedad',ico:I.ansiedad},
+    {slug:'autoestima',nom:'Fortalecer tu Autoestima',ico:I.autoestima},
+    {slug:'pareja',nom:'Sanar en Pareja',ico:I.pareja},
+    {slug:'duelo',nom:'Acompañar un Duelo',ico:I.duelo}
+  ];
+  var PLANES = [
+    {slug:'1', cifra:'1',nom:'sesión',  det:'Una cita puntual',   ico:I.reloj,precio:30, ahorro:0},
+    {slug:'p3',cifra:'3',nom:'sesiones',det:'A tu ritmo, 90 días',ico:I.cal,  precio:75, ahorro:15,sugerida:true},
+    {slug:'p5',cifra:'5',nom:'sesiones',det:'A tu ritmo, 90 días',ico:I.cal,  precio:125,ahorro:25}
+  ];
+
+  function grupoSimple(lista, attr, elegido, clase, titulo, id) {
+    return '<section class="grupo"><h2 class="grupo-tit" id="' + id + '">' + titulo + '</h2>' +
+      '<div class="' + clase + '" role="radiogroup" aria-labelledby="' + id + '">' +
+      lista.map(function (m) {
+        var v = m.v || m.slug, n = m.n || m.nom, d = m.d || m.ico;
+        return '<button type="button" class="card" role="radio" data-' + attr + '="' + v + '" ' +
+          'aria-checked="' + (elegido === v) + '" tabindex="' + (elegido === v ? 0 : -1) + '">' +
+          '<span class="circ" aria-hidden="true">' + ico(d) + '</span>' +
+          '<span class="nom">' + n + '</span></button>';
+      }).join('') + '</div></section>';
+  }
+
+  function grupoPlanes(elegido, id) {
+    return '<section class="grupo sep"><h2 class="grupo-tit" id="' + id + '">¿Una sesión o un proceso?' +
+      '<span class="grupo-nota">Los paquetes salen más baratos por sesión</span></h2>' +
+      '<div class="planes" role="radiogroup" aria-labelledby="' + id + '">' +
+      PLANES.map(function (p) {
+        return '<button type="button" class="card" role="radio" data-plan="' + p.slug + '" ' +
+          'aria-checked="' + (elegido === p.slug) + '" tabindex="' + (elegido === p.slug ? 0 : -1) + '">' +
+          (p.sugerida ? '<span class="plan-cinta" aria-hidden="true"></span>' : '') +
+          '<span class="plan-cab">' +
+            '<span class="circ plan-cifra">' + p.cifra + '</span>' +
+            '<span class="plan-nom">' + p.nom + '</span>' +
+            (p.sugerida ? '<span class="plan-eti">Sugerida</span>' : '') +
+          '</span>' +
+          '<span class="plan-cuerpo">' + ico(p.ico, 1.7) + '<span>' + p.det + '</span></span>' +
+          '<span class="plan-pie">' +
+            '<span class="plan-precio">' + p.precio + ' $</span>' +
+            '<span class="plan-der">' +
+              (p.ahorro ? '<span class="plan-ahorro">Ahorras ' + p.ahorro + ' $</span>' : '') +
+              '<span class="plan-check" aria-hidden="true">' + ico(I.check, 3.5) + '</span>' +
+            '</span>' +
+          '</span></button>';
+      }).join('') + '</div></section>';
+  }
+
+  [].forEach.call(document.querySelectorAll('.v'), function (v) {
+    var k = v.dataset.v;
+    v.innerHTML =
+      '<div class="barra"><i></i></div>' +
+      grupoSimple(MODOS, 'modo', 'online', 'modos', '¿Cómo prefieres la sesión?', 'tm-' + k) +
+      grupoSimple(SERVICIOS, 'serv', 'ansiedad', 'servicios', '¿En qué quieres trabajar?', 'ts-' + k) +
+      grupoPlanes('p3', 'tp-' + k) +
+      '<button type="button" class="btn">Ver horarios' +
+        ico('<path d="M5 12h14M13 6l6 6-6 6"/>', 2) + '</button>';
+  });
+
+  function roving(g) {
+    [].forEach.call(g.children, function (b) {
+      b.tabIndex = b.getAttribute('aria-checked') === 'true' ? 0 : -1;
+    });
+  }
+  function elegir(g, b) {
+    [].forEach.call(g.children, function (o) { o.setAttribute('aria-checked', String(o === b)); });
+    roving(g);
+  }
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[role="radio"]');
+    if (b) elegir(b.parentElement, b);
+  });
+  document.addEventListener('keydown', function (ev) {
+    var g = ev.target.closest && ev.target.closest('[role="radiogroup"]');
+    if (!g) return;
+    var t = ['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'];
+    if (t.indexOf(ev.key) < 0) return;
+    ev.preventDefault();
+    var h = [].slice.call(g.children), i = Math.max(0, h.indexOf(ev.target));
+    var n = ev.key === 'Home' ? 0 : ev.key === 'End' ? h.length - 1
+          : (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') ? (i + 1) % h.length
+          : (i - 1 + h.length) % h.length;
+    elegir(g, h[n]); h[n].focus();
+  });
+})();
+</script>
+</body>
+</html>

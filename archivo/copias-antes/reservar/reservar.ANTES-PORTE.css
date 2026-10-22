@@ -1,0 +1,1028 @@
+/* ============================================================
+   RESERVA DE CITAS — Psicconsciente
+
+   Esta página no es la landing. La landing seduce; esto resuelve una tarea,
+   y muchas veces se entra en frío desde un enlace que Daryeli mandó por chat,
+   sin haber visto el resto del sitio.
+
+   El patrón viene de las agendas médicas que la gente ya sabe usar
+   (Doctoralia, Zocdoc): la profesional arriba para dar confianza, y una tira
+   de días con sus horas debajo, para elegir comparando en una sola pantalla
+   en lugar de ir y volver entre calendario y horarios.
+
+   La paleta va aparte de la landing, que se queda en terracota: aquí manda el
+   verde bosque, que es donde coinciden las paletas de reserva y de salud de la
+   skill. Se retiran las manchas orgánicas del fondo y los radios irregulares:
+   en una herramienta estorban.
+
+   Mobile-first, como el resto del proyecto.
+   ============================================================ */
+
+:root{
+  /* TIPOGRAFÍA: una sola familia en toda la página.
+     La landing usa Fraunces en los titulares, que es una serif editorial: ahí
+     seduce, pero en una pantalla de reserva se lee como revista y no como
+     herramienta. Inter está pensada para interfaz — cifras tabulares que
+     mantienen alineadas las columnas de horas, y buena legibilidad a tamaño
+     pequeño, que es casi todo lo que hay aquí.
+     Se sobreescriben los tokens de style.css en lugar de tocar cada regla. */
+  --font-display:Inter,"Inter respaldo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-hand:Inter,"Inter respaldo",system-ui,sans-serif;
+
+  /* PALETA: verde bosque.
+     La landing se queda en terracota; esta página va aparte y usa el verde,
+     que es lo único en lo que coinciden todas las paletas de reserva y salud
+     de la base de datos de la skill.
+
+     Se eligió #2F6B4F y no el #059669 que propone la skill por una razón
+     medible: el esmeralda da 3,77:1 con texto blanco encima y el mínimo
+     accesible es 4,5:1. Este da 6,29:1. Además, al ser profundo y apagado no
+     se confunde con el verde de "operación correcta" de las etiquetas.
+
+     Se sobreescriben los tokens de style.css en vez de reescribir cada regla:
+     todo lo que ya usaba --primary-deep pasa a verde solo. */
+  --primary:#3F8062;
+  --primary-light:#B9D3C5;
+  --primary-soft:#E4EFE8;
+  --primary-deep:#2F6B4F;       /* acción y selección — 6,29:1 sobre blanco */
+  --primary-darkest:#245640;    /* al pasar por encima */
+  --border-soft:rgba(47,107,79,.16);
+  --border-strong:rgba(47,107,79,.30);
+
+  /* Estados */
+  --ok:#2F6B4F;      --ok-suave:#E4EFE8;
+  --pend:#96650E;    --pend-suave:#FBEFE4;
+  --mal:#A33A2E;     --mal-suave:#FBEAE8;
+
+  /* Grises con una gota de verde: sobre blanco puro, un gris neutro se ve
+     azulado al lado de un acento cálido-verde. */
+  --linea:#E4E8E6;
+  --linea-fuerte:#CFD7D3;
+  --papel:#F7F9F8;
+
+  /* --space-5 NO existe en style.css: la escala salta del 4 (1rem) al 6 (1.5rem).
+     Se usaba en diez reglas de este archivo y, al ser un token indefinido, el
+     navegador descarta la declaracion entera. Por eso la tarjeta de resumen se
+     quedaba sin relleno y el "margin:0 auto" del check final no centraba nada.
+     Se define aqui, en el punto medio de la escala. */
+  --space-5:1.25rem;
+
+  /* ELEVACION.
+     Hasta ahora todo era el mismo rectangulo blanco con un borde de 1px: la
+     tarjeta que se elige, el resumen que solo se lee y el aviso que hay que
+     atender pesaban igual. Sin diferencia de peso no hay jerarquia. La sombra
+     lleva verde en vez de negro puro para que no ensucie sobre el blanco. */
+  --elev-1:0 1px 2px rgba(26,46,36,.05);
+  --elev-2:0 4px 12px -4px rgba(26,46,36,.14), 0 1px 3px rgba(26,46,36,.06);
+
+  /* DISPONIBILIDAD. El "available green / booked grey" que pide la base de
+     datos de la skill para una agenda de citas. Se definen ya; se aplican al
+     rehacer el paso 2. */
+  --libre:#E4EFE8;
+  --ocupado:#EDF0EE;
+
+  /* CONTROL DESACTIVADO.
+     Antes era el verde de accion al 40% de opacidad, que sobre blanco deja el
+     texto en 1,8:1 cuando el minimo accesible es 4,5:1. Un boton apagado sigue
+     teniendo que leerse: superficie gris y texto oscuro dan 5,5:1. */
+  --inerte:#E4E8E6;
+  --inerte-texto:#4F5B54;
+
+  /* MEDIDA. El contenedor mide 60rem y hasta ahora todo lo ocupaba entero: un
+     campo de nombre de 730px y un boton de 1070px. El ancho de un control es
+     una promesa sobre lo que cabe dentro. */
+  --medida:min(100%,32rem);
+  --medida-ancha:min(100%,44rem);
+
+  /* Una sola curva para seleccionar, abrir y cambiar de paso. */
+  --paso:220ms cubic-bezier(.2,.8,.3,1);
+
+  --wz-ancho:60rem;
+  --wz-radio:12px;
+}
+
+/* La landing pinta fondo crema y unas formas orgánicas. Aquí se anulan: el
+   blanco es lo que hace que el verde funcione como única señal de acción y lo
+   que mantiene la pantalla legible de un vistazo. */
+.wz-body{
+  background:var(--white);
+  font-variant-numeric:tabular-nums;
+  padding-bottom:var(--space-16);
+}
+.wz-body .blobs{display:none}
+
+/* ============ CABECERA ============ */
+.wz-top{
+  border-bottom:1px solid var(--linea);
+  background:var(--white);
+  position:sticky;top:0;z-index:20;
+}
+.wz-top-int{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);
+  max-width:var(--wz-ancho);margin-inline:auto;
+  padding:var(--space-4);
+}
+/* Daryeli va en la cabecera y no en una tarjeta aparte: así la acompaña
+   durante los cuatro pasos en vez de solo en el primero, y se ahorra un bloque
+   entero de altura, que era lo que dejaba la página apretada. */
+.wz-marca{
+  display:inline-flex;align-items:center;gap:.6rem;
+  color:var(--text-dark);text-decoration:none;min-width:0;
+}
+.wz-marca-foto{
+  width:38px;height:38px;flex:none;border-radius:50%;
+  object-fit:cover;object-position:center 18%;
+  border:2px solid var(--white);box-shadow:0 0 0 1px var(--linea);
+}
+.wz-marca-txt{min-width:0;line-height:1.25}
+.wz-marca-nombre{display:block;font-size:.9rem;font-weight:700;letter-spacing:-.012em}
+.wz-marca-cargo{display:block;font-size:.72rem;color:var(--text-soft)}
+.wz-ayuda{
+  flex:none;font-size:var(--text-xs);font-weight:600;
+  color:var(--primary-deep);text-decoration:none;white-space:nowrap;
+  padding:.4rem .75rem;min-height:36px;
+  display:inline-flex;align-items:center;gap:.35rem;
+  border:1px solid var(--linea-fuerte);border-radius:var(--radius-pill);
+  transition:background var(--transition),border-color var(--transition);
+}
+.wz-ayuda:hover{background:var(--primary-soft);border-color:var(--primary)}
+.wz-ayuda svg{width:14px;height:14px}
+@media (max-width:399px){ .wz-ayuda-larga{display:none} }
+
+/* ============ PROGRESO ============
+   Discreto: una línea y un contador. En una agenda médica el progreso informa,
+   no protagoniza. */
+.wz-progreso{
+  max-width:var(--wz-ancho);margin-inline:auto;
+  padding:var(--space-6) var(--space-4) 0;
+}
+.wz-progreso-fila{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);
+  margin-bottom:.55rem;
+}
+.wz-paso-actual{font-size:var(--text-xs);font-weight:600;color:var(--text-soft);letter-spacing:.03em}
+.wz-paso-nombre{color:var(--primary-deep)}
+.wz-barra{height:3px;background:var(--linea);border-radius:var(--radius-pill);overflow:hidden}
+.wz-barra-relleno{
+  display:block;height:100%;width:25%;
+  background:var(--primary-deep);border-radius:inherit;
+  transition:width .4s var(--ease);
+}
+
+/* ============ ESTRUCTURA ============ */
+.wz-main{
+  max-width:var(--wz-ancho);margin-inline:auto;
+  padding:var(--space-8) var(--space-4) 0;
+}
+.wz-vista{animation:wz-entra .28s var(--ease) both}
+@keyframes wz-entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Inter necesita más peso que una serif para sostener un titular: con 600 se
+   queda blanda. Y algo menos de interletraje, que a este tamaño abre mucho. */
+.wz-body h1,.wz-body h2,.wz-body h3{font-weight:700;letter-spacing:-.021em}
+.wz-vista h1{
+  font-size:clamp(1.5rem,4.6vw,1.85rem);
+  margin-bottom:var(--space-2);
+}
+.wz-vista h1:focus{outline:none}   /* el foco al cambiar de paso es programático */
+.wz-intro{color:var(--text-soft);font-size:var(--text-sm);line-height:1.65;margin-bottom:var(--space-8)}
+
+/* ============ FICHA DE LA PROFESIONAL ============
+   Estas reglas ya no las usa ningún paso: Daryeli subió a la cabecera, donde
+   acompaña los cuatro pasos en lugar de solo el primero y no cuesta un bloque
+   de altura. Se dejan por si el panel o la página de "mi cita" la necesitan. */
+.wz-ficha{
+  display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-4);margin-bottom:var(--space-6);
+  background:var(--papel);border:1px solid var(--linea);border-radius:var(--wz-radio);
+}
+.wz-ficha-foto{
+  width:56px;height:56px;flex:none;border-radius:50%;
+  object-fit:cover;object-position:center 18%;
+  border:2px solid var(--white);box-shadow:0 0 0 1px var(--linea);
+}
+.wz-ficha-txt{min-width:0}
+.wz-ficha-nombre{font-size:1.02rem;font-weight:700;line-height:1.25;letter-spacing:-.015em}
+.wz-ficha-cargo{font-size:var(--text-xs);color:var(--text-soft);margin-top:.1rem}
+.wz-ficha-sello{
+  display:inline-flex;align-items:center;gap:.3rem;margin-top:.35rem;
+  font-size:.7rem;font-weight:600;color:var(--ok);
+}
+.wz-ficha-sello svg{width:13px;height:13px}
+
+/* ============ ONLINE O PRESENCIAL ============
+   Va lo primero, como en Doctoralia: es la decisión que cambia si la persona
+   tiene que desplazarse, así que condiciona todo lo demás. Dos opciones se
+   presentan como par, no como lista: se comparan de un vistazo.
+
+   Sin subtítulo debajo del nombre. "Online" ya significa videollamada, y la
+   dirección de Barquisimeto se despliega sola al elegir Presencial, así que
+   explicarlo dos veces solo añadía una línea de letra pequeña a una decisión
+   que se toma en un segundo. Con icono y nombre la tarjeta se lee entera de
+   un golpe. */
+.wz-modos{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.wz-modo{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.45rem;
+  padding:var(--space-5) .7rem;min-height:88px;
+  background:var(--white);border:1.5px solid var(--linea);border-radius:var(--wz-radio);
+  font:inherit;color:inherit;cursor:pointer;text-align:center;
+  box-shadow:var(--elev-1);
+  transition:box-shadow var(--paso),border-color var(--paso),background var(--paso);
+}
+.wz-modo:hover{border-color:var(--linea-fuerte);background:var(--papel);box-shadow:var(--elev-2)}
+.wz-modo[aria-checked="true"]{
+  border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2);
+}
+/* El icono queda como única señal visual, así que sube de 24 a 26. */
+.wz-modo-icono{display:flex;color:var(--primary-deep)}
+.wz-modo-icono svg{width:26px;height:26px}
+.wz-modo[aria-checked="true"] .wz-modo-icono{color:var(--primary-darkest)}
+.wz-modo-nombre{font-weight:600;font-size:var(--text-base);line-height:1.3}
+/* El pin va como emoji a proposito: es el unico sitio de la pantalla donde
+   hace falta senalar un lugar fisico, y el color propio del emoji lo separa
+   del resto del texto sin anadir otro icono al set. */
+/* Pin dibujado en vez de emoji: hereda el color del texto que acompana y no
+   mete una mancha de color en una linea secundaria. */
+.wz-pin{width:1em;height:1em;margin-right:.3em;vertical-align:-.14em}
+
+/* ============ SERVICIO Y PLANES ============ */
+.wz-grupo{margin-bottom:var(--space-12)}
+/* La divisoria dice que ahi empieza otra decision, no una continuacion de la
+   anterior. Sin ella el bloque de planes aparecia flotando al elegir servicio. */
+.wz-grupo-separado{
+  border-top:1px solid var(--linea);
+  padding-top:var(--space-8);
+}
+.wz-grupo-titulo{
+  font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-4);
+  display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;
+}
+.wz-grupo-nota{font-weight:400;font-size:var(--text-xs);color:var(--text-soft)}
+
+/* ---------- Desplegable de servicio ----------
+   Es un <select> nativo con la flecha del sistema apagada y una propia encima:
+   asi se comporta como el resto de la pagina en escritorio y sigue abriendo el
+   selector del sistema en el movil, que es el que la gente sabe usar. */
+.wz-select{position:relative;max-width:var(--medida)}
+.wz-select select{
+  appearance:none;-webkit-appearance:none;
+  width:100%;min-height:56px;padding:.9rem 3rem .9rem 1rem;
+  /* 16px minimo: por debajo, iOS hace zoom al enfocar y descuadra la vista. */
+  font:inherit;font-size:1rem;font-weight:500;
+  color:var(--text-dark);background:var(--white);
+  border:1.5px solid var(--linea-fuerte);border-radius:10px;
+  box-shadow:var(--elev-1);cursor:pointer;
+  transition:border-color var(--paso),box-shadow var(--paso);
+}
+.wz-select select:hover{border-color:var(--primary)}
+.wz-select select:focus-visible{
+  outline:none;border-color:var(--primary-deep);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 20%,transparent);
+}
+/* Sin elegir, el texto es una instruccion, no un dato: va apagado. */
+.wz-select select:invalid,.wz-select select option[value=""]{color:var(--text-soft)}
+.wz-select-flecha{
+  position:absolute;right:1rem;top:50%;transform:translateY(-50%);
+  width:20px;height:20px;color:var(--primary-deep);pointer-events:none;
+}
+
+/* ---------- Tarjetas de plan ----------
+   Tres opciones en tres columnas. En una rejilla de dos, la tercera se quedaba
+   sola en su fila con medio ancho vacio al lado. */
+.wz-planes{display:grid;gap:.75rem;grid-template-columns:1fr}
+/* La altura minima solo hace falta con las tres en fila, para que los precios
+   queden alineados. Apilada, obligaba a cada tarjeta a un hueco vacio. */
+@media (min-width:600px){
+  .wz-planes{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .wz-plan{min-height:9.5rem}
+}
+
+.wz-plan{
+  display:flex;flex-direction:column;gap:.35rem;
+  padding:var(--space-5);
+  /* Blanco tambien la de una sesion: antes iba en gris y el gris apagado es el
+     codigo universal de "no disponible", asi que la opcion mas comun parecia
+     bloqueada. */
+  background:var(--white);border:1.5px solid var(--linea);border-radius:var(--wz-radio);
+  font:inherit;color:inherit;text-align:left;cursor:pointer;
+  box-shadow:var(--elev-1);
+  transition:box-shadow var(--paso),border-color var(--paso),background var(--paso);
+}
+.wz-plan:hover{border-color:var(--linea-fuerte);background:var(--papel);box-shadow:var(--elev-2)}
+.wz-plan[aria-checked="true"]{
+  border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2);
+}
+.wz-plan-cab{display:flex;align-items:center;gap:.6rem}
+.wz-plan-nombre{font-weight:600;font-size:var(--text-base);line-height:1.25}
+.wz-plan-detalle{
+  font-size:var(--text-xs);color:var(--text-soft);line-height:1.45;
+  padding-left:1.9rem;   /* alineado con el nombre, no con el radio */
+}
+/* El pie se empuja abajo para que los tres precios queden a la misma altura. */
+.wz-plan-pie{
+  margin-top:auto;padding-top:var(--space-4);padding-left:1.9rem;
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+  /* Altura fija: sin ella la tarjeta sin badge deja el precio unos pixeles mas
+     abajo que las otras dos, y en una comparacion de precios eso se nota. */
+  min-height:2rem;
+}
+.wz-plan-precio{
+  font-size:1.3rem;font-weight:700;letter-spacing:-.02em;
+  line-height:1;color:var(--primary-darkest);
+}
+.wz-ahorro{
+  display:inline-block;padding:.2rem .45rem;border-radius:5px;
+  background:var(--ok-suave);color:var(--ok);
+  font-size:.7rem;font-weight:600;line-height:1.3;white-space:nowrap;
+}
+/* --ok-suave y --primary-soft son el mismo verde, asi que sobre la tarjeta
+   elegida el badge se disolvia en el fondo justo cuando mas se mira. */
+.wz-plan[aria-checked="true"] .wz-ahorro{background:var(--white)}
+
+/* ---------- Marca de radio ---------- */
+.wz-marca-radio{
+  flex:none;width:20px;height:20px;border-radius:50%;
+  border:2px solid var(--linea-fuerte);background:var(--white);
+  display:grid;place-items:center;
+  transition:border-color var(--paso),background var(--paso);
+}
+.wz-marca-radio::after{
+  content:"";width:9px;height:9px;border-radius:50%;
+  background:var(--white);transform:scale(0);
+  transition:transform var(--paso);
+}
+.wz-plan[aria-checked="true"] .wz-marca-radio{
+  border-color:var(--primary-deep);background:var(--primary-deep);
+}
+.wz-plan[aria-checked="true"] .wz-marca-radio::after{transform:scale(1)}
+
+/* ============ PASO 2 · AGENDA ============
+   Dos columnas en escritorio: a la izquierda lo que se reserva, que no cambia;
+   a la derecha los días. En móvil se apila. */
+.wz-agenda{display:grid;gap:var(--space-8)}
+@media (min-width:900px){
+  .wz-agenda{grid-template-columns:16rem 1fr;gap:var(--space-8);align-items:start}
+}
+
+/* ---------- Resumen de la reserva ----------
+   Era una lista de cinco pares etiqueta/valor con el mismo peso: se leia como
+   una tabla y habia que recorrerla entera para saber que se estaba reservando.
+   Ahora el nombre de la sesion manda, los datos van de apoyo con su icono, y
+   el total cierra abajo separado por una linea. */
+.wz-resumen{
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea);border-radius:var(--wz-radio);
+}
+/* Solo el resumen que acompana al asistente se queda pegado. La tarjeta de
+   la pantalla de cierre reutiliza .wz-resumen para no duplicar estilos, y con
+   la regla sin acotar heredaba el sticky: al hacer scroll se despegaba y
+   flotaba por encima de "Que pasa ahora" y de la caja del enlace. */
+@media (min-width:900px){ .wz-agenda > .wz-resumen{position:sticky;top:5rem} }
+
+.wz-resumen-etq{
+  margin:0 0 .2rem;font-size:.68rem;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--text-soft);
+}
+.wz-resumen-titulo{
+  margin:0 0 var(--space-4);font-size:1.05rem;font-weight:700;
+  line-height:1.25;letter-spacing:-.015em;
+}
+.wz-resumen-datos{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
+.wz-resumen-dato{
+  display:flex;align-items:flex-start;gap:.5rem;
+  font-size:var(--text-xs);color:var(--text-soft);line-height:1.45;
+}
+.wz-resumen-ico{flex:none;display:flex;color:var(--primary-deep);margin-top:.05rem}
+.wz-resumen-ico svg{width:15px;height:15px}
+.wz-resumen-dato small{display:block;font-size:.92em;opacity:.8}
+
+.wz-resumen-total{
+  display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-3);
+  margin:var(--space-4) 0 0;padding-top:var(--space-4);
+  border-top:1px solid var(--linea-fuerte);
+  font-size:var(--text-sm);color:var(--text-soft);
+}
+.wz-resumen-total b{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;color:var(--primary-darkest)}
+
+/* Enlace, no boton: cambiar de sesion es la salida rara de esta pantalla y
+   antes ocupaba el ancho entero de la tarjeta compitiendo con el total. */
+.wz-resumen-cambiar{
+  margin-top:var(--space-4);padding:.6rem 0;min-height:44px;
+  background:none;border:none;font:inherit;font-size:var(--text-xs);font-weight:600;
+  color:var(--primary-deep);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;
+  transition:color var(--paso);
+}
+.wz-resumen-cambiar:hover{color:var(--primary-darkest)}
+
+/* ---------- Tira de días ---------- */
+.wz-tira-cabecera{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:var(--space-2);margin-bottom:var(--space-4);
+}
+.wz-tira-rango{font-size:var(--text-sm);font-weight:600}
+.wz-tira-nav{display:flex;gap:.4rem}
+.wz-flecha{
+  width:44px;height:44px;flex:none;               /* objetivo táctil */
+  display:grid;place-items:center;
+  background:var(--white);border:1px solid var(--linea-fuerte);border-radius:8px;
+  color:var(--text-dark);cursor:pointer;
+  transition:background var(--transition),border-color var(--transition);
+}
+.wz-flecha:hover:not(:disabled){background:var(--primary-soft);border-color:var(--primary)}
+.wz-flecha:disabled{opacity:.35;cursor:not-allowed}
+
+/* EL NÚCLEO DE LA PANTALLA.
+   Cada columna es un día con sus horas debajo. Se ven varios días a la vez, y
+   eso es lo que permite decidir sin ir y volver: si el martes a las 10 no
+   sirve, el miércoles está justo al lado. */
+.wz-dias{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));   /* móvil: tres días */
+  gap:.65rem;
+}
+@media (min-width:560px){ .wz-dias{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media (min-width:900px){ .wz-dias{grid-template-columns:repeat(5,minmax(0,1fr))} }
+
+.wz-col{display:flex;flex-direction:column;gap:.5rem;min-width:0}
+.wz-col-cabecera{
+  text-align:center;padding-block:.4rem .5rem;
+  border-bottom:1px solid var(--linea);margin-bottom:.2rem;
+}
+.wz-col-dia{display:block;font-size:.66rem;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em}
+.wz-col-num{display:block;font-size:1.05rem;font-weight:600;line-height:1.2}
+.wz-col-hoy .wz-col-num{color:var(--primary-deep)}
+.wz-col-hoy .wz-col-dia{color:var(--primary)}
+
+.wz-hueco{
+  width:100%;min-height:50px;padding:.5rem .2rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--white);border:1.5px solid var(--linea);border-radius:8px;
+  font:inherit;font-size:var(--text-sm);font-weight:500;color:var(--text-dark);
+  cursor:pointer;
+  transition:background .14s var(--ease),border-color .14s var(--ease),color .14s var(--ease);
+}
+.wz-hueco:hover{background:var(--primary-soft);border-color:var(--primary)}
+.wz-hueco:active{transform:scale(.97)}
+.wz-hueco[aria-checked="true"]{
+  background:var(--primary-deep);border-color:var(--primary-deep);color:var(--white);
+  font-weight:600;
+}
+/* La hora de Caracas solo aparece cuando NO coincide con la de quien mira. Es
+   la razón de ser de este bloque: Daryeli atiende también a gente en España. */
+.wz-hueco-alt{font-size:.62rem;opacity:.68;line-height:1.25;font-weight:400}
+
+/* El "booked grey" de la base de datos de la skill: un dia sin disponibilidad
+   se apaga entero y lo dice con palabras, en vez de un guion dentro de una caja
+   punteada que se leia como un campo roto. */
+.wz-col-vacio{
+  margin:0;min-height:50px;display:grid;place-items:center;text-align:center;
+  padding:.4rem .2rem;
+  font-size:.68rem;line-height:1.3;color:var(--text-soft);
+  background:var(--ocupado);border-radius:8px;
+}
+.wz-col-sin .wz-col-cabecera{opacity:.45}
+.wz-mas{
+  width:100%;min-height:38px;padding:.3rem;
+  background:var(--primary-soft);border:none;border-radius:8px;
+  font:inherit;font-size:.7rem;font-weight:600;color:var(--primary-darkest);
+  cursor:pointer;transition:background var(--paso);
+}
+.wz-mas:hover{background:var(--primary-light)}
+
+.wz-zona{
+  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+  margin-top:var(--space-4);padding-top:var(--space-4);
+  border-top:1px solid var(--linea);
+  font-size:var(--text-xs);color:var(--text-soft);
+}
+/* Variante compacta para la zona horaria: mismo desplegable vestido que el de
+   servicio, pero sin ocupar el ancho de un campo de formulario.
+   (La regla antigua .wz-select estaba pensada para el <select> a pelo y, al
+   pasar .wz-select a ser el envoltorio, le pintaba un segundo borde alrededor
+   del selector de servicio.) */
+.wz-select-compacto{max-width:20rem}
+.wz-select-compacto select{min-height:44px;padding:.55rem 2.5rem .55rem .75rem;font-size:var(--text-sm)}
+.wz-select-compacto .wz-select-flecha{right:.7rem;width:17px;height:17px}
+
+.wz-cargando,.wz-vacio{
+  grid-column:1/-1;padding:var(--space-8) var(--space-4);text-align:center;
+  color:var(--text-soft);font-size:var(--text-sm);
+  background:var(--papel);border-radius:var(--wz-radio);
+}
+
+/* ============ FORMULARIOS ============ */
+/* El ancho de un campo promete lo que cabe dentro: 730px para un nombre
+   prometia un parrafo. Las filas de dos columnas se quedan sin tope. */
+.wz-campo{margin-bottom:var(--space-8);max-width:var(--medida)}
+.wz-fila .wz-campo{max-width:none}
+/* :not(.wz-subir) no es adorno: la caja de la captura tambien es un <label>, y
+   esta regla —mas especifica que .wz-subir— le imponia display:block, asi que su
+   icono, su texto y su pista se quedaban en una sola linea en vez de apilarse. */
+.wz-campo label:not(.wz-subir),.wz-label-suelta{
+  display:block;font-size:var(--text-sm);font-weight:600;margin-bottom:.5rem;
+}
+.wz-campo input[type="text"],
+.wz-campo input[type="email"],
+.wz-campo input[type="tel"],
+.wz-campo input[type="date"],
+.wz-campo select{
+  width:100%;min-height:52px;padding:.85rem .9rem;
+  /* 16px mínimo: por debajo, iOS hace zoom al enfocar y descuadra la vista. */
+  font:inherit;font-size:1rem;
+  color:var(--text-dark);background:var(--white);
+  border:1.5px solid var(--linea-fuerte);border-radius:8px;
+  transition:border-color .16s var(--ease),box-shadow .16s var(--ease);
+}
+.wz-campo input:focus,.wz-campo select:focus{
+  outline:none;border-color:var(--primary-deep);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 20%,transparent);
+}
+.wz-campo input[aria-invalid="true"]{border-color:var(--mal)}
+.wz-ayuda-campo{font-size:var(--text-xs);color:var(--text-soft);margin-top:.3rem}
+
+/* Prefijo y numero pegados como un solo control: son un dato, no dos campos.
+   El prefijo no crece; el numero se queda con el resto del ancho. */
+.wz-tel{display:flex;gap:.5rem;align-items:stretch}
+.wz-select-pais{flex:0 0 11rem}
+.wz-select-pais select{
+  min-height:52px;padding:.85rem 2.2rem .85rem .8rem;
+  font-size:1rem;font-weight:500;
+  /* La opcion completa dice "+58 · Venezuela"; cerrado no cabe entera, y
+     recortarla es correcto porque el prefijo, que es el dato, va delante. */
+  text-overflow:ellipsis;
+}
+.wz-select-pais .wz-select-flecha{right:.6rem;width:16px;height:16px}
+.wz-tel input[type="tel"]{flex:1;min-width:0}
+
+/* :not([hidden]) no es adorno: "display:flex" a secas gana al display:none
+   que el navegador aplica por el atributo hidden, y los <p> de error vacios
+   se pintaban igual — de ahi los puntos rojos en un formulario recien abierto. */
+.wz-error:not([hidden]){
+  display:flex;align-items:flex-start;gap:.35rem;
+  font-size:var(--text-xs);color:var(--mal);font-weight:500;margin-top:.35rem;
+}
+/* El error no se señala solo en rojo: lleva su propio signo. */
+.wz-error::before{
+  content:"!";width:15px;height:15px;flex:none;margin-top:1px;
+  display:grid;place-items:center;border-radius:50%;
+  background:var(--mal);color:var(--white);font-size:.62rem;font-weight:700;
+}
+
+.wz-fila{display:grid;gap:var(--space-4)}
+@media (min-width:560px){ .wz-fila{grid-template-columns:1fr 1fr} }
+
+.wz-aviso{
+  display:flex;gap:.7rem;align-items:flex-start;
+  padding:var(--space-5);
+  /* Separado de los campos por arriba y del consentimiento por abajo: es un
+     aviso de seguridad, no el pie de un formulario. */
+  margin:var(--space-10) 0 var(--space-6);
+  background:var(--pend-suave);border-left:3px solid var(--pend);border-radius:8px;
+  font-size:var(--text-sm);line-height:1.55;
+}
+.wz-aviso-icono{flex:none;color:var(--pend)}
+.wz-aviso-icono svg{width:20px;height:20px}
+.wz-aviso a{color:var(--mal);font-weight:600}
+
+/* Caja propia para el consentimiento: es la pieza que protege ante un reclamo
+   y estaba a diez pixeles del bloque naranja, leyendose como su continuacion. */
+.wz-consent-caja{
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea);border-radius:var(--wz-radio);
+}
+.wz-consent-caja:focus-within{border-color:var(--linea-fuerte)}
+.wz-consent{display:flex;gap:.7rem;align-items:flex-start}
+.wz-consent input[type="checkbox"]{
+  width:22px;height:22px;flex:none;margin-top:1px;
+  accent-color:var(--primary-deep);cursor:pointer;
+}
+.wz-consent label{font-size:var(--text-sm);line-height:1.55;font-weight:400;margin:0;cursor:pointer}
+
+/* Qué pasa después de pulsar. Va pegado al botón, que es donde aparece la duda
+   que frena a la gente. */
+.wz-despues{
+  display:flex;align-items:flex-start;gap:.45rem;
+  font-size:var(--text-xs);color:var(--text-soft);
+  margin-top:var(--space-3);line-height:1.5;
+}
+.wz-despues svg{width:14px;height:14px;flex:none;color:var(--ok);margin-top:2px}
+
+/* ============ ACCIONES ============ */
+/* Los dos botones ocupaban media pantalla cada uno: en un asistente el
+   retroceso es la accion rara y el avance la esperada, asi que no pueden
+   pesar igual. Y el grupo deja de estirarse hasta los 1070px. */
+.wz-acciones{
+  display:flex;gap:.75rem;flex-wrap:wrap;margin-top:var(--space-8);
+  max-width:var(--medida-ancha);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.wz-acciones .btn{flex:1 1 auto;min-width:7rem;border-radius:10px;min-height:50px}
+.wz-acciones .wz-continuar{flex:2 1 13rem}
+.wz-acciones .btn:only-child{flex:0 1 26rem}
+/* Desactivado: superficie propia en vez de bajar la opacidad del verde.
+   El verde al 40% dejaba el texto blanco en 1,8:1; esto da 5,5:1. */
+.wz-continuar:disabled,
+.wz-continuar:disabled:hover{
+  background:var(--inerte);color:var(--inerte-texto);
+  opacity:1;cursor:not-allowed;transform:none;box-shadow:none;
+}
+.wz-continuar[data-cargando="si"]{opacity:.7;pointer-events:none}
+.wz-continuar[data-cargando="si"]::after{
+  content:"";width:14px;height:14px;
+  border:2px solid currentColor;border-right-color:transparent;border-radius:50%;
+  animation:wz-gira .7s linear infinite;
+}
+@keyframes wz-gira{to{transform:rotate(360deg)}}
+
+/* ============ PASO 4 · PAGO ============ */
+/* Un aviso, no un cronometro: los digitos gigantes contando hacia atras metian
+   prisa, y la prisa es lo ultimo que hace falta en una pagina de terapia. */
+.wz-reten{
+  display:flex;align-items:flex-start;gap:.7rem;
+  padding:var(--space-4) var(--space-5);margin-bottom:var(--space-6);
+  background:var(--primary-soft);border:1px solid var(--primary-light);
+  border-radius:var(--wz-radio);
+}
+.wz-reten-icono{flex:none;display:flex;color:var(--primary-deep);margin-top:.05rem}
+.wz-reten-icono svg{width:19px;height:19px}
+.wz-reten-txt{
+  margin:0;font-size:var(--text-sm);color:var(--text-soft);line-height:1.55;
+}
+.wz-reten-txt strong{color:var(--text-dark);font-weight:600}
+/* Ambar cuando queda poco, no rojo: rojo es "algo va mal", y aqui no va nada
+   mal — solo queda menos tiempo del que habia. */
+.wz-reten[data-urgente="si"]{background:var(--pend-suave);border-color:var(--pend)}
+.wz-reten[data-urgente="si"] .wz-reten-icono{color:var(--pend)}
+.wz-reten[data-urgente="si"] .wz-reten-txt strong{color:var(--pend)}
+
+/* ---------- Gestionar una cita ya hecha ----------
+   Mover va antes que cancelar y con mas peso: sin retencion ni pago por
+   delante, abandonar no cuesta nada, asi que cambiar de horario tiene que ser
+   la salida mas facil de las dos. */
+.wz-gestion{display:grid;gap:.6rem}
+@media (min-width:520px){ .wz-gestion{grid-template-columns:1fr 1fr} }
+.wz-gestion-op{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.7rem 1rem;min-height:48px;
+  background:var(--white);border:1.5px solid var(--linea-fuerte);
+  border-radius:var(--wz-radio);
+  font:inherit;font-size:var(--text-sm);font-weight:600;color:var(--text-dark);
+  cursor:pointer;transition:border-color var(--paso),background var(--paso),color var(--paso);
+}
+.wz-gestion-op svg{width:17px;height:17px;flex:none}
+.wz-gestion-op:hover{border-color:var(--primary);background:var(--primary-soft);color:var(--primary-darkest)}
+.wz-gestion-baja{color:var(--text-soft)}
+.wz-gestion-baja:hover{border-color:var(--mal);background:var(--mal-suave);color:var(--mal)}
+
+/* Banda de reprogramacion: deja claro que no se esta reservando otra cita. */
+.wz-modo-repro{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);
+  flex-wrap:wrap;margin-bottom:var(--space-6);
+  padding:var(--space-4) var(--space-5);
+  background:var(--pend-suave);border-left:3px solid var(--pend);border-radius:8px;
+}
+.wz-modo-repro-txt{margin:0;font-size:var(--text-sm);color:var(--text-dark);line-height:1.5}
+.wz-modo-repro-txt span{display:block;color:var(--text-soft);font-size:var(--text-xs);margin-top:.15rem}
+.wz-modo-repro-salir{
+  flex:none;padding:.5rem .9rem;min-height:44px;
+  background:var(--white);border:1px solid var(--linea-fuerte);border-radius:var(--radius-pill);
+  font:inherit;font-size:var(--text-xs);font-weight:600;color:var(--text-dark);cursor:pointer;
+}
+.wz-modo-repro-salir:hover{border-color:var(--pend);color:var(--pend)}
+
+/* Datos rellenados de la ultima vez. Se dice, no se hace en silencio: nadie
+   deberia encontrarse sus datos escritos sin saber de donde salieron. */
+.wz-vuelta{
+  margin:0 0 var(--space-6);padding:var(--space-3) var(--space-4);
+  background:var(--primary-soft);border-radius:8px;
+  font-size:var(--text-xs);color:var(--primary-darkest);line-height:1.5;
+}
+
+.wz-tira-txt{min-width:0}
+.wz-tira-duracion{margin:.1rem 0 0;font-size:var(--text-xs);color:var(--text-soft)}
+
+.wz-auxilio{
+  margin:var(--space-5) 0 0;font-size:var(--text-xs);color:var(--text-soft);text-align:center;
+}
+.wz-auxilio a{color:var(--primary-deep);font-weight:600}
+
+/* ---------- Cuando pagar ----------
+   El horario ya es del paciente; lo unico que queda por decidir es el momento
+   del pago. Dos opciones como par, no como lista: se comparan de un vistazo. */
+.wz-momento{margin-bottom:var(--space-8)}
+.wz-momento-ops{display:grid;gap:.7rem}
+@media (min-width:640px){ .wz-momento-ops{grid-template-columns:1fr 1fr} }
+.wz-momento-op{
+  display:flex;align-items:flex-start;gap:.7rem;text-align:left;
+  padding:var(--space-5);
+  background:var(--white);border:1.5px solid var(--linea);border-radius:var(--wz-radio);
+  font:inherit;color:inherit;cursor:pointer;
+  box-shadow:var(--elev-1);
+  transition:box-shadow var(--paso),border-color var(--paso),background var(--paso);
+}
+.wz-momento-op:hover{border-color:var(--linea-fuerte);background:var(--papel);box-shadow:var(--elev-2)}
+.wz-momento-op[aria-checked="true"]{
+  border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2);
+}
+.wz-momento-op .wz-marca-radio{margin-top:.1rem}
+.wz-momento-op[aria-checked="true"] .wz-marca-radio{
+  border-color:var(--primary-deep);background:var(--primary-deep);
+}
+.wz-momento-op[aria-checked="true"] .wz-marca-radio::after{transform:scale(1)}
+.wz-momento-txt{min-width:0}
+.wz-momento-nombre{display:block;font-weight:600;font-size:var(--text-base);line-height:1.25}
+.wz-momento-nota{display:block;font-size:var(--text-xs);color:var(--text-soft);line-height:1.45;margin-top:.25rem}
+
+/* Norma, no sospecha: por eso va en el ambar de "pendiente" y no en rojo. */
+.wz-prepago{
+  margin:0 0 var(--space-8);padding:var(--space-4) var(--space-5);
+  background:var(--pend-suave);border-left:3px solid var(--pend);border-radius:8px;
+  font-size:var(--text-sm);color:var(--text-dark);line-height:1.55;
+}
+
+/* Pagar despues no es un formulario mas corto: es no tener formulario. */
+.wz-despues-caja{
+  padding:var(--space-6);
+  background:var(--primary-soft);border:1px solid var(--primary-light);
+  border-radius:var(--wz-radio);
+}
+.wz-despues-txt{margin:0;font-size:var(--text-sm);line-height:1.6;color:var(--text-dark)}
+.wz-despues-caja .wz-acciones{margin-top:var(--space-5)}
+
+/* ---------- Cuanto hay que transferir ----------
+   La cifra en bolivares es la que se teclea en la app del banco, asi que es la
+   grande. El dolar y la tasa quedan como referencia debajo. */
+.wz-importe{
+  padding:var(--space-6);margin-bottom:var(--space-8);
+  background:var(--primary-soft);border:1px solid var(--primary-light);
+  border-radius:var(--wz-radio);
+}
+.wz-importe-etq{
+  margin:0;font-size:.68rem;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--primary-darkest);opacity:.75;
+}
+.wz-importe-cifra{
+  margin:.25rem 0 0;display:flex;align-items:baseline;gap:.35rem;flex-wrap:wrap;
+  font-size:clamp(1.9rem,6vw,2.5rem);font-weight:700;letter-spacing:-.03em;
+  line-height:1.05;color:var(--primary-darkest);
+}
+.wz-importe-moneda{font-size:.45em;font-weight:600;letter-spacing:0;opacity:.75}
+.wz-importe-nota{
+  margin:.55rem 0 0;font-size:var(--text-xs);color:var(--text-soft);line-height:1.5;
+}
+.wz-importe-nota strong{color:var(--text-dark);font-weight:600}
+.wz-copiar-grande{margin-top:var(--space-4);padding:.5rem .9rem;min-height:40px}
+/* Sin tasa disponible no se inventa una: la caja se apaga y se pide el importe
+   en dolares, explicando que hay que convertirlo. */
+.wz-importe[data-sin-tasa="si"]{background:var(--papel);border-color:var(--linea)}
+.wz-importe[data-sin-tasa="si"] .wz-importe-etq,
+.wz-importe[data-sin-tasa="si"] .wz-importe-cifra{color:var(--text-dark)}
+
+/* ---------- Numeracion de los dos tramos del pago ---------- */
+.wz-paso-titulo{align-items:center;gap:.6rem;margin-top:var(--space-8)}
+.wz-paso-num{
+  flex:none;width:24px;height:24px;display:grid;place-items:center;
+  border-radius:50%;background:var(--primary-deep);color:var(--white);
+  font-size:.75rem;font-weight:700;
+}
+
+/* ---------- Cuentas de pago movil ----------
+   Cada banco con su color y sus iniciales. Pagar a la cuenta equivocada es el
+   error caro de este formulario, y distinguirlas de un vistazo lo evita. */
+.wz-cuentas{display:grid;gap:.7rem;margin-bottom:var(--space-8)}
+@media (min-width:640px){ .wz-cuentas{grid-template-columns:1fr 1fr} }
+.wz-cuenta{
+  padding:var(--space-5);
+  background:var(--white);border:1px solid var(--linea);border-radius:var(--wz-radio);
+  box-shadow:var(--elev-1);
+  border-top:3px solid var(--banco,var(--primary));
+}
+.wz-cuenta-cab{
+  display:flex;align-items:center;gap:.6rem;
+  padding-bottom:var(--space-4);margin-bottom:var(--space-2);
+  border-bottom:1px solid var(--linea);
+}
+/* Iniciales sobre el color del banco, no su logotipo: reproducirlos exigiria
+   sus archivos y su permiso, y envejecen mal. */
+.wz-cuenta-sello{
+  flex:none;width:34px;height:34px;display:grid;place-items:center;
+  border-radius:9px;background:var(--banco,var(--primary));
+  color:var(--banco-tinta,#fff);
+  font-size:.66rem;font-weight:700;letter-spacing:.02em;
+}
+.wz-cuenta-banco{margin:0;font-weight:600;font-size:var(--text-sm);line-height:1.25}
+.wz-dato{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:var(--space-3);padding-block:.45rem;
+}
+.wz-dato-txt{min-width:0}
+.wz-dato-etq{display:block;font-size:.68rem;color:var(--text-soft)}
+.wz-dato-val{display:block;font-weight:600;font-size:var(--text-sm);word-break:break-all}
+.wz-copiar{
+  /* 44px: es el minimo con el que un dedo acierta, y estos botones se usan
+     casi siempre desde el movil, saltando a la app del banco y volviendo. */
+  flex:none;display:inline-flex;align-items:center;gap:.3rem;
+  padding:.5rem .75rem;min-height:44px;
+  background:var(--white);color:var(--primary-deep);
+  border:1px solid var(--linea-fuerte);border-radius:var(--radius-pill);
+  font:inherit;font-size:var(--text-xs);font-weight:600;cursor:pointer;
+  transition:background var(--paso),color var(--paso),border-color var(--paso);
+}
+.wz-copiar:hover{background:var(--primary-deep);color:var(--white);border-color:var(--primary-deep)}
+.wz-copiar svg{width:13px;height:13px}
+.wz-copiar[data-copiado="si"]{background:var(--ok);color:var(--white);border-color:var(--ok)}
+
+/* ---------- Cuando se pago ----------
+   Hoy y Ayer cubren casi todos los casos; el calendario nativo queda para la
+   excepcion en vez de ser el unico camino. */
+.wz-cuando{display:flex;gap:.5rem;flex-wrap:wrap}
+.wz-chip{
+  padding:.55rem 1rem;min-height:44px;
+  background:var(--white);border:1.5px solid var(--linea-fuerte);
+  border-radius:var(--radius-pill);
+  font:inherit;font-size:var(--text-sm);font-weight:600;color:var(--text-dark);
+  cursor:pointer;transition:background var(--paso),border-color var(--paso),color var(--paso);
+}
+.wz-chip:hover{border-color:var(--primary)}
+.wz-chip[aria-checked="true"]{
+  background:var(--primary-deep);border-color:var(--primary-deep);color:var(--white);
+}
+.wz-label-fecha{
+  display:block;font-size:var(--text-xs);color:var(--text-soft);
+  margin:var(--space-4) 0 .4rem;
+}
+#cajaFecha input[type="date"]{max-width:16rem}
+
+/* ---------- Captura del comprobante ---------- */
+.wz-subir{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:.4rem;text-align:center;
+  padding:var(--space-8) var(--space-4);min-height:130px;
+  background:var(--papel);border:2px dashed var(--linea-fuerte);
+  border-radius:var(--wz-radio);cursor:pointer;
+  transition:background var(--paso),border-color var(--paso);
+}
+.wz-subir:hover{border-color:var(--primary);background:var(--primary-soft)}
+.wz-subir input[type="file"]{position:absolute;width:1px;height:1px;opacity:0}
+.wz-subir:focus-within{outline:2.5px solid var(--primary-deep);outline-offset:3px}
+.wz-subir-icono{color:var(--primary-deep)}
+.wz-subir-icono svg{width:28px;height:28px}
+.wz-subir-txt{font-size:var(--text-sm);color:var(--text-dark);font-weight:600;word-break:break-all}
+.wz-subir-pista{font-size:var(--text-xs);color:var(--text-soft)}
+.wz-subir[data-lleno="si"]{border-style:solid;border-color:var(--ok);background:var(--ok-suave)}
+.wz-subir[data-lleno="si"] .wz-subir-icono{color:var(--ok)}
+.wz-vista-previa{margin-top:.7rem}
+.wz-vista-previa img{
+  max-height:220px;width:auto;border-radius:8px;border:1px solid var(--linea);
+  box-shadow:var(--elev-1);
+}
+.wz-previa-pdf{
+  margin:0;padding:var(--space-4);font-size:var(--text-sm);color:var(--text-soft);
+  background:var(--papel);border:1px solid var(--linea);border-radius:8px;
+}
+
+/* ============ CIERRE ============
+   Antes: check a la izquierda, titulo centrado, una pildora gris vacia y un
+   boton de 1070px. Tres alineaciones distintas en cuatro elementos. Ahora la
+   cabecera se centra —es un momento, no un texto— y todo lo que hay que leer
+   con detalle va alineado a la izquierda dentro de una columna acotada. */
+.wz-final{padding-block:var(--space-8)}
+.wz-final-cabecera{text-align:center;max-width:34rem;margin-inline:auto}
+.wz-final-marca{
+  width:64px;height:64px;margin:0 auto var(--space-5);
+  display:grid;place-items:center;border-radius:50%;
+  background:var(--ok-suave);color:var(--ok);
+}
+.wz-final-marca svg{width:32px;height:32px}
+.wz-final-txt{
+  color:var(--text-soft);font-size:var(--text-sm);line-height:1.6;
+  margin:var(--space-3) 0 0;
+}
+/* Columna acotada: en escritorio el contenido no se estira a 960px, que es lo
+   que hacia parecer la pantalla vacia. */
+.wz-final-cuerpo{
+  max-width:34rem;margin:var(--space-8) auto 0;
+  display:flex;flex-direction:column;gap:var(--space-5);
+}
+.wz-final-cuerpo .wz-acciones{margin-top:var(--space-3);max-width:none}
+.wz-final-cuerpo .wz-acciones .btn{flex:1 1 auto}
+
+/* Se cualifica con .wz-resumen-total porque esa regla pone el total a 1,25rem
+   y, siendo mas especifica, inflaba la etiqueta de estado hasta el tamano de
+   una cifra de dinero. */
+.wz-resumen-total b.wz-marca-estado{
+  font-size:var(--text-xs);font-weight:600;letter-spacing:0;
+  padding:.3rem .6rem;border-radius:var(--radius-pill);
+}
+.wz-marca-estado.wz-pendiente{background:var(--pend-suave);color:var(--pend)}
+.wz-marca-estado.wz-ok{background:var(--ok-suave);color:var(--ok)}
+.wz-marca-estado.wz-mal{background:var(--mal-suave);color:var(--mal)}
+
+/* Que pasa ahora. Era lo unico que la persona necesitaba saber en este momento
+   y no estaba en ninguna parte. */
+.wz-siguiente{
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea);border-radius:var(--wz-radio);
+}
+.wz-siguiente-titulo{
+  margin:0 0 var(--space-4);font-size:var(--text-sm);font-weight:600;
+}
+.wz-siguiente-lista{
+  list-style:none;counter-reset:paso;margin:0;padding:0;
+  display:grid;gap:var(--space-4);
+}
+.wz-siguiente-lista li{
+  counter-increment:paso;position:relative;padding-left:2rem;
+  font-size:var(--text-sm);color:var(--text-soft);line-height:1.55;
+}
+.wz-siguiente-lista li::before{
+  content:counter(paso);position:absolute;left:0;top:.05rem;
+  width:1.4rem;height:1.4rem;display:grid;place-items:center;
+  border-radius:50%;background:var(--primary-soft);color:var(--primary-darkest);
+  font-size:.7rem;font-weight:700;
+}
+
+/* El enlace guardado: sin cuenta ni contrasena, es la unica llave que tiene la
+   persona para volver a su cita. */
+.wz-guardar{
+  padding:var(--space-5);
+  background:var(--white);border:1px dashed var(--linea-fuerte);
+  border-radius:var(--wz-radio);
+}
+.wz-guardar-etq{
+  margin:0 0 .6rem;font-size:var(--text-xs);font-weight:600;color:var(--text-dark);
+}
+.wz-guardar-fila{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+.wz-guardar-url{
+  flex:1;min-width:0;font-size:.72rem;color:var(--text-soft);
+  background:var(--papel);border:1px solid var(--linea);border-radius:6px;
+  padding:.5rem .6rem;overflow-x:auto;white-space:nowrap;
+}
+
+/* ============ CÓMO LLEGAR ============
+   Solo para quien reserva presencial. Un mapa incrustado se come pantalla en
+   el móvil y no lleva a ningún sitio; un botón que abre la app de mapas del
+   teléfono sí traza la ruta. Es lo que hacen las agendas médicas. */
+.wz-lugar{
+  /* Separada de las tarjetas de modalidad: aparece al pulsar "Presencial" y
+     necesita leerse como una respuesta, no como una prolongacion del boton. */
+  margin:var(--space-6) 0 0;
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea);border-radius:var(--wz-radio);
+  text-align:left;
+}
+/* Cabecera: el nombre del sitio es el dato que primero se busca. */
+.wz-lugar-cab{
+  display:flex;align-items:center;gap:.6rem;
+  padding-bottom:var(--space-4);
+  border-bottom:1px solid var(--linea);
+}
+.wz-lugar-icono{flex:none;display:flex;color:var(--primary-deep)}
+.wz-lugar-icono svg{width:26px;height:26px}
+.wz-lugar-nombre{font-weight:600;font-size:var(--text-base);line-height:1.3}
+/* Direccion y boton en la misma fila cuando hay ancho: si el boton se queda
+   solo debajo, en escritorio deja media tarjeta vacia a su derecha. */
+.wz-lugar-cuerpo{
+  display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-4);
+  padding-top:var(--space-4);
+}
+.wz-lugar-dir{font-size:var(--text-sm);color:var(--text-soft);line-height:1.6;margin:0}
+.wz-lugar-ir{
+  display:inline-flex;align-items:center;gap:.4rem;flex:none;
+  padding:.6rem 1.1rem;min-height:44px;
+  background:var(--primary-deep);color:var(--white);
+  border-radius:var(--radius-pill);text-decoration:none;
+  font-size:var(--text-sm);font-weight:600;
+  transition:background var(--transition),transform var(--transition);
+}
+.wz-lugar-ir:hover{background:var(--primary-darkest)}
+.wz-lugar-ir:active{transform:translateY(1px)}
+.wz-lugar-ir svg{width:16px;height:16px}
+@media (min-width:560px){
+  .wz-lugar-cuerpo{flex-direction:row;align-items:center;justify-content:space-between;gap:var(--space-6)}
+}
+
+/* ============ ALERTAS ============ */
+.wz-alerta{
+  display:flex;gap:.55rem;align-items:flex-start;
+  padding:var(--space-4);margin-bottom:var(--space-5);
+  border-radius:8px;font-size:var(--text-sm);line-height:1.55;border-left:3px solid;
+}
+.wz-alerta[data-tipo="error"]{background:var(--mal-suave);border-color:var(--mal);color:var(--mal)}
+.wz-alerta[data-tipo="ok"]{background:var(--ok-suave);border-color:var(--ok);color:var(--ok)}
+
+/* ============ PIE ============ */
+.wz-pie{
+  max-width:var(--wz-ancho);margin:var(--space-16) auto 0;
+  padding:var(--space-6) var(--space-4) 0;
+  border-top:1px solid var(--linea);
+  text-align:center;font-size:var(--text-xs);color:var(--text-soft);
+}
+.wz-pie p{margin-block:.2rem}
+
+@media (prefers-reduced-motion:reduce){
+  .wz-vista{animation:none}
+  .wz-barra-relleno{transition:none}
+  .wz-continuar[data-cargando="si"]::after{animation-duration:2s}
+}

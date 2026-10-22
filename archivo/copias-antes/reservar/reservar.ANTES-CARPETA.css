@@ -1,0 +1,1937 @@
+/* ============================================================
+   RESERVA DE CITAS — Psicconsciente
+
+   Esta página no es la landing. La landing seduce; esto resuelve una tarea,
+   y muchas veces se entra en frío desde un enlace que Daryeli mandó por chat,
+   sin haber visto el resto del sitio.
+
+   El patrón viene de las agendas médicas que la gente ya sabe usar
+   (Doctoralia, Zocdoc): la profesional arriba para dar confianza, y una tira
+   de días con sus horas debajo, para elegir comparando en una sola pantalla
+   en lugar de ir y volver entre calendario y horarios.
+
+   La paleta va aparte de la landing, que se queda en terracota: aquí manda el
+   verde bosque, que es donde coinciden las paletas de reserva y de salud de la
+   skill. Se retiran las manchas orgánicas del fondo y los radios irregulares:
+   en una herramienta estorban.
+
+   Mobile-first, como el resto del proyecto.
+   ============================================================ */
+
+/* ============================================================
+   LA CAPA DE TOKENS
+
+   Aqui se monta lo que se decidio en la maqueta `maqueta-vista1-salvia.html`
+   entre el 27 de agosto y el 3 de septiembre. No es una paleta nueva: es LA
+   MISMA, escrita con el vocabulario que la maqueta se fue dando.
+
+   Se cambia el :root y no cada regla porque `style.css` esta tokenizado por
+   completo —no tiene un solo color literal fuera de sus variables—, asi que
+   redefinir aqui los tokens de la landing repinta esta pagina entera,
+   botones heredados incluidos, SIN TOCAR LA LANDING.
+   ============================================================ */
+:root{
+  /* ===== TIPOGRAFIA =====
+     El 26 de agosto esta pagina echo a Fraunces con un argumento escrito: en
+     una pantalla de reserva una serif editorial "se lee como revista y no como
+     herramienta". La maqueta la devolvio, y es la version que se aprobo
+     viendola. Se revierte, entonces, pero el argumento de agosto sigue siendo
+     bueno y por eso Fraunces tiene el papel MINIMO: titular, titulos de grupo y
+     cifras. Todo lo demas —cada campo, cada boton, cada hora de la agenda— lo
+     sigue escribiendo Inter, que es la que trae cifras tabulares.
+     Volver atras es apuntar --display a --font-body. */
+  --display:var(--font-display);   /* Fraunces, la de style.css */
+  --texto:var(--font-body);        /* Inter */
+
+  /* La escala son SEIS peldanos y no los quince valores sueltos que habia.
+     Van nombrados por funcion y no por tamano porque los dos de en medio
+     —16 y 16,8 px— casi no se diferencian en cuerpo: lo que los separa es la
+     familia. */
+  --t-nota:.78rem;    /* 12,5 px · Inter    · lo accesorio: pasos, notas, badges */
+  --t-aux:.88rem;     /* 14,1 px · Inter    · lo que se lee de reojo */
+  --t-base:1rem;      /* 16   px · Inter    · el cuerpo */
+  --t-tit:1.05rem;    /* 16,8 px · Fraunces · titulos de grupo y cifras */
+  --t-cifra:1.45rem;  /* 23,2 px · Fraunces · el precio */
+  --t-h1:1.8rem;      /* 28,8 px · Fraunces · el titular */
+
+  /* ===== SALVIA Y ARCILLA =====
+     Sustituye al verde bosque #2F6B4F que tenia esta pagina. Los dos polos son
+     tonos de tierra, asi que la paleta no parece ensamblada: en OKLCH estan a
+     89,7 grados uno de otro, la mitad de los 173,5 que separaban la pizarra del
+     terracota de la landing.
+
+     EL REPARTO ES LO QUE HAY QUE RESPETAR AL ESCRIBIR UNA REGLA NUEVA:
+       la ARCILLA dibuja  — lineas, contornos en reposo, el precio
+       la SALVIA decide   — boton, aro de lo elegido, barra de progreso, foco */
+
+  /* --- superficies: la escalera de profundidad, siempre hacia abajo --- */
+  --suelo:#FFFFFF;              /* la pagina */
+  --sup:#FFFFFF;                /* la tarjeta · blanca, igual que el papel */
+  --sup-cal:#FAF3EA;            /* superficie tenue: cajas de aviso y hover */
+  --sup-eleg:#F2E7D9;           /* la tarjeta elegida · dos escalones */
+  --sel:#EFE6D8;                /* tinte de los badges */
+  --acc-sv:#E8EDE6;             /* salvia lavada */
+
+  /* --- ARCILLA · dibuja --- */
+  --marca:#A8825F; --marca-cl:#C6A783; --marca-dp:#8A6746; --marca-dk:#7A5A3C;
+
+  /* --- TEXTO · neutros templados hacia el verde --- */
+  --txt:#2E332E; --txt-suave:#5C635A;
+
+  /* --- SALVIA · decide ---
+     Consecuencia que se hereda y que toca resolver en el paso 4: si el verde
+     significa "esto es lo tuyo", ya NO puede significar "pago verificado". Ese
+     estado se resuelve con el check y la palabra, no con el color. */
+  --acc:#5A7060;      /* 5,30:1 con blanco */
+  --acc-dp:#3E4F44;   /* 8,35:1 con blanco */
+  --acc-txt:#FFFFFF;  /* lo que se escribe ENCIMA de la salvia */
+
+  /* --- lineas ---
+     `--linea` es el contorno de un CONTROL y por eso lleva la arcilla entera:
+     una tarjeta y una fila son <button>, y la WCAG pide 3:1 para el contorno de
+     un control contra lo que tiene al lado. El gris #E4E8E6 que habia aqui daba
+     1,2:1 contra el blanco y no llegaba ni de lejos; este da 3,49:1.
+     `--linea-int` es la divisoria, que es otra cosa y va tenue. */
+  --linea:#A8825F;
+  --linea-sug:rgba(168,130,95,.44);
+  --linea-int:rgba(168,130,95,.22);
+  /* La linea de lo elegido es SALVIA en los dos temas. Se define una sola vez
+     porque apunta a --acc, y --acc ya cambia con el tema. */
+  --linea-f:var(--acc);
+
+  --circ-eleg:#FFFFFF;            /* el disco de la tarjeta elegida · SE ENCIENDE */
+  --circ-eleg-txt:#5A7060;        /* su contenido · 5,36:1 */
+  --disco:rgba(255,255,255,.16);  /* el disco dentro del boton */
+  --disco-off:rgba(46,51,46,.09); /* el mismo, con el boton apagado */
+  --foto:saturate(.8);
+  --foto-eleg:saturate(1.06) contrast(1.03);
+
+  --banda:#8C6246;
+  --barra:#E0CDB8;
+
+  /* ===== ESTADOS ===== */
+  --inerte:#E6E1D7; --inerte-txt:#625E56;   /* 4,94:1 */
+  --pend:#7A5B12; --pend-sv:#FAF0DC; --pend-linea:rgba(122,91,18,.22);
+  --mal:#A33A2E;   --mal-sv:#FBEAE8;  --mal-txt:#FFFFFF;
+  --ok:var(--acc); --ok-sv:var(--acc-sv);
+
+  /* DISPONIBILIDAD de la agenda: libre en salvia lavada, ocupado apagado. */
+  --libre:var(--acc-sv);
+  --ocupado:#EFEDE8;
+
+  /* ===== PUENTES =====
+     Los nombres que ya usaban este archivo y `style.css`, apuntando a los de
+     arriba. Existen para que el repintado alcance a las reglas heredadas sin
+     reescribirlas una por una; al tocar una regla, conviene cambiarla al nombre
+     nuevo, que es el que dice para que sirve. */
+  --white:var(--sup);
+  --bg-main:var(--suelo);
+  --bg-secondary:var(--sup-cal);
+  --papel:var(--sup-cal);
+  --text-dark:var(--txt);
+  --text-soft:var(--txt-suave);
+  --primary:var(--linea-f);          /* se usaba en hover y foco: eso decide */
+  --primary-light:var(--linea-sug);
+  --primary-soft:var(--sup-eleg);
+  --primary-deep:var(--acc);
+  --primary-darkest:var(--acc-dp);
+  --linea-fuerte:var(--linea);
+  --border-soft:var(--linea-int);
+  --border-strong:var(--linea-sug);
+  --inerte-texto:var(--inerte-txt);
+  --ok-suave:var(--ok-sv);
+  --pend-suave:var(--pend-sv);
+  --mal-suave:var(--mal-sv);
+
+  /* ===== FORMA =====
+     Los radios se alinean con la maqueta: 16px la tarjeta, 8px la miniatura.
+     La pagina tenia 12px, que no era ninguno de los dos. */
+  /* La escala de style.css apunta a la de arriba. Son cuatro nombres contra
+     seis peldanos: asi las 54 declaraciones que ya los usaban entran en la
+     escala nueva sin tocar una sola regla. --text-base baja de 1,0625rem a
+     1rem, que es el cuerpo de la maqueta. */
+  --text-xs:var(--t-nota);
+  --text-sm:var(--t-aux);
+  --text-base:var(--t-base);
+  --text-lg:var(--t-tit);
+
+  --wz-radio:16px;
+  --r:var(--wz-radio);      /* el nombre corto con el que lo escribe la maqueta */
+  --r-pill:var(--radius-pill);
+  --r-sm:8px;
+  --ico:16px; --ico-lg:20px;
+
+  /* --space-5 NO existe en style.css: la escala salta del 4 (1rem) al 6
+     (1.5rem). Se usaba en diez reglas de este archivo y, al ser un token
+     indefinido, el navegador descarta la declaracion entera. */
+  --space-5:1.25rem;
+
+  /* ELEVACION. La sombra lleva verde en vez de negro puro para no ensuciar
+     sobre el blanco. */
+  --elev-1:0 1px 2px rgba(26,46,36,.05);
+  --elev-2:0 4px 12px -4px rgba(26,46,36,.14), 0 1px 3px rgba(26,46,36,.06);
+
+  /* MEDIDA. El ancho de un control es una promesa sobre lo que cabe dentro. */
+  --medida:min(100%,32rem);
+  --medida-ancha:min(100%,44rem);
+  /* 50rem y no los 60rem de agosto: es el ancho con el que se ajustaron los
+     cortes de 760 y 780 px de la vista 1. Cuando se rehaga el paso 2, la agenda
+     de dos columnas querra mas sitio y tendra que pedirlo ella. */
+  --wz-ancho:50rem;
+
+  /* Una sola curva para seleccionar, abrir y cambiar de paso. */
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+
+  /* Que el navegador pinte con el tema lo suyo: barras de scroll, foco y los
+     controles nativos, que aqui son el <select> y las casillas. */
+  color-scheme:only light;
+}
+
+/* ============================================================
+   MODO OSCURO
+
+   El peso del diseno esta en las SUPERFICIES, no en las lineas. En claro el
+   papel blanco ya hace de material por si solo; en oscuro no hay papel, asi
+   que el material lo tiene que poner la superficie. Los escalones van a
+   DL* 7 y 9,8 y las lineas BAJAN de contraste en vez de subir: la WCAG pide
+   3:1 para el contorno de un control y en claro esta en 3,49, asi que aqui se
+   IGUALA, no se maximiza. Subirlas dejaba la vista dibujada a alambre.
+   ============================================================ */
+
+
+/* La landing pinta fondo crema y unas formas orgánicas. Aquí se anulan: el
+   blanco es lo que hace que el verde funcione como única señal de acción y lo
+   que mantiene la pantalla legible de un vistazo. */
+.wz-body{
+  background:var(--suelo);
+  color:var(--txt);
+  /* 1,5 y no el 1,7 de la landing. Alli el interlineado ancho es correcto:
+     son parrafos que se leen seguidos. Aqui casi todo es de una linea -un
+     nombre, un precio, una hora- y 1,7 le anadia 3,2 px de aire a cada pieza,
+     que es lo que hacia que la caja del consultorio midiera 13 px mas que en
+     la maqueta. Lo que si son parrafos, como .wz-intro, pide su 1,7 aparte. */
+  /* Las cifras tabulares NO van en toda la pagina. Se pusieron en agosto para
+     que las columnas de horas del paso 2 alinearan, y eso sigue siendo cierto,
+     pero aplicadas al body ensanchan cada digito de la pantalla: el badge de
+     "Ahorras 15 $" medía 4 px mas que en la maqueta. Van donde hacen falta:
+     donde hay una COLUMNA de numeros que comparar. */
+  line-height:1.5;
+  /* El relleno de abajo se fue a .pnl-lienzo-ancho, en ../panel.css. Aqui, en
+     el body, quedaba FUERA de la rejilla del panel: la columna marron no podia
+     cubrirlo y aparecia una franja blanca de 64 px por debajo del menu, como si
+     el menu no llegara al final. Dentro de la rejilla crece con ella. */
+}
+
+/* El foco de la maqueta: 3 px de salvia honda y el radio de la tarjeta, para
+   que el aro siga la curva de lo que rodea en vez de cortarla. style.css lo
+   dibuja a 2,5 px con radio de 8. */
+.wz-body :focus{outline:none}
+.wz-body :focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:var(--r)}
+.wz-body .blobs{display:none}
+
+/* ============ CABECERA ============ */
+.wz-top{
+  border-bottom:1px solid var(--linea-int);
+  background:var(--suelo);
+  position:sticky;top:0;z-index:20;
+}
+.wz-top-int{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);
+  max-width:var(--wz-ancho);margin-inline:auto;
+  padding:var(--space-4);
+}
+/* Daryeli va en la cabecera y no en una tarjeta aparte: así la acompaña
+   durante los cuatro pasos en vez de solo en el primero, y se ahorra un bloque
+   entero de altura, que era lo que dejaba la página apretada. */
+.wz-marca{
+  display:inline-flex;align-items:center;gap:.6rem;
+  color:var(--text-dark);text-decoration:none;min-width:0;
+}
+.wz-marca-foto{
+  width:38px;height:38px;flex:none;border-radius:50%;
+  object-fit:cover;object-position:center 18%;
+  border:2px solid var(--suelo);box-shadow:0 0 0 1px var(--linea-int);
+}
+.wz-marca-txt{min-width:0;line-height:1.25}
+.wz-marca-nombre{display:block;font-family:var(--display);
+  font-size:var(--t-base);font-weight:600;letter-spacing:-.01em;line-height:1.25}
+.wz-marca-cargo{display:block;font-size:var(--t-nota);color:var(--text-soft)}
+.wz-ayuda{
+  flex:none;font-size:var(--text-xs);font-weight:600;
+  color:var(--primary-deep);text-decoration:none;white-space:nowrap;
+  padding:.4rem .75rem;min-height:36px;
+  display:inline-flex;align-items:center;gap:.35rem;
+  border:1px solid var(--linea-fuerte);border-radius:var(--radius-pill);
+  transition:background var(--transition),border-color var(--transition);
+}
+.wz-ayuda:hover{background:var(--primary-soft);border-color:var(--primary)}
+.wz-ayuda svg{width:14px;height:14px}
+@media (max-width:399px){ .wz-ayuda-larga{display:none} }
+
+/* ============ PROGRESO ============
+   Discreto: una línea y un contador. En una agenda médica el progreso informa,
+   no protagoniza. */
+.wz-progreso{
+  max-width:var(--wz-ancho);margin-inline:auto;
+  padding:var(--space-6) var(--space-4) 0;
+}
+.wz-progreso-fila{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);
+  margin-bottom:.55rem;
+}
+.wz-paso-actual{font-size:var(--text-xs);font-weight:600;color:var(--text-soft);letter-spacing:.03em}
+.wz-paso-nombre{color:var(--primary-deep)}
+.wz-barra{height:3px;background:var(--linea-int);border-radius:var(--radius-pill);overflow:hidden}
+.wz-barra-relleno{
+  display:block;height:100%;width:25%;
+  background:var(--primary-deep);border-radius:inherit;
+  transition:width .4s var(--ease);
+}
+
+/* ============ ESTRUCTURA ============ */
+.wz-main{
+  max-width:var(--wz-ancho);margin-inline:auto;
+  padding:var(--space-8) var(--space-4) 0;
+}
+.wz-vista{animation:wz-entra .28s var(--ease) both}
+@keyframes wz-entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Esta regla subia los tres titulares a 700 para COMPENSAR QUE ERAN INTER: una
+   sans a 600 se queda blanda sosteniendo un titular. Con Fraunces de vuelta la
+   compensacion sobra —una serif ya trae ese peso optico en los remates— y ademas
+   estorbaba: al ser mas especifica que .wz-grupo-titulo, le ganaba y dejaba los
+   titulos de grupo en 700 en vez de los 600 de la maqueta. */
+.wz-body h1,.wz-body h2,.wz-body h3{font-weight:600}
+.wz-vista h1{
+  font-size:var(--t-h1);font-weight:600;line-height:1.12;letter-spacing:-.02em;
+  margin-bottom:var(--space-2);
+}
+.wz-vista h1:focus{outline:none}   /* el foco al cambiar de paso es programático */
+/* La bajada acompana al titulo pero no es titulo: se queda en Inter y al
+   cuerpo, con una medida que no pase de lo que el ojo lee de un renglon. */
+.wz-intro{color:var(--txt-suave);font-size:var(--t-base);line-height:1.7;
+  max-width:34rem;margin-bottom:var(--space-8)}
+
+/* ============ FICHA DE LA PROFESIONAL ============
+   Estas reglas ya no las usa ningún paso: Daryeli subió a la cabecera, donde
+   acompaña los cuatro pasos en lugar de solo el primero y no cuesta un bloque
+   de altura. Se dejan por si el panel o la página de "mi cita" la necesitan. */
+.wz-ficha{
+  display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-4);margin-bottom:var(--space-6);
+  background:var(--papel);border:1px solid var(--linea-int);border-radius:var(--wz-radio);
+}
+.wz-ficha-foto{
+  width:56px;height:56px;flex:none;border-radius:50%;
+  object-fit:cover;object-position:center 18%;
+  border:2px solid var(--suelo);box-shadow:0 0 0 1px var(--linea-int);
+}
+.wz-ficha-txt{min-width:0}
+.wz-ficha-nombre{font-size:var(--t-tit);font-weight:700;line-height:1.25;letter-spacing:-.015em}
+.wz-ficha-cargo{font-size:var(--text-xs);color:var(--text-soft);margin-top:.1rem}
+.wz-ficha-sello{
+  display:inline-flex;align-items:center;gap:.3rem;margin-top:.35rem;
+  font-size:var(--t-nota);font-weight:600;color:var(--ok);
+}
+.wz-ficha-sello svg{width:13px;height:13px}
+
+/* Aqui vivian las reglas de la vista 1 de agosto: .wz-modos, .wz-modo, .wz-pin,
+   .wz-grupo, .wz-grupo-separado, .wz-grupo-nota, .wz-planes, .wz-plan y sus
+   piezas, y .wz-marca-radio. Las sustituye el bloque portado de la maqueta que
+   esta al final del archivo, con los nombres que usa ella: .segs, .lugar,
+   .lista, .fila, .planes, .card y .circ.
+   Se quedan .wz-grupo-titulo y .wz-select, que NO son de la vista 1 sola: el
+   titulo de grupo lo usan los pasos 3 y 4, y el desplegable es el selector de
+   zona horaria del paso 2 y el prefijo de telefono del 3. */
+/* ============ SERVICIO Y PLANES ============ */
+.wz-grupo-titulo{
+  font-family:var(--display);
+  font-size:var(--t-tit);font-weight:600;letter-spacing:-.01em;margin-bottom:var(--space-4);
+  display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;
+}
+
+/* ---------- Desplegable de servicio ----------
+   Es un <select> nativo con la flecha del sistema apagada y una propia encima:
+   asi se comporta como el resto de la pagina en escritorio y sigue abriendo el
+   selector del sistema en el movil, que es el que la gente sabe usar. */
+.wz-select{position:relative;max-width:var(--medida)}
+.wz-select select{
+  appearance:none;-webkit-appearance:none;
+  width:100%;min-height:56px;padding:.9rem 3rem .9rem 1rem;
+  /* 16px minimo: por debajo, iOS hace zoom al enfocar y descuadra la vista. */
+  font:inherit;font-size:var(--t-base);font-weight:500;
+  color:var(--text-dark);background:var(--sup);
+  border:1.5px solid var(--linea-fuerte);border-radius:10px;
+  box-shadow:var(--elev-1);cursor:pointer;
+  transition:border-color var(--paso),box-shadow var(--paso);
+}
+.wz-select select:hover{border-color:var(--primary)}
+.wz-select select:focus-visible{
+  outline:none;border-color:var(--primary-deep);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 20%,transparent);
+}
+/* Sin elegir, el texto es una instruccion, no un dato: va apagado. */
+.wz-select select:invalid,.wz-select select option[value=""]{color:var(--text-soft)}
+.wz-select-flecha{
+  position:absolute;right:1rem;top:50%;transform:translateY(-50%);
+  width:20px;height:20px;color:var(--primary-deep);pointer-events:none;
+}
+
+/* Aqui si: las horas y los dias forman columnas que se leen en vertical, y con
+   cifras proporcionales el "1" estrecho las desalinea. */
+.wz-hueco,.wz-col-num,.wz-importe,.wz-resumen-total b,.wz-plan-precio{
+  font-variant-numeric:tabular-nums;
+}
+
+/* ============ PASO 2 · AGENDA ============
+   Dos columnas en escritorio: a la izquierda lo que se reserva, que no cambia;
+   a la derecha los días. En móvil se apila. */
+.wz-agenda{display:grid;gap:var(--space-8)}
+@media (min-width:900px){
+  .wz-agenda{grid-template-columns:16rem 1fr;gap:var(--space-8);align-items:start}
+}
+
+/* ---------- Resumen de la reserva ----------
+   Era una lista de cinco pares etiqueta/valor con el mismo peso: se leia como
+   una tabla y habia que recorrerla entera para saber que se estaba reservando.
+   Ahora el nombre de la sesion manda, los datos van de apoyo con su icono, y
+   el total cierra abajo separado por una linea. */
+.wz-resumen{
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea-int);border-radius:var(--wz-radio);
+}
+/* Solo el resumen que acompana al asistente se queda pegado. La tarjeta de
+   la pantalla de cierre reutiliza .wz-resumen para no duplicar estilos, y con
+   la regla sin acotar heredaba el sticky: al hacer scroll se despegaba y
+   flotaba por encima de "Que pasa ahora" y de la caja del enlace. */
+@media (min-width:900px){ .wz-agenda > .wz-resumen{position:sticky;top:5rem} }
+
+.wz-resumen-etq{
+  margin:0 0 .2rem;font-size:var(--t-nota);font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--text-soft);
+}
+.wz-resumen-titulo{
+  margin:0 0 var(--space-4);font-size:var(--t-tit);font-weight:700;
+  line-height:1.25;letter-spacing:-.015em;
+}
+.wz-resumen-datos{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
+.wz-resumen-dato{
+  display:flex;align-items:flex-start;gap:.5rem;
+  font-size:var(--text-xs);color:var(--text-soft);line-height:1.45;
+}
+.wz-resumen-ico{flex:none;display:flex;color:var(--primary-deep);margin-top:.05rem}
+.wz-resumen-ico svg{width:15px;height:15px}
+.wz-resumen-dato small{display:block;font-size:.92em;opacity:.8}
+
+.wz-resumen-total{
+  display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-3);
+  margin:var(--space-4) 0 0;padding-top:var(--space-4);
+  border-top:1px solid var(--linea-int);
+  font-size:var(--text-sm);color:var(--text-soft);
+}
+.wz-resumen-total b{font-size:var(--t-cifra);font-weight:700;letter-spacing:-.02em;color:var(--primary-darkest)}
+
+/* Enlace, no boton: cambiar de sesion es la salida rara de esta pantalla y
+   antes ocupaba el ancho entero de la tarjeta compitiendo con el total. */
+.wz-resumen-cambiar{
+  margin-top:var(--space-4);padding:.6rem 0;min-height:44px;
+  background:none;border:none;font:inherit;font-size:var(--text-xs);font-weight:600;
+  color:var(--primary-deep);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;
+  transition:color var(--paso);
+}
+.wz-resumen-cambiar:hover{color:var(--primary-darkest)}
+
+/* ---------- Tira de días ---------- */
+.wz-tira-cabecera{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:var(--space-2);margin-bottom:var(--space-4);
+}
+.wz-tira-rango{font-size:var(--text-sm);font-weight:600}
+.wz-tira-nav{display:flex;gap:.4rem}
+.wz-flecha{
+  width:44px;height:44px;flex:none;               /* objetivo táctil */
+  display:grid;place-items:center;
+  background:var(--sup);border:1px solid var(--linea-fuerte);border-radius:8px;
+  color:var(--text-dark);cursor:pointer;
+  transition:background var(--transition),border-color var(--transition);
+}
+.wz-flecha:hover:not(:disabled){background:var(--primary-soft);border-color:var(--primary)}
+.wz-flecha:disabled{opacity:.35;cursor:not-allowed}
+
+/* EL NÚCLEO DE LA PANTALLA.
+   Cada columna es un día con sus horas debajo. Se ven varios días a la vez, y
+   eso es lo que permite decidir sin ir y volver: si el martes a las 10 no
+   sirve, el miércoles está justo al lado. */
+.wz-dias{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));   /* móvil: tres días */
+  gap:.65rem;
+}
+@media (min-width:560px){ .wz-dias{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media (min-width:900px){ .wz-dias{grid-template-columns:repeat(5,minmax(0,1fr))} }
+
+.wz-col{display:flex;flex-direction:column;gap:.5rem;min-width:0}
+.wz-col-cabecera{
+  text-align:center;padding-block:.4rem .5rem;
+  border-bottom:1px solid var(--linea-int);margin-bottom:.2rem;
+}
+.wz-col-dia{display:block;font-size:var(--t-nota);color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em}
+.wz-col-num{display:block;font-size:var(--t-tit);font-weight:600;line-height:1.2}
+.wz-col-hoy .wz-col-num{color:var(--primary-deep)}
+.wz-col-hoy .wz-col-dia{color:var(--primary)}
+
+.wz-hueco{
+  width:100%;min-height:50px;padding:.5rem .2rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--sup);border:1.5px solid var(--linea);border-radius:8px;
+  font:inherit;font-size:var(--text-sm);font-weight:500;color:var(--text-dark);
+  cursor:pointer;
+  transition:background .14s var(--ease),border-color .14s var(--ease),color .14s var(--ease);
+}
+.wz-hueco:hover{background:var(--primary-soft);border-color:var(--primary)}
+.wz-hueco:active{transform:scale(.97)}
+.wz-hueco[aria-checked="true"]{
+  background:var(--primary-deep);border-color:var(--primary-deep);color:var(--acc-txt);
+  font-weight:600;
+}
+/* La hora de Caracas solo aparece cuando NO coincide con la de quien mira. Es
+   la razón de ser de este bloque: Daryeli atiende también a gente en España. */
+.wz-hueco-alt{font-size:var(--t-nota);opacity:.68;line-height:1.25;font-weight:400}
+
+/* El "booked grey" de la base de datos de la skill: un dia sin disponibilidad
+   se apaga entero y lo dice con palabras, en vez de un guion dentro de una caja
+   punteada que se leia como un campo roto. */
+.wz-col-vacio{
+  margin:0;min-height:50px;display:grid;place-items:center;text-align:center;
+  padding:.4rem .2rem;
+  font-size:var(--t-nota);line-height:1.3;color:var(--text-soft);
+  background:var(--ocupado);border-radius:8px;
+}
+.wz-col-sin .wz-col-cabecera{opacity:.45}
+.wz-mas{
+  width:100%;min-height:38px;padding:.3rem;
+  background:var(--primary-soft);border:none;border-radius:8px;
+  font:inherit;font-size:var(--t-nota);font-weight:600;color:var(--primary-darkest);
+  cursor:pointer;transition:background var(--paso);
+}
+.wz-mas:hover{background:var(--primary-light)}
+
+.wz-zona{
+  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+  margin-top:var(--space-4);padding-top:var(--space-4);
+  border-top:1px solid var(--linea-int);
+  font-size:var(--text-xs);color:var(--text-soft);
+}
+/* Variante compacta para la zona horaria: mismo desplegable vestido que el de
+   servicio, pero sin ocupar el ancho de un campo de formulario.
+   (La regla antigua .wz-select estaba pensada para el <select> a pelo y, al
+   pasar .wz-select a ser el envoltorio, le pintaba un segundo borde alrededor
+   del selector de servicio.) */
+.wz-select-compacto{max-width:20rem}
+.wz-select-compacto select{min-height:44px;padding:.55rem 2.5rem .55rem .75rem;font-size:var(--text-sm)}
+.wz-select-compacto .wz-select-flecha{right:.7rem;width:17px;height:17px}
+
+.wz-cargando,.wz-vacio{
+  grid-column:1/-1;padding:var(--space-8) var(--space-4);text-align:center;
+  color:var(--text-soft);font-size:var(--text-sm);
+  background:var(--papel);border-radius:var(--wz-radio);
+}
+
+/* ============ FORMULARIOS ============ */
+/* El ancho de un campo promete lo que cabe dentro: 730px para un nombre
+   prometia un parrafo. Las filas de dos columnas se quedan sin tope. */
+.wz-campo{margin-bottom:var(--space-8);max-width:var(--medida)}
+.wz-fila .wz-campo{max-width:none}
+/* :not(.wz-subir) no es adorno: la caja de la captura tambien es un <label>, y
+   esta regla —mas especifica que .wz-subir— le imponia display:block, asi que su
+   icono, su texto y su pista se quedaban en una sola linea en vez de apilarse. */
+.wz-campo label:not(.wz-subir),.wz-label-suelta{
+  display:block;font-size:var(--text-sm);font-weight:600;margin-bottom:.5rem;
+}
+.wz-campo input[type="text"],
+.wz-campo input[type="email"],
+.wz-campo input[type="tel"],
+.wz-campo input[type="date"],
+.wz-campo select{
+  width:100%;min-height:52px;padding:.85rem .9rem;
+  /* 16px mínimo: por debajo, iOS hace zoom al enfocar y descuadra la vista. */
+  font:inherit;font-size:var(--t-base);
+  color:var(--text-dark);background:var(--sup);
+  border:1.5px solid var(--linea-fuerte);border-radius:8px;
+  transition:border-color .16s var(--ease),box-shadow .16s var(--ease);
+}
+.wz-campo input:focus,.wz-campo select:focus{
+  outline:none;border-color:var(--primary-deep);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 20%,transparent);
+}
+.wz-campo input[aria-invalid="true"]{border-color:var(--mal)}
+.wz-ayuda-campo{font-size:var(--text-xs);color:var(--text-soft);margin-top:.3rem}
+
+/* Prefijo y numero pegados como un solo control: son un dato, no dos campos.
+   El prefijo no crece; el numero se queda con el resto del ancho. */
+.wz-tel{display:flex;gap:.5rem;align-items:stretch}
+.wz-select-pais{flex:0 0 11rem}
+.wz-select-pais select{
+  min-height:52px;padding:.85rem 2.2rem .85rem .8rem;
+  font-size:var(--t-base);font-weight:500;
+  /* La opcion completa dice "+58 · Venezuela"; cerrado no cabe entera, y
+     recortarla es correcto porque el prefijo, que es el dato, va delante. */
+  text-overflow:ellipsis;
+}
+.wz-select-pais .wz-select-flecha{right:.6rem;width:16px;height:16px}
+.wz-tel input[type="tel"]{flex:1;min-width:0}
+
+/* :not([hidden]) no es adorno: "display:flex" a secas gana al display:none
+   que el navegador aplica por el atributo hidden, y los <p> de error vacios
+   se pintaban igual — de ahi los puntos rojos en un formulario recien abierto. */
+.wz-error:not([hidden]){
+  display:flex;align-items:flex-start;gap:.35rem;
+  font-size:var(--text-xs);color:var(--mal);font-weight:500;margin-top:.35rem;
+}
+/* El error no se señala solo en rojo: lleva su propio signo. */
+.wz-error::before{
+  content:"!";width:15px;height:15px;flex:none;margin-top:1px;
+  display:grid;place-items:center;border-radius:50%;
+  background:var(--mal);color:var(--mal-txt);font-size:var(--t-nota);font-weight:700;
+}
+
+.wz-fila{display:grid;gap:var(--space-4)}
+@media (min-width:560px){ .wz-fila{grid-template-columns:1fr 1fr} }
+
+.wz-aviso{
+  display:flex;gap:.7rem;align-items:flex-start;
+  padding:var(--space-5);
+  /* Separado de los campos por arriba y del consentimiento por abajo: es un
+     aviso de seguridad, no el pie de un formulario. */
+  margin:var(--space-10) 0 var(--space-6);
+  background:var(--pend-suave);border-left:3px solid var(--pend);border-radius:8px;
+  font-size:var(--text-sm);line-height:1.55;
+}
+.wz-aviso-icono{flex:none;color:var(--pend)}
+.wz-aviso-icono svg{width:20px;height:20px}
+.wz-aviso a{color:var(--mal);font-weight:600}
+
+/* Caja propia para el consentimiento: es la pieza que protege ante un reclamo
+   y estaba a diez pixeles del bloque naranja, leyendose como su continuacion. */
+.wz-consent-caja{
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea-int);border-radius:var(--wz-radio);
+}
+.wz-consent-caja:focus-within{border-color:var(--linea-f)}
+.wz-consent{display:flex;gap:.7rem;align-items:flex-start}
+.wz-consent input[type="checkbox"]{
+  width:22px;height:22px;flex:none;margin-top:1px;
+  accent-color:var(--primary-deep);cursor:pointer;
+}
+.wz-consent label{font-size:var(--text-sm);line-height:1.55;font-weight:400;margin:0;cursor:pointer}
+
+/* Qué pasa después de pulsar. Va pegado al botón, que es donde aparece la duda
+   que frena a la gente. */
+.wz-despues{
+  display:flex;align-items:flex-start;gap:.45rem;
+  font-size:var(--text-xs);color:var(--text-soft);
+  margin-top:var(--space-3);line-height:1.5;
+}
+.wz-despues svg{width:14px;height:14px;flex:none;color:var(--ok);margin-top:2px}
+
+/* ============ ACCIONES ============ */
+/* Los dos botones ocupaban media pantalla cada uno: en un asistente el
+   retroceso es la accion rara y el avance la esperada, asi que no pueden
+   pesar igual. Y el grupo deja de estirarse hasta los 1070px. */
+.wz-acciones{
+  display:flex;gap:.75rem;flex-wrap:wrap;margin-top:var(--space-8);
+  max-width:var(--medida-ancha);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+/* style.css escribe el boton primario con --white encima de la salvia. Ese
+   nombre aqui significa "superficie de tarjeta", no "la tinta que va sobre el
+   acento": en claro coinciden y en oscuro no, asi que se dice cual es. */
+.wz-acciones .btn-primary,.btn-primary{color:var(--acc-txt)}
+/* style.css escribe el boton a .97rem, que era un septimo tamano fuera de la
+   escala de seis. Entra en el cuerpo, que es lo que es: texto que se lee. */
+.wz-body .btn{font-size:var(--t-base)}
+.wz-acciones .btn{flex:1 1 auto;min-width:7rem;border-radius:10px;min-height:50px}
+.wz-acciones .wz-continuar{flex:2 1 13rem}
+.wz-acciones .btn:only-child{flex:0 1 26rem}
+/* Desactivado: superficie propia en vez de bajar la opacidad del verde.
+   El verde al 40% dejaba el texto blanco en 1,8:1; esto da 5,5:1. */
+.wz-continuar:disabled,
+.wz-continuar:disabled:hover{
+  background:var(--inerte);color:var(--inerte-texto);
+  opacity:1;cursor:not-allowed;transform:none;box-shadow:none;
+}
+.wz-continuar[data-cargando="si"]{opacity:.7;pointer-events:none}
+.wz-continuar[data-cargando="si"]::after{
+  content:"";width:14px;height:14px;
+  border:2px solid currentColor;border-right-color:transparent;border-radius:50%;
+  animation:wz-gira .7s linear infinite;
+}
+@keyframes wz-gira{to{transform:rotate(360deg)}}
+
+/* ============ PASO 4 · PAGO ============ */
+/* Un aviso, no un cronometro: los digitos gigantes contando hacia atras metian
+   prisa, y la prisa es lo ultimo que hace falta en una pagina de terapia. */
+.wz-reten{
+  display:flex;align-items:flex-start;gap:.7rem;
+  padding:var(--space-4) var(--space-5);margin-bottom:var(--space-6);
+  background:var(--primary-soft);border:1px solid var(--primary-light);
+  border-radius:var(--wz-radio);
+}
+.wz-reten-icono{flex:none;display:flex;color:var(--primary-deep);margin-top:.05rem}
+.wz-reten-icono svg{width:19px;height:19px}
+.wz-reten-txt{
+  margin:0;font-size:var(--text-sm);color:var(--text-soft);line-height:1.55;
+}
+.wz-reten-txt strong{color:var(--text-dark);font-weight:600}
+/* Ambar cuando queda poco, no rojo: rojo es "algo va mal", y aqui no va nada
+   mal — solo queda menos tiempo del que habia. */
+.wz-reten[data-urgente="si"]{background:var(--pend-suave);border-color:var(--pend)}
+.wz-reten[data-urgente="si"] .wz-reten-icono{color:var(--pend)}
+.wz-reten[data-urgente="si"] .wz-reten-txt strong{color:var(--pend)}
+
+/* ---------- Gestionar una cita ya hecha ----------
+   Mover va antes que cancelar y con mas peso: sin retencion ni pago por
+   delante, abandonar no cuesta nada, asi que cambiar de horario tiene que ser
+   la salida mas facil de las dos. */
+.wz-gestion{display:grid;gap:.6rem}
+@media (min-width:520px){ .wz-gestion{grid-template-columns:1fr 1fr} }
+.wz-gestion-op{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.7rem 1rem;min-height:48px;
+  background:var(--sup);border:1.5px solid var(--linea-fuerte);
+  border-radius:var(--wz-radio);
+  font:inherit;font-size:var(--text-sm);font-weight:600;color:var(--text-dark);
+  cursor:pointer;transition:border-color var(--paso),background var(--paso),color var(--paso);
+}
+.wz-gestion-op svg{width:17px;height:17px;flex:none}
+.wz-gestion-op:hover{border-color:var(--primary);background:var(--primary-soft);color:var(--primary-darkest)}
+.wz-gestion-baja{color:var(--text-soft)}
+.wz-gestion-baja:hover{border-color:var(--mal);background:var(--mal-suave);color:var(--mal)}
+
+/* Banda de reprogramacion: deja claro que no se esta reservando otra cita. */
+.wz-modo-repro{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);
+  flex-wrap:wrap;margin-bottom:var(--space-6);
+  padding:var(--space-4) var(--space-5);
+  background:var(--pend-suave);border-left:3px solid var(--pend);border-radius:8px;
+}
+.wz-modo-repro-txt{margin:0;font-size:var(--text-sm);color:var(--text-dark);line-height:1.5}
+.wz-modo-repro-txt span{display:block;color:var(--text-soft);font-size:var(--text-xs);margin-top:.15rem}
+.wz-modo-repro-salir{
+  flex:none;padding:.5rem .9rem;min-height:44px;
+  background:var(--sup);border:1px solid var(--linea-fuerte);border-radius:var(--radius-pill);
+  font:inherit;font-size:var(--text-xs);font-weight:600;color:var(--text-dark);cursor:pointer;
+}
+.wz-modo-repro-salir:hover{border-color:var(--pend);color:var(--pend)}
+
+/* Datos rellenados de la ultima vez. Se dice, no se hace en silencio: nadie
+   deberia encontrarse sus datos escritos sin saber de donde salieron. */
+.wz-vuelta{
+  margin:0 0 var(--space-6);padding:var(--space-3) var(--space-4);
+  background:var(--primary-soft);border-radius:8px;
+  font-size:var(--text-xs);color:var(--primary-darkest);line-height:1.5;
+}
+
+.wz-tira-txt{min-width:0}
+.wz-tira-duracion{margin:.1rem 0 0;font-size:var(--text-xs);color:var(--text-soft)}
+
+.wz-auxilio{
+  margin:var(--space-5) 0 0;font-size:var(--text-xs);color:var(--text-soft);text-align:center;
+}
+.wz-auxilio a{color:var(--primary-deep);font-weight:600}
+
+/* ---------- Cuando pagar ----------
+   El horario ya es del paciente; lo unico que queda por decidir es el momento
+   del pago. Dos opciones como par, no como lista: se comparan de un vistazo. */
+.wz-momento{margin-bottom:var(--space-8)}
+.wz-momento-ops{display:grid;gap:.7rem}
+@media (min-width:640px){ .wz-momento-ops{grid-template-columns:1fr 1fr} }
+.wz-momento-op{
+  display:flex;align-items:flex-start;gap:.7rem;text-align:left;
+  padding:var(--space-5);
+  background:var(--sup);border:1.5px solid var(--linea);border-radius:var(--wz-radio);
+  font:inherit;color:inherit;cursor:pointer;
+  box-shadow:var(--elev-1);
+  transition:box-shadow var(--paso),border-color var(--paso),background var(--paso);
+}
+.wz-momento-op:hover{border-color:var(--linea-f);background:var(--papel);box-shadow:var(--elev-2)}
+.wz-momento-op[aria-checked="true"]{
+  border-color:var(--primary-deep);background:var(--primary-soft);box-shadow:var(--elev-2);
+}
+.wz-momento-op .wz-marca-radio{margin-top:.1rem}
+.wz-momento-op[aria-checked="true"] .wz-marca-radio{
+  border-color:var(--primary-deep);background:var(--primary-deep);
+}
+.wz-momento-op[aria-checked="true"] .wz-marca-radio::after{transform:scale(1)}
+.wz-momento-txt{min-width:0}
+.wz-momento-nombre{display:block;font-weight:600;font-size:var(--text-base);line-height:1.25}
+.wz-momento-nota{display:block;font-size:var(--text-xs);color:var(--text-soft);line-height:1.45;margin-top:.25rem}
+
+/* Norma, no sospecha: por eso va en el ambar de "pendiente" y no en rojo. */
+.wz-prepago{
+  margin:0 0 var(--space-8);padding:var(--space-4) var(--space-5);
+  background:var(--pend-suave);border-left:3px solid var(--pend);border-radius:8px;
+  font-size:var(--text-sm);color:var(--text-dark);line-height:1.55;
+}
+
+/* Pagar despues no es un formulario mas corto: es no tener formulario. */
+.wz-despues-caja{
+  padding:var(--space-6);
+  background:var(--primary-soft);border:1px solid var(--primary-light);
+  border-radius:var(--wz-radio);
+}
+.wz-despues-txt{margin:0;font-size:var(--text-sm);line-height:1.6;color:var(--text-dark)}
+.wz-despues-caja .wz-acciones{margin-top:var(--space-5)}
+
+/* ---------- Cuanto hay que transferir ----------
+   La cifra en bolivares es la que se teclea en la app del banco, asi que es la
+   grande. El dolar y la tasa quedan como referencia debajo. */
+.wz-importe{
+  padding:var(--space-6);margin-bottom:var(--space-8);
+  background:var(--primary-soft);border:1px solid var(--primary-light);
+  border-radius:var(--wz-radio);
+}
+.wz-importe-etq{
+  margin:0;font-size:var(--t-nota);font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--primary-darkest);opacity:.75;
+}
+.wz-importe-cifra{
+  margin:.25rem 0 0;display:flex;align-items:baseline;gap:.35rem;flex-wrap:wrap;
+  font-size:var(--t-h1);font-weight:700;letter-spacing:-.03em;
+  line-height:1.05;color:var(--primary-darkest);
+}
+.wz-importe-moneda{font-size:.45em;font-weight:600;letter-spacing:0;opacity:.75}
+.wz-importe-nota{
+  margin:.55rem 0 0;font-size:var(--text-xs);color:var(--text-soft);line-height:1.5;
+}
+.wz-importe-nota strong{color:var(--text-dark);font-weight:600}
+.wz-copiar-grande{margin-top:var(--space-4);padding:.5rem .9rem;min-height:40px}
+/* Sin tasa disponible no se inventa una: la caja se apaga y se pide el importe
+   en dolares, explicando que hay que convertirlo. */
+.wz-importe[data-sin-tasa="si"]{background:var(--papel);border-color:var(--linea-int)}
+.wz-importe[data-sin-tasa="si"] .wz-importe-etq,
+.wz-importe[data-sin-tasa="si"] .wz-importe-cifra{color:var(--text-dark)}
+
+/* ---------- Numeracion de los dos tramos del pago ---------- */
+.wz-paso-titulo{align-items:center;gap:.6rem;margin-top:var(--space-8)}
+.wz-paso-num{
+  flex:none;width:24px;height:24px;display:grid;place-items:center;
+  border-radius:50%;background:var(--primary-deep);color:var(--acc-txt);
+  font-size:var(--t-nota);font-weight:700;
+}
+
+/* ---------- Cuentas de pago movil ----------
+   Cada banco con su color y sus iniciales. Pagar a la cuenta equivocada es el
+   error caro de este formulario, y distinguirlas de un vistazo lo evita. */
+.wz-cuentas{display:grid;gap:.7rem;margin-bottom:var(--space-8)}
+@media (min-width:640px){ .wz-cuentas{grid-template-columns:1fr 1fr} }
+.wz-cuenta{
+  padding:var(--space-5);
+  background:var(--sup);border:1px solid var(--linea-int);border-radius:var(--wz-radio);
+  box-shadow:var(--elev-1);
+  border-top:3px solid var(--banco,var(--primary));
+}
+.wz-cuenta-cab{
+  display:flex;align-items:center;gap:.6rem;
+  padding-bottom:var(--space-4);margin-bottom:var(--space-2);
+  border-bottom:1px solid var(--linea-int);
+}
+/* Iniciales sobre el color del banco, no su logotipo: reproducirlos exigiria
+   sus archivos y su permiso, y envejecen mal. */
+.wz-cuenta-sello{
+  flex:none;width:34px;height:34px;display:grid;place-items:center;
+  border-radius:9px;background:var(--banco,var(--primary));
+  color:var(--banco-tinta,#fff);
+  font-size:var(--t-nota);font-weight:700;letter-spacing:.02em;
+}
+.wz-cuenta-banco{margin:0;font-weight:600;font-size:var(--text-sm);line-height:1.25}
+.wz-dato{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:var(--space-3);padding-block:.45rem;
+}
+.wz-dato-txt{min-width:0}
+.wz-dato-etq{display:block;font-size:var(--t-nota);color:var(--text-soft)}
+.wz-dato-val{display:block;font-weight:600;font-size:var(--text-sm);word-break:break-all}
+.wz-copiar{
+  /* 44px: es el minimo con el que un dedo acierta, y estos botones se usan
+     casi siempre desde el movil, saltando a la app del banco y volviendo. */
+  flex:none;display:inline-flex;align-items:center;gap:.3rem;
+  padding:.5rem .75rem;min-height:44px;
+  background:var(--sup);color:var(--primary-deep);
+  border:1px solid var(--linea-fuerte);border-radius:var(--radius-pill);
+  font:inherit;font-size:var(--text-xs);font-weight:600;cursor:pointer;
+  transition:background var(--paso),color var(--paso),border-color var(--paso);
+}
+.wz-copiar:hover{background:var(--primary-deep);color:var(--acc-txt);border-color:var(--primary-deep)}
+.wz-copiar svg{width:13px;height:13px}
+.wz-copiar[data-copiado="si"]{background:var(--ok);color:var(--acc-txt);border-color:var(--ok)}
+
+/* ---------- Cuando se pago ----------
+   Hoy y Ayer cubren casi todos los casos; el calendario nativo queda para la
+   excepcion en vez de ser el unico camino. */
+.wz-cuando{display:flex;gap:.5rem;flex-wrap:wrap}
+.wz-chip{
+  padding:.55rem 1rem;min-height:44px;
+  background:var(--sup);border:1.5px solid var(--linea-fuerte);
+  border-radius:var(--radius-pill);
+  font:inherit;font-size:var(--text-sm);font-weight:600;color:var(--text-dark);
+  cursor:pointer;transition:background var(--paso),border-color var(--paso),color var(--paso);
+}
+.wz-chip:hover{border-color:var(--primary)}
+.wz-chip[aria-checked="true"]{
+  background:var(--primary-deep);border-color:var(--primary-deep);color:var(--acc-txt);
+}
+.wz-label-fecha{
+  display:block;font-size:var(--text-xs);color:var(--text-soft);
+  margin:var(--space-4) 0 .4rem;
+}
+#cajaFecha input[type="date"]{max-width:16rem}
+
+/* ---------- Captura del comprobante ---------- */
+.wz-subir{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:.4rem;text-align:center;
+  padding:var(--space-8) var(--space-4);min-height:130px;
+  background:var(--papel);border:2px dashed var(--linea-fuerte);
+  border-radius:var(--wz-radio);cursor:pointer;
+  transition:background var(--paso),border-color var(--paso);
+}
+.wz-subir:hover{border-color:var(--primary);background:var(--primary-soft)}
+.wz-subir input[type="file"]{position:absolute;width:1px;height:1px;opacity:0}
+.wz-subir:focus-within{outline:2.5px solid var(--primary-deep);outline-offset:3px}
+.wz-subir-icono{color:var(--primary-deep)}
+.wz-subir-icono svg{width:28px;height:28px}
+.wz-subir-txt{font-size:var(--text-sm);color:var(--text-dark);font-weight:600;word-break:break-all}
+.wz-subir-pista{font-size:var(--text-xs);color:var(--text-soft)}
+.wz-subir[data-lleno="si"]{border-style:solid;border-color:var(--ok);background:var(--ok-suave)}
+.wz-subir[data-lleno="si"] .wz-subir-icono{color:var(--ok)}
+.wz-vista-previa{margin-top:.7rem}
+.wz-vista-previa img{
+  max-height:220px;width:auto;border-radius:8px;border:1px solid var(--linea-int);
+  box-shadow:var(--elev-1);
+}
+.wz-previa-pdf{
+  margin:0;padding:var(--space-4);font-size:var(--text-sm);color:var(--text-soft);
+  background:var(--papel);border:1px solid var(--linea-int);border-radius:8px;
+}
+
+/* ============ CIERRE ============
+   Antes: check a la izquierda, titulo centrado, una pildora gris vacia y un
+   boton de 1070px. Tres alineaciones distintas en cuatro elementos. Ahora la
+   cabecera se centra —es un momento, no un texto— y todo lo que hay que leer
+   con detalle va alineado a la izquierda dentro de una columna acotada. */
+.wz-final{padding-block:var(--space-8)}
+.wz-final-cabecera{text-align:center;max-width:34rem;margin-inline:auto}
+.wz-final-marca{
+  width:64px;height:64px;margin:0 auto var(--space-5);
+  display:grid;place-items:center;border-radius:50%;
+  background:var(--ok-suave);color:var(--ok);
+}
+.wz-final-marca svg{width:32px;height:32px}
+.wz-final-txt{
+  color:var(--text-soft);font-size:var(--text-sm);line-height:1.6;
+  margin:var(--space-3) 0 0;
+}
+/* Columna acotada: en escritorio el contenido no se estira a 960px, que es lo
+   que hacia parecer la pantalla vacia. */
+.wz-final-cuerpo{
+  max-width:34rem;margin:var(--space-8) auto 0;
+  display:flex;flex-direction:column;gap:var(--space-5);
+}
+.wz-final-cuerpo .wz-acciones{margin-top:var(--space-3);max-width:none}
+.wz-final-cuerpo .wz-acciones .btn{flex:1 1 auto}
+
+/* Se cualifica con .wz-resumen-total porque esa regla pone el total a 1,25rem
+   y, siendo mas especifica, inflaba la etiqueta de estado hasta el tamano de
+   una cifra de dinero. */
+.wz-resumen-total b.wz-marca-estado{
+  font-size:var(--text-xs);font-weight:600;letter-spacing:0;
+  padding:.3rem .6rem;border-radius:var(--radius-pill);
+}
+.wz-marca-estado.wz-pendiente{background:var(--pend-suave);color:var(--pend)}
+.wz-marca-estado.wz-ok{background:var(--ok-suave);color:var(--ok)}
+.wz-marca-estado.wz-mal{background:var(--mal-suave);color:var(--mal)}
+
+/* Que pasa ahora. Era lo unico que la persona necesitaba saber en este momento
+   y no estaba en ninguna parte. */
+.wz-siguiente{
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea-int);border-radius:var(--wz-radio);
+}
+.wz-siguiente-titulo{
+  margin:0 0 var(--space-4);font-size:var(--text-sm);font-weight:600;
+}
+.wz-siguiente-lista{
+  list-style:none;counter-reset:paso;margin:0;padding:0;
+  display:grid;gap:var(--space-4);
+}
+.wz-siguiente-lista li{
+  counter-increment:paso;position:relative;padding-left:2rem;
+  font-size:var(--text-sm);color:var(--text-soft);line-height:1.55;
+}
+.wz-siguiente-lista li::before{
+  content:counter(paso);position:absolute;left:0;top:.05rem;
+  width:1.4rem;height:1.4rem;display:grid;place-items:center;
+  border-radius:50%;background:var(--primary-soft);color:var(--primary-darkest);
+  font-size:var(--t-nota);font-weight:700;
+}
+
+/* El enlace guardado: sin cuenta ni contrasena, es la unica llave que tiene la
+   persona para volver a su cita. */
+.wz-guardar{
+  padding:var(--space-5);
+  background:var(--sup);border:1px dashed var(--linea-fuerte);
+  border-radius:var(--wz-radio);
+}
+.wz-guardar-etq{
+  margin:0 0 .6rem;font-size:var(--text-xs);font-weight:600;color:var(--text-dark);
+}
+.wz-guardar-fila{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+.wz-guardar-url{
+  flex:1;min-width:0;font-size:var(--t-nota);color:var(--text-soft);
+  background:var(--papel);border:1px solid var(--linea-int);border-radius:6px;
+  padding:.5rem .6rem;overflow-x:auto;white-space:nowrap;
+}
+
+/* ============ CÓMO LLEGAR ============
+   Solo para quien reserva presencial. Un mapa incrustado se come pantalla en
+   el móvil y no lleva a ningún sitio; un botón que abre la app de mapas del
+   teléfono sí traza la ruta. Es lo que hacen las agendas médicas. */
+.wz-lugar{
+  /* Separada de las tarjetas de modalidad: aparece al pulsar "Presencial" y
+     necesita leerse como una respuesta, no como una prolongacion del boton. */
+  margin:var(--space-6) 0 0;
+  padding:var(--space-5);
+  background:var(--papel);border:1px solid var(--linea-int);border-radius:var(--wz-radio);
+  text-align:left;
+}
+/* Cabecera: el nombre del sitio es el dato que primero se busca. */
+.wz-lugar-cab{
+  display:flex;align-items:center;gap:.6rem;
+  padding-bottom:var(--space-4);
+  border-bottom:1px solid var(--linea-int);
+}
+.wz-lugar-icono{flex:none;display:flex;color:var(--primary-deep)}
+.wz-lugar-icono svg{width:26px;height:26px}
+.wz-lugar-nombre{font-weight:600;font-size:var(--text-base);line-height:1.3}
+/* Direccion y boton en la misma fila cuando hay ancho: si el boton se queda
+   solo debajo, en escritorio deja media tarjeta vacia a su derecha. */
+.wz-lugar-cuerpo{
+  display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-4);
+  padding-top:var(--space-4);
+}
+.wz-lugar-dir{font-size:var(--text-sm);color:var(--text-soft);line-height:1.6;margin:0}
+.wz-lugar-ir{
+  display:inline-flex;align-items:center;gap:.4rem;flex:none;
+  padding:.6rem 1.1rem;min-height:44px;
+  background:var(--primary-deep);color:var(--acc-txt);
+  border-radius:var(--radius-pill);text-decoration:none;
+  font-size:var(--text-sm);font-weight:600;
+  transition:background var(--transition),transform var(--transition);
+}
+.wz-lugar-ir:hover{background:var(--primary-darkest)}
+.wz-lugar-ir:active{transform:translateY(1px)}
+.wz-lugar-ir svg{width:16px;height:16px}
+@media (min-width:560px){
+  .wz-lugar-cuerpo{flex-direction:row;align-items:center;justify-content:space-between;gap:var(--space-6)}
+}
+
+/* ============ ALERTAS ============ */
+.wz-alerta{
+  display:flex;gap:.55rem;align-items:flex-start;
+  padding:var(--space-4);margin-bottom:var(--space-5);
+  border-radius:8px;font-size:var(--text-sm);line-height:1.55;border-left:3px solid;
+}
+.wz-alerta[data-tipo="error"]{background:var(--mal-suave);border-color:var(--mal);color:var(--mal)}
+.wz-alerta[data-tipo="ok"]{background:var(--ok-suave);border-color:var(--ok);color:var(--ok)}
+
+/* ============ PIE ============ */
+.wz-pie{
+  max-width:var(--wz-ancho);margin:var(--space-16) auto 0;
+  padding:var(--space-6) var(--space-4) 0;
+  border-top:1px solid var(--linea-int);
+  text-align:center;font-size:var(--text-xs);color:var(--text-soft);
+}
+.wz-pie p{margin-block:.2rem}
+
+@media (prefers-reduced-motion:reduce){
+  .lugar,.abre{transition:none !important}
+  .wz-vista{animation:none}
+  .wz-barra-relleno{transition:none}
+  .wz-continuar[data-cargando="si"]::after{animation-duration:2s}
+}
+
+
+/* ============================================================
+   LA VISTA 1, PORTADA DE LA MAQUETA
+
+   Copiado de `maqueta-vista1-salvia.html` tal cual, con cuatro cambios y solo
+   cuatro, todos de encaje con lo que ya habia:
+
+     1. `var(--medida)` pasa a `var(--wz-ancho)`. El nombre existia en los dos
+        archivos con significados distintos: en la maqueta es el ancho de la
+        PAGINA (50rem) y aqui el de un CAMPO de formulario (32rem). Confundirlos
+        habria dejado la pagina entera de 512 px.
+     2. `main`, `h1` y `.intro` se enganchan a `.wz-main`, `.wz-vista h1` y
+        `.wz-intro`, que es como se llaman en el armazon de los cuatro pasos.
+     3. Se cae `.aviso-maqueta`, el cartel de "esto es una maqueta".
+     4. Nada mas. Los nombres de clase se quedan como estaban -.card, .fila,
+        .segs, .lugar, .planes- porque no chocan con `style.css`: se comprobo y
+        el unico nombre comun es `.btn`, que es el mismo componente a proposito.
+        Asi esta hoja y la maqueta se pueden seguir comparando linea a linea.
+   ============================================================ */
+/* ===================== CABECERA =====================
+   Sin borde inferior: el propio cambio de color ya separa la banda del papel, y
+   una linea de arcilla encima del terracota no se ve. */
+.top{background:var(--banda);border-bottom:0;color:#fff}
+/* El foco global es `--acc-dp`, verde hondo, y sobre el terracota da 1,64:1
+   cuando la WCAG 2.2 pide 3:1 para el indicador de foco. Dentro de la banda pasa
+   a blanco, que da 5,32:1. */
+.top :focus-visible{outline-color:#fff}
+.top-in{max-width:var(--wz-ancho);margin:0 auto;padding:.9rem 1.25rem;
+  display:flex;align-items:center;gap:.8rem}
+/* LA FOTO, NO LAS INICIALES. Un avatar de iniciales es lo que genera un sistema
+   cuando no tiene retrato, y era lo primero que se veia al entrar. Quien esta a
+   punto de contarle a una desconocida que no puede dormir necesita verle la cara.
+   El encuadre es el mismo que ya usa `reservar/reservar.css`: la foto original es
+   vertical (900x1200), asi que centrarla dejaria el torso; al 18 % desde arriba
+   queda la cara.
+   El aro va como BORDE, no como sombra: en esta vista no hay una sola sombra y un
+   aro de 1 px hace el mismo trabajo de recortar el circulo contra el fondo.
+   Ahora que el fondo es terracota el aro es blanco al 62 %, no arcilla: la arcilla
+   sobre terracota no se distingue.
+   El fondo de salvia se queda de reserva para el instante en que la imagen aun no
+   ha cargado: sin el, la cabecera arranca con un agujero. */
+/* La marca es un enlace de vuelta al sitio, que es lo unico que se le anade a
+   la cabecera de la maqueta: aquella era una vista suelta y no tenia a donde
+   volver. Pero un <a> hereda de style.css el color de acento y el subrayado del
+   navegador, y en la banda salian el nombre y el cargo subrayados. Se apaga,
+   igual que ya hacia el boton de WhatsApp de al lado. El gap sube aqui porque
+   la foto y el texto han pasado a ser hijos del enlace, no de .top-in. */
+.top-marca{display:inline-flex;align-items:center;gap:.8rem;min-width:0;
+  color:inherit;text-decoration:none}
+.avatar{width:42px;height:42px;border-radius:50%;flex:none;
+  object-fit:cover;object-position:center 18%;
+  background:var(--acc);border:1px solid rgba(255,255,255,.62)}
+.top-txt{min-width:0}
+/* El nombre es la marca, asi que va en Fraunces igual que .brand-title en la
+   landing. Sube de .95 a 1rem porque el serif con opsz pequeno pesa menos de lo
+   que su tamano dice, y a .95 se quedaba por debajo del subtitulo que lleva
+   debajo. */
+.top-txt strong{display:block;font-family:var(--display);font-size:var(--t-base);font-weight:600;
+  line-height:1.25;letter-spacing:-.01em;color:#fff}
+/* .92 y no blanco puro: es el valor con el que el pie de la landing separa su
+   texto secundario del principal. Da 4,79:1 sobre la banda, por encima del 4,5
+   que pide la WCAG para texto normal. */
+.top-txt > span{display:block;font-size:var(--t-nota);color:rgba(255,255,255,.92);line-height:1.4}
+/* El subtitulo dice lo mismo en las dos anchuras. Se probo a sumarle la
+   especializacion en escritorio, donde el hueco entre el nombre y la pastilla esta
+   vacio, y sobraba: el hueco no es un problema que haya que rellenar, y la
+   cabecera se lee mejor diciendo una sola cosa a cualquier ancho.
+   Lo que si arregla la linea corta es el desbordamiento al filo: "Barquisimeto y
+   online" ocupaba 194,5 px en una caja de 194,5 —el 100 % exacto— asi que envolvia
+   en cuanto la fuente tardaba en cargar. "Psicologa clinica" ocupa 98,7 de 120,6. */
+/* LA PASTILLA, DENTRO DE LA BANDA.
+   Rellenarla de blanco sobre el terracota la convertiria en lo mas luminoso de la
+   pantalla, y no es la accion principal de esta vista: la principal es elegir. Va
+   hueca con el canto claro, que es como el pie de la landing dibuja sus botones
+   redondos, y se rellena al pasar por encima.
+   El canto va al 62 %, no al 32 % del pie: ese .32 da 1,88:1 sobre el terracota y
+   la WCAG pide 3:1 para el contorno de un objeto grafico. Al 62 % da 3,12:1.
+   Copiar el .32 habria sido heredar un fallo, no una receta. */
+.wa{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;
+  gap:.4rem;padding:.5rem .85rem;border-radius:var(--r-pill);border:1px solid rgba(255,255,255,.62);
+  background:transparent;color:#fff;font-size:var(--t-nota);font-weight:500;
+  text-decoration:none;min-height:44px;
+  transition:background var(--paso),color var(--paso)}
+.wa:hover{background:#fff;color:var(--banda)}
+/* Una sola regla para todos: el tamano se hereda de la escala y el color de la
+   tinta del sitio donde este el icono, salvo las dos excepciones anotadas abajo. */
+.ico{width:var(--ico);height:var(--ico);flex:none;display:block;fill:currentColor}
+
+/* En el telefono la pastilla se queda en el icono. A 390 px la cabecera reparte
+   42 de foto, el nombre con su linea de abajo y esta pastilla, y no daban: el
+   texto se partia en "Tengo una / duda" dentro de la propia pastilla y de paso
+   estrujaba el subtitulo hasta hacerlo envolver tambien.
+   El texto NO se borra, se oculta a la vista: el lector de pantalla lo sigue
+   leyendo, asi que el boton conserva su nombre accesible. El globo de WhatsApp
+   se reconoce solo, y el objetivo tactil sube a 44x44 exactos. */
+@media(max-width:559.98px){
+  .wa{width:44px;padding:0;gap:0}
+  .wa .ico{width:var(--ico-lg);height:var(--ico-lg)}
+  .wa-txt{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap;border:0}
+}
+
+.barra-wrap{max-width:var(--wz-ancho);margin:0 auto;padding:0 1.25rem}
+.barra{height:4px;background:var(--inerte);border-radius:var(--r-pill);overflow:hidden;margin-top:.1rem}
+.barra i{display:block;height:100%;width:25%;background:var(--acc);border-radius:var(--r-pill);
+  transition:width 400ms cubic-bezier(.2,.8,.3,1)}
+.paso-txt{font-size:var(--t-nota);color:var(--txt-suave);margin:.55rem 0 0;font-weight:500;
+  letter-spacing:.01em}
+
+/* ===================== CUERPO =====================
+   EL RANGO TIPOGRAFICO, ABIERTO.
+   Antes iba de 0,73 a 1,4 rem casi todo en 600: un rango de nada, y por eso el
+   ojo no tenia donde aterrizar. Ahora va de 0,72 a 1,8 rem y el peso maximo
+   baja de 700 a 600 — mas rango de tamano, menos rango de grosor, que es lo
+   que separa una pantalla cuidada de una en negrita. */
+.wz-main{max-width:var(--wz-ancho);margin:0 auto;padding:1.75rem 1.25rem 2rem}
+/* Mismas medidas que h1,h2,h3 en style.css: peso 600, interlineado 1,12,
+   interletraje -0,02em y text-wrap:balance, que reparte las lineas del titular en
+   vez de dejar una palabra suelta abajo. */
+.wz-vista h1{font-family:var(--display);font-size:var(--t-h1);font-weight:600;line-height:1.12;
+  margin:0 0 .5rem;letter-spacing:-.02em;text-wrap:balance}
+.wz-intro{color:var(--txt-suave);margin:0 0 2.25rem;line-height:1.7;font-size:var(--t-base);max-width:34rem}
+
+.grupo{margin-bottom:2.25rem}
+/* Son h2, asi que llevan el display. A 1,05rem y peso 600 son exactamente la
+   misma pieza que .brand-title y que el summary de las preguntas frecuentes de la
+   landing, de ahi el -0,01em en vez del -0,02em de los titulares grandes. */
+/* line-height explicito: style.css pone los h1, h2 y h3 a 1,12, que es lo que
+   pide un titular de dos lineas, y este es un titulo de una sola que en la
+   maqueta hereda el 1,5 del cuerpo. Sin esto medía 19 px en vez de 25. */
+.grupo-tit{font-family:var(--display);font-size:var(--t-tit);font-weight:600;line-height:1.5;
+  letter-spacing:-.01em;margin:0 0 1rem;
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+/* La bajada acompana al titulo pero no es titulo: vuelve a Inter, o el bloque
+   entero se leeria como una sola frase en serif.
+   Sirve tambien suelta debajo de un grupo, que es como la usa el plazo de los
+   paquetes: ahi el dato no es de una tarjeta sino de las tres, asi que se dice una
+   vez fuera de ellas en lugar de repetirse dentro. */
+.grupo-nota{font-family:var(--texto);font-size:var(--t-nota);font-weight:400;
+  color:var(--txt-suave);letter-spacing:0;line-height:1.5;margin:1rem 0 0;
+  /* En una linea desde 360 px para arriba. A 320 no cabe por 0,2 px —el texto
+     pide 206,9 de los 206,7 que hay— y ahi parte en dos. No se persigue esa
+     diferencia recortando la frase ni con un media query para un telefono de 2016:
+     lo que se arregla es DONDE parte. Sin esto rompia en "a tu / ritmo", dejando
+     una palabra suelta abajo; con `balance` el navegador reparte las dos lineas y
+     el corte cae en la coma. */
+  text-wrap:balance}
+/* LA CONDICION DE LOS PAQUETES, EN PASTILLA.
+   No inventa una forma: es el mismo radio de 7 px del badge de "Ahorras" y el
+   unico tinte calido de la paleta que no significa nada mas —`--sel` solo lo usa
+   hoy el hueco de la foto mientras carga—, asi que no se confunde con el relleno
+   de una tarjeta elegida.
+   `inline-flex` y no `flex`: la pastilla mide lo que mide su texto. A ancho
+   completo dejaria de ser una pastilla y pasaria a ser una franja, que es peso que
+   este dato no tiene.
+   Medido: el texto da 5,01:1 sobre el tinte y el icono 7,06:1. */
+/* CAJA Y NO CAPSULA.
+   Empezo siendo una pastilla y en movil no funcionaba: a 390 px la columna util
+   son 330 y la capsula media 276, el 84 %. Una capsula es para dos o tres
+   palabras; ahi hay siete, y a esa anchura deja de leerse como pastilla y se lee
+   como una barra estirada.
+   Al ancho completo el problema desaparece y ademas rima con la tarjeta que tiene
+   encima, que mide exactamente lo mismo. El radio es el 16 de la escala, asi que
+   no aparece ningun valor nuevo. */
+.nota-plazo{display:flex;align-items:center;gap:.55rem;margin:1.15rem 0 0;
+  padding:.7rem .9rem;border-radius:var(--r);background:var(--sel)}
+/* En escritorio la caja se encoge hasta su texto. A ancho completo aqui son 760 px
+   de superficie para seis palabras, y el hueco vacio pesa mas que el dato. Abajo
+   no pasa porque la columna mide 330 y la caja se llena casi sola.
+   El corte es 780 y no otro porque es EL DE SU PROPIO BLOQUE: a 780 las tarjetas
+   de consulta pasan de una columna a tres. Mientras las tarjetas sigan apiladas a
+   ancho completo la nota las acompana; en cuanto se reparten en tres, la nota deja
+   de tener con quien alinearse y vuelve a medir lo suyo. Usar el 760 de la lista
+   de motivos habria encogido la nota mientras su bloque seguia en una columna. */
+@media(min-width:780px){
+  .nota-plazo{display:inline-flex}
+}
+.nota-plazo .ico{color:var(--acc-dp)}
+.grupo-sep{border-top:1px solid var(--linea);padding-top:2rem}
+
+/* ===================== TARJETAS BASE =====================
+   Sin sombra en reposo. La tarjeta se ve porque es blanca sobre el suelo crema,
+   no porque tenga un marco. */
+.card{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  cursor:pointer;font:inherit;color:var(--txt);
+  transition:border-color var(--paso),background var(--paso),box-shadow var(--paso)}
+.card:hover{border-color:var(--linea-f)}
+
+/* LO QUE PIDIO EDGAR: al elegir, solo se pintan las LINEAS, y en el mismo color
+   del hover. Nada se rellena de oscuro. */
+/* Sin sombra. Lo elegido se dice con el relleno de salvia, la linea de arcilla
+   y el check — nunca levantando la tarjeta del papel. */
+/* EL 1,5 px NO DIBUJABA NADA. Chrome trunca el grosor de borde a pixeles fisicos
+   enteros, con un minimo de uno. A densidad 1 —la mayoria de escritorios— y a 1,15
+   —la pantalla de Edgar, Windows al 115 %— tanto 1 px como 1,5 px acaban en UN
+   pixel fisico, asi que el borde de la tarjeta elegida era identico al de reposo y
+   la unica senal que quedaba era el relleno calido. Con 2 px la fila se separa de
+   la de 1 px en todas las densidades.
+   Coste medido: el contenido de la tarjeta elegida se mete 0,87 px por lado a
+   densidad 1,15. El archivo avisaba de que engordar el borde desalineaba los
+   precios entre tarjetas, y por eso la SUGERIDA se distingue por color y no por
+   grosor —esa es permanente y se compara con sus dos vecinas—. Aqui es distinto:
+   la elegida es transitoria, es la que acabas de pulsar, y 0,87 px no se ven.
+   Cuidado al cambiarlo: 1,25 tampoco vale, y 2,5 se comporta como 2 hasta
+   densidad 1,25. La regla practica es que solo los enteros son de fiar. */
+/* TRES PIXELES DE SALVIA, Y NI UNO DE DESPLAZAMIENTO.
+   Engordar el `border` era el camino obvio y tenia dos problemas medidos. Uno:
+   Chrome trunca el grosor de borde a pixeles FISICOS enteros, asi que a 1x un
+   borde de 2,5 px se pinta exactamente igual que uno de 2 y el cambio no se veria
+   en un monitor normal. Dos: a 3 px si se ve, pero la tarjeta elegida pierde 2 px
+   de caja interior y sus precios se descuadran 1,74 px respecto a los de sus dos
+   vecinas — justo la clase de defecto que llevamos toda la semana quitando.
+   El aro interior resuelve las dos cosas: `box-shadow` no participa en la
+   maquetacion, asi que las tres tarjetas conservan su borde de 1 px y su geometria
+   identica, y encima el aro no se trunca como el borde. El borde de 1 px cambia de
+   color y el aro anade 2 px por dentro: 3 px continuos de salvia contra el 1 px de
+   arcilla de las no elegidas, y el desalineamiento se queda en 0,00. */
+.card[aria-checked="true"]{border-color:var(--linea-f);
+  box-shadow:inset 0 0 0 2px var(--linea-f);background:var(--sup-eleg)}
+
+/* El circulo pierde el disco: es un aro, en reposo tenue y al elegirlo del
+   mismo color que el hover. El icono se dibuja dentro, nunca en blanco sobre
+   oscuro. */
+/* El circulo pasa de aro a DISCO: relleno macizo en la misma salvia del boton
+   "Ver horarios", con el icono dibujado en blanco encima. Es lo que le da al
+   verde presencia real dentro de la tarjeta.
+   Al elegir, el disco baja un escalon a la salvia oscura — asi la seleccion
+   sigue teniendo senal propia sin cambiar de color. */
+.circ{flex:none;border-radius:50%;border:1.5px solid var(--acc);background:var(--acc);
+  display:grid;place-items:center;color:var(--acc-txt);
+  transition:border-color var(--paso),background var(--paso),border-width var(--paso)}
+.card:hover .circ{border-color:var(--acc-dp);background:var(--acc-dp)}
+/* Al elegir, el disco se INVIERTE: de salvia maciza con el icono en blanco pasa a
+   blanco con el icono en salvia. Vale igual para el icono de motivo y para la
+   cifra de las sesiones, porque las dos cosas son .circ.
+   El aro va en salvia y mas grueso (2,5 px) para que el disco se recorte contra el
+   crema de la tarjeta: en blanco sobre blanco el borde daba 1,22:1 y el disco se
+   diluia. Con el aro sube a 4,33:1, muy por encima del 3:1 que pide la WCAG para
+   el contorno de un elemento grafico.
+   El ancho no mueve nada: el disco es 44x44 fijo con box-sizing border-box. */
+/* EL DISCO ELEGIDO TIENE TOKENS PROPIOS, Y HAY UN MOTIVO MEDIDO.
+   Antes la inversion se escribia con `--acc-txt`, el mismo token que se usa para lo
+   que va encima de la salvia: en reposo el disco era salvia con el contenido en
+   `--acc-txt`, y elegido era `--acc-txt` con el contenido en salvia. Sobre el papel
+   es elegante — la regla no sabe en que tema esta— y en el resultado estaba mal.
+   Medido: al elegir, el disco pasa de L*45,1 a L*100 en claro (+54,9) y de L*66,1 a
+   L*6,7 en oscuro (-59,4). Mismo tamano de gesto, DIRECCION CONTRARIA. En claro
+   elegir ENCIENDE el disco y en oscuro lo APAGABA, asi que la senal de "esta es la
+   tuya" se leia como "esta esta desactivada" — que es justo lo que noto Edgar.
+   Con tokens propios el disco se enciende en los dos temas: en claro va a blanco y
+   en oscuro al hueso del texto, que es lo mas luminoso que existe en esa paleta. */
+.card[aria-checked="true"] .circ{border-width:2.5px;border-color:var(--acc);
+  background:var(--circ-eleg);color:var(--circ-eleg-txt)}
+
+/* --------- modalidad · control segmentado ---------
+   Antes eran dos tarjetas de 371x118 con un disco de 44 dentro: el disco ocupaba
+   el 11,9% del ancho, la mitad que en las tarjetas de motivo, y por eso se leian
+   como dos cajas vacias con un punto en medio. Elegir entre dos cosas no es
+   explorar una rejilla — es accionar un interruptor. */
+.segs{position:relative;width:min(100%,22rem);padding:4px;background:var(--sup);
+  border:1px solid var(--linea);border-radius:var(--r-pill);
+  transition:transform 160ms cubic-bezier(.23,1,.32,1)}
+/* Al pulsar se hunde el control ENTERO, no un segmento. Si se hundiera solo el
+   segmento, la copia de color que va encima no lo acompanaria y el texto elegido
+   se quedaria quieto mientras el de debajo encoge. */
+.segs:active{transform:scale(.985)}
+
+/* Las dos mitades miden exactamente lo mismo (flex:1 1 0, no auto), asi que el
+   aro se mueve con un translateX limpio y no hay que medir nada en JavaScript. */
+/* 20 px de hueco entre las dos mitades: la costura queda centrada con 10 px de
+   aire a cada lado. Con 8 el aro casi la tocaba. */
+.segs-in{position:relative;display:flex;gap:20px}
+
+.seg{position:relative;z-index:2;flex:1 1 0;display:inline-flex;align-items:center;
+  justify-content:center;gap:.5rem;padding:0 1rem;min-height:44px;border-radius:var(--r-pill);
+  border:1px solid transparent;background:none;font:inherit;font-size:var(--t-aux);
+  font-weight:500;color:var(--txt-suave);cursor:pointer;white-space:nowrap;
+  transition:color var(--paso)}
+
+
+/* EL ARO. Misma receta que el disco y el check: blanco por dentro, salvia fuerte
+   a 2,5 px. Lo que se desliza es un contorno, no un bloque de color. */
+.seg-ind{position:absolute;z-index:1;top:0;bottom:0;left:0;width:calc(50% - 10px);
+  border-radius:var(--r-pill);border:2.5px solid var(--acc);
+  transition:transform 220ms cubic-bezier(.77,0,.175,1)}
+
+/* LA COPIA EN SALVIA, recortada al aro. El color no se funde: se BARRE. Un
+   fundido deja ver los dos colores a la vez a mitad de camino; con el recorte el
+   cambio ocurre exactamente en el borde del aro. */
+.seg-copia{position:absolute;z-index:3;inset:0;display:flex;gap:20px;
+  pointer-events:none;color:var(--acc);
+  transition:clip-path 220ms cubic-bezier(.77,0,.175,1)}
+.seg-copia .seg{color:inherit}
+
+/* LA COSTURA · hilo. Una linea que no empieza ni termina de golpe: se desvanece
+   hacia las dos puntas. Vive en el hueco de 8 px entre las dos mitades, asi que
+   el aro nunca la pisa. */
+.seg-hilo{position:absolute;z-index:0;left:50%;top:9px;bottom:9px;width:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(to bottom,transparent 0%,var(--linea) 35%,
+    var(--linea) 65%,transparent 100%)}
+
+/* --------- consultorio --------- */
+/* EL AIRE DE FUERA. La caja salia a 17,6 px del control de modalidad y a 36 de la
+   linea que cierra el bloque: estaba el doble de pegada arriba que abajo, y arriba
+   es justo donde mas se nota, porque la caja APARECE — se despliega al elegir
+   presencial, asi que si nace pegada al control parece que lo empuja.
+   Arriba pasa a 28,8 px, el mismo valor que el relleno de las tarjetas de consulta.
+   Abajo se le anaden 12 px por PADDING y no por margen: el margen inferior de este
+   bloque colapsaria con el del `.grupo` que lo contiene y el mayor de los dos se
+   comeria al otro, asi que no sumaria nada. Con el padding la linea queda con 48 px
+   por encima y 32 por debajo — mas aire del lado del bloque que acaba de terminar,
+   que es a quien pertenece. Va en la transicion para que crezca con el despliegue y
+   no de un salto al final. */
+.lugar{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows 320ms cubic-bezier(.2,.8,.3,1),opacity 220ms,
+             margin-top 320ms,padding-bottom 320ms;
+  margin-top:0;padding-bottom:0}
+.lugar.abierto{grid-template-rows:1fr;opacity:1;margin-top:1.8rem;padding-bottom:.75rem}
+.lugar-in{overflow:hidden;min-height:0}
+/* EL AIRE DE DENTRO, con el mismo reparto que las tarjetas de consulta. El relleno
+   vertical sube de 19,2 a 28,8 px —el horizontal se queda en 20,8, que ya estaba
+   bien— y la linea interior deja de tener 12,8 px por arriba y 14,4 por debajo: 18,4
+   a cada lado, igual que la divisoria de las tarjetas. Era la misma asimetria, y
+   estaba en los dos sitios. */
+.lugar-caja{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1.8rem 1.3rem}
+.lugar-cab{display:flex;align-items:center;gap:.65rem;padding-bottom:1.15rem;margin-bottom:1.15rem;
+  border-bottom:1px solid var(--linea-int)}
+.lugar-cab .ico{width:var(--ico-lg);height:var(--ico-lg);color:var(--marca-dp)}
+/* Encabeza su caja, asi que es un titulo pequeno y le toca el display. */
+.lugar-cab strong{font-family:var(--display);font-size:var(--t-base);font-weight:600;
+  letter-spacing:-.01em}
+/* En movil la caja apila direccion y boton. Sin align-items el boton se estiraba
+   a todo el ancho de la caja y el rotulo quedaba pegado a la izquierda: parecia
+   una fila de lista, no un boton. Centrado y con un ancho minimo propio se lee
+   como lo que es. En escritorio vuelve a la fila, con la direccion a la izquierda. */
+.lugar-cuerpo{display:flex;flex-direction:column;gap:1.1rem;align-items:center}
+@media(min-width:640px){
+  .lugar-cuerpo{flex-direction:row;align-items:center;justify-content:space-between}
+  .lugar-ir{align-self:auto;min-width:0}
+}
+.lugar-dir{font-size:var(--t-aux);color:var(--txt-suave);line-height:1.65;margin:0}
+.lugar-ir{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.7rem 1.6rem;border-radius:var(--r-pill);min-width:11rem;
+  background:var(--acc);color:var(--acc-txt);font-size:var(--t-aux);font-weight:500;text-decoration:none;
+  min-height:48px;flex:none;transition:background var(--paso),transform 160ms cubic-bezier(.23,1,.32,1)}
+.lugar-ir:active{transform:scale(.97)}
+/* Es el UNICO icono macizo de la vista y es a proposito: a 15 px un icono de trazo
+   con detalle interior se cierra y queda en una mancha —le paso al mapa plegado que
+   habia antes—. Una forma llena conserva su silueta a cualquier tamano. Ademas es
+   el glifo que usa Google Maps para "como llegar", asi que ya viene aprendido. */
+.lugar-ir:hover{background:var(--acc-dp)}
+
+
+/* --------- motivo · una lista, no una rejilla ---------
+   Antes eran cuatro tarjetas con su borde, cada una con un disco de salvia de 44
+   px. Dos motivos para cambiarlo:
+
+   1. Icono in a circle repetido cuatro veces es el patron de maquetacion generada
+      mas reconocible que hay. Y estos cuatro glifos no informaban: tapando el
+      nombre, nadie distingue "Superar la ansiedad" de "Acompanar un duelo". Un
+      icono que no se puede adivinar es decoracion, y decoracion repetida es lo que
+      delata.
+   2. La rejilla centraba el contenido, asi que cuando un nombre ocupaba una linea
+      y su vecino dos, los discos quedaban a 844,1 y 833,6 px — 10,5 px de desfase
+      entre dos circulos que estan uno al lado del otro. La fila no centra nada, y
+      el problema desaparece por construccion.
+
+   Cuatro cajas pasan a ser UNA. Ese solo cambio quita tres rectangulos con borde
+   de una pantalla que tenia veintiuno. */
+.lista{display:flex;flex-direction:column;background:var(--sup);
+  border:1px solid var(--linea);border-radius:var(--r);overflow:hidden}
+.fila{position:relative;display:flex;align-items:center;gap:.9rem;width:100%;min-height:56px;
+  padding:.9rem 1.1rem;border:0;border-top:1px solid var(--linea-int);
+  background:transparent;font:inherit;color:var(--txt);text-align:left;cursor:pointer;
+  transition:background var(--paso)}
+/* LA FOTO, EN LAS DOS ANCHURAS.
+   Aqui es una miniatura de 44 px a la izquierda; en escritorio el mismo elemento
+   se estira a franja de 16:10 sobre el nombre. Un solo envoltorio con dos formas,
+   igual que la lista entera: mismo marcado, sin JavaScript por medio.
+   Son las cuatro imagenes que la landing ya usa para estos mismos cuatro motivos,
+   asi que quien llega a reservar viene de verlas hace treinta segundos. */
+.serv-foto{position:relative;flex:none;display:block;width:44px;height:44px;
+  border-radius:var(--r-sm);overflow:hidden;background:var(--sel)}
+.serv-foto img{display:block;width:100%;height:100%;object-fit:cover;
+  filter:var(--foto);transition:filter var(--paso)}
+/* La misma gradacion de arcilla que `.graded` en style.css: sin ella las cuatro
+   fotos llegan con su temperatura de origen y no rimarian ni entre si ni con la
+   pagina de la que vienen. */
+.serv-foto::after{content:"";position:absolute;inset:0;pointer-events:none;
+  mix-blend-mode:multiply;
+  background:linear-gradient(165deg,rgba(196,164,132,.12),rgba(243,233,222,.06) 45%,
+    rgba(166,123,91,.14))}
+/* El color hace de segunda senal de "elegido". Los valores no son inventados: son
+   los de `.graded img`, saturate(1.06) contrast(1.03). En reposo la foto baja a
+   0,8 de saturacion, asi que la elegida es la unica a todo color. El relleno calido
+   y el canto de salvia siguen siendo la senal principal — esto se suma, no
+   sustituye, porque el color por si solo no vale como unica marca de estado. */
+.fila[aria-checked="true"] .serv-foto img{filter:var(--foto-eleg)}
+.fila:first-child{border-top:0}
+.fila:hover{background:var(--sup-cal)}
+.fila[aria-checked="true"]{background:var(--sup-eleg)}
+/* AQUI HABIA UN CANTO DE SALVIA de 3 px en el costado izquierdo de la fila elegida.
+   Tenia sentido cuando la seleccion no traia linea propia: el relleno calido decia
+   "elegido" y el canto lo volvia inequivoco. Ahora la seleccion SI trae linea —el aro
+   interior de 3 px— y el canto solo conseguia que el lado izquierdo se viese distinto
+   de los otros tres, porque se le superponia. Un aro que mide lo mismo por los cuatro
+   lados dice lo mismo y no cojea. */
+/* El anillo de foco va hacia DENTRO: la caja recorta lo que sobresale, asi que con
+   el desplazamiento por defecto se perderia la mitad del anillo. */
+/* El anillo de foco va hacia DENTRO porque la caja recorta lo que sobresale. Ya no
+   se fuerza `border-radius:0`: las filas de los extremos tienen su propia curva y el
+   anillo la sigue solo. */
+.fila:focus-visible{outline-offset:-3px}
+/* Mismo tamano que el nombre del plan: son la misma clase de etiqueta y no hay
+   jerarquia que justifique que una sea un 27% mayor. */
+.serv-nom{font-weight:500;font-size:var(--t-aux);line-height:1.35}
+.fila[aria-checked="true"] .serv-nom{font-weight:600}
+
+/* EN ESCRITORIO LA CAJA SE DESHACE y vuelven las cuatro tarjetas de siempre.
+   La lista de una pieza funciona en el telefono porque alli es una columna: cuatro
+   filas apiladas se leen de arriba abajo. Tumbada a 800 px se convierte en el
+   unico objeto de la pagina que ocupa todo el ancho sin partirse en piezas, y
+   entonces no rima ni con la pildora de arriba ni con las tarjetas de abajo.
+   Separadas, los dos bloques de elegir vuelven a tener el mismo radio, el mismo
+   borde y la misma separacion.
+   Es un solo componente con dos disposiciones — el mismo marcado, sin JavaScript
+   por medio. */
+@media(min-width:760px){
+  .lista{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem;
+    background:none;border:0;border-radius:0;overflow:visible}
+  .fila{flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    gap:.7rem;min-height:128px;padding:1.1rem .75rem;
+    background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+    transition:background var(--paso),border-color var(--paso),box-shadow var(--paso)}
+  /* La regla base quita el borde superior a la primera fila para que no doble la
+     linea del contenedor. Aqui ya no hay contenedor, asi que hay que devolverselo
+     — y con la misma especificidad, o gana la de arriba. */
+  .fila:first-child{border-top:1px solid var(--linea)}
+  .fila:hover{background:var(--sup);border-color:var(--linea-f)}
+  /* El mismo aro interior que en `.card`, y por los mismos dos motivos: el borde se
+     trunca a pixeles fisicos y engordarlo desplazaria la foto y el nombre de la
+     tesela elegida respecto a los de sus tres vecinas. */
+  .fila[aria-checked="true"]{border-color:var(--linea-f);
+    box-shadow:inset 0 0 0 2px var(--linea-f);background:var(--sup-eleg)}
+  /* Ya no hay caja que recorte, asi que el anillo de foco vuelve a ir por fuera. */
+  .fila:focus-visible{outline-offset:3px;border-radius:var(--r)}
+  /* LA MINIATURA SE ESTIRA A FRANJA y entra a sangre por los tres cantos altos.
+     Aqui es donde volvia el patron que se habia quitado en movil: cuatro tarjetas
+     iguales con cuatro discos de salvia identicos, justo encima de otras tres
+     tarjetas iguales. Con la foto cada tarjeta trae su propio contenido y las
+     cuatro dejan de ser la misma. */
+  .fila{padding:0;gap:0;justify-content:flex-start;overflow:hidden;min-height:0}
+  .fila .serv-foto{width:100%;height:auto;aspect-ratio:16/10;border-radius:0}
+  /* LA HOLGURA VUELVE A REPARTIRSE, POR OTRA VIA.
+     La rejilla estira las cuatro al alto de la mas alta y "Fortalecer tu
+     Autoestima" es la unica de dos lineas. Con el nombre a su alto natural las
+     otras tres se quedaban con 21,2 px muertos abajo — el mismo descuadre que el
+     `min-height:2.7em` resolvia para los discos y que con foto deja de servir,
+     porque ese minimo se lo come el propio relleno del nombre.
+     La franja de texto toma el hueco sobrante y centra dentro lo que tenga, una
+     linea o dos: medido, la asimetria queda en 2,8 px y es identica en las cuatro.
+     Es el mismo defecto que resolvia el `min-height:2.7em` de los discos, por otra
+     via: alli el nombre reservaba dos lineas siempre, aqui se queda con todo el
+     hueco que le sobre a la tarjeta. */
+  .fila .serv-nom{display:grid;place-items:center;flex:1;width:100%;
+    padding:.75rem .7rem .85rem}
+}
+
+/* --------- sesiones --------- */
+/* Las tres columnas entran a 780 px, no a 640.
+   A 640 cada tarjeta se quedaba en 186 px y el pie necesitaba 190: el precio y
+   el badge se partian en dos filas, y como solo pasaba en las tarjetas que
+   llevan badge, los precios dejaban de estar alineados entre si. Por debajo de
+   780 va una sola columna a ancho completo, donde no hay estrechez posible. */
+.planes{display:grid;grid-template-columns:1fr;gap:1.25rem}
+@media(min-width:780px){.planes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* padding:0 NO es decorativo. Estas tarjetas son <button>, y Chrome les aplica
+   su padding por defecto (6 px a cada lado). Eso se comia 12 px de ancho util
+   —suficiente para que el precio y el badge se partieran en dos filas— y ademas
+   desplazaba 6 px todo el contenido respecto al borde real de la tarjeta, asi
+   que las divisorias no empezaban donde decia el CSS. */
+.planes .card{position:relative;display:flex;flex-direction:column;overflow:hidden;
+  text-align:left;padding:0}
+
+/* UNA SOLA DIVISORIA, Y ES LA DEL PIE. Aqui habia un `border-bottom` que dibujaba
+   la MISMA raya que `.plan-pie::before`, y por encima de 820 px se dibujaban las
+   dos. Coincidian solo mientras el pie midiese igual en las tres tarjetas, y la de
+   1 consulta no lleva badge "Ahorras": su pie es 1,95 px mas corto, `margin-top:auto`
+   lo baja esos 1,95 y las dos lineas se separaban. Sin elegir no se notaba —las dos
+   al 22 % se funden en una raya un poco mas gorda— pero al elegir saltaban las dos a
+   arcilla llena y se veian dos trazos a 2 px uno de otro y de distinta longitud: la
+   cabecera mide su margen por DENTRO del borde de la tarjeta (17,88 px) y el pie por
+   fuera (16,80), y esos 1,08 de diferencia son justo el grosor del borde.
+   Se queda la del pie, que es la unica que dibuja en movil y la que funciona en las
+   dos anchuras. El margen lateral SI se queda: sin relleno propio en la tarjeta, es
+   lo que mete la cabecera hacia dentro. */
+/* EL REPARTO VERTICAL, REHECHO. La tarjeta media 240 x 125 en escritorio —proporcion
+   1,92, casi 2:1— justo debajo de los cuatro motivos, que son cuadrados de 176,8 x
+   174,9. El ojo compara las dos filas y las de precio se lei­an aplastadas. No era el
+   ancho: era el alto, y no era el contenido sino el relleno. La tarjeta gasta 34 px
+   en el disco de la cifra y 23,2 en el precio: 57 px de contenido en 125 de caja.
+   Ademas el aire estaba mal repartido —la divisoria tenia 12,8 px por arriba y 14,4
+   por debajo—, asi que ahora las dos mitades llevan lo mismo: 1,15rem a cada lado de
+   la raya y 1,8rem en los dos extremos. La tarjeta queda en 240 x 153,7, proporcion
+   1,56. Sigue siendo claramente otra cosa que el motivo, que es lo correcto: una es
+   una foto y la otra es un dato. Se descarto subirla hasta 168 porque quedaba a 7 px
+   de los 175 del motivo, y casi igual pero no igual se lee como un descuadre.
+   Solo escritorio: por debajo de 820 px manda el relleno de la propia tarjeta. */
+.plan-cab{display:flex;align-items:center;gap:.6rem;padding:1.8rem 0 1.15rem;margin:0 1.05rem}
+/* La sugerida NO se oscurece en reposo: el relleno calido significa una sola cosa
+   en toda la vista, "esto es lo que has elegido". Lo que la distingue es el
+   contorno mas marcado — una senal de TARJETA, que pesa mas que cualquier etiqueta
+   sin necesidad de gritar.
+   Va por COLOR y no por grosor: engordar el borde a 2px cambiaba la geometria de
+   la caja y desalineaba los precios de las tres tarjetas y el check. El color no
+   mueve nada. #A8825F da 3,53:1 contra el blanco frente al 2,29 del borde normal.
+   La regla va DESPUES de la de elegida para que la sugerida conserve su linea. */
+.planes .card.sugerida{border-color:var(--marca)}
+/* PERO ELEGIR GANA A SUGERIR. `.planes .card.sugerida` pesa mas que
+   `.card[aria-checked="true"]` —tres clases contra una clase y un atributo—, asi que
+   sin esta linea la sugerida seria la UNICA que no cambia de color al elegirla. Hasta
+   ahora no se notaba porque `--marca` y `--linea-f` valian lo mismo y el conflicto
+   estaba tapado; en cuanto lo elegido pasa a salvia, se destapa. Y se destaparia en la
+   peor tarjeta posible: la sugerida es la que mas gente va a elegir. */
+.planes .card.sugerida[aria-checked="true"]{border-color:var(--linea-f)}
+
+/* Esto es, pieza por pieza, el .step-num de la landing: un disco con un numero
+   dentro, en Fraunces 600 a 1,05rem. Se copia el mismo tratamiento. */
+.plan-cifra{width:34px;height:34px;font-family:var(--display);font-size:var(--t-tit);
+  font-weight:600;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.plan-nom{font-weight:600;font-size:var(--t-aux);line-height:1.3;letter-spacing:-.01em}
+/* "Sugerida" sube de gris a salvia oscura y a peso 500, pero NO se convierte en
+   caja: con el badge de ahorro ya macizo, dos pastillas en la misma tarjeta se
+   pelean. Y hay una razon medida — a 228 px de tarjeta el encabezado deja unos
+   194 px utiles, y circulo + "sesiones" + una pastilla no caben sin partirse. */
+/* SIN PUNTO DELANTE. Habia un circulo de 5 px en salvia antes de la palabra, y era
+   el TERCER aviso del mismo hecho: la tarjeta sugerida ya lleva el contorno en
+   arcilla marcada —que es una senal de tarjeta y pesa mas que cualquier etiqueta—
+   y ya lleva la palabra. El punto era ademas el mas debil de los tres: a 5 px no
+   se lee como forma sino como una mota, y metia un tercer tono en una senal que
+   ya se decia en dos (arcilla el contorno, salvia honda el texto).
+   Un punto de estado se gana su sitio cuando hay un JUEGO de estados y el color es
+   lo unico que los separa. Aqui hay un estado, en una tarjeta de tres, con palabra.
+   La palabra sola queda separada por posicion (al borde derecho), por tamano (12,5
+   frente a los 14,1 del nombre) y por color; sobre la tarjeta elegida da 7,15:1. */
+.plan-eti{margin-left:auto;flex:none;font-size:var(--t-nota);font-weight:500;color:var(--acc-dp);
+  white-space:nowrap}
+/* EL CUERPO DE LA TARJETA SE FUE ENTERO.
+   Era `[icono] + [texto]` y en las de 3 y 5 consultas las dos piezas eran la
+   misma: mismo calendario y "A tu ritmo, 60 dias" palabra por palabra. Cuando una
+   fila se repite identica entre opciones que hay que comparar deja de ayudar a
+   decidir y pasa a ser relleno.
+   No se sustituyo por otro dato porque no existe: el precio por consulta es 25 $
+   en las dos de individual (75/3 y 125/5). En pareja si difiere, 33,33 y 30, pero
+   una linea que solo funciona en una de las dos modalidades es peor que ninguna.
+   El plazo se dice ahora una vez debajo del grupo. Lo que distingue una tarjeta de
+   otra es la cifra y el precio, y los dos ya estaban ahi.
+   `.plan-pie` conserva su `margin-top:auto`, asi que el precio sigue anclado al
+   fondo de la tarjeta y la holgura queda entre la cabecera y el pie. */
+.plan-pie{position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:.5rem .6rem;flex-wrap:wrap;padding:1.15rem 1.05rem 1.8rem;margin-top:auto}
+.plan-pie::before{content:"";position:absolute;top:0;left:1.05rem;right:1.05rem;height:1px;
+  background:var(--linea-int)}
+.card[aria-checked="true"] .plan-pie::before{background:var(--linea-f)}
+
+/* El precio va al mismo color que el titulo de la tarjeta. Con esto la arcilla
+   deja de tener tinta en toda la vista y pasa a ser solo estructura —lineas,
+   bordes y la costura—; el peso del precio lo llevan el tamano y las cifras
+   tabulares, no el color. */
+/* EL PRECIO BAJA DE 1,8 A 1,45 REM Y DE PESO 700 A 600.
+   Estaba EMPATADO EN TAMANO con el h1 de la pagina —los dos a 28,8 px— y ademas
+   con un peso mas, asi que en el desempate ganaba el dinero. Multiplicado por las
+   tres tarjetas, lo primero que veia el ojo al llegar al bloque no era que estaba
+   eligiendo sino cuanto costaba. En una tienda eso esta bien; aqui la persona no
+   viene a comparar precios, viene a decidir si empieza.
+   A 1,45 sigue siendo con diferencia lo mas grande de la tarjeta —el nombre del
+   plan mide 0,94— pero deja de competir con el titular.
+   Se copiaba el peso 700 de `.stat-number` de la landing, pero alli esa cifra ES
+   el contenido de su bloque y aqui no: aqui el contenido es la decision.
+   Con esto el 700 desaparece de la vista entera y quedan tres pesos, que es lo que
+   el comentario del cuerpo de la pagina dice desde el principio que hay.
+   El interletraje se queda en -0,02em: -0,035 estaba apretado a mano para
+   compensar lo suelto que va el sans del sistema entre cifras, y Fraunces ya viene
+   ajustada. Las cifras tabulares tambien: son las que alinean los tres precios. */
+.plan-precio{font-family:var(--display);font-size:var(--t-cifra);font-weight:600;
+  letter-spacing:-.02em;line-height:1;
+  color:var(--txt);white-space:nowrap;font-variant-numeric:tabular-nums}
+/* El pie ancla sus dos piezas a los extremos: el precio a la izquierda y el badge
+   a la derecha. Antes el badge iba pegado al precio y el check remataba a la
+   derecha; sin check, repartirlos es lo que deja las tres tarjetas uniformes. */
+/* El ahorro vuelve a ser un badge. Va en crema con letra terracota oscura: es
+   informacion que se dibuja, no una decision, asi que se queda del lado calido.
+   Sobre la tarjeta elegida el relleno pasa a blanco, porque el crema del badge y
+   el crema de la tarjeta son casi el mismo y el badge se disolveria. */
+/* El badge pasa a relleno macizo con la salvia oscura del hover del boton. En
+   crema sobre blanco daba 1,00 y desaparecia. Ya no necesita excepcion sobre la
+   tarjeta elegida: el mismo relleno se lee igual de bien sobre blanco y crema. */
+/* El margen separa el badge SOLO del precio; el hueco del pie sigue mandando en
+   la distancia hasta el check, que va empujado a la derecha por su cuenta. */
+/* translateY de 1,5 px: alineacion OPTICA, no geometrica. El precio tiene
+   line-height 1, asi que su caja reserva sitio para trazos descendentes que las
+   cifras casi no usan —24 px de tinta arriba de la linea base y 3 abajo—, y el
+   centro de la caja queda 1,5 px por debajo del centro visual de los numeros.
+   Centrar por caja deja el badge flotando alto. */
+/* EL translateY SE VA AL CAMBIAR DE FUENTE, y esta medido.
+   Aquel 1,5 px era una compensacion optica calibrada contra el sans del sistema:
+   sus cifras dejaban mucho hueco por debajo de la linea base dentro de una caja
+   con line-height 1, asi que el badge centrado por caja flotaba alto.
+   Fraunces reparte su tinta de otra manera. Medido con canvas a 28,8 px, "125 $"
+   deja 23 px de tinta sobre la linea base y 3 por debajo, y con eso los centros
+   visuales del precio y del badge caen ya en el mismo sitio: el desfase sin
+   transform es de 0,05 px. Manteniendo el 1,5 el badge se iba 1,49 px abajo, asi
+   que la correccion habia pasado a ser el error. */
+.plan-ahorro{display:inline-flex;align-items:center;
+  padding:.28rem .7rem;border-radius:var(--r-pill);
+  background:var(--acc-dp);color:var(--acc-txt);font-size:var(--t-nota);font-weight:500;
+  line-height:1.3;white-space:nowrap;
+  /* EL BADGE NO MANDA EN LA ALTURA DE LA FILA. Con su relleno propio medi­a 25,16 px
+     frente a los 23,2 del precio, asi que el pie de las tarjetas CON badge salia
+     casi 2 px mas alto que el de la de 1 consulta; como todas las tarjetas miden lo
+     mismo y el pie va con `margin-top:auto`, esa diferencia se convertia en que la
+     divisoria de la tarjeta 1 caia 1,95 px por debajo de la de sus vecinas.
+     El tope va contra `--t-cifra`, que es el token que fija el precio y tiene
+     `line-height:1`: las dos piezas de la fila miden exactamente lo mismo, hoy y si
+     manana movemos la escala. El texto sigue centrado por el `align-items` de arriba;
+     lo unico que se encoge es el relleno vertical, 1 px. */
+  max-height:var(--t-cifra)}
+
+/* ============ LA APERTURA DE LAS CONSULTAS ============
+   Antes el bloque aparecia de golpe (hidden) y luego probe con las tarjetas
+   entrando escalonadas. Esto es lo que hay ahora, y es la misma tecnica que la caja
+   del consultorio: grid-template-rows de 0fr a 1fr. Es la unica forma de animar una
+   altura que no se conoce de antemano sin fijarla a mano.
+
+   La divisoria y el relleno superior viven DENTRO de la parte que se abre; si
+   estuvieran en el contenedor que anima, quedaria una raya suelta con el bloque
+   cerrado. */
+.abre{display:grid;grid-template-rows:0fr;opacity:0;margin-bottom:0;
+  transition:grid-template-rows 320ms cubic-bezier(.2,.8,.3,1),
+             opacity 220ms,margin-bottom 320ms}
+.abre.abierto{grid-template-rows:1fr;opacity:1;margin-bottom:2.25rem}
+.abre-in{overflow:hidden;min-height:0}
+
+/* ============ LAS TARJETAS DE CONSULTA, EN MOVIL ============
+   La tarjeta media 332 x 180 y 94 de esos 180 eran relleno y divisorias, no
+   contenido. Aqui no se estrecha —en la pantalla mas pequena no sobra ancho— ni
+   se parte en columnas: se aprieta.
+
+   Se probo antes una rejilla de dos columnas y fallaba por una razon de fondo:
+   en una rejilla las columnas se COMPARTEN entre filas, asi que el badge de 82 px
+   reservaba ancho tambien en la fila del nombre, donde el precio solo necesita 55.
+   La cabecera se quedaba en 167 px pidiendo 180, "Sugerida" caia a otra linea y
+   esa tarjeta acababa 19 px mas alta que sus vecinas. Tres filas a ancho completo
+   no comparten nada: nada aprieta a nada y las tres tarjetas miden igual. */
+/* EL CORTE BAJA DE 820 A 780, QUE ES DONDE YA ESTABA EL OTRO. Las tarjetas pasan a
+   rejilla de tres columnas en `min-width:780`, pero este bloque las mantenia con el
+   reparto apretado hasta 820: en esa franja de 40 px se vei­an tres tarjetas de 240
+   px de ancho con relleno de movil, o sea 240 x 131 —proporcion 1,83—, justo la
+   forma chata que acabamos de corregir. Con los dos cortes en 780, "escritorio"
+   significa lo mismo para la rejilla y para la tarjeta. */
+@media(max-width:779.98px){
+  .planes .card{display:flex;flex-direction:column;gap:.9rem;padding:1.35rem 1.25rem}
+  .plan-cab{margin:0;padding:0}
+  /* padding-top y no 0: la divisoria se dibuja en el borde superior del pie, asi
+     que sin relleno el precio arranca pegado al trazo. Con .9rem la linea queda
+     con 14,4 px por encima (el hueco entre filas) y 14,4 por debajo — el mismo
+     ritmo que ya tenia en escritorio. */
+  .plan-pie{padding:.9rem 0 0;margin-top:0;justify-content:space-between}
+  /* La divisoria sobre el precio SE QUEDA tambien en movil: separa el dato del
+     dinero del resto de la tarjeta y a Edgar le funciona. Lo que apretaba no era
+     la raya, era el relleno. */
+  /* Aqui habia un `.plan-precio{font-size:1.55rem}` que BAJABA el precio desde el
+     1,8 rem de entonces. Al bajar la base a 1,45 ese mismo valor pasaba a SUBIRLO,
+     con lo que en el telefono el precio volvia a acercarse al titular: justo lo que
+     el cambio queria evitar. Se quita: el precio mide 1,45 en las dos anchuras, y
+     de paso es un tamano menos en la escala. */
+}
+
+/* EL ARO DE LO ELEGIDO, TAMBIEN EN LA LISTA DE MOTIVOS.
+   Aqui no puede ser un `border` de verdad, y no es por gusto: las cuatro terapias
+   en movil son FILAS DENTRO DE UNA SOLA CAJA, no cuatro cajas. Un borde real le
+   comeria 2,5 px de ancho y de alto a la fila elegida, asi que su foto y su nombre
+   quedarian desplazados respecto a los de sus tres vecinas, y ademas se doblaria
+   con el borde de la lista en los costados.
+   `box-shadow` interior dibuja el mismo aro y NO OCUPA SITIO: no hay reflujo, la
+   fila mide exactamente lo que medi­a, y la caja lo recorta en las esquinas
+   redondeadas igual que recorta todo lo demas.
+   Va con `--linea-f`, que es la salvia del tema en los dos casos. */
+@media(max-width:759.98px){
+  .fila[aria-checked="true"]{box-shadow:inset 0 0 0 3px var(--linea-f)}
+  /* LAS ESQUINAS DE LOS EXTREMOS. La caja tiene 16 px de radio y `overflow:hidden`,
+     pero las filas no tenian radio ninguno: el aro de la primera y de la ultima era
+     un rectangulo recto y la curva de la caja le RECORTABA las esquinas — se veian
+     comidas. El radio va menos el pixel del borde de la caja, que es como se anida
+     una esquina dentro de otra: 16 fuera, 15 dentro, y las dos curvas paralelas.
+     VA AQUI DENTRO Y NO EN LA REGLA BASE, y es importante: `.fila:first-child` pesa
+     mas que el `.fila` del bloque de escritorio, y la especificidad gana a la media
+     query. Escrito arriba, las teselas de los extremos se quedaban con media curva
+     en escritorio en vez de sus cuatro esquinas. Es el mismo tropiezo que ya tiene
+     anotado la regla del `border-top` unas lineas mas abajo. */
+  .fila:first-child{border-radius:calc(var(--r) - 1px) calc(var(--r) - 1px) 0 0}
+  .fila:last-child{border-radius:0 0 calc(var(--r) - 1px) calc(var(--r) - 1px)}
+}
+
+/* EL CANTO DE SALVIA, TAMBIEN EN LAS TARJETAS DE CONSULTA — solo en movil.
+   Es la misma marca que llevan las filas del motivo, asi que en el telefono las
+   dos decisiones se senalan igual: relleno calido mas canto de salvia.
+   En escritorio NO va, y es a proposito: alli el motivo vuelve a ser tarjeta
+   cuadrada sin canto, y ponerselo solo a las de precio inventaria una senal que
+   no existe en ningun otro sitio de esa pantalla.
+   El corte de 759,98 es el mismo de la lista y el de la barra fija, para que
+   "movil" signifique lo mismo en todo el archivo.
+   Dos detalles que resuelve el codigo solo: la tarjeta ya recorta su contenido,
+   asi que los extremos del canto salen redondeados como los de la fila; y al
+   posicionarse contra la caja de relleno, el canto queda POR DENTRO del borde de
+   arcilla en vez de taparlo — la linea de la tarjeta se conserva entera. */
+/* Aqui habia el mismo canto de salvia para las tarjetas de consulta en movil, y se
+   va por el mismo motivo que el de la lista: con el aro de 3 px, el canto solo hacia
+   que el costado izquierdo midiera mas que los otros tres. Con el se van tambien la
+   media consulta que lo apagaba en oscuro y la explicacion de por que hacia falta:
+   la seleccion se dice ahora de UNA manera en toda la pantalla, un aro. */
+
+/* ===================== ACCION ===================== */
+/* El icono del destino va dentro de su propio disco, no suelto al lado.
+   El disco es blanco al 16 %: da sitio propio al icono sin meter un color nuevo
+   ni partir el boton en dos objetos, que es lo que hacia la referencia del panel
+   diagonal. Cabe un solo icono, asi que este dice A DONDE VAS —un calendario en
+   el paso 1— y se renuncia a la flecha de avance. */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.9rem;
+  padding:.5rem .5rem .5rem 1.5rem;border-radius:var(--r-pill);font:inherit;font-weight:500;
+  font-size:var(--t-base);border:1px solid transparent;cursor:pointer;min-height:48px;
+  transition:background var(--paso),transform var(--paso)}
+.btn-disco{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:var(--disco);transition:background var(--paso)}
+
+/* Apagado, el blanco al 16 % sobre el beige inerte no se veria: pasa a tinta. */
+.btn-1:disabled .btn-disco{background:var(--disco-off)}
+.btn-1{background:var(--acc);color:var(--acc-txt)}
+.btn-1:hover:not(:disabled){background:var(--acc-dp)}
+/* scale y no translateY: se siente como que el boton te responde,
+   no como que se mueve de sitio. */
+.btn-1:active:not(:disabled){transform:scale(.97)}
+.btn-1:disabled{background:var(--inerte);color:var(--inerte-txt);cursor:not-allowed}
+
+/* En movil el boton es la barra fija de abajo y ocupa todo el ancho. */
+.acciones{margin-top:2.5rem}
+.acciones .btn{width:100%;max-width:26rem}
+
+/* En escritorio, la mitad izquierda de la fila la ocupa el RESUMEN de lo elegido,
+   no una linea. La linea decorativa medi­a 594 px contra 166 del boton —3,58 veces
+   mas— y a esa proporcion no se leia como una flecha sino como una regla suelta.
+   El hueco no se arreglaba con un trazo: se arregla con contenido que sirva.
+   Y justo antes de avanzar es cuando confirmar lo elegido vale para algo. */
+@media(min-width:760px){
+  .acciones{display:flex;align-items:center;gap:1.5rem}
+  /* El boton crece SOLO aqui: en movil la barra fija ya ocupa todo el ancho y no
+     necesita nada. Con min-width su tamano deja de depender de lo corto que sea
+     el rotulo — "Ver horarios" son dos palabras y sin un minimo el boton se
+     quedaba en 170 px, mas pequeno que una tarjeta de sesion. */
+  /* Largo, no alto. El min-width es lo que le da presencia —"Ver horarios" son dos
+     palabras cortas y sin un minimo el ancho lo decidiria el texto—; la altura
+     vuelve a los 52 px del resto de controles de la pantalla. */
+  /* Mas largo y mas bajo. El disco se encoge con el: con 34 px de disco mas su
+     relleno la altura no bajaria de 50 y el min-height no mandaria nada. */
+  .acciones .btn{width:auto;max-width:none;flex:none;
+    min-width:23rem;min-height:50px;
+    padding:.45rem .45rem .45rem 1.75rem;gap:.9rem}
+  .acciones .btn .btn-disco{width:32px;height:32px}
+
+}
+.resumen{flex:1 1 auto;margin:0;font-size:var(--t-aux);line-height:1.55;color:var(--txt-suave);
+  text-wrap:pretty}
+.resumen b{font-weight:600;color:var(--txt);white-space:nowrap}
+/* Se va rellenando segun se decide, asi que la fila nunca esta vacia: la modalidad
+   siempre tiene valor. */
+
+/* EL FONDO VA MACIZO, NO TRASLUCIDO.
+   Antes era `rgba(244,236,228,.93)` con desenfoque detras. Con un beige claro eso
+   daba igual, pero al oscurecerlo el 7 % de transparencia deja pasar lo que haya
+   debajo y el tono de la barra cambia segun por donde vaya el desplazamiento —y
+   con el, el contraste del boton verde, que es justo lo que hay que garantizar.
+   Macizo, el 3,47:1 del boton contra la barra es una cifra fija y no una media.
+   Al no haber transparencia el `backdrop-filter` ya no pinta nada, asi que se va:
+   era un filtro sobre algo que ya no se ve. */
+.barra-fija{position:fixed;left:0;right:0;bottom:0;z-index:20;
+  padding:.8rem 1.25rem calc(.8rem + env(safe-area-inset-bottom));
+  background:var(--barra);
+  border-top:1px solid var(--linea);display:none}
+.barra-fija .btn{width:100%}
+@media(max-width:759px){
+  /* Solo en el paso 1: es su boton. El sitio que reserva abajo tambien es
+     suyo, porque en los demas pasos no hay nada anclado que tapar. */
+  body[data-paso="1"] .barra-fija{display:block}
+  body[data-paso="1"] .acciones{display:none}
+  body[data-paso="1"] .wz-main{padding-bottom:6.5rem}
+}
+
+
+/* ============================================================
+   LA FICHA DE QUIEN RESERVA · paso 3
+
+   Desde que hay cuentas, este paso ya no pregunta: comprueba. Y una
+   comprobacion no se dibuja como un formulario — sin recuadros de campo, sin
+   etiquetas flotando encima de cajas vacias. Se lee de un vistazo y se sigue.
+
+   El mismo fondo calido que las cajas de aviso, para que se lea como
+   informacion del sistema y no como algo que haya que rellenar.
+   ============================================================ */
+
+.wz-ficha:not([hidden]) {
+  display:flex; flex-direction:column; gap:.35rem;
+  padding:1rem 1.15rem;
+  background:var(--sup-cal);
+  border:1px solid var(--linea-int);
+  border-radius:12px;
+}
+
+.wz-ficha-nombre {
+  margin:0;
+  font-family:var(--display);
+  font-size:var(--t-tit);
+  color:var(--txt);
+}
+
+.wz-ficha-dato {
+  margin:0;
+  display:flex; gap:.6rem; align-items:baseline;
+  font-size:var(--t-aux);
+  color:var(--txt-suave);
+}
+
+/* La etiqueta en columna propia y con ancho fijo: sin el, "Correo" y
+   "Telefono" empujan cada valor a una sangria distinta y las dos filas se leen
+   como texto corrido en vez de como una ficha. */
+.wz-ficha-et {
+  flex:0 0 4.8rem;
+  font-size:var(--t-nota);
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  color:var(--txt-suave);
+}
+
+/* Un enlace y no un boton con aspecto de boton: corregir es la salida rara, y
+   dibujarla como accion principal invita a usarla a quien no la necesita. */
+.wz-ficha-editar {
+  align-self:flex-start;
+  margin-top:.45rem;
+  padding:0;
+  border:0; background:none;
+  font:inherit; font-size:var(--t-aux);
+  color:var(--marca-dp);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.wz-ficha-editar:hover { color:var(--txt); }
+.wz-ficha-editar:focus-visible {
+  outline:2px solid var(--linea-f); outline-offset:3px; border-radius:3px;
+}
+
+/* El borde se marca mas que en el resumen: mientras esta abierto, es donde
+   esta el trabajo. */
+.wz-ficha-edicion:not([hidden]) {
+  display:flex; flex-direction:column; gap:1rem;
+  padding:1.15rem;
+  background:var(--sup-cal);
+  border:1px solid var(--linea-sug);
+  border-radius:12px;
+}
+
+.wz-ficha-acciones { display:flex; gap:.6rem; flex-wrap:wrap; }

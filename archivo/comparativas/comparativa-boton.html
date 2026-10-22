@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparativa · el botón de cada paso</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --sup:#FFFFFF;
+  --marca:#A8825F; --marca-cl:#C6A783; --marca-dk:#7A5A3C;
+  --txt:#2E332E; --txt-suave:#5C635A;
+  --acc:#5A7060; --acc-dp:#3E4F44; --acc-sv:#E8EDE6;
+  --linea:#C6A783;
+  --paso:200ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#FAF3EA;color:var(--txt);
+  font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--acc-dp);outline-offset:3px;border-radius:999px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms !important}}
+
+.envoltorio{max-width:62rem;margin:0 auto;padding:1.75rem 1.25rem 4rem}
+h1{font-size:1.45rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .35rem}
+.intro{color:var(--txt-suave);margin:0 0 1.75rem;line-height:1.65;font-size:.9rem;max-width:40rem}
+
+/* ============ LAS CUATRO, A LA VEZ ============ */
+.rejilla{display:grid;grid-template-columns:1fr;gap:1rem;margin-bottom:2.25rem}
+@media(min-width:720px){.rejilla{grid-template-columns:1fr 1fr}}
+.op{background:var(--sup);border:1px solid var(--linea);border-radius:14px;
+  padding:1.25rem 1.35rem 1.4rem;display:flex;flex-direction:column;gap:.85rem}
+.op.recomendada{border-color:var(--marca);border-width:2px}
+.op-cab{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;margin:0}
+.op-cab b{font-size:.98rem;font-weight:600;letter-spacing:-.012em}
+.op-cab em{font-style:normal;font-size:.68rem;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--acc-dp)}
+.op-nota{margin:0;font-size:.82rem;color:var(--txt-suave);line-height:1.6}
+.op-muestra{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.75rem;
+  padding:1.1rem .75rem;background:#FAF3EA;border-radius:10px;min-height:88px}
+
+/* ================= BASE DEL BOTON ================= */
+.b{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  font:inherit;font-weight:500;font-size:.95rem;border:1px solid transparent;
+  cursor:pointer;min-height:48px;background:var(--acc);color:#fff;
+  border-radius:999px;padding:.85rem 1.6rem;transition:background var(--paso)}
+.b:hover{background:var(--acc-dp)}
+.b svg{width:18px;height:18px;flex:none}
+.b-b .destino{opacity:.85}
+
+/* C · panel partido */
+.b-c{padding:0;overflow:hidden;gap:0}
+.b-c .texto{padding:.85rem 1.5rem;display:flex;align-items:center;min-height:48px}
+.b-c .panel{background:#fff;color:var(--acc);display:flex;align-items:center;
+  padding:0 1.15rem;align-self:stretch;clip-path:polygon(14px 0,100% 0,100% 100%,0 100%)}
+.b-c .panel svg{width:20px;height:20px}
+
+/* D · disco dentro */
+.b-d{padding:.5rem .5rem .5rem 1.5rem;gap:.9rem}
+.b-d .disco{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.16);
+  display:grid;place-items:center;flex:none}
+.b-d .disco svg{width:17px;height:17px}
+
+/* ============ LA SERIE DE B, ABAJO ============ */
+.serie{background:var(--sup);border:1px solid var(--linea);border-radius:14px;padding:1.5rem}
+.serie h2{font-size:.98rem;font-weight:600;letter-spacing:-.012em;margin:0 0 .3rem}
+.serie>p{margin:0 0 1.25rem;font-size:.85rem;color:var(--txt-suave);line-height:1.65;max-width:44rem}
+.pasos{display:grid;gap:.75rem}
+.fila{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.paso{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--txt-suave);min-width:4.5rem}
+.remate{margin:1.25rem 0 0;padding:.9rem 1.1rem;background:var(--acc-sv);border-radius:10px;
+  font-size:.84rem;line-height:1.65}
+.remate b{font-weight:600}
+</style>
+</head>
+<body>
+<div class="envoltorio">
+
+  <header>
+    <h1>El botón de cada paso</h1>
+    <p class="intro">Los cuatro tratamientos a la vez, con tu paleta. Mismo alto, mismo color y
+       mismo texto en todos: lo único que cambia es cómo se presenta el icono.</p>
+  </header>
+
+  <div class="rejilla">
+
+    <section class="op">
+      <p class="op-cab"><b>A · El actual</b> <em>referencia</em></p>
+      <div class="op-muestra">
+        <button type="button" class="b">
+          Ver horarios
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <p class="op-nota">Dice que avanzas, pero no dice hacia dónde.</p>
+    </section>
+
+    <section class="op recomendada">
+      <p class="op-cab"><b>B · Destino y avance</b> <em>mi recomendación</em></p>
+      <div class="op-muestra">
+        <button type="button" class="b b-b">
+          <svg class="destino" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+          Ver horarios
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <p class="op-nota">Un solo objeto con dos iconos que hacen cosas distintas: el de la
+         izquierda dice <b>qué vas a encontrar</b>, el de la derecha <b>que avanzas</b>. Es tu
+         idea sin partir el botón en dos.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>C · Panel partido</b> <em>tu referencia</em></p>
+      <div class="op-muestra">
+        <button type="button" class="b b-c">
+          <span class="texto">Ver horarios</span>
+          <span class="panel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+          </span>
+        </button>
+      </div>
+      <p class="op-nota">El panel blanco se lleva el <b>30 % del ancho</b> y es lo más claro de
+         la pantalla — 5,36:1 contra el propio botón—, así que la mirada va al icono y no a la
+         palabra. Y el ojo lee dos objetos donde solo hay una acción.</p>
+    </section>
+
+    <section class="op">
+      <p class="op-cab"><b>D · El icono en su disco</b> <em>término medio</em></p>
+      <div class="op-muestra">
+        <button type="button" class="b b-d">
+          Ver horarios
+          <span class="disco">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+          </span>
+        </button>
+      </div>
+      <p class="op-nota">Si lo que te gusta de la referencia es que el icono tenga sitio propio,
+         esta es la forma de dárselo sin partir el botón: un disco blanco al 16 %, sin colores
+         nuevos. Lo que pierde es la flecha — solo cabe un icono.</p>
+    </section>
+
+  </div>
+
+  <section class="serie">
+    <h2>Cómo se vería B en las cuatro pantallas</h2>
+    <p>Cada paso lleva el icono de a dónde va, que es lo que hace que el botón oriente en vez de
+       solo empujar.</p>
+    <div class="pasos">
+      <div class="fila">
+        <span class="paso">Paso 1</span>
+        <button type="button" class="b b-b">
+          <svg class="destino" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+          Ver horarios
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="fila">
+        <span class="paso">Paso 2</span>
+        <button type="button" class="b b-b">
+          <svg class="destino" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+          Continuar con mis datos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="fila">
+        <span class="paso">Paso 3</span>
+        <button type="button" class="b b-b">
+          <svg class="destino" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></svg>
+          Ir al pago
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="fila">
+        <span class="paso">Paso 4</span>
+        <button type="button" class="b b-b">
+          <svg class="destino" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5.5 5.5L20 7"/></svg>
+          Confirmar mi reserva
+        </button>
+      </div>
+    </div>
+    <p class="remate"><b>Fíjate en el paso 4:</b> es el único sin flecha. Ahí no avanzas a otra
+       pantalla, terminas — y quitar la flecha lo dice sin una palabra de más.</p>
+  </section>
+
+</div>
+</body>
+</html>

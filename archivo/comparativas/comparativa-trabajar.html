@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qué quieres trabajar · cuatro formas</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     CUATRO FORMAS DEL BLOQUE "QUE QUIERES TRABAJAR".
+
+     Cada una se dibuja DENTRO DE LA CARPETA y con el bloque de modalidad al
+     lado, a las medidas reales de la pagina —columna izquierda 17rem, derecha
+     el resto de 1120 px—, porque la pregunta no es cual es mas bonita suelta:
+     es cual pega con la de al lado.
+
+     Las cuatro llevan radio de verdad (`input type=radio`), que es lo que pidio
+     Edgar y ademas lo que corresponde: con cuatro opciones excluyentes, el
+     control es un radio y no un boton que finge serlo.
+
+     LOS DATOS SON LOS REALES, los cuatro nombres que estan en la tabla
+     `services` de Supabase. "Fortalecer tu Autoestima" es el mas largo con 24
+     caracteres y es el que decide si una forma cabe o no.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --tinte:#F6EFE7; --blanco:#FFFFFF;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --trazo:#6E4C36; --trazo-fino:#C9B49A;
+  --elegido:#FBF4EA;
+  --salvia:#5A7060;
+  --display:Fraunces,Georgia,serif;
+  --cuerpo:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--tinte);color:var(--txt);
+     font-family:var(--cuerpo);font-size:16px;line-height:1.55}
+
+/* ---------- el chrome de la comparativa ---------- */
+header{
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  padding:.9rem 2rem;background:rgba(246,239,231,.95);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--trazo-fino);
+}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--cuerpo);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+.grupo{display:flex;gap:.3rem;background:#E7DACA;padding:.25rem;border-radius:999px}
+.grupo button{min-height:34px;padding:0 .9rem;border:0;border-radius:999px;
+  background:none;font:inherit;font-size:.82rem;color:var(--trazo);cursor:pointer}
+.grupo button[aria-pressed="true"]{background:var(--blanco);font-weight:600;
+  box-shadow:0 1px 2px rgba(110,76,54,.14)}
+
+.zona{padding:1.5rem 2rem 3rem}
+.caso{margin-bottom:2.5rem}
+.etq{display:flex;align-items:baseline;gap:.6rem;margin:0 0 .6rem;
+  font-size:.85rem;color:var(--txt-suave)}
+.etq b{font-family:var(--display);font-size:1.05rem;color:var(--txt)}
+.medida{margin-left:auto;font-variant-numeric:tabular-nums;font-size:.78rem}
+
+/* ---------- la carpeta, igual que en la pagina ---------- */
+.pest-tira{display:flex;align-items:flex-end;padding-left:1.25rem;max-width:70rem}
+.pest{display:flex;align-items:center;gap:.5rem;min-height:44px;padding:0 1.35rem;
+  border:2px solid var(--trazo);border-bottom:0;border-radius:12px 12px 0 0;
+  background:#E7DACA;color:var(--trazo);font:inherit;font-size:.88rem}
+.pest.on{background:var(--blanco);font-weight:600;min-height:50px;
+  margin-bottom:-2px;padding-bottom:2px;position:relative;z-index:2}
+.pest.off{background:#EDE3D6;color:#8C7A66;border-color:var(--trazo-fino);
+  margin-left:-14px}
+
+.carpeta{max-width:70rem;padding:1.75rem;background:var(--blanco);
+  border:2px solid var(--trazo);border-radius:0 20px 20px 20px}
+.rejilla{display:grid;grid-template-columns:17rem minmax(0,1fr);gap:1.5rem;align-items:start}
+
+.bloque{border:2px solid var(--trazo);border-radius:14px;padding:1.25rem 1.35rem;min-width:0}
+.tit{margin:0 0 1rem;font-size:.74rem;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--txt-suave)}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend{padding:0}
+
+/* ---------- modalidad, la de la izquierda (igual en los cuatro) ---------- */
+.modos{display:flex;flex-direction:column;gap:.6rem}
+.modo{position:relative;display:flex;align-items:center;gap:.7rem;min-height:46px;
+  padding:0 1rem;cursor:pointer;border:1px solid var(--trazo-fino);
+  border-radius:10px;font-size:.96rem}
+.modo input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.modo svg{width:18px;height:18px;flex:none;color:var(--trazo)}
+.modo:has(input:checked){border:2px solid var(--trazo);background:var(--elegido);
+  font-weight:600;padding:0 calc(1rem - 1px)}
+
+/* ==========================================================================
+   A · IGUAL QUE LA DE AL LADO
+   Una sola columna de filas, con el radio a la vista. Es la forma del bloque de
+   modalidad repetida: la misma altura de fila, el mismo borde, el mismo tinte.
+   ========================================================================== */
+.a-lista{display:flex;flex-direction:column;gap:.6rem}
+.a-op{display:flex;align-items:center;gap:.75rem;min-height:46px;padding:0 1rem;
+  cursor:pointer;border:1px solid var(--trazo-fino);border-radius:10px;font-size:.96rem}
+.a-op input{margin:0;width:18px;height:18px;accent-color:var(--trazo);cursor:pointer}
+.a-op:hover{background:var(--tinte)}
+.a-op:has(input:checked){border:2px solid var(--trazo);background:var(--elegido);
+  font-weight:600;padding:0 calc(1rem - 1px)}
+
+/* ==========================================================================
+   B · DOS COLUMNAS DE FILAS
+   Lo mismo que A pero en dos columnas, para que el ancho de la derecha trabaje.
+   ========================================================================== */
+.b-lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+.b-op{display:flex;align-items:center;gap:.75rem;min-height:46px;padding:0 1rem;
+  cursor:pointer;border:1px solid var(--trazo-fino);border-radius:10px;font-size:.96rem}
+.b-op input{margin:0;width:18px;height:18px;accent-color:var(--trazo);cursor:pointer}
+.b-op:hover{background:var(--tinte)}
+.b-op:has(input:checked){border:2px solid var(--trazo);background:var(--elegido);
+  font-weight:600;padding:0 calc(1rem - 1px)}
+
+/* ==========================================================================
+   C · SIN CAJAS
+   Ninguna opcion tiene borde. Solo una divisoria fina entre ellas y el radio
+   delante. Es la forma de una carta de menu, y es la que menos tinta gasta: en
+   la version de hoy hay cinco rectangulos anidados —carpeta, bloque y cuatro
+   cajas— y aqui se van los cuatro de dentro.
+   ========================================================================== */
+.c-lista{display:flex;flex-direction:column}
+.c-op{display:flex;align-items:center;gap:.85rem;min-height:48px;
+  padding:0 .5rem;margin:0 -.5rem;cursor:pointer;border-radius:8px;font-size:1rem}
+.c-op+.c-op{box-shadow:inset 0 1px 0 var(--trazo-fino)}
+.c-op input{margin:0;width:18px;height:18px;accent-color:var(--trazo);cursor:pointer}
+.c-op:hover{background:var(--tinte)}
+.c-op:has(input:checked){font-weight:600}
+.c-op:has(input:checked)+.c-op{box-shadow:inset 0 1px 0 var(--trazo-fino)}
+
+/* ==========================================================================
+   D · CUATRO COLUMNAS
+   La lectura literal de "en columnas": las cuatro una al lado de otra, el radio
+   arriba y el nombre debajo. Aprovecha todo el ancho de un golpe.
+   ========================================================================== */
+.d-lista{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem}
+.d-op{display:flex;flex-direction:column;gap:.5rem;padding:.9rem .85rem;
+  cursor:pointer;border:1px solid var(--trazo-fino);border-radius:10px;
+  font-size:.94rem;line-height:1.3;text-wrap:balance}
+.d-op input{margin:0;width:18px;height:18px;accent-color:var(--trazo);cursor:pointer}
+.d-op:hover{background:var(--tinte)}
+.d-op:has(input:checked){border:2px solid var(--trazo);background:var(--elegido);
+  font-weight:600;padding:calc(.9rem - 1px) calc(.85rem - 1px)}
+
+/* ---------- las notas ---------- */
+.notas{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));
+  padding:0 2rem 3rem}
+.nota{padding:1rem 1.15rem;background:var(--blanco);border:2px solid var(--trazo);
+  border-radius:14px;font-size:.86rem;line-height:1.6}
+.nota h2{margin:0 0 .5rem;font-family:var(--display);font-size:1rem}
+.nota p{margin:0 0 .5rem}
+.nota p:last-child{margin:0}
+.pro{color:#4A5E50;font-weight:600}
+.con{color:#A33A2E;font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Qué quieres trabajar · cuatro formas<small>Cada una dentro de la carpeta, con la modalidad al lado, a medidas reales</small></h1>
+  <div class="grupo" role="group" aria-label="Ver">
+    <button type="button" data-v="todas" aria-pressed="true">Las cuatro</button>
+    <button type="button" data-v="a" aria-pressed="false">A</button>
+    <button type="button" data-v="b" aria-pressed="false">B</button>
+    <button type="button" data-v="c" aria-pressed="false">C</button>
+    <button type="button" data-v="d" aria-pressed="false">D</button>
+  </div>
+</header>
+
+<div class="zona" id="zona"></div>
+
+<div class="notas">
+  <div class="nota">
+    <h2>A · Igual que la de al lado</h2>
+    <p>Una columna de cuatro filas, con la misma altura, el mismo borde y el mismo tinte que el bloque de modalidad.</p>
+    <p><span class="pro">A favor:</span> los dos bloques se leen como hermanos. Es la que menos puede salir mal.</p>
+    <p><span class="con">En contra:</span> deja mucho aire a la derecha de cada etiqueta, porque la columna mide 766&nbsp;px y el nombre más largo ocupa 190.</p>
+  </div>
+  <div class="nota">
+    <h2>B · Dos columnas de filas</h2>
+    <p>Lo mismo que A, repartido en dos columnas.</p>
+    <p><span class="pro">A favor:</span> el ancho trabaja y el bloque queda a la altura del de modalidad, así que la fila de arriba no cojea.</p>
+    <p><span class="con">En contra:</span> sigue habiendo cuatro rectángulos, que es de lo que te quejabas. Es la actual con el radio puesto.</p>
+  </div>
+  <div class="nota">
+    <h2>C · Sin cajas</h2>
+    <p>Ninguna opción tiene borde: una divisoria fina entre ellas y el radio delante. La forma de una carta de menú.</p>
+    <p><span class="pro">A favor:</span> es la que quita de verdad lo cuadrado. Hoy hay cinco rectángulos anidados —carpeta, bloque y cuatro cajas— y aquí desaparecen los cuatro de dentro.</p>
+    <p><span class="con">En contra:</span> es la que menos se parece al bloque de modalidad, que sí lleva cajas.</p>
+  </div>
+  <div class="nota">
+    <h2>D · Cuatro columnas</h2>
+    <p>La lectura literal de «en columnas»: las cuatro una al lado de otra, el radio arriba y el nombre debajo.</p>
+    <p><span class="pro">A favor:</span> aprovecha todo el ancho de un golpe y el bloque es el más bajo de los cuatro.</p>
+    <p><span class="con">En contra:</span> «Fortalecer tu Autoestima» no cabe en una línea en 180&nbsp;px, así que las etiquetas parten y las cuatro columnas dejan de medir lo mismo de alto.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* Los cuatro nombres reales de la tabla `services`. */
+  var SERV = ['Superar la Ansiedad', 'Fortalecer tu Autoestima',
+              'Sanar en Pareja', 'Acompañar un Duelo'];
+
+  var ICO = {
+    video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="13" rx="2"/><path d="M8 21h8M12 17.5V21"/></svg>',
+    pin:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>'
+  };
+
+  var FORMAS = {
+    a: { nom: 'A · Igual que la de al lado', clase: 'a' },
+    b: { nom: 'B · Dos columnas de filas',   clase: 'b' },
+    c: { nom: 'C · Sin cajas',               clase: 'c' },
+    d: { nom: 'D · Cuatro columnas',         clase: 'd' }
+  };
+
+  function opciones(v, id) {
+    return SERV.map(function (n, i) {
+      var marcada = i === 0 ? ' checked' : '';
+      if (v === 'd') {
+        return '<label class="d-op"><input type="radio" name="serv-' + id + '" value="' + i + '"' + marcada + '>' +
+               '<span>' + n + '</span></label>';
+      }
+      return '<label class="' + v + '-op"><input type="radio" name="serv-' + id + '" value="' + i + '"' + marcada + '>' +
+             '<span>' + n + '</span></label>';
+    }).join('');
+  }
+
+  function caso(v) {
+    var f = FORMAS[v], id = v;
+    return '<section class="caso" data-cual="' + v + '">' +
+      '<p class="etq"><b>' + f.nom + '</b>' +
+        '<span class="medida" id="med-' + id + '">…</span></p>' +
+
+      '<div class="pest-tira">' +
+        '<span class="pest on">Reserva</span>' +
+        '<span class="pest off">Fecha</span>' +
+        '<span class="pest off">Pago</span>' +
+      '</div>' +
+
+      '<div class="carpeta"><div class="rejilla">' +
+
+        '<section class="bloque"><fieldset>' +
+          '<legend class="tit">Cómo quieres tu consulta</legend>' +
+          '<div class="modos">' +
+            '<label class="modo"><input type="radio" name="modo-' + id + '" checked>' + ICO.video + '<span>Online</span></label>' +
+            '<label class="modo"><input type="radio" name="modo-' + id + '">' + ICO.pin + '<span>Presencial</span></label>' +
+          '</div>' +
+        '</fieldset></section>' +
+
+        '<section class="bloque" id="der-' + id + '"><fieldset>' +
+          '<legend class="tit">Qué quieres trabajar</legend>' +
+          '<div class="' + v + '-lista">' + opciones(v, id) + '</div>' +
+        '</fieldset></section>' +
+
+      '</div></div>' +
+    '</section>';
+  }
+
+  var zona = document.getElementById('zona');
+  zona.innerHTML = ['a', 'b', 'c', 'd'].map(caso).join('');
+
+  /* La altura se OBSERVA, no se cronometra: las fuentes llegan por red y
+     cualquier temporizador que yo elija va a estar mal en alguna maquina. Y se
+     mide tambien la del bloque de modalidad, porque lo que importa no es cuanto
+     mide el de la derecha sino CUANTO SE DESPEGA del de al lado. */
+  ['a', 'b', 'c', 'd'].forEach(function (v) {
+    var der = document.getElementById('der-' + v);
+    var izq = der.parentElement.querySelector('.bloque');
+    var hueco = document.getElementById('med-' + v);
+    var obs = new ResizeObserver(function () {
+      var hd = Math.round(der.getBoundingClientRect().height);
+      var hi = Math.round(izq.getBoundingClientRect().height);
+      hueco.textContent = hd + ' px de alto · ' +
+        (hd === hi ? 'igual que modalidad' : Math.abs(hd - hi) + ' px ' + (hd > hi ? 'más alto' : 'más bajo') + ' que modalidad');
+    });
+    obs.observe(der);
+    obs.observe(izq);
+  });
+
+  document.querySelector('.grupo').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function (o) {
+      o.setAttribute('aria-pressed', String(o === b));
+    });
+    var v = b.dataset.v;
+    zona.querySelectorAll('.caso').forEach(function (c) {
+      c.hidden = (v !== 'todas' && c.dataset.cual !== v);
+    });
+  });
+})();
+</script>
+</body>
+</html>

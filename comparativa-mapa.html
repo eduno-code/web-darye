@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El botón de cómo llegar · cinco iconos</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     CINCO ICONOS PARA "COMO LLEGAR", cada uno en la nota de verdad y a su
+     medida real: 36 px de diametro, salvia, dentro de la columna estrecha.
+
+     Cada uno dice algo distinto, y eso importa mas que cual es mas bonito:
+
+       CHINCHETA  dice "aqui esta el sitio". Pero eso ya lo dice el bloque
+                  entero, que se llama "Presencial" y trae la direccion.
+       FLECHA     dice "te llevo". Es el gesto estandar de "ir a" en los mapas.
+       MAPA       dice "abre un mapa". Describe el destino, no la accion.
+       COCHE      dice "conduce hasta alli". Excluye a quien va andando o en
+                  autobus, y en Barquisimeto eso no es un detalle.
+       PEATON     dice "camina hasta alli". El mismo problema al reves.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-chico:8px;
+  --paso:160ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--suelo);color:var(--txt);
+     font-family:var(--texto);font-size:16px;line-height:1.55;
+     -webkit-font-smoothing:antialiased}
+
+header{padding:1rem 2rem;border-bottom:1px solid var(--linea)}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--texto);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+
+.fila{display:flex;flex-wrap:wrap;gap:1.25rem;padding:1.75rem 2rem 1rem}
+
+.caso{background:var(--blanco);border-radius:18px;padding:1.4rem 1.6rem;
+  width:25rem;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2)}
+.caso h2{margin:0 0 .15rem;font-family:var(--display);font-size:1rem;color:var(--marca)}
+.caso .dice{margin:0 0 1rem;font-size:.79rem;color:var(--txt-suave)}
+
+/* la nota, igual que en la pagina */
+.modo-nota{display:flex;align-items:flex-start;gap:.6rem;margin:0;
+  padding-top:1.1rem;border-top:1px solid var(--linea);
+  font-size:.88rem;line-height:1.6;color:var(--txt-suave)}
+.modo-nota .pin{width:17px;height:17px;flex:none;color:var(--marca);margin-top:.15rem}
+.modo-nota strong{display:block;font-weight:600;color:var(--txt)}
+
+.mapa{display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:36px;height:36px;margin-left:.15rem;vertical-align:-.6rem;
+  border-radius:50%;background:var(--acc);color:#fff;text-decoration:none;
+  transition:background var(--paso)}
+.mapa svg{width:18px;height:18px}
+.mapa:hover{background:var(--acc-dp)}
+
+.cierre{padding:.5rem 2rem 3rem;max-width:52rem;font-size:.88rem;
+  line-height:1.65;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>El botón de cómo llegar · cinco iconos<small>Cada uno en la nota de verdad, a 36&nbsp;px y en salvia. Lo que cambia es qué dice cada uno.</small></h1>
+</header>
+
+<div class="fila" id="zona"></div>
+
+<div class="cierre">
+  <p>Mi apuesta es la <b>flecha de navegación</b>, y no por gusto: es el único que dice «te llevo». La chincheta dice «aquí está el sitio», y eso ya lo dice el bloque entero —se llama «Presencial» y trae la dirección debajo—, así que repetiría en un icono lo que el texto acaba de decir.</p>
+  <p>El <b>coche</b> y el <b>peatón</b> tienen el mismo defecto por lados opuestos: eligen por la persona cómo va a llegar. En Barquisimeto eso no es un detalle menor, y un mapa abierto sirve igual para quien conduce, camina o toma un autobús.</p>
+  <p>El <b>mapa desplegado</b> es correcto pero describe el destino, no la acción: dice «esto abre un mapa» en vez de «esto te lleva allí».</p>
+</div>
+
+<script>
+(function () {
+  var ICONOS = [
+    ['Chincheta', 'Dice «aquí está el sitio». Es el que está puesto ahora.',
+     '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>'],
+
+    ['Flecha de navegación', 'Dice «te llevo». El gesto estándar de «ir a» en los mapas.',
+     '<path d="M3.4 10.9 20.2 4.2a.7.7 0 0 1 .9.9l-6.7 16.8a.7.7 0 0 1-1.3-.1l-2-6.4a.7.7 0 0 0-.5-.5l-6.4-2a.7.7 0 0 1-.1-1.3Z"/>'],
+
+    ['Mapa desplegado', 'Dice «abre un mapa». Describe el destino, no la acción.',
+     '<path d="M9 4 3.6 6.2A1 1 0 0 0 3 7.1v12.1a.8.8 0 0 0 1.1.7L9 18m0-14 6 2m-6-2v14m6-12 4.9-1.9a.8.8 0 0 1 1.1.7v12.1a1 1 0 0 1-.6.9L15 20m0-14v14m0 0-6-2"/>'],
+
+    ['Coche', 'Dice «conduce hasta allí». Excluye a quien va andando o en bus.',
+     '<path d="M4.5 16.5h15M5.6 16.5v1.6a1 1 0 0 1-1 1h-.7a1 1 0 0 1-1-1v-1.6m16.5 0v1.6a1 1 0 0 0 1 1h.7a1 1 0 0 0 1-1v-1.6M2.9 16.5v-4.3l2-5.1a1.5 1.5 0 0 1 1.4-.9h11.4a1.5 1.5 0 0 1 1.4.9l2 5.1v4.3M6.5 13h2m7 0h2"/>'],
+
+    ['Peatón', 'Dice «camina hasta allí». El mismo problema al revés.',
+     '<circle cx="13" cy="4.4" r="2"/><path d="M11.4 8.2 9 10.4l-1.6 4.2m4-6.4 3.2 1.4 1.4 3.6m-4.6-5 .6 5.4 2.6 3.4.8 3.6m-4-7L9.4 22"/>']
+  ];
+
+  document.getElementById('zona').innerHTML = ICONOS.map(function (i, n) {
+    return '<section class="caso">' +
+      '<h2>' + (n + 1) + ' · ' + i[0] + '</h2>' +
+      '<p class="dice">' + i[1] + '</p>' +
+      '<p class="modo-nota">' +
+        '<svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+          'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/>' +
+          '<circle cx="12" cy="10" r="2.6"/></svg>' +
+        '<span><strong>Centro Humanista Intellego</strong>' +
+          'Calle 19, entre carreras 28 y 29. Barquisimeto, estado Lara.' +
+          '<a class="mapa" href="#" title="Cómo llegar" ' +
+            'aria-label="Cómo llegar, se abre el mapa en una pestaña nueva">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+              'stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ' +
+              'aria-hidden="true">' + i[2] + '</svg></a>' +
+        '</span>' +
+      '</p>' +
+    '</section>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

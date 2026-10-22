@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El color del eco · cinco opciones de la paleta</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     EL COLOR DEL ECO, con los cinco candidatos que da la paleta del proyecto.
+
+     Cada caso se dibuja con los TRES rotulos a la vez, y eso es lo que hay que
+     mirar: un chip suelto puede verse bien y tres iguales en la misma tarjeta
+     pesar demasiado. El marron oscuro es el ejemplo claro.
+
+     Los contrastes del pie estan medidos, no estimados.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A; --hueso:#FAF3EA;
+  --pest-off:#E2D3BE;
+  --acc:#5A7060; --acc-dp:#4A5E50; --acc-sv:#E8EDE6;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-chico:8px; --r-pill:999px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--suelo);color:var(--txt);
+     font-family:var(--texto);font-size:16px;line-height:1.55;
+     -webkit-font-smoothing:antialiased}
+
+header{position:sticky;top:0;z-index:5;padding:.9rem 2rem;
+  background:rgba(237,226,210,.95);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--linea)}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--texto);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+
+.caso{padding:1.5rem 2rem 2rem}
+.etq{display:flex;align-items:baseline;gap:.7rem;margin:0 0 .8rem;
+  font-size:.85rem;color:var(--txt-suave)}
+.etq b{font-family:var(--display);font-size:1.1rem;color:var(--txt)}
+.etq code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.76rem}
+.etq .razon{margin-left:auto;font-variant-numeric:tabular-nums}
+
+.tarjeta{max-width:56rem;background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 14px 36px -14px rgba(110,76,54,.2);
+  padding:1.6rem 2rem}
+.rejilla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.75rem;
+  align-items:start;margin-bottom:1.4rem}
+
+.rot{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;
+  margin:0 0 .7rem;font-family:var(--display);font-size:1.05rem;
+  font-weight:600;letter-spacing:-.01em;color:var(--marca)}
+
+/* la base del eco: la forma no cambia entre casos, solo el color */
+.eco{font-family:var(--texto);font-size:.79rem;font-weight:500;letter-spacing:0;
+  padding:.2rem .55rem;border-radius:var(--r-chico)}
+
+/* ---- 1 · marron oscuro relleno ---- */
+.v1 .eco{background:var(--marca);color:var(--hueso)}
+/* ---- 2 · marron lavado ---- */
+.v2 .eco{background:var(--marca-cl);color:var(--txt)}
+/* ---- 3 · tono de pestaña dormida ---- */
+.v3 .eco{background:var(--pest-off);color:var(--marca)}
+/* ---- 4 · blanco con filete ---- */
+.v4 .eco{background:var(--blanco);color:var(--marca);
+  box-shadow:inset 0 0 0 1px var(--marca-cl)}
+/* ---- 5 · el actual ---- */
+.v5 .eco{background:var(--fila-viva);color:var(--marca)}
+
+.ops{display:flex;flex-direction:column;gap:.3rem}
+.op{display:flex;align-items:center;gap:.85rem;min-height:42px;
+  padding:0 .6rem;margin:0 -.6rem;border-radius:var(--r-chico);font-size:1rem}
+.op input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.dot{flex:none;width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--marca-cl);box-sizing:border-box}
+.op:has(input:checked) .dot{border-color:var(--marca);background:var(--marca);
+  box-shadow:inset 0 0 0 3.5px var(--blanco)}
+.op:has(input:checked){background:var(--fila-viva);font-weight:600}
+
+.planes-zona{padding-top:1.3rem;border-top:1px solid var(--linea)}
+.planes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;
+  margin:0 -.8rem}
+.plan{display:grid;grid-template-columns:18px auto 1fr;align-items:baseline;
+  gap:.2rem .8rem;padding:.7rem .8rem;border-radius:var(--r-chico)}
+.plan input{position:absolute;width:1px;height:1px;opacity:0}
+.plan .dot{grid-column:1;grid-row:1;align-self:center}
+.plan-nom{grid-column:2 / -1;grid-row:1}
+.plan-precio{grid-column:2;grid-row:2;font-variant-numeric:tabular-nums;color:var(--txt-suave)}
+.plan-ahorro{grid-column:3;grid-row:2;justify-self:start;margin-left:.35rem;
+  padding:.18rem .65rem;border-radius:var(--r-pill);background:var(--acc-sv);
+  font-size:.79rem;font-weight:500;color:var(--acc-dp);white-space:nowrap}
+.plan:has(input:checked){background:var(--fila-viva)}
+.plan:has(input:checked) .plan-nom{font-weight:600}
+
+.cierre{padding:0 2rem 3rem;max-width:56rem;font-size:.88rem;line-height:1.65;
+  color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>El color del eco · cinco opciones de la paleta<small>Mira los TRES chips a la vez: uno suelto puede verse bien y tres iguales pesar demasiado</small></h1>
+</header>
+
+<div id="zona"></div>
+
+<div class="cierre">
+  <p>Los contrastes están medidos sobre cada pareja de colores, no estimados. Los cinco pasan AA para texto pequeño, así que aquí la decisión es de <b>peso visual</b>, no de accesibilidad.</p>
+  <p>Lo que yo miraría al comparar: <b>cuánto tiran los tres chips del ojo</b> frente a la fila que está realmente elegida. El eco es un recordatorio, no la decisión — si pesa más que la opción marcada, está robando atención al sitio donde hay que mirar.</p>
+  <p>Y el caso 3 tiene una trampa que no se ve pero cuenta: ese tono es el de las <b>pestañas dormidas</b>, donde significa «apagado, no estás aquí». Usarlo para tu respuesta manda la señal contraria.</p>
+</div>
+
+<script>
+(function () {
+  var SERV = ['Superar la Ansiedad', 'Fortalecer tu Autoestima',
+              'Sanar en Pareja', 'Acompañar un Duelo'];
+  var MODOS = ['En línea', 'Presencial'];
+  var PLANES = [['1 Consulta', '45 $', ''],
+                ['3 Consultas', '90 $', 'Ahorras 45 $'],
+                ['5 Consultas', '150 $', 'Ahorras 75 $']];
+
+  var CASOS = [
+    ['1', 'Marrón oscuro relleno', '#6E4C36 · texto hueso #FAF3EA', '6,93:1'],
+    ['2', 'Marrón lavado',         '#C9B49A · texto tinta #2C3E50', '5,48:1'],
+    ['3', 'Tono de pestaña dormida','#E2D3BE · texto marrón',       '5,20:1'],
+    ['4', 'Blanco con filete',     'blanco + filete #C9B49A',       '7,70:1'],
+    ['5', 'El actual',             '#EDE2D2 · texto marrón',        '5,97:1']
+  ];
+
+  function ops(grupo, lista, marcada) {
+    return lista.map(function (n, i) {
+      return '<label class="op"><input type="radio" name="' + grupo + '"' +
+        (i === marcada ? ' checked' : '') + '><span class="dot"></span><span>' + n + '</span></label>';
+    }).join('');
+  }
+
+  function planes(id) {
+    return PLANES.map(function (p, i) {
+      return '<label class="plan"><input type="radio" name="plan-' + id + '"' +
+        (i === 1 ? ' checked' : '') + '>' +
+        '<span class="dot"></span>' +
+        '<span class="plan-nom">' + p[0] + '</span>' +
+        '<span class="plan-precio">' + p[1] + '</span>' +
+        (p[2] ? '<span class="plan-ahorro">' + p[2] + '</span>' : '<span></span>') +
+      '</label>';
+    }).join('');
+  }
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c) {
+    var k = c[0];
+    return '<section class="caso v' + k + '">' +
+      '<p class="etq"><b>' + k + ' · ' + c[1] + '</b><code>' + c[2] + '</code>' +
+        '<span class="razon">contraste ' + c[3] + '</span></p>' +
+      '<div class="tarjeta">' +
+        '<div class="rejilla">' +
+          '<fieldset style="border:0;padding:0;margin:0;min-width:0">' +
+            '<legend class="rot">Cómo quieres tu consulta<span class="eco">Presencial</span></legend>' +
+            '<div class="ops">' + ops('modo-' + k, MODOS, 1) + '</div></fieldset>' +
+          '<fieldset style="border:0;padding:0;margin:0;min-width:0">' +
+            '<legend class="rot">Qué quieres trabajar<span class="eco">Sanar en Pareja</span></legend>' +
+            '<div class="ops">' + ops('serv-' + k, SERV, 2) + '</div></fieldset>' +
+        '</div>' +
+        '<fieldset class="planes-zona" style="border:0;padding-left:0;padding-right:0;margin:0;min-width:0">' +
+          '<legend class="rot">Una consulta o un proceso<span class="eco">3 Consultas</span></legend>' +
+          '<div class="planes">' + planes(k) + '</div>' +
+        '</fieldset>' +
+      '</div>' +
+    '</section>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

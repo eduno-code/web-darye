@@ -1,0 +1,354 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auditoría 2 · Vista 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --papel:#F4EFE8; --sup:#FFFFFF;
+  --txt:#2E332E; --txt-suave:#5C635A;
+  --acc:#5A7060; --acc-dp:#3E4F44;
+  --marca:#A8825F; --marca-cl:#C6A783; --marca-dp:#8A6746; --marca-dk:#7A5A3C; --banda:#8C6246;
+  --linea:rgba(168,130,95,.3); --linea-int:rgba(168,130,95,.18);
+  --sel:#EFE6D8; --sup-eleg:#F2E7D9;
+  --r:16px; --r-pill:999px;
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--txt);
+  font:400 16px/1.65 var(--texto);-webkit-font-smoothing:antialiased}
+.hoja{max-width:1100px;margin:0 auto;padding:0 1.5rem 6rem}
+
+/* ---------- cabecera ---------- */
+/* Sin margen negativo: la cabecera es hermana de <main>, no hija, asi que ya va a
+   ancho completo. El -1.5rem la sacaba fuera del body y abria barra horizontal. */
+.cab{background:var(--banda);color:#fff;margin:0 0 3rem;padding:3rem 1.5rem 2.5rem}
+.cab-in{max-width:1100px;margin:0 auto}
+.cab h1{font-family:var(--display);font-weight:600;letter-spacing:-.025em;
+  font-size:clamp(2rem,5vw,2.9rem);line-height:1.08;margin:0 0 .6rem}
+.cab p{margin:0;max-width:52rem;color:rgba(255,255,255,.92);line-height:1.7}
+.cab p + p{margin-top:.8rem}
+.cab b{color:#fff}
+.dial{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.6rem 0 0}
+.dial span{border:1px solid rgba(255,255,255,.62);border-radius:var(--r-pill);
+  padding:.3rem .8rem;font-size:.78rem;font-family:var(--mono)}
+
+/* ---------- resumen ---------- */
+.marcador{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  margin:0 0 3.5rem}
+.tarj{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1.1rem 1.2rem;margin:0}
+.tarj b{display:block;font-family:var(--display);font-size:1.9rem;font-weight:600;
+  letter-spacing:-.02em;line-height:1;margin:0 0 .35rem}
+.tarj span{font-size:.82rem;color:var(--txt-suave);line-height:1.45;display:block}
+.bien b{color:var(--acc-dp)}
+.ojo b{color:var(--marca-dp)}
+
+h2.tramo{font-family:var(--display);font-size:1.35rem;font-weight:600;letter-spacing:-.02em;
+  margin:0 0 1.4rem;padding:0 0 .7rem;border-bottom:1px solid var(--linea)}
+
+/* ---------- hallazgos ---------- */
+.hallazgo{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1.6rem 1.5rem;margin:0 0 1.5rem}
+.h-cab{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;margin:0 0 1rem}
+.h-num{font-family:var(--mono);font-size:.8rem;color:var(--marca-dp);flex:none}
+.h-cab h3{font-family:var(--display);font-size:1.15rem;font-weight:600;letter-spacing:-.015em;
+  margin:0;flex:1 1 16rem;line-height:1.25}
+.sev{flex:none;font-size:.72rem;font-weight:500;padding:.24rem .7rem;border-radius:var(--r-pill)}
+.alto{background:#F6E3D8;color:#7A4A2E}
+.medio{background:var(--sel);color:var(--marca-dk)}
+.bajo{background:#E8EDE6;color:var(--acc-dp)}
+.tuya{background:var(--banda);color:#fff}
+.hallazgo p{margin:0 0 .9rem;max-width:60rem}
+.hallazgo p:last-child{margin-bottom:0}
+.medido{font:400 .82rem/1.75 var(--mono);background:#FBF8F3;border:1px solid var(--linea-int);
+  border-radius:10px;padding:.9rem 1rem;margin:0 0 1.1rem;color:var(--txt-suave)}
+.medido b{color:var(--txt);font-weight:600}
+.hago{border-left:3px solid var(--acc);padding:0 0 0 1rem;margin:1.2rem 0 0}
+.hago strong{display:block;font-family:var(--display);font-size:.95rem;font-weight:600;
+  margin:0 0 .4rem}
+.hago p{font-size:.92rem}
+
+/* ---------- tabla de la escala ---------- */
+.tabla-caja{overflow-x:auto;margin:0 0 1.1rem;-webkit-overflow-scrolling:touch}
+.tabla{width:100%;min-width:26rem;border-collapse:collapse;font-size:.84rem;margin:0}
+.tabla th{text-align:left;font-weight:600;font-size:.74rem;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--txt-suave);padding:.4rem .6rem;
+  border-bottom:1px solid var(--linea)}
+.tabla td{padding:.34rem .6rem;border-bottom:1px solid var(--linea-int);
+  font-family:var(--mono);font-size:.8rem}
+.tabla td:last-child{font-family:var(--texto);color:var(--txt-suave)}
+.pega{background:#FBEFE6}
+.pega td{color:#7A4A2E}
+
+/* ---------- demostraciones ---------- */
+.demo{background:#FBF8F3;border:1px solid var(--linea-int);border-radius:12px;
+  padding:1.4rem 1.3rem;margin:0 0 1.1rem}
+.demo-rot{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--txt-suave);margin:0 0 .9rem}
+.par{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.tit-demo{font-family:var(--display);font-size:1.8rem;font-weight:600;letter-spacing:-.02em;
+  line-height:1.1;margin:0}
+.precio-demo{font-family:var(--display);font-size:1.8rem;font-weight:700;letter-spacing:-.02em;
+  line-height:1.1;margin:0;font-variant-numeric:tabular-nums}
+.precio-menor{font-size:1.45rem;font-weight:600}
+.pie-demo{font-size:.78rem;color:var(--txt-suave);margin:.5rem 0 0;font-family:var(--mono)}
+
+.limpio{display:grid;gap:.55rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  list-style:none;padding:0;margin:0}
+.limpio li{background:var(--sup);border:1px solid var(--linea);border-radius:12px;
+  padding:.7rem .9rem;font-size:.86rem;display:flex;gap:.6rem;align-items:baseline}
+.limpio b{font-family:var(--mono);font-size:.8rem;color:var(--acc-dp);flex:none}
+
+.cierre{background:var(--sup);border:1px solid var(--marca-cl);border-radius:var(--r);
+  padding:1.6rem 1.5rem;margin:2.5rem 0 0}
+.cierre h3{font-family:var(--display);font-size:1.15rem;font-weight:600;margin:0 0 .8rem}
+.cierre ol{margin:0;padding-left:1.3rem}
+.cierre li{margin:0 0 .5rem;max-width:58rem}
+</style>
+
+<header class="cab">
+  <div class="cab-in">
+    <h1>Segunda auditoría de la vista 1</h1>
+    <p><b>Lectura del encargo:</b> paso 1 de un flujo de reserva para una consulta de
+      psicología, para alguien que está a punto de contar algo íntimo, con el lenguaje
+      cálido y editorial que hereda de la landing.</p>
+    <p>La skill que se usó avisa en su §13 de que <b>los flujos multipaso están fuera de su
+      alcance</b>. Se aplican solo las partes que sí valen aquí: tipografía, color, forma,
+      iconos, estados y los patrones que delatan una interfaz generada. Todo lo que sigue
+      está medido sobre el DOM, no mirado.</p>
+    <div class="dial">
+      <span>VARIANZA 4</span><span>MOVIMIENTO 3</span><span>DENSIDAD 4</span>
+    </div>
+  </div>
+</header>
+
+<main class="hoja">
+
+  <div class="marcador">
+    <figure class="tarj bien"><b>0</b><span>guiones largos en texto visible</span></figure>
+    <figure class="tarj bien"><b>0/40</b><span>textos que fallan el contraste</span></figure>
+    <figure class="tarj bien"><b>0</b><span>sombras en toda la vista</span></figure>
+    <figure class="tarj ojo"><b>14</b><span>tamaños de letra distintos</span></figure>
+    <figure class="tarj ojo"><b>2</b><span>colores compitiendo por ser el acento</span></figure>
+  </div>
+
+  <h2 class="tramo">Lo que encontré</h2>
+
+  <article class="hallazgo">
+    <header class="h-cab"><span class="h-num">01</span>
+      <h3>El precio pesa más que el título de la página</h3>
+      <span class="sev alto">Alto</span></header>
+
+    <p class="medido">
+      <b>h1</b> "Reserva tu consulta" · Fraunces <b>28,8 px</b> · peso <b>600</b><br>
+      <b>.plan-precio</b> "75 $" · Fraunces <b>28,8 px</b> · peso <b>700</b><br>
+      Mismo tamaño, y el precio con un peso más. Hay <b>tres</b> precios a la vez en pantalla.
+    </p>
+
+    <p>El titular y el dinero están empatados en tamaño, y en el desempate gana el dinero.
+      Multiplicado por tres tarjetas, lo primero que ve el ojo al llegar al bloque de consultas
+      no es qué está eligiendo sino cuánto cuesta.</p>
+
+    <p>En una tienda eso estaría bien. Aquí no: la persona no viene a comparar precios, viene a
+      decidir si empieza. El precio tiene que estar claro y ser fácil de encontrar, pero no ser
+      lo más ruidoso de la pantalla.</p>
+
+    <div class="demo">
+      <p class="demo-rot">Los dos, al tamaño real</p>
+      <div class="par">
+        <div>
+          <p class="tit-demo">Reserva tu consulta</p>
+          <p class="pie-demo">28,8 px · peso 600</p>
+        </div>
+        <div>
+          <p class="precio-demo">75 $</p>
+          <p class="pie-demo">28,8 px · peso 700</p>
+        </div>
+        <div>
+          <p class="precio-demo precio-menor">75 $</p>
+          <p class="pie-demo">23,2 px · peso 600 · propuesta</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hago">
+      <strong>Qué haría</strong>
+      <p>Bajar el precio a <b>1,45 rem y peso 600</b>. Sigue siendo con diferencia lo más grande
+        de la tarjeta (el nombre del plan mide 0,94) pero deja de competir con el titular de la
+        página. El peso 700 desaparece de la vista entera, que además arregla el hallazgo 04.</p>
+      <p>Las cifras tabulares se quedan: son las que mantienen los tres precios alineados en
+        columna.</p>
+    </div>
+  </article>
+
+  <article class="hallazgo">
+    <header class="h-cab"><span class="h-num">02</span>
+      <h3>La escala tipográfica no escala</h3>
+      <span class="sev alto">Alto</span></header>
+
+    <p class="medido">Catorce tamaños distintos en pantalla. <b>Once</b> de ellos caben entre
+      0,72 y 1,05 rem, o sea en un rango de <b>5,3 px</b>.</p>
+
+    <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th>rem</th><th>px</th><th>Quién lo usa</th></tr></thead>
+      <tbody>
+        <tr><td>0,720</td><td>11,52</td><td>Badge "Ahorras"</td></tr>
+        <tr class="pega"><td>0,740</td><td>11,84</td><td>Etiqueta "Sugerida"</td></tr>
+        <tr class="pega"><td>0,760</td><td>12,16</td><td>"1 de 4" del progreso</td></tr>
+        <tr class="pega"><td>0,780</td><td>12,48</td><td>Subtítulo de la cabecera</td></tr>
+        <tr class="pega"><td>0,800</td><td>12,80</td><td>Pastilla de WhatsApp</td></tr>
+        <tr class="pega"><td>0,820</td><td>13,12</td><td>Nota de los 60 días</td></tr>
+        <tr><td>0,850</td><td>13,60</td><td>Dirección, resumen</td></tr>
+        <tr><td>0,900</td><td>14,40</td><td>Botón "Cómo llegar"</td></tr>
+        <tr class="pega"><td>0,940</td><td>15,04</td><td>Nombre de motivo y de plan</td></tr>
+        <tr class="pega"><td>0,950</td><td>15,20</td><td>Botón "Ver horarios"</td></tr>
+        <tr class="pega"><td>0,980</td><td>15,68</td><td>Nombre del consultorio</td></tr>
+        <tr class="pega"><td>1,000</td><td>16,00</td><td>Nombre de Daryeli, entradilla</td></tr>
+        <tr><td>1,050</td><td>16,80</td><td>Títulos de bloque, cifra del disco</td></tr>
+        <tr><td>1,800</td><td>28,80</td><td>h1, precio</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Las filas marcadas están a menos de medio píxel de su vecina. <b>0,94 y 0,95 se
+      diferencian en 0,16 px</b>; 0,98 y 1,00 en 0,32. Nadie ve esa diferencia, así que no
+      comunican jerarquía: son valores elegidos uno a uno según hacía falta, no una escala.</p>
+
+    <p>Y hay una ironía dentro del propio archivo, que en un comentario presume de haber abierto
+      el rango tipográfico "de 0,72 a 1,8 rem". El rango sí se abrió. Los <b>pasos</b> siguen
+      siendo ruido.</p>
+
+    <div class="hago">
+      <strong>Qué haría</strong>
+      <p>Reducir a <b>seis pasos</b> y ponerlos en tokens, igual que se hizo con los radios en el
+        hallazgo 07 de la primera auditoría: <code>0,78 · 0,88 · 1 · 1,05 · 1,45 · 1,8</code>.
+        Cada elemento se lleva al peldaño más cercano. Los pares indistinguibles colapsan solos.</p>
+      <p>Es un cambio grande en superficie y pequeño en riesgo: solo toca declaraciones de
+        <code>font-size</code>, no la maqueta. Pero hay que medir después, porque tres de esos
+        textos van dentro de cajas ajustadas.</p>
+    </div>
+  </article>
+
+  <article class="hallazgo">
+    <header class="h-cab"><span class="h-num">03</span>
+      <h3>Dos colores se disputan el papel de acento</h3>
+      <span class="sev tuya">Lo decides tú</span></header>
+
+    <p class="medido">Salvia en <b>34</b> sitios · arcilla en <b>16</b>.<br>
+      La salvia <code>#5A7060</code> no aparece <b>ni una vez</b> en <code>style.css</code>.</p>
+
+    <p>Es el punto 10 de la primera auditoría, que quedó aparcado. Sigue abierto y ahora aprieta
+      más, porque la cabecera pasó a terracota y el terracota manda mucho más que antes en la
+      pantalla.</p>
+
+    <p>Hoy el reparto es: la salvia decide (botón, aro elegido, barra de progreso, foco) y la
+      arcilla dibuja (líneas, bordes, la banda de arriba, el badge). Es un reparto coherente, y
+      por eso funciona. El problema no es de esta pantalla, es que <b>la landing no tiene
+      salvia</b>: quien llega aquí desde la web cambia de paleta a mitad de camino.</p>
+
+    <div class="hago">
+      <strong>Qué haría</strong>
+      <p>Nada hasta que lo decidas, porque afecta a las dos páginas. Las dos salidas son:
+        devolver el papel de "decide" a la pizarra <code>#55697A</code>, que sí está en la
+        landing, o subir la salvia a la landing entera. Lo que no se puede es dejar una paleta
+        en cada página.</p>
+    </div>
+  </article>
+
+  <article class="hallazgo">
+    <header class="h-cab"><span class="h-num">04</span>
+      <h3>Cuatro pesos, y el archivo dice que hay tres</h3>
+      <span class="sev medio">Medio</span></header>
+
+    <p class="medido">Pesos en uso: <b>400, 500, 600 y 700</b>.<br>
+      Comentario en el archivo: <i>"el peso máximo baja de 700 a 600"</i>.<br>
+      Quien lo usa: <b>.plan-precio</b>, y nadie más.</p>
+
+    <p>El comentario describe una decisión que se tomó y que el código no cumple. Un solo
+      elemento sostiene un peso entero de la escala, y encima es el que ya sale señalado en el
+      hallazgo 01.</p>
+
+    <div class="hago">
+      <strong>Qué haría</strong>
+      <p>Se resuelve solo al aplicar el 01: si el precio baja a peso 600, el 700 desaparece y la
+        vista se queda con tres pesos, que es lo que su propia documentación dice.</p>
+    </div>
+  </article>
+
+  <article class="hallazgo">
+    <header class="h-cab"><span class="h-num">05</span>
+      <h3>El punto verde de "Sugerida"</h3>
+      <span class="sev bajo">Bajo</span></header>
+
+    <p class="medido"><b>.plan-eti::before</b> · círculo de <b>5 × 5 px</b> en salvia, delante
+      de la palabra "Sugerida".</p>
+
+    <p>La primera auditoría lo dejó pasar como caso límite permitido. La skill es más dura de lo
+      que yo apliqué entonces: prohíbe los puntos decorativos sin matices, y solo los admite
+      cuando comunican un estado real.</p>
+
+    <p>Aquí está en la frontera. Sí comunica algo, que esta es la opción recomendada, pero la palabra
+      "Sugerida" ya lo dice entera, así que el punto no añade información: añade color.</p>
+
+    <div class="hago">
+      <strong>Qué haría</strong>
+      <p>Quitarlo. Es un elemento menos y no se pierde nada. Pero es el hallazgo más discutible
+        de la lista y si te gusta cómo queda, se queda: no rompe nada.</p>
+    </div>
+  </article>
+
+  <article class="hallazgo">
+    <header class="h-cab"><span class="h-num">06</span>
+      <h3>Sin modo oscuro y sin estados de carga ni de error</h3>
+      <span class="sev medio">Medio</span></header>
+
+    <p class="medido">Reglas <code>prefers-color-scheme</code>: <b>0</b>.<br>
+      Elementos con <code>aria-busy</code>, <code>role="alert"</code> o estado vacío: <b>0</b>.</p>
+
+    <p>Los dos venían de la primera auditoría y los dos se aplazaron a propósito, no por
+      descuido. Van aquí para que no se pierdan de vista.</p>
+
+    <div class="hago">
+      <strong>Qué haría</strong>
+      <p>El modo oscuro, ahora que el diseño en claro ya está cerrado: definiendo los tokens en
+        un bloque aparte, no regla por regla. Es un formulario de salud que se abre de noche
+        desde la cama.</p>
+      <p>Los estados, al portar a <code>reservar/</code>. Aquí no hay nada que enviar, así que
+        hoy no se notan; en la página real hacen falta.</p>
+    </div>
+  </article>
+
+  <h2 class="tramo">Lo que ya está limpio</h2>
+  <ul class="limpio">
+    <li><b>0</b> guiones largos en todo el texto visible, <code>aria-label</code> incluidos</li>
+    <li><b>0/40</b> textos fallan el contraste; el peor es 4,95:1</li>
+    <li><b>0</b> sombras: la pantalla se estructura con líneas y color</li>
+    <li><b>2</b> familias tipográficas, las dos de la marca</li>
+    <li><b>5</b> iconos, todos de Phosphor, ninguno dibujado a mano</li>
+    <li><b>3</b> radios más el círculo, y son los de <code>style.css</code></li>
+    <li><b>12</b> objetivos táctiles, todos de 44 px o más en su lado corto</li>
+    <li><b>3</b> familias de disposición distintas en tres bloques seguidos</li>
+    <li>Fotos reales en los motivos, las mismas que usa la landing</li>
+    <li>Ninguna tarjeta repetida idéntica, ni en móvil ni en escritorio</li>
+  </ul>
+
+  <div class="cierre">
+    <h3>Por dónde seguiría</h3>
+    <ol>
+      <li><b>01 y 04 juntos</b>, que son el mismo cambio: bajar el precio a 1,45 rem y peso 600.
+        Diez minutos y es lo que más cambia la sensación de la pantalla.</li>
+      <li><b>02</b>, la escala tipográfica a seis pasos con tokens. Es el trabajo más largo de
+        los tres y el que deja el archivo listo para la vista 2, porque a partir de ahí los
+        tamaños ya no se eligen, se toman de la escala.</li>
+      <li><b>05</b>, el punto, si te convence el argumento.</li>
+      <li><b>03</b> cuando decidas el color, porque toca la landing también.</li>
+      <li><b>06</b> al final: el modo oscuro antes de portar, los estados al portar.</li>
+    </ol>
+  </div>
+
+</main>

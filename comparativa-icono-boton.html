@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El icono del botón · seis candidatos</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     SEIS ICONOS PARA "VER HORARIO", cada uno dentro del boton de verdad, a su
+     tamaño real y con el pie completo para verlo en contexto.
+
+     ESTAN DIVIDIDOS EN DOS BLOQUES Y ESO ES LO IMPORTANTE:
+
+       A TRAZO (1 a 3) — rutas dibujadas a 24x24 con grosor 1,8. Es la forma que
+       tienen los iconos de ESTA vista: las tres pestañas y la chincheta de la
+       direccion van a trazo.
+
+       RELLENOS (4 a 6) — Phosphor, 256x256, macizos. Es la forma que tiene el
+       sprite de la pagina real, `reservar/index.html`: ahi los cinco iconos son
+       Phosphor relleno.
+
+     O sea que el proyecto tiene HOY dos familias conviviendo, y esa es la
+     decision de fondo que hay detras de elegir uno de estos seis. La regla de
+     oficio es una familia por proyecto.
+
+     Todas las librerias grandes —Phosphor, Tabler, Heroicons, Lucide, Material
+     Symbols— son MIT o Apache 2.0: libres para uso comercial y sin atribucion.
+     La licencia no decide nada aqui.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-pill:999px;
+  --paso:160ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--suelo);color:var(--txt);
+     font-family:var(--texto);font-size:16px;line-height:1.55;
+     -webkit-font-smoothing:antialiased}
+
+header{padding:1rem 2rem;border-bottom:1px solid var(--linea)}
+h1{margin:0;font-family:var(--display);font-size:1.05rem;font-weight:600}
+h1 small{display:block;font-family:var(--texto);font-weight:400;
+  font-size:.78rem;color:var(--txt-suave)}
+
+.grupo-tit{margin:1.75rem 2rem .25rem;font-family:var(--display);
+  font-size:1rem;font-weight:600;color:var(--marca)}
+.grupo-sub{margin:0 2rem 1rem;font-size:.82rem;color:var(--txt-suave);max-width:46rem}
+
+.fila{display:flex;flex-wrap:wrap;gap:1rem;padding:0 2rem}
+
+.caso{background:var(--blanco);border-radius:18px;padding:1.2rem 1.5rem 1.4rem;
+  width:26rem;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2)}
+.caso h2{margin:0 0 .1rem;font-size:.9rem;font-weight:600}
+.caso .dice{margin:0 0 1rem;font-size:.78rem;color:var(--txt-suave)}
+
+/* el pie, igual que en la pagina */
+.pie{display:flex;align-items:center;gap:1rem 1.5rem;flex-wrap:wrap;
+  padding-top:1.2rem;border-top:1px solid var(--linea)}
+.total{display:flex;align-items:baseline;gap:.7rem;margin:0}
+.total span{font-size:.79rem;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--txt-suave)}
+.total b{font-family:var(--display);font-size:1.9rem;font-weight:600;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+.seguir{display:flex;align-items:center;justify-content:center;gap:.55rem;
+  min-height:48px;padding:0 1.8rem;margin-left:auto;border:0;
+  border-radius:var(--r-pill);background:var(--acc);color:#fff;
+  font:inherit;font-size:.97rem;font-weight:600;cursor:pointer;
+  box-shadow:0 1px 2px rgba(74,94,80,.18),0 6px 16px -8px rgba(74,94,80,.45);
+  transition:background var(--paso),box-shadow var(--paso),transform 90ms ease-out}
+.seguir:hover{background:var(--acc-dp)}
+.seguir:active{transform:scale(.97);box-shadow:0 1px 2px rgba(74,94,80,.22)}
+.seguir svg{width:18px;height:18px;flex:none}
+
+.cierre{padding:1.75rem 2rem 3rem;max-width:52rem;font-size:.88rem;
+  line-height:1.65;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+.cierre a{color:var(--marca);text-underline-offset:3px}
+.cierre ul{margin:.4rem 0 0;padding-left:1.1rem}
+.cierre li{margin-bottom:.3rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>El icono del botón · seis candidatos<small>Cada uno en el botón de verdad, a 18&nbsp;px, con el pie completo para verlo en contexto</small></h1>
+</header>
+
+<p class="grupo-tit">A trazo · la familia de esta vista</p>
+<p class="grupo-sub">Rutas dibujadas a 24×24 con grosor 1,8. Es la forma que tienen los iconos de esta pantalla: las tres pestañas y la chincheta de la dirección van a trazo.</p>
+<div class="fila" id="trazo"></div>
+
+<p class="grupo-tit">Rellenos · la familia de la página real</p>
+<p class="grupo-sub">Phosphor, 256×256, macizos. Es la forma que tiene el sprite de <code>reservar/index.html</code>: ahí los cinco iconos son Phosphor relleno.</p>
+<div class="fila" id="relleno"></div>
+
+<div class="cierre">
+  <p><b>La decisión de fondo no es qué dibujo, es qué familia.</b> El proyecto tiene hoy dos conviviendo: esta vista va a trazo y la página real va rellena. La regla de oficio es una familia por proyecto, y elegir uno de estos seis es elegir a cuál nos pasamos.</p>
+  <p><b>Mi apuesta: el 2, el calendario simple a trazo.</b> Tres razones. Un calendario dice «elige un día», que es literalmente el paso siguiente; un reloj dice «hora» y en el paso 2 se eligen las dos cosas, pero primero el día. Sin los puntos ni la marca de dentro, sobrevive a 18&nbsp;px sin convertirse en una mancha. Y a trazo rima con los tres iconos de las pestañas, que están a dos centímetros.</p>
+  <p><b>Y una pega del reloj que no se ve hasta que lo piensas:</b> un reloj en un botón también significa «espera» o «pendiente» en media interfaz del mundo. En una pantalla donde el paso siguiente es elegir hora, eso se puede leer mal.</p>
+  <p>Las licencias no deciden nada aquí: todas las librerías grandes son MIT o Apache 2.0, libres para uso comercial y sin atribución. Si quieres mirar el catálogo entero antes de decidir:</p>
+  <ul>
+    <li><a href="https://phosphoricons.com" target="_blank" rel="noopener noreferrer">phosphoricons.com</a> — la que ya usa el proyecto, MIT, seis pesos por icono</li>
+    <li><a href="https://tabler.io/icons" target="_blank" rel="noopener noreferrer">tabler.io/icons</a> — más de 5.000 iconos a trazo de 2&nbsp;px en rejilla 24×24, MIT</li>
+    <li><a href="https://heroicons.com" target="_blank" rel="noopener noreferrer">heroicons.com</a> — de los autores de Tailwind, MIT</li>
+  </ul>
+</div>
+
+<script>
+(function () {
+  /* ---- a trazo, 24x24, grosor 1,8 ---- */
+  var TRAZO = [
+    ['1 · Reloj', 'Dice «hora». Simple y reconocible a cualquier tamaño.',
+     '<circle cx="12" cy="12" r="9"/><path d="M12 7.4V12l3.6 2.2"/>'],
+
+    ['2 · Calendario simple', 'Dice «elige un día». Sin puntos ni marcas dentro: aguanta 18 px.',
+     '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10.2h18M8 3v4M16 3v4"/>'],
+
+    ['3 · Calendario con reloj', 'Dice «día y hora». Las dos cosas, pero muy denso a este tamaño.',
+     '<path d="M21 11.5V7.5a2.5 2.5 0 0 0-2.5-2.5h-13A2.5 2.5 0 0 0 3 7.5v11A2.5 2.5 0 0 0 5.5 21H11M3 10.2h18M8 3v4M16 3v4"/><circle cx="17.5" cy="17.5" r="4"/><path d="M17.5 15.8v1.8l1.4.9"/>']
+  ];
+
+  /* ---- Phosphor relleno, 256x256 ---- */
+  var RELLENO = [
+    ['4 · Reloj Phosphor', 'El mismo gesto, macizo. Rima con el sprite de la página real.',
+     '<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/>'],
+
+    ['5 · Calendario Phosphor', 'El que ya está en el sprite, usado en la nota de los 60 días.',
+     '<path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/>'],
+
+    ['6 · Calendario con puntos', 'El mismo con tres días marcados. Más rico y más ruidoso.',
+     '<path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/><circle cx="84" cy="148" r="12"/><circle cx="128" cy="148" r="12"/><circle cx="172" cy="148" r="12"/>']
+  ];
+
+  function caso(c, relleno) {
+    var svg = relleno
+      ? '<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">' + c[2] + '</svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + c[2] + '</svg>';
+    return '<section class="caso">' +
+      '<h2>' + c[0] + '</h2>' +
+      '<p class="dice">' + c[1] + '</p>' +
+      '<div class="pie">' +
+        '<p class="total"><span>Total</span><b>90 $</b></p>' +
+        '<button type="button" class="seguir">' + svg + 'Ver horario</button>' +
+      '</div>' +
+    '</section>';
+  }
+
+  document.getElementById('trazo').innerHTML =
+    TRAZO.map(function (c) { return caso(c, false); }).join('');
+  document.getElementById('relleno').innerHTML =
+    RELLENO.map(function (c) { return caso(c, true); }).join('');
+})();
+</script>
+</body>
+</html>

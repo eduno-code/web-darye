@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letra del sistema de reserva · comparativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=Red+Hat+Text:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2;--blanco:#fff;--txt:#2C3E50;--suave:#55697A;
+  --marca:#6E4C36;--linea:rgba(166,123,91,.28);--acc:#5A7060;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--suelo);color:var(--txt);font:16px/1.5 system-ui,sans-serif}
+header{padding:1.25rem 1.5rem .75rem;display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center}
+h1{margin:0;font:600 1.3rem/1.2 Fraunces,Georgia,serif}
+nav{display:flex;flex-wrap:wrap;gap:.5rem}
+nav button{
+  border:1px solid var(--linea);background:var(--blanco);color:var(--txt);
+  border-radius:999px;padding:.55rem 1.1rem;font-size:.95rem;cursor:pointer;min-height:44px;
+}
+nav button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+nav button small{opacity:.75;margin-left:.35rem}
+main{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:1.5rem;padding:0 1.5rem 1.5rem;align-items:start}
+.marco{background:var(--blanco);border:1px solid var(--linea);border-radius:14px;overflow:hidden}
+.marco p{margin:0;padding:.5rem .9rem;font-size:.8rem;color:var(--suave);border-bottom:1px solid var(--linea)}
+.esc{position:relative;width:100%;overflow:hidden}
+.esc iframe{position:absolute;top:0;left:0;width:1440px;height:900px;border:0;transform-origin:0 0}
+.mov iframe{display:block;width:390px;height:844px;border:0}
+section.cifras{padding:0 1.5rem 2rem}
+section.cifras h2{font:600 1.05rem Fraunces,Georgia,serif;margin:0 0 .75rem}
+.tabla{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.tabla article{background:var(--blanco);border:1px solid var(--linea);border-radius:14px;padding:1rem}
+.tabla h3{margin:0 0 .6rem;font-size:.95rem}
+.horas{font-variant-numeric:tabular-nums;font-size:15px;line-height:1.7}
+.horas span{display:inline-block}
+.medida{font-size:.78rem;color:var(--suave);margin-top:.5rem}
+.muestra{margin-top:.75rem;font-size:13px;color:var(--suave)}
+@media (max-width:1000px){main{grid-template-columns:1fr}.mov{justify-self:center}.tabla{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Letra del sistema de reserva</h1>
+  <nav aria-label="Letra">
+    <button type="button" data-f="Inter" aria-pressed="true">Hoy<small>Inter</small></button>
+    <button type="button" data-f="Source Sans 3" aria-pressed="false">A<small>Source Sans 3</small></button>
+    <button type="button" data-f="Commissioner" aria-pressed="false">B<small>Commissioner</small></button>
+    <button type="button" data-f="Red Hat Text" aria-pressed="false">C<small>Red Hat Text</small></button>
+  </nav>
+</header>
+
+<main>
+  <div class="marco">
+    <p>Escritorio · 1440 px · paso 2 real. Los títulos siguen en Fraunces.</p>
+    <div class="esc" id="esc"><iframe id="fEsc" src="reservar/?paso=2" title="Paso 2 en escritorio"></iframe></div>
+  </div>
+  <div class="marco mov">
+    <p>Móvil · 390 px</p>
+    <iframe id="fMov" src="reservar/?paso=2" title="Paso 2 en móvil"></iframe>
+  </div>
+</main>
+
+<section class="cifras">
+  <h2>Horas y precios en columna</h2>
+  <div class="tabla" id="tabla"></div>
+</section>
+
+<script>
+(function () {
+  var URL_LETRAS = 'https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Red+Hat+Text:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap';
+  var actual = 'Inter';
+  var marcos = [document.getElementById('fEsc'), document.getElementById('fMov')];
+
+  function aplicar(f) {
+    var doc;
+    try { doc = f.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.head) return;
+    if (!doc.getElementById('cmpLetras')) {
+      var l = doc.createElement('link');
+      l.id = 'cmpLetras'; l.rel = 'stylesheet'; l.href = URL_LETRAS;
+      doc.head.appendChild(l);
+    }
+    var s = doc.getElementById('cmpEstilo');
+    if (!s) { s = doc.createElement('style'); s.id = 'cmpEstilo'; doc.head.appendChild(s); }
+    var pila = '"' + actual + '",system-ui,sans-serif';
+    s.textContent = actual === 'Inter' ? '' :
+      ':root,:root *{--texto:' + pila + ' !important;--font-body:' + pila + ' !important}';
+  }
+
+  marcos.forEach(function (f) { f.addEventListener('load', function () { aplicar(f); }); });
+
+  function escalar() {
+    var caja = document.getElementById('esc');
+    var k = caja.clientWidth / 1440;
+    marcos[0].style.transform = 'scale(' + k + ')';
+    caja.style.height = (900 * k) + 'px';
+  }
+  window.addEventListener('resize', escalar);
+  escalar();
+
+  document.querySelectorAll('nav button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      actual = b.dataset.f;
+      document.querySelectorAll('nav button').forEach(function (x) {
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      marcos.forEach(aplicar);
+    });
+  });
+
+  var horas = ['10:00', '11:00', '14:00', '18:00', '21:00'];
+  var tabla = document.getElementById('tabla');
+  ['Inter', 'Source Sans 3', 'Commissioner', 'Red Hat Text'].forEach(function (f) {
+    var a = document.createElement('article');
+    a.style.fontFamily = '"' + f + '",sans-serif';
+    a.innerHTML = '<h3>' + f + '</h3><div class="horas">' +
+      horas.map(function (h) { return '<span>' + h + '</span>'; }).join('<br>') +
+      '<br><span>30 $</span><br><span>145 $</span></div>' +
+      '<p class="medida"></p>' +
+      '<p class="muestra">Busca un rincón donde nadie te interrumpa durante la sesión.</p>';
+    tabla.appendChild(a);
+  });
+
+  document.fonts.ready.then(function () {
+    tabla.querySelectorAll('article').forEach(function (a) {
+      var anchos = [].map.call(a.querySelectorAll('.horas span'), function (s) {
+        return Math.round(s.getBoundingClientRect().width * 10) / 10;
+      }).slice(0, horas.length);
+      var iguales = anchos.every(function (x) { return x === anchos[0]; });
+      a.querySelector('.medida').textContent =
+        (iguales ? 'Cifras alineadas: ' : 'Cifras NO alineadas: ') + anchos.join(' · ') + ' px';
+    });
+  });
+})();
+</script>
+</body>
+</html>

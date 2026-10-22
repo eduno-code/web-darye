@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; background: #F2EEE7; color: #2E332E;
+           font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    a { color: #3E4F44; } a:hover { color: #2A362E; }
+    .serif { font-family: Newsreader, Georgia, "Times New Roman", serif; }
+  </style>
+</helmet>
+
+<article style="padding: 34px; display: flex; flex-direction: column; gap: 22px; height: 100%; box-sizing: border-box">
+
+  <header style="display: flex; flex-direction: column; gap: 7px">
+    <p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: #5A7060">Alternativa · el polo frío</p>
+    <h2 class="serif" style="margin: 0; font-size: 29px; font-weight: 400; line-height: 1.12; letter-spacing: -.015em">Salvia y arcilla</h2>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #5C635A">El frío deja de ser arquitectónico y pasa a ser herbal. Es el registro que más se asocia con la terapia.</p>
+  </header>
+
+  <div style="display: flex; gap: 10px">
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #3E4F44"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #5A7060"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #A8825F"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #DCC9AE"></span>
+    <span style="flex: 1; height: 42px; border-radius: 8px; background: #F2EEE7; border: 1px solid rgba(90,112,96,.22)"></span>
+  </div>
+
+  <section style="display: flex; flex-direction: column; gap: 12px">
+    <article style="background: #FFFFFF; border: 1.5px solid #5A7060; border-radius: 13px; overflow: hidden">
+      <header style="display: flex; align-items: center; gap: 10px; padding: 15px 0 11px; margin: 0 16px; border-bottom: 1px solid rgba(168,130,95,.24)">
+        <span style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #5A7060; color: #5A7060; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">3</span>
+        <p style="margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -.015em">sesiones</p>
+        <p style="margin: 0 0 0 auto; font-size: 12px; color: #5C635A; display: flex; align-items: center; gap: 6px"><span style="width: 5px; height: 5px; border-radius: 50%; background: #A8825F"></span>Sugerida</p>
+      </header>
+      <p style="margin: 0; padding: 13px 16px; font-size: 12.5px; color: #5C635A">A tu ritmo, 90 días</p>
+      <footer style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 16px 17px; border-top: 1px solid rgba(168,130,95,.24)">
+        <p style="margin: 0; font-size: 27px; font-weight: 600; letter-spacing: -.03em; color: #7A5A3C; font-variant-numeric: tabular-nums">75 $</p>
+        <span style="display: flex; align-items: center; gap: 9px">
+          <span style="padding: 5px 8px; border-radius: 7px; background: #EFE6D8; color: #7A5A3C; font-size: 11.5px; font-weight: 500">Ahorras 15 $</span>
+          <span style="width: 21px; height: 21px; border-radius: 50%; background: #3E4F44; display: flex; align-items: center; justify-content: center">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5.5 5.5L20 7"/></svg>
+          </span>
+        </span>
+      </footer>
+    </article>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+      <p style="margin: 0; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 500; background: #FFFFFF; border: 1px solid rgba(168,130,95,.28); border-radius: 9px; font-variant-numeric: tabular-nums">09:00</p>
+      <p style="margin: 0; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 500; background: #F0F2EE; border: 2px solid #5A7060; border-radius: 9px; font-variant-numeric: tabular-nums">10:00</p>
+      <p style="margin: 0; padding: 11px 6px; text-align: center; font-size: 13px; font-weight: 500; background: #E6E1D7; color: #6A665E; border: 1px solid transparent; border-radius: 9px; font-variant-numeric: tabular-nums">11:00</p>
+    </div>
+
+    <button type="button" style="font: inherit; font-size: 14px; font-weight: 500; padding: 13px 22px; border-radius: 999px; border: 1px solid transparent; background: #5A7060; color: #FFFFFF; cursor: pointer; width: 100%">Ver horarios</button>
+  </section>
+
+  <footer style="margin-top: auto; display: flex; flex-direction: column; gap: 9px; padding: 16px 18px; background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(90,112,96,.20)">
+    <p style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #5A7060">A favor</p>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #5C635A">Es el registro más calmado de los cuatro, y el verde sobre crema es casi un tópico del sector porque funciona.</p>
+    <p style="margin: 8px 0 0; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #8A5A46">El precio a pagar</p>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #5C635A">Si el verde decide, ya no puede significar «pago verificado». Habría que renunciar a ese estado y resolverlo solo con el check.</p>
+  </footer>
+
+</article>
+</x-dc>
+</body>
+</html>

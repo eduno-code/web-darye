@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqueta del panel</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     MAQUETA PARA DECIDIR, NO CODIGO DE PRODUCCION.
+
+     UN SOLO ARCHIVO para las dos direcciones, con ?dir=a o ?dir=b. Si fueran
+     dos archivos acabarian separandose en cosas que no son el menu —un
+     espaciado aqui, un tamano alla— y entonces la comparacion mentiria: uno
+     creeria estar eligiendo el menu y estaria eligiendo otra cosa.
+
+     Lo unico que cambia entre A y B esta al final de la hoja, bajo su marca.
+     Y ESO SOLO AFECTA A ESCRITORIO: en movil no hay menu lateral que decidir,
+     asi que las dos direcciones se ven igual, que es la respuesta correcta.
+     ============================================================ -->
+<script>
+(function(){var d=new URLSearchParams(location.search).get('dir');
+document.documentElement.dataset.dir=(d==='b')?'b':'a';})();
+</script>
+
+<style>
+:root{
+  color-scheme:only light;
+
+  --crema:#FDFAF7;  --crema-2:#FAF4EE;  --blanco:#FFFFFF;
+  --txt:#2C3E50;    --txt-suave:#55697A;
+  --marca:#A67B5B;  --marca-dp:#8C6246; --marca-dk:#6E4C36;
+  --linea:rgba(166,123,91,.20);
+
+  /* El marron y la celosia salen tal cual de entrar/entrar.css */
+  --panel:#5E442C;
+  --panel-txt:#FAF3EA;
+  --panel-txt-sv:#E2D5C4;
+  --panel-carta:rgba(255,246,232,.10);
+  --panel-borde:rgba(255,246,232,.20);
+  --celosia:rgba(255,246,232,.065);
+  --celosia-sv:rgba(255,246,232,.048);
+
+  --ok:#5A7060;     --ok-sv:#E8EDE6;
+  --pend:#7A5B12;   --pend-sv:#FAF0DC;
+  --inerte:#E6E1D7; --inerte-txt:#625E56;
+
+  /* UNA escala de radios, que es lo que fallaba en cuenta.css */
+  --r-chico:10px; --r-medio:16px; --r-pastilla:999px;
+
+  --display:Fraunces,Georgia,serif;
+  --cuerpo:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--crema); color:var(--txt);
+  font-family:var(--cuerpo); font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2{margin:0}
+p{margin:0}
+ul{list-style:none;margin:0;padding:0}
+
+/* ============================================================
+   ESCRITORIO · rejilla de menu + contenido
+   ============================================================ */
+.panel{display:grid; grid-template-columns:15.5rem 1fr; min-height:100vh}
+
+.menu{display:flex; flex-direction:column; gap:1.75rem; padding:1.5rem 1.15rem; position:relative}
+
+.marca{
+  display:flex; align-items:center; gap:.5rem;
+  font-family:var(--display); font-weight:600; font-size:1rem; text-decoration:none;
+}
+.marca svg{width:21px;height:21px;flex:none}
+
+.reservar{
+  display:flex; align-items:center; justify-content:center; gap:.45rem;
+  min-height:48px; padding:0 1rem; border-radius:var(--r-pastilla);
+  font:inherit; font-size:.94rem; font-weight:600; text-decoration:none;
+}
+.reservar svg{width:17px;height:17px}
+
+.vistas{display:flex;flex-direction:column;gap:.15rem}
+.vista{
+  display:flex; align-items:center; gap:.6rem;
+  min-height:44px; padding:0 .75rem; border-radius:var(--r-chico);
+  font-size:.94rem; text-decoration:none;
+}
+.vista svg{width:18px;height:18px;flex:none;opacity:.75}
+
+.salir{
+  margin-top:auto; display:flex; align-items:center; gap:.5rem;
+  min-height:44px; padding:0 .75rem; border:0; background:none; cursor:pointer;
+  font:inherit; font-size:.88rem; border-radius:var(--r-chico);
+}
+.salir svg{width:16px;height:16px}
+
+.lienzo{padding:2.25rem clamp(1.25rem,3vw,2.5rem) 3rem; max-width:46rem}
+.saludo{font-family:var(--display); font-weight:600; font-size:1.85rem; line-height:1.2; margin-bottom:1.75rem}
+.rotulo{font-size:.72rem; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--txt-suave); margin-bottom:.85rem}
+.bloque+.bloque{margin-top:2.5rem}
+.resto>.bloque:first-child{margin-top:2.5rem}
+
+.cita{background:var(--blanco); border:1px solid var(--linea); border-radius:var(--r-medio); padding:1.5rem 1.6rem}
+.cita-dia{font-family:var(--display); font-weight:600; font-size:1.45rem; line-height:1.25}
+.cita-dia b{font-weight:600}
+.cita-otra{font-size:.9rem;color:var(--txt-suave);margin-top:.3rem}
+.cita-que{font-size:.9rem;color:var(--txt-suave);margin-top:.5rem}
+.cita-acc{display:flex;align-items:center;gap:1.1rem;margin-top:1.35rem;flex-wrap:wrap}
+
+.bt{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:46px;padding:0 1.35rem;border-radius:var(--r-pastilla);
+  font:inherit;font-size:.9rem;font-weight:600;text-decoration:none;
+  background:var(--marca-dp);color:var(--blanco);border:1.5px solid var(--marca-dp);
+}
+.enl{display:inline-flex;align-items:center;min-height:44px;font-size:.9rem;color:var(--marca-dp);text-decoration:underline;text-underline-offset:3px}
+
+.marcaEstado{
+  display:inline-block;margin-top:.7rem;padding:.24rem .62rem;
+  border-radius:var(--r-pastilla);font-size:.78rem;font-weight:600;white-space:nowrap;
+  background:var(--ok-sv);color:var(--ok);
+}
+.marcaEstado.pend{background:var(--pend-sv);color:var(--pend)}
+.marcaEstado.gris{background:var(--inerte);color:var(--inerte-txt)}
+
+.fila{display:flex;align-items:center;gap:.9rem;min-height:56px;padding:.7rem .25rem;font-size:.9rem}
+.fila+.fila{border-top:1px solid var(--linea)}
+.fila-dia{font-weight:600;font-variant-numeric:tabular-nums}
+.fila-que{flex:1;min-width:0;color:var(--txt-suave);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.barra{display:none}
+
+/* ============================================================
+   MOVIL · OTRO PANEL, NO EL MISMO ENCOGIDO
+
+   Cabecera de color con la hoja blanca curva montada encima. Es el mismo
+   recurso que Edgar ya eligio para el movil de entrar/ —incluida la curva
+   exacta, 64% 36% 0 0 / 32px 22px— asi que entrar en la cuenta y estar en la
+   cuenta usan la misma forma. No hay que importar nada de fuera.
+
+   Arriba, sobre el marron, va LA UNICA pregunta que trae a alguien aqui desde
+   el telefono: cuando es su proxima consulta. Debajo, en la hoja, todo lo
+   demas, que se mira una vez cada muchas semanas.
+   ============================================================ */
+@media (max-width:44rem){
+  .panel{grid-template-columns:1fr; background:var(--panel); position:relative; overflow:hidden}
+
+  /* La celosia del panel de entrar/, sobre la zona de color */
+  .panel::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:60vh;z-index:0;pointer-events:none;
+    background-image:
+      repeating-linear-gradient(38deg,  var(--celosia) 0 16px, rgba(255,246,232,0) 30px 74px),
+      repeating-linear-gradient(-49deg, var(--celosia-sv) 0 12px, rgba(255,246,232,0) 26px 66px);
+    -webkit-mask-image:radial-gradient(72% 100% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
+    mask-image:radial-gradient(72% 100% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 82%);
+  }
+  .menu,.lienzo{position:relative;z-index:1}
+
+  /* El menu lateral no se encoge: se va. Sobreviven la marca y salir, en una
+     linea, sobre el marron. */
+  .menu{
+    flex-direction:row; align-items:center; justify-content:space-between;
+    gap:1rem; padding:.9rem 1.1rem; background:none; color:var(--panel-txt);
+  }
+  .menu::before{display:none}
+  .marca{color:var(--panel-txt)}
+  .reservar,.vistas{display:none}
+  .salir{margin:0;color:var(--panel-txt-sv)}
+  .salir span{display:none}
+
+  .lienzo{padding:0; max-width:none}
+
+  /* ---- lo que va SOBRE el color ---- */
+  .destacado{padding:.5rem 1.1rem 2rem; color:var(--panel-txt)}
+  .saludo{font-size:1.35rem; margin-bottom:1.1rem; color:var(--panel-txt)}
+  .destacado .rotulo{color:var(--panel-txt-sv)}
+
+  /* La cita como carta translucida sobre el marron, no como tarjeta blanca:
+     una tarjeta blanca aqui seria un agujero en la cabecera. */
+  .destacado .cita{background:var(--panel-carta); border-color:var(--panel-borde); padding:1.35rem 1.25rem}
+  /* Tres lineas y no una: en 360px una sola obliga a encoger la tipografia
+     hasta que deja de ser lo primero que se lee. */
+  .cita-dia{font-size:1.75rem; color:var(--panel-txt)}
+  .cita-dia b{display:block}
+  .destacado .cita-otra,.destacado .cita-que{color:var(--panel-txt-sv)}
+  .destacado .bt{background:#C6A783;color:#241C17;border-color:#C6A783;flex:1 1 auto}
+  .destacado .enl{color:var(--panel-txt);flex:0 0 auto}
+
+  /* ---- LA HOJA ---- */
+  .resto{
+    background:var(--crema);
+    border-radius:64% 36% 0 0 / 32px 22px 0 0;
+    box-shadow:0 -14px 34px -18px rgba(46,42,36,.40);
+    /* El relleno de abajo reserva el hueco de la barra fija. Sin esto la barra
+       tapa la ultima fila del historial, que es el fallo clasico. */
+    padding:1.9rem 1.1rem calc(5.5rem + env(safe-area-inset-bottom));
+    min-height:52vh;
+  }
+  .resto>.bloque:first-child{margin-top:0}
+
+  .fila{flex-wrap:wrap;row-gap:.25rem}
+  .fila-que{flex-basis:100%;order:3}
+
+  /* ---- LA BARRA ---- */
+  .barra{
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:.5rem;
+    position:fixed; left:0; right:0; bottom:0; z-index:10;
+    padding:.4rem 1.25rem calc(.4rem + env(safe-area-inset-bottom));
+    background:var(--blanco); border-top:1px solid var(--linea);
+  }
+  .barra a{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.12rem;
+    min-height:52px;font-size:.7rem;text-decoration:none;color:var(--txt-suave);
+  }
+  .barra a svg{width:21px;height:21px}
+  .barra a[aria-current]{color:var(--marca-dk);font-weight:600}
+  /* Reservar va en el centro y marcada como accion, no como una tercera
+     pestana: es la unica de las tres que sale del panel. */
+  .barra .accion{
+    background:var(--marca-dp);color:var(--blanco);
+    width:56px;height:56px;border-radius:var(--r-pastilla);gap:0;
+    margin-top:-1.1rem;box-shadow:0 6px 16px -6px rgba(110,76,54,.55);
+  }
+  .barra .accion span{display:none}
+  .barra .accion svg{width:25px;height:25px}
+}
+
+
+/* ============================================================
+   A · MENU SOLIDO  (solo escritorio)
+   Barra marron de ancho completo con la celosia, el mismo material del
+   panel de entrar/. Presente, con caracter, ancla la pantalla.
+   ============================================================ */
+@media (min-width:44.01rem){
+  [data-dir="a"] .menu{background:var(--panel);color:var(--panel-txt);overflow:hidden}
+  [data-dir="a"] .menu::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      repeating-linear-gradient(38deg,  var(--celosia) 0 16px, rgba(255,246,232,0) 30px 74px),
+      repeating-linear-gradient(-49deg, var(--celosia-sv) 0 12px, rgba(255,246,232,0) 26px 66px);
+    -webkit-mask-image:radial-gradient(90% 45% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 80%);
+    mask-image:radial-gradient(90% 45% at 100% 0%, #000 0%, rgba(0,0,0,.55) 42%, transparent 80%);
+  }
+  [data-dir="a"] .menu>*{position:relative;z-index:1}
+  [data-dir="a"] .marca{color:var(--panel-txt)}
+  [data-dir="a"] .reservar{background:#C6A783;color:#241C17}
+  [data-dir="a"] .vista{color:var(--panel-txt-sv)}
+  [data-dir="a"] .vista[aria-current]{background:rgba(255,246,232,.13);color:var(--panel-txt);font-weight:600}
+  [data-dir="a"] .salir{color:var(--panel-txt-sv)}
+
+  /* ============================================================
+     B · MENU DISCRETO  (solo escritorio)
+     Rail estrecho sobre crema, separado por una linea fina. El marron
+     aparece solo en lo que se puede pulsar. Todo el peso al contenido.
+     ============================================================ */
+  [data-dir="b"] .panel{grid-template-columns:14.5rem 1fr}
+  [data-dir="b"] .menu{background:var(--crema-2);border-right:1px solid var(--linea)}
+  [data-dir="b"] .marca{color:var(--txt)}
+  [data-dir="b"] .marca svg{color:var(--marca-dp)}
+  [data-dir="b"] .reservar{background:var(--marca-dp);color:var(--blanco)}
+  [data-dir="b"] .vista{color:var(--txt-suave)}
+  [data-dir="b"] .vista[aria-current]{background:var(--blanco);color:var(--marca-dk);font-weight:600;box-shadow:0 1px 2px rgba(110,76,54,.07)}
+  [data-dir="b"] .salir{color:var(--txt-suave)}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-hoja" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2.1A7.2 7.2 0 0 0 7.8 15.15c.55.4.8 1 .8 1.7v.75h6.8v-.75c0-.7.25-1.3.8-1.7A7.2 7.2 0 0 0 12 2.1Z"/>
+    <path d="M9 20h6M10.2 22.2h3.6"/>
+  </symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-lista" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></symbol>
+  <symbol id="i-persona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20a7.4 7.4 0 0 1 14.4 0"/></symbol>
+  <symbol id="i-salir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v2M11 12h10M18 9l3 3-3 3"/></symbol>
+</svg>
+
+<div class="panel">
+
+  <nav class="menu" aria-label="Panel">
+    <a class="marca" href="#"><svg aria-hidden="true"><use href="#i-hoja"/></svg> Psicconsciente</a>
+    <a class="reservar" href="#"><svg aria-hidden="true"><use href="#i-mas"/></svg> Reservar cita</a>
+    <div class="vistas">
+      <a class="vista" href="#" aria-current="page"><svg aria-hidden="true"><use href="#i-lista"/></svg> Mis consultas</a>
+      <a class="vista" href="#"><svg aria-hidden="true"><use href="#i-persona"/></svg> Mis datos</a>
+    </div>
+    <button type="button" class="salir"><svg aria-hidden="true"><use href="#i-salir"/></svg> <span>Cerrar sesión</span></button>
+  </nav>
+
+  <main class="lienzo">
+
+    <!-- Sobre el color: el saludo y la unica pregunta que trae a alguien aqui -->
+    <div class="destacado">
+      <h1 class="saludo">Hola, María</h1>
+      <section class="bloque">
+        <h2 class="rotulo">Tu próxima consulta</h2>
+        <article class="cita">
+          <p class="cita-dia"><b>jueves</b>18 de septiembre · 15:00</p>
+          <p class="cita-otra">14:00 en Caracas</p>
+          <p class="cita-que">Superar la Ansiedad · Online · 60 min</p>
+          <p><span class="marcaEstado">Confirmada</span></p>
+          <p class="cita-acc">
+            <a class="bt" href="#">Cambiar de horario</a>
+            <a class="enl" href="#">Ver o cancelar</a>
+          </p>
+        </article>
+      </section>
+    </div>
+
+    <!-- La hoja: todo lo que se mira una vez cada muchas semanas -->
+    <div class="resto">
+      <section class="bloque">
+        <h2 class="rotulo">También tienes</h2>
+        <ul>
+          <li class="fila">
+            <span class="fila-dia">25 sep · 15:00</span>
+            <span class="fila-que">Superar la Ansiedad</span>
+            <span class="marcaEstado pend">Comprobante en revisión</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="bloque">
+        <h2 class="rotulo">Historial</h2>
+        <ul>
+          <li class="fila">
+            <span class="fila-dia">12 de agosto de 2026 · 15:00</span>
+            <span class="fila-que">Superar la Ansiedad</span>
+            <span class="marcaEstado gris">Completada</span>
+          </li>
+          <li class="fila">
+            <span class="fila-dia">5 de agosto de 2026 · 15:00</span>
+            <span class="fila-que">Superar la Ansiedad</span>
+            <span class="marcaEstado gris">Cancelada</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</div>
+
+<nav class="barra" aria-label="Secciones">
+  <a href="#" aria-current="page"><svg aria-hidden="true"><use href="#i-lista"/></svg> Consultas</a>
+  <a class="accion" href="#"><svg aria-hidden="true"><use href="#i-mas"/></svg> <span>Reservar</span></a>
+  <a href="#"><svg aria-hidden="true"><use href="#i-persona"/></svg> Mis datos</a>
+</nav>
+
+</body>
+</html>

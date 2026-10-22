@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paleta de la landing</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{background:var(--bg-main);font-family:var(--font-body);margin:0;padding:2.5rem 1.25rem 5rem;color:var(--text-dark)}
+  .env{max-width:64rem;margin:0 auto}
+  h1{font-family:var(--font-display);font-size:2rem;margin:0 0 .5rem;font-weight:600}
+  .sub{color:var(--text-soft);margin:0 0 2.5rem;max-width:44rem;line-height:1.7}
+
+  .grupo{margin-bottom:2.75rem}
+  .grupo > h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.09em;font-weight:700;
+    color:var(--text-soft);margin:0 0 1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border-soft)}
+
+  .tiras{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+  .tono{background:var(--white);border:1px solid var(--border-soft);border-radius:var(--radius-md);
+    overflow:hidden;box-shadow:var(--shadow-sm)}
+  .muestra{height:96px;display:flex;align-items:flex-end;justify-content:flex-end;padding:.55rem .7rem}
+  .ratio{font-size:.68rem;font-weight:700;padding:.16rem .4rem;border-radius:5px;
+    background:rgba(255,255,255,.9);color:#2C3E50;font-variant-numeric:tabular-nums}
+  .ratio.mal{background:#FBEAE8;color:#A33A2E}
+  .info{padding:.75rem .85rem .9rem}
+  .info .tok{font-family:ui-monospace,"SF Mono",monospace;font-size:.72rem;color:var(--text-soft);display:block}
+  .info .hex{font-family:ui-monospace,monospace;font-size:.86rem;font-weight:700;letter-spacing:.02em}
+  .info .uso{font-size:.76rem;color:var(--text-soft);line-height:1.5;margin:.4rem 0 0}
+
+  .fuentes{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .fuente{background:var(--white);border:1px solid var(--border-soft);border-radius:var(--radius-md);
+    padding:1.1rem 1.2rem;box-shadow:var(--shadow-sm)}
+  .fuente .et{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-soft);font-weight:700}
+  .fuente .ej{margin:.5rem 0 .35rem;line-height:1.2}
+  .fuente .nom{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--text-soft)}
+
+  .formas{display:flex;gap:1rem;flex-wrap:wrap}
+  .forma{width:110px}
+  .forma .caja{height:88px;background:var(--primary-soft);border:1px solid var(--border-strong)}
+  .forma .nom{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--text-soft);margin-top:.45rem;display:block;line-height:1.4}
+
+  .aviso{background:#FBEAE8;border:1px solid rgba(163,58,46,.22);border-radius:var(--radius-md);
+    padding:1rem 1.2rem;margin-top:1.2rem;font-size:.86rem;line-height:1.65;color:#7A2C22}
+  .aviso b{font-weight:700}
+
+  .ctas{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+  .b{padding:.8rem 1.5rem;border-radius:var(--radius-pill);font:inherit;font-weight:600;
+    font-size:.95rem;border:1.5px solid transparent;cursor:pointer}
+  .b1{background:var(--primary-deep);color:#fff}
+  .b2{background:var(--white);color:var(--primary-darkest);border-color:var(--border-strong)}
+  .b3{background:var(--wa);color:#08331A}
+</style>
+</head>
+<body>
+<div class="env">
+
+<h1>La paleta de la landing de Daryeli</h1>
+<p class="sub">Tal cual está hoy en <code>style.css</code>. Debajo de cada color va su contraste real
+   sobre blanco: <b>4,5:1 es el mínimo para texto</b>. Los que no llegan solo pueden usarse como
+   fondo o decoración, nunca para letra ni para un botón con texto encima.</p>
+
+<div class="grupo">
+  <h2>Terracota · la marca</h2>
+  <div class="tiras" id="marca"></div>
+  <div class="aviso">
+    <b>Ojo con <code>--primary</code> (#A67B5B): da 3,75:1 y no llega al mínimo.</b>
+    Hoy funciona porque en la landing se usa como fondo y como adorno, no como texto.
+    Los que sí sirven para letra o para un botón son <code>--primary-deep</code> (5,32:1) y
+    <code>--primary-darkest</code> (7,71:1).
+  </div>
+</div>
+
+<div class="grupo">
+  <h2>Fondos y texto</h2>
+  <div class="tiras" id="neutros"></div>
+</div>
+
+<div class="grupo">
+  <h2>WhatsApp · el único color ajeno a la marca</h2>
+  <div class="tiras" id="wa"></div>
+</div>
+
+<div class="grupo">
+  <h2>Botones, como se ven de verdad</h2>
+  <div class="ctas">
+    <button class="b b1">Reservar una sesión</button>
+    <button class="b b2">Conocer a Daryeli</button>
+    <button class="b b3">Escribir por WhatsApp</button>
+  </div>
+</div>
+
+<div class="grupo">
+  <h2>Tipografías</h2>
+  <div class="fuentes">
+    <div class="fuente">
+      <span class="et">Titulares</span>
+      <p class="ej" style="font-family:var(--font-display);font-size:1.75rem;font-weight:600">Acompañarte</p>
+      <span class="nom">--font-display · Fraunces (serif)</span>
+    </div>
+    <div class="fuente">
+      <span class="et">Texto</span>
+      <p class="ej" style="font-family:var(--font-body);font-size:1.0625rem">Un espacio para hablar con calma.</p>
+      <span class="nom">--font-body · Inter</span>
+    </div>
+    <div class="fuente">
+      <span class="et">Acento manuscrito</span>
+      <p class="ej" style="font-family:var(--font-hand);font-size:1.6rem">con calma</p>
+      <span class="nom">--font-hand · Caveat</span>
+    </div>
+  </div>
+</div>
+
+<div class="grupo">
+  <h2>Formas · los radios orgánicos son la firma de la landing</h2>
+  <div class="formas">
+    <div class="forma"><div class="caja" style="border-radius:var(--radius-sm)"></div><span class="nom">--radius-sm<br>8px</span></div>
+    <div class="forma"><div class="caja" style="border-radius:var(--radius-md)"></div><span class="nom">--radius-md<br>16px</span></div>
+    <div class="forma"><div class="caja" style="border-radius:var(--radius-lg)"></div><span class="nom">--radius-lg<br>28px</span></div>
+    <div class="forma"><div class="caja" style="border-radius:var(--radius-organic-a)"></div><span class="nom">--radius-organic-a<br>180 180 32 32</span></div>
+    <div class="forma"><div class="caja" style="border-radius:var(--radius-organic-b)"></div><span class="nom">--radius-organic-b<br>32 120 32 32</span></div>
+    <div class="forma"><div class="caja" style="border-radius:var(--radius-organic-c)"></div><span class="nom">--radius-organic-c<br>120 32 32 32</span></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function () {
+  function lum(h) {
+    h = h.replace('#','');
+    var r = parseInt(h.slice(0,2),16)/255, g = parseInt(h.slice(2,4),16)/255, b = parseInt(h.slice(4,6),16)/255;
+    function f(v){ return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); }
+    return .2126*f(r) + .7152*f(g) + .0722*f(b);
+  }
+  function cr(a, b) { var L1 = lum(a), L2 = lum(b); var hi = Math.max(L1,L2), lo = Math.min(L1,L2); return (hi+.05)/(lo+.05); }
+
+  var GRUPOS = {
+    marca: [
+      ['--primary',        '#A67B5B', 'El terracota de la marca. Fondos, bordes, adorno.'],
+      ['--primary-light',  '#C4A484', 'Bordes suaves y detalles sobre fondo claro.'],
+      ['--primary-soft',   '#F3E9DE', 'Fondo de bloques destacados.'],
+      ['--primary-deep',   '#8C6246', 'Botones y texto. El primero que sirve para letra.'],
+      ['--primary-darkest','#6E4C36', 'Hover y la franja del pie.']
+    ],
+    neutros: [
+      ['--bg-main',      '#FDFAF7', 'Fondo general. Blanco cálido, no blanco puro.'],
+      ['--bg-secondary', '#FAF4EE', 'Secciones alternas.'],
+      ['--text-dark',    '#2C3E50', 'Texto principal. Azul pizarra, no negro.'],
+      ['--text-soft',    '#55697A', 'Texto secundario.'],
+      ['--white',        '#FFFFFF', 'Tarjetas.']
+    ],
+    wa: [
+      ['--wa',      '#25D366', 'El verde oficial de WhatsApp. Solo para ese botón.'],
+      ['--wa-deep', '#1FAE55', 'Su estado al pasar por encima.']
+    ]
+  };
+
+  Object.keys(GRUPOS).forEach(function (k) {
+    document.getElementById(k).innerHTML = GRUPOS[k].map(function (t) {
+      var r = cr(t[1], '#FFFFFF');
+      var mal = r < 4.5;
+      var tinta = lum(t[1]) > .45 ? '#2C3E50' : '#FFFFFF';
+      return '<div class="tono">' +
+        '<div class="muestra" style="background:' + t[1] + '">' +
+          '<span class="ratio' + (mal ? ' mal' : '') + '">' + r.toFixed(2).replace('.', ',') + ':1</span>' +
+        '</div>' +
+        '<div class="info"><span class="tok">' + t[0] + '</span>' +
+        '<span class="hex">' + t[1] + '</span>' +
+        '<p class="uso">' + t[2] + '</p></div></div>';
+    }).join('');
+  });
+})();
+</script>
+</body>
+</html>

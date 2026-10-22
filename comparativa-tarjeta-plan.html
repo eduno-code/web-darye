@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La tarjeta del plan · tres estructuras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     LA TARJETA DEL PLAN.
+
+     MEDIDO en la pagina, sobre la tarjeta de 289 x 81:
+
+       nombre -> precio          3 px
+       precio -> ahorro         18 px
+       ahorro -> canto derecho  84 px
+
+     Dos cosas, no una. La obvia: 3 px entre dos lineas de 16 px es una
+     colision, no un grupo. Y la que el espaciado no explica: EL NOMBRE Y EL
+     PRECIO MIDEN LOS DOS 16 px, asi que al entornar los ojos no hay elemento
+     principal — son dos lineas del mismo peso pegadas.
+
+     Ademas el ahorro no esta a la derecha: esta a la izquierda con 84 px
+     muertos detras, porque vive en una columna `1fr` con `justify-self:start`.
+
+     Las tres fichas van a 289 px, el ancho real de la tarjeta, y con los
+     precios de pareja —100 y 150— que son los mas anchos que existen.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --aro:#A87453;
+  --acc:#5A7060; --acc-dp:#4A5E50; --acc-sv:#E8EDE6;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-nota:.79rem; --t-aux:.88rem; --t-base:1rem; --t-rotulo:1.05rem;
+  --r-chico:8px; --r-medio:14px; --r-pill:999px;
+  --canto:2px;
+  --paso:180ms cubic-bezier(.2,.8,.3,1);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--suelo);color:var(--txt);
+  font-family:var(--texto);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+header{padding:1.5rem 2rem 1rem}
+h1{margin:0 0 .3rem;font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+header p{margin:0;max-width:64rem;font-size:var(--t-aux);color:var(--txt-suave)}
+header b{color:var(--txt)}
+
+.caso{
+  margin:1.25rem 2rem;padding:1.4rem 1.5rem 1.6rem;
+  background:var(--blanco);border-radius:18px;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+.caso h2{margin:0 0 .2rem;font-size:1rem;font-weight:600}
+.caso .dice{margin:0 0 1rem;max-width:60rem;font-size:var(--t-aux);color:var(--txt-suave)}
+.caso .dice b{color:var(--txt)}
+.medidas{
+  display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;margin:0 0 1.2rem;
+  font-size:var(--t-nota);color:var(--txt-suave);font-variant-numeric:tabular-nums;
+}
+.medidas b{color:var(--txt);font-weight:600}
+.medidas .ojo{color:#8C2F2F;font-weight:600}
+
+/* la tira de tres, como en la pagina */
+.planes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;width:927px;max-width:100%}
+
+.plan{
+  position:relative;
+  padding:.85rem .8rem;
+  border-radius:var(--r-medio);
+  cursor:pointer;
+  transition:background var(--paso), box-shadow var(--paso);
+}
+.plan input{position:absolute;width:1px;height:1px;opacity:0;margin:0}
+.plan:hover{background:var(--fila-viva)}
+.plan:has(input:checked){background:var(--fila-viva);box-shadow:inset 0 0 0 var(--canto) var(--acc)}
+.plan:has(input:focus-visible){outline:2px solid var(--acc);outline-offset:1px}
+
+.marca{
+  flex:none;width:16px;height:16px;border-radius:5px;
+  border:1px solid var(--aro);box-sizing:border-box;
+  transition:border-color var(--paso), background var(--paso);
+}
+.plan:has(input:checked) .marca{border-color:var(--acc);background:var(--acc)}
+
+.nom{font-size:var(--t-base);line-height:1.3}
+.plan:has(input:checked) .nom{font-weight:600}
+.precio{font-variant-numeric:tabular-nums;color:var(--txt-suave)}
+.plan:has(input:checked) .precio{color:var(--txt)}
+/* `:not(:empty)` es la guarda que ya usa la pagina: sin ella, el badge de una
+   opcion sin ahorro dibuja una pildora vacia — un guion fantasma. */
+.ahorro:not(:empty){
+  padding:.18rem .65rem;border-radius:var(--r-pill);background:var(--acc-sv);
+  font-size:var(--t-nota);font-weight:500;color:var(--acc-dp);white-space:nowrap;
+}
+
+/* ============ HOY ============ */
+.hoy .plan{display:grid;grid-template-columns:16px auto 1fr;align-items:baseline;gap:.2rem .8rem}
+.hoy .marca{grid-column:1;grid-row:1;align-self:center}
+.hoy .nom{grid-column:2 / -1;grid-row:1}
+.hoy .precio{grid-column:2;grid-row:2;font-size:var(--t-base)}
+.hoy .ahorro{grid-column:3;grid-row:2;justify-self:start;margin-left:.35rem}
+
+/* ============ A · con linea ============
+   El nombre es la cabecera de la tarjeta, la linea lo separa, y debajo la fila
+   del dinero: precio a la izquierda y ahorro pegado al canto derecho. */
+.una .cab{display:flex;align-items:center;gap:.8rem}
+.una .sep{
+  display:block;   /* un span es `inline` y lo inline ignora `height` */
+  height:1px;margin:.7rem 0;
+  background:var(--linea);
+}
+.plan:has(input:checked) .una-sep{background:rgba(90,112,96,.3)}
+.una .dinero{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.una .precio{font-size:var(--t-base)}
+
+/* ============ B · sin linea, solo aire ============
+   La proximidad hace el trabajo que hacia la linea: 8 px en vez de 3 entre el
+   nombre y el precio, y el ahorro al canto. Sin muebles nuevos. */
+.dos .cab{display:flex;align-items:center;gap:.8rem}
+.dos .dinero{
+  display:flex;align-items:center;justify-content:space-between;gap:.8rem;
+  margin-top:.5rem;padding-left:1.6rem;   /* sangrado a la altura del texto */
+}
+.dos .precio{font-size:var(--t-base)}
+
+/* ============ C · dos columnas ============
+   Los 84 px muertos pasan a ser una segunda columna de verdad: el nombre y el
+   precio a la izquierda, el ahorro a la derecha y centrado con los dos. */
+.tres .plan{display:grid;grid-template-columns:16px 1fr auto;align-items:start;gap:0 .8rem}
+/* La marca se alinea con EL NOMBRE, no con el centro del bloque: centrada
+   contra las dos lineas caia en el hueco entre el nombre y el precio, y una
+   marca que no esta a la altura de lo que marca se lee como descuadre.
+   Los 3 px la bajan a la altura de la mayuscula. */
+.tres .marca{grid-column:1;grid-row:1;margin-top:3px}
+/* El ahorro si se centra contra el bloque entero: es lo que equilibra la
+   tarjeta por la derecha. */
+.tres .ahorro:not(:empty){align-self:center}
+.tres .bloque{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.tres .precio{font-size:var(--t-base)}
+.tres .ahorro{grid-column:3;grid-row:1}
+
+.cierre{padding:.5rem 2rem 4rem;max-width:64rem;font-size:var(--t-aux);line-height:1.7;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+.cierre p{margin:0 0 .9rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>La tarjeta del plan</h1>
+  <p>A 289&nbsp;px, el ancho real, y con los precios de pareja —100 y 150— que son los más anchos que existen. La de en medio está elegida en las tres.</p>
+</header>
+
+<div id="zona"></div>
+
+<div class="cierre">
+  <p><b>Dos problemas, no uno.</b> El obvio: 3&nbsp;px entre dos líneas de 16&nbsp;px es una colisión, no un grupo. El que el espaciado no explica: <b>el nombre y el precio miden los dos 16&nbsp;px</b>, así que al entornar los ojos no hay elemento principal. Y el «Ahorras» no estaba a la derecha — estaba a la izquierda con 84&nbsp;px muertos detrás, porque vivía en una columna <code>1fr</code> con <code>justify-self:start</code>.</p>
+
+  <p><b>Mi apuesta es la C.</b> Convierte esos 84&nbsp;px en una segunda columna de verdad en vez de en espacio sobrante: el nombre y el precio forman un bloque a la izquierda, y el ahorro se va al canto derecho centrado con los dos. La tarjeta pasa a tener una estructura —izquierda lo que eliges, derecha lo que ganas— en lugar de tres cosas apiladas. Y es la más baja de las tres, así que la fila de planes ocupa menos.</p>
+
+  <p>La <b>A</b> es tu petición literal y funciona: el nombre queda como cabecera, la línea separa, y debajo la fila del dinero con el ahorro al canto. Lo que me frena es que <b>añade un mueble</b> —una línea— para resolver algo que la proximidad ya resuelve, y el playbook de layout pide proximidad antes que decoración. También es la más alta.</p>
+
+  <p>La <b>B</b> es la A sin la línea: 8&nbsp;px en vez de 3, y el ahorro al canto. Es el arreglo mínimo, el de menos riesgo. Si quieres tocar lo justo, esta.</p>
+
+  <p>En las tres, el ahorro ya está <b>pegado al canto derecho</b>, que es lo que pediste, y con <code>tabular-nums</code> en el precio para que las tres tarjetas alineen sus cifras.</p>
+</div>
+
+<script>
+(function () {
+  var PLANES = [
+    { v:'1', nom:'1 Consulta',   precio:'45',  ahorro:null },
+    { v:'3', nom:'3 Consultas',  precio:'100', ahorro:'35' },
+    { v:'5', nom:'5 Consultas',  precio:'150', ahorro:'75' }
+  ];
+
+  function marca() { return '<span class="marca" aria-hidden="true"></span>'; }
+  function radio(g, v, elegido) {
+    return '<input type="radio" name="' + g + '" value="' + v + '"' + (elegido ? ' checked' : '') + '>';
+  }
+  function ahorro(p) { return p.ahorro ? '<span class="ahorro">Ahorras ' + p.ahorro + ' $</span>' : '<span></span>'; }
+
+  var FORMAS = {
+    hoy: function (g, p, el) {
+      return '<label class="plan">' + radio(g, p.v, el) + marca() +
+        '<span class="nom">' + p.nom + '</span>' +
+        '<span class="precio">' + p.precio + ' $</span>' +
+        (p.ahorro ? '<span class="ahorro">Ahorras ' + p.ahorro + ' $</span>' : '<span class="ahorro"></span>') +
+        '</label>';
+    },
+    una: function (g, p, el) {
+      return '<label class="plan">' + radio(g, p.v, el) +
+        '<span class="cab">' + marca() + '<span class="nom">' + p.nom + '</span></span>' +
+        '<span class="sep una-sep"></span>' +
+        '<span class="dinero"><span class="precio">' + p.precio + ' $</span>' + ahorro(p) + '</span>' +
+        '</label>';
+    },
+    dos: function (g, p, el) {
+      return '<label class="plan">' + radio(g, p.v, el) +
+        '<span class="cab">' + marca() + '<span class="nom">' + p.nom + '</span></span>' +
+        '<span class="dinero"><span class="precio">' + p.precio + ' $</span>' + ahorro(p) + '</span>' +
+        '</label>';
+    },
+    tres: function (g, p, el) {
+      return '<label class="plan">' + radio(g, p.v, el) + marca() +
+        '<span class="bloque"><span class="nom">' + p.nom + '</span>' +
+        '<span class="precio">' + p.precio + ' $</span></span>' +
+        ahorro(p) +
+        '</label>';
+    }
+  };
+
+  var CASOS = [
+    { clase:'hoy', titulo:'Como está ahora',
+      dice:'Tres cosas apiladas a la izquierda. El nombre y el precio compiten al mismo tamaño y el ahorro flota.',
+      med:[['nombre → precio','3 px',true],['ahorro → canto','84 px',true],['alto','81 px',false]] },
+
+    { clase:'una', titulo:'A · con línea de separación',
+      dice:'Tu petición literal: el nombre como cabecera, una línea, y debajo la fila del dinero con el ahorro al canto derecho.',
+      med:[['nombre → precio','23 px',false],['ahorro → canto','13 px',false],['alto','≈ 103 px',false]] },
+
+    { clase:'dos', titulo:'B · sin línea, solo aire',
+      dice:'Lo mismo sin el mueble: la proximidad hace el trabajo. 8&nbsp;px en vez de 3, y el ahorro al canto.',
+      med:[['nombre → precio','8 px',false],['ahorro → canto','13 px',false],['alto','≈ 85 px',false]] },
+
+    { clase:'tres', titulo:'C · dos columnas',
+      dice:'Los 84&nbsp;px muertos pasan a ser una columna de verdad: <b>izquierda lo que eliges, derecha lo que ganas</b>, centrados entre sí.',
+      med:[['nombre → precio','6 px',false],['ahorro → canto','13 px',false],['alto','≈ 78 px',false]] }
+  ];
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c, i) {
+    var forma = FORMAS[c.clase];
+    var tarjetas = PLANES.map(function (p, j) {
+      return forma('g' + i, p, j === 1);
+    }).join('');
+
+    return '<section class="caso ' + c.clase + '">' +
+      '<h2>' + c.titulo + '</h2>' +
+      '<p class="dice">' + c.dice + '</p>' +
+      '<p class="medidas">' + c.med.map(function (m) {
+        return '<span>' + m[0] + ' <b class="' + (m[2] ? 'ojo' : '') + '">' + m[1] + '</b></span>';
+      }).join('') + '</p>' +
+      '<div class="planes">' + tarjetas + '</div>' +
+    '</section>';
+  }).join('');
+
+  /* Las medidas de las tres variantes se MIDEN sobre lo renderizado y se
+     reescriben: una comparativa que anuncia numeros a ojo no sirve de nada. */
+  document.querySelectorAll('.caso').forEach(function (caso) {
+    var plan = caso.querySelector('.plan:has(input:checked)') || caso.querySelectorAll('.plan')[1];
+    var caja = plan.getBoundingClientRect();
+    var nom = plan.querySelector('.nom').getBoundingClientRect();
+    var precio = plan.querySelector('.precio').getBoundingClientRect();
+    var ah = plan.querySelector('.ahorro');
+    var celdas = caso.querySelectorAll('.medidas b');
+    celdas[0].textContent = Math.round(precio.top - nom.bottom) + ' px';
+    if (ah && ah.textContent) {
+      celdas[1].textContent = Math.round(caja.right - ah.getBoundingClientRect().right) + ' px';
+    }
+    celdas[2].textContent = Math.round(caja.height) + ' px';
+  });
+})();
+</script>
+</body>
+</html>

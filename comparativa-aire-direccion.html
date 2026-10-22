@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El aire de la columna de la modalidad · cinco arreglos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap">
+
+<!-- ============================================================
+     EL AIRE QUE SOBRA A LA DERECHA DE LA DIRECCION.
+
+     Medido en la pagina: la columna mide 407 px y el texto de la direccion 186,
+     asi que quedan 194 px vacios — casi la mitad.
+
+     Y hay una causa concreta que no es de diseno: la direccion se pinta a
+     12,64 px, el tamano mas pequeno del sistema, el de lo accesorio. Sale de
+     una regla del diseno VIEJO —`#vista1 .lugar-dir{font-size:var(--t-nota)}`
+     en reservar.css— de cuando vivia dentro de una caja apretada. Al reutilizar
+     ese nombre de clase en el porte se heredo la decision.
+
+     Las cinco fichas van a 407 px justos, el ancho real de la columna.
+     ============================================================ -->
+
+<style>
+:root{
+  color-scheme:only light;
+  --suelo:#EDE2D2; --blanco:#FFFFFF; --fila-viva:#EDE2D2;
+  --txt:#2C3E50; --txt-suave:#55697A;
+  --marca:#6E4C36; --marca-cl:#C9B49A;
+  --acc:#5A7060; --acc-dp:#4A5E50;
+  --linea:rgba(166,123,91,.22);
+  --display:Fraunces,Georgia,serif;
+  --texto:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-nota:.79rem;      /* 12,64 px  lo accesorio */
+  --t-aux:.88rem;       /* 14,08 px  lo que se lee de reojo */
+  --t-base:1rem;        /* 16    px  el cuerpo */
+  --r-chico:8px; --r-medio:14px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--suelo);color:var(--txt);
+  font-family:var(--texto);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+header{padding:1.5rem 2rem 1rem}
+h1{margin:0 0 .3rem;font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+header p{margin:0;max-width:60rem;font-size:var(--t-aux);color:var(--txt-suave)}
+
+.zona{display:flex;flex-wrap:wrap;gap:1.25rem;padding:1.5rem 2rem 2rem}
+
+.caso{
+  width:447px;   /* 407 de columna + 20 de aire a cada lado */
+  background:var(--blanco);
+  border-radius:18px;
+  padding:1.25rem 1.25rem 1.5rem;
+  box-shadow:0 1px 2px rgba(110,76,54,.05),0 12px 30px -14px rgba(110,76,54,.2);
+}
+.caso h2{margin:0 0 .15rem;font-size:.92rem;font-weight:600}
+.caso .dice{margin:0 0 1.1rem;font-size:var(--t-nota);color:var(--txt-suave);min-height:3.6em}
+.col{width:407px;position:relative}
+
+/* la regla que mide el vacio */
+.regla{
+  position:absolute;right:0;bottom:-1.4rem;
+  font-size:.68rem;font-weight:600;color:var(--marca);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- la nota, como en la pagina ---------- */
+.nota{
+  display:flex;align-items:flex-start;gap:.6rem;margin:0;
+  padding-top:1.25rem;border-top:1px solid var(--linea);
+  font-size:var(--t-aux);line-height:1.6;color:var(--txt-suave);
+}
+.nota .pin{width:1em;height:1em;flex:none;font-size:17px;color:var(--marca);margin-top:.15rem}
+.nota > .txt{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.nota strong{display:block;margin-bottom:.4rem;font-weight:600;color:var(--txt)}
+.dir{margin:0}
+
+/* el boton, la variante F ya elegida */
+.mapa{
+  display:inline-flex;align-items:center;flex:none;height:38px;padding:0;
+  margin-top:.9rem;border-radius:var(--r-chico);
+  background:var(--acc);color:#fff;text-decoration:none;
+  box-shadow:0 1px 4px rgba(110,76,54,.28);
+}
+.mapa-flecha{display:grid;place-items:center;flex:none;width:38px;height:38px}
+.mapa-flecha svg{width:17px;height:17px;fill:currentColor;transform:rotate(45deg)}
+.mapa-et{display:grid;grid-template-columns:0fr;transition:grid-template-columns 260ms cubic-bezier(.2,.8,.3,1)}
+.mapa-et > span{overflow:hidden;min-width:0}
+.mapa-lbl{display:block;padding-left:.9rem;padding-right:.15rem;white-space:nowrap;font-size:var(--t-nota);font-weight:600}
+.mapa:hover .mapa-et{grid-template-columns:1fr}
+.mapa:hover{background:var(--acc-dp)}
+
+/* ============ HOY ============ */
+.hoy .dir{font-size:var(--t-nota)}
+
+/* ============ A · tamaño propio ============ */
+.a strong{font-size:var(--t-base)}
+.a .dir{font-size:var(--t-aux)}
+
+/* ============ B · a una línea ============ */
+.b strong{font-size:var(--t-base)}
+.b .dir{font-size:var(--t-aux)}
+
+/* ============ C · con la duración ============ */
+.c strong{font-size:var(--t-base)}
+.c .dir{font-size:var(--t-aux)}
+.c .dato{
+  display:flex;align-items:center;gap:.5rem;
+  margin:.75rem 0 0;font-size:var(--t-aux);
+}
+.c .dato svg{width:1em;height:1em;flex:none;font-size:15px;color:var(--marca)}
+.c .dato b{font-weight:600;color:var(--txt)}
+
+/* ============ D · panel tenue ============ */
+.d .nota{
+  align-items:flex-start;
+  padding:1.1rem 1.2rem;
+  border-top:0;
+  border-radius:var(--r-medio);
+  background:var(--fila-viva);
+  width:100%;
+}
+.d .sep{border-top:1px solid var(--linea);padding-top:1.25rem}
+.d strong{font-size:var(--t-base)}
+.d .dir{font-size:var(--t-aux)}
+.d .mapa{box-shadow:0 1px 4px rgba(110,76,54,.28),0 0 0 3px var(--fila-viva)}
+
+.cierre{padding:0 2rem 4rem;max-width:60rem;font-size:var(--t-aux);line-height:1.7;color:var(--txt-suave)}
+.cierre b{color:var(--txt)}
+.cierre p{margin:0 0 .85rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>El aire que sobra a la derecha de la dirección</h1>
+  <p>Las cinco a 407&nbsp;px, el ancho real de la columna. La cifra marrón bajo cada una es cuánto vacío queda a la derecha del texto más largo.</p>
+</header>
+
+<div class="zona" id="zona"></div>
+
+<div class="cierre">
+  <p><b>La causa no es de diseño, es una regla heredada.</b> La dirección se pinta a 12,64&nbsp;px —el tamaño más pequeño del sistema, el de lo accesorio— por <code>#vista1 .lugar-dir{font-size:var(--t-nota)}</code> en <code>reservar.css</code>, del diseño viejo, de cuando vivía dentro de una caja apretada. Al reutilizar ese nombre de clase en el porte se heredó la decisión sin querer.</p>
+
+  <p><b>Mi apuesta es la C.</b> Sube el tamaño a lo que le toca —la dirección al mismo cuerpo que el resto de la nota, el nombre del centro al del texto normal— y además <b>añade la duración, que hoy falta</b>: en línea dice «60 minutos por videollamada» y presencial no dice cuánto dura nada. Es el mismo dato, y lo necesita igual quien va a desplazarse. Llena el hueco con información que hacía falta, no con aire tipográfico.</p>
+
+  <p>La <b>B</b> es la más directa contra el vacío: la dirección en una sola línea usa el ancho de verdad. El riesgo es que depende del largo de la dirección — con una calle más larga vuelve a partirse, y con el punto de referencia que Daryeli aún puede añadir, seguro.</p>
+
+  <p>La <b>D</b> hace desaparecer el problema por otra vía: con un panel a todo el ancho, el espacio de la derecha deja de leerse como un hueco y pasa a leerse como margen. A cambio devuelve una caja a una pantalla de la que quitamos todas.</p>
+
+  <p>Queda una quinta vía que no monto porque toca la estructura y es tu decisión: <b>columnas desiguales</b>, la de modalidad más estrecha y la de terapias más ancha. Arreglaría el vacío de raíz, pero va contra lo que decidiste al principio —las dos columnas del mismo ancho—, así que no la muevo sin que lo digas.</p>
+</div>
+
+<script>
+(function () {
+  var FLECHA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 21 12 17 4 21Z"/></svg>';
+  var PIN = '<svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>';
+  var RELOJ = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+  var NOMBRE = 'Centro Humanista Intellego';
+  var DOS = 'Calle 19, entre carreras 28 y 29<br>Barquisimeto, estado Lara';
+  var UNA = 'Calle 19, entre carreras 28 y 29. Barquisimeto, estado Lara.';
+
+  function boton() {
+    return '<a class="mapa" href="#" target="_blank" rel="noopener noreferrer">' +
+      '<span class="mapa-et"><span><span class="mapa-lbl">Cómo llegar</span></span></span>' +
+      '<span class="mapa-flecha" aria-hidden="true">' + FLECHA + '</span></a>';
+  }
+
+  function nota(dir, extra) {
+    return '<p class="nota">' + PIN + '<span class="txt">' +
+      '<strong>' + NOMBRE + '</strong>' +
+      '<span class="dir">' + dir + '</span>' +
+      (extra || '') + boton() + '</span></p>';
+  }
+
+  var DURACION = '<span class="dato">' + RELOJ + '<span><b>60 minutos</b> en consulta</span></span>';
+
+  var CASOS = [
+    ['hoy', 'Como está ahora',
+     'La dirección a 12,64 px por una regla heredada del diseño viejo, y partida en dos líneas cortas por un &lt;br&gt; forzado.',
+     nota(DOS)],
+
+    ['a', 'A · el tamaño que le toca',
+     'La dirección al mismo cuerpo que el resto de la nota y el nombre del centro al del texto normal. Se quita la regla vieja y nada más.',
+     nota(DOS)],
+
+    ['b', 'B · a una sola línea',
+     'Lo mismo, y además se deja que la dirección fluya en vez de forzar el corte. Usa el ancho de verdad.',
+     nota(UNA)],
+
+    ['c', 'C · con la duración',
+     'Con el tamaño corregido y añadiendo cuánto dura la consulta, que hoy solo se dice en la modalidad en línea.',
+     nota(UNA, DURACION)],
+
+    ['d', 'D · panel tenue a todo el ancho',
+     'El bloque ocupa la columna entera, así que el espacio de la derecha se lee como margen y no como hueco.',
+     '<div class="sep">' + nota(UNA) + '</div>']
+  ];
+
+  document.getElementById('zona').innerHTML = CASOS.map(function (c) {
+    return '<section class="caso ' + c[0] + '">' +
+      '<h2>' + c[1] + '</h2>' +
+      '<p class="dice">' + c[2] + '</p>' +
+      '<div class="col">' + c[3] + '<span class="regla" data-regla></span></div>' +
+    '</section>';
+  }).join('');
+
+  /* La cifra del vacio se MIDE, no se escribe a mano: se toma el ancho real del
+     texto mas largo del bloque y se resta al de la columna. Asi la comparativa
+     no puede decir un numero que no sea verdad. */
+  document.querySelectorAll('.caso').forEach(function (caso) {
+    var col = caso.querySelector('.col');
+    var anchoCol = col.getBoundingClientRect().width;
+    var izq = col.getBoundingClientRect().left;
+    var masAncho = 0;
+
+    caso.querySelectorAll('strong, .dir, .dato, .mapa').forEach(function (el) {
+      var r = document.createRange();
+      r.selectNodeContents(el);
+      var b = r.getBoundingClientRect();
+      if (!b.width) b = el.getBoundingClientRect();
+      masAncho = Math.max(masAncho, b.right - izq);
+    });
+
+    var vacio = Math.round(anchoCol - masAncho);
+    caso.querySelector('[data-regla]').textContent = vacio + ' px vacíos';
+  });
+})();
+</script>
+</body>
+</html>

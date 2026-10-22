@@ -1,0 +1,475 @@
+/* ============================================================
+   entrar.css · pantalla de crear cuenta y entrar
+
+   Los tokens son los de Psicconsciente, repartidos al reves que en el
+   asistente de reserva: aqui mandan los marrones sobre blanco y la salvia
+   queda de acento — el aro del foco y la nota de privacidad.
+
+   Lo que hay que saber antes de tocar nada:
+
+   · Los DOS formularios estan siempre en el DOM, uno en cada mitad de la
+     rejilla. El panel marron tapa el que no toca y VIAJA de una mitad a la
+     otra al cambiar de modo. Por eso el cambio puede ser un desplazamiento y
+     no una sustitucion: no se monta ni se desmonta nada.
+   · El unico atributo que manda es data-modo en .puerta ("registro" o
+     "entrar"). Todo lo demas cuelga de el.
+   · Del formulario tapado se encarga el JavaScript con inert, no el CSS.
+   ============================================================ */
+
+/* ============================================================
+   PUERTA · crear cuenta y entrar
+
+   Dos mitades. El panel marron NO esta fijo a un lado: se desliza de una
+   mitad a la otra al cambiar de modo, tapando el formulario que se va y
+   destapando el que llega. El movimiento no es adorno — es lo que explica
+   que los dos formularios estaban ahi todo el rato, uno detras del panel.
+
+   La paleta es la de Psicconsciente repartida al reves que en el asistente
+   de reserva: aqui mandan los marrones sobre blanco, y la salvia queda de
+   acento en el aro del foco y en la nota de privacidad.
+   ============================================================ */
+
+:root {
+  --blanco:#FFFFFF;
+  --papel:#FAF3EA;
+
+  --tierra:#7A5A3C;
+  --tierra-cl:#8A6746;
+  --tierra-dp:#5E442C;
+  --marca-cl:#C6A783;
+
+  --salvia:#5A7060;
+  --salvia-dp:#3E4F44;
+  --salvia-sv:#E8EDE6;
+
+  --txt:#2E332E;
+  --txt-tenue:#6B665D;
+
+  --linea:rgba(122,90,60,.20);
+  --linea-med:rgba(122,90,60,.38);
+  --linea-fuerte:#A8825F;
+
+  --mal:#A33A2E; --mal-sv:#FBEAE8;
+  --inerte:#E6E1D7; --inerte-txt:#625E56;
+
+  --display:"Fraunces",Georgia,serif;
+  --texto:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  --t-nota:.78rem; --t-aux:.88rem; --t-base:1rem;
+
+  --r-sm:10px; --r-pill:999px;
+
+  --elev-1:0 1px 2px rgba(46,42,36,.06);
+  --elev-2:0 4px 14px -6px rgba(46,42,36,.18);
+
+  /* Curvas del estandar, no aproximadas a ojo. */
+  --curva:cubic-bezier(.23,1,.32,1);          /* entrar y salir */
+  --curva-mueve:cubic-bezier(.77,0,.175,1);   /* moverse por la pantalla */
+  --paso:160ms var(--curva);
+  --viaje:520ms var(--curva-mueve);           /* el panel cruzando la pantalla */
+
+  color-scheme:light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --blanco:#20241F; --papel:#191C18;
+    --tierra:#4A3627; --tierra-cl:#9C7A56; --tierra-dp:#B08C64; --marca-cl:#C6A783;
+    --salvia:#8AA891; --salvia-dp:#A8C0AE; --salvia-sv:#242A25;
+    --txt:#EDE9E1; --txt-tenue:#9A958B;
+    --linea:rgba(156,122,86,.28); --linea-med:rgba(156,122,86,.50);
+    --linea-fuerte:#9C7A56;
+    --mal:#E9887A; --mal-sv:#2C1D1B;
+    --inerte:#2C2F2B; --inerte-txt:#979C93;
+    --elev-1:0 1px 2px rgba(0,0,0,.4);
+    --elev-2:0 4px 14px -6px rgba(0,0,0,.55);
+  }
+}
+
+*,*::before,*::after { box-sizing:border-box; }
+html,body { height:100%; }
+
+body {
+  margin:0;
+  background:var(--blanco);
+  color:var(--txt);
+  font-family:var(--texto);
+  font-size:var(--t-base);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+:focus { outline:none; }
+:focus-visible { outline:3px solid var(--salvia-dp); outline-offset:3px; border-radius:var(--r-sm); }
+.banda :focus-visible { outline-color:var(--papel); }
+
+.sr-only {
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ============ LAS DOS MITADES ============ */
+
+.puerta { position:relative; min-height:100dvh; display:grid; overflow:hidden; }
+
+@media (min-width:60rem) {
+  .puerta { grid-template-columns:1fr 1fr; }
+}
+
+/* Los dos formularios estan SIEMPRE en su sitio, uno en cada mitad. El panel
+   tapa el que no toca. Por eso el cambio de modo puede ser un desplazamiento
+   y no una sustitucion: no se monta ni se desmonta nada. */
+.cara {
+ display: flex; 
+  flex-direction: column; 
+  justify-content: flex-start; /* <-- Cambiamos de "center" a "flex-start" para subirlo */
+  padding: clamp(5rem, 8vw, 7rem) clamp(1.1rem, 3vw, 2rem); /* <-- Aumentamos el espacio superior para que respire */
+  transition: opacity 240ms var(--curva);
+}
+
+
+#vEntrar   { grid-area:1 / 1; }
+#vRegistro { grid-area:1 / 2; }
+
+.puerta[data-modo="registro"] #vEntrar,
+.puerta[data-modo="entrar"]   #vRegistro { opacity:0; }
+
+.panel {
+  /* Hacemos el contenedor un poco más ancho (26rem en vez de 24rem) 
+     para compensar el espacio que nos va a quitar el relleno (padding) */
+  width: min(100%, 26rem); 
+  margin-inline: auto;
+  display: flex; 
+  flex-direction: column; 
+  gap: 1.4rem;
+  
+  /* NUEVO: Estilos de Tarjeta (Contenedor) */
+  background: var(--blanco);
+  padding: clamp(1.5rem, 4vw, 2.5rem); /* Espacio interno para que respire */
+  border-radius: 16px;                 /* Bordes redondeados modernos */
+  border: 1px solid var(--linea);      /* Borde muy sutil con tu variable de color */
+  
+  /* Sombra suave y elegante para que resalte del fondo blanco */
+  box-shadow: 0 12px 32px -8px rgba(46, 42, 36, 0.12); 
+}
+
+/* ============ EL PANEL QUE VIAJA (TIERRA MINIMALISTA) ============ */
+.banda {
+  position: absolute; inset: 0 auto 0 0;
+  width: 50%;
+  z-index: 2;
+  color: var(--papel);
+  padding: clamp(1.6rem, 3.4vw, 3rem);
+  display: flex; flex-direction: column; gap: 1.5rem;
+  overflow: hidden; 
+  transition: transform var(--viaje);
+  
+  /* Color base del panel (Tierra oscuro) */
+  background-color: var(--tierra-dp); 
+
+  /* Solo 3 formas limpias y separadas para no amontonar */
+  background-image: 
+    /* 1. Un círculo grande y elegante en la esquina superior derecha */
+    radial-gradient(circle at 100% 0%, var(--tierra) 0%, var(--tierra) 40%, transparent 40.5%),
+    
+    /* 2. Un círculo amplio en la esquina inferior izquierda */
+    radial-gradient(circle at -40% 100%, var(--tierra-cl) 0%, var(--tierra-cl) 45%, transparent 45.5%),
+    
+    /* 3. Un detalle sutil de luz en la esquina inferior derecha */
+    radial-gradient(circle at 100% 100%, rgba(250, 243, 234, 0.05) 30%, rgba(250, 243, 234, 0.05) 20%, transparent 20.5%);
+}
+
+.puerta[data-modo="entrar"] .banda { transform:translateX(100%); }
+
+/* En movil no hay dos mitades que intercambiar: el panel se queda arriba y el
+   formulario debajo. Un desplazamiento lateral aqui no significaria nada. */
+@media (max-width:59.99rem) {
+  .banda { position:static; width:auto; min-height:clamp(16rem,34vh,20rem); }
+  .puerta[data-modo="entrar"] .banda { transform:none; }
+  #vEntrar, #vRegistro { grid-area:2 / 1; }
+  .puerta[data-modo="registro"] #vEntrar,
+  .puerta[data-modo="entrar"]   #vRegistro { display:none; }
+}
+
+/* ---------- EL LOGO ----------
+   La bombilla con la espiral dentro, que es la marca de Psicconsciente. Se
+   dibuja sola al cargar: primero el contorno, luego la base, y al final la
+   espiral desplegandose. Una vez y se queda; un bucle infinito seria un
+   adorno pidiendo atencion cada pocos segundos. */
+
+
+/* ---------- EL LOGO (Viajero y miniatura) ---------- */
+.logo { 
+  display: flex; 
+  flex-direction: row; 
+  align-items: center; 
+  gap: 0.4rem; /* Redujimos la separación porque ahora es más pequeño */
+}
+
+.logo svg { 
+  width: clamp(1.4rem, 2.5vw, 1.8rem); /* Ícono pequeño */
+  height: auto; 
+  overflow: visible; 
+  color: var(--papel); /* Se mantiene color papel porque el fondo siempre es marrón */
+}
+
+/* Animaciones del ícono (se quedan igual, le dan un toque genial) */
+.logo path {
+  fill: none; stroke: currentColor;
+  stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1;
+  animation: dibuja 1.1s var(--curva) both;
+}
+.logo path:nth-child(2) { animation-delay: .6s;  animation-duration: .4s; }
+.logo path:nth-child(3) { animation-delay: .85s; animation-duration: 1.35s; }
+
+/* Texto del logo miniatura */
+.logo p {
+  margin: 0;
+  font-family: var(--texto); /* Fuente normal, más legible en tamaños pequeños */
+  font-size: var(--t-nota);  /* Tamaño exacto al de la nota del candado */
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase; /* Mayúsculas pequeñas para que parezca una firma */
+  animation: sube 420ms var(--curva) 2.15s both;
+}
+
+/* Magia UX: Cambio de color según la posición del panel */
+/* Cuando está en "registro", el panel marrón está a la izquierda (debajo del logo) */
+.puerta[data-modo="registro"] .logo-fijo {
+  color: var(--papel);
+}
+
+/* Cuando está en "entrar", el panel se va a la derecha, dejando fondo blanco a la izquierda */
+.puerta[data-modo="entrar"] .logo-fijo {
+  color: var(--tierra-dp);
+}
+
+/* En móviles, el logo siempre va sobre el panel superior */
+@media (max-width: 59.99rem) {
+  .logo-fijo { position: relative; top: 0; left: 0; padding: 1.5rem 1.5rem 0; color: var(--papel) !important; justify-content: center; }
+}
+
+
+
+/* ---------- LA INVITACIÓN ----------
+   Lo unico que cambia de lado a lado. Se desvanece mientras el panel viaja y
+   vuelve ya cambiada: si el texto se sustituyera de golpe a mitad de camino
+   se leeria el truco. */
+
+.invita {
+  margin:auto 0;
+  display:flex; flex-direction:column; align-items:center; gap:.9rem;
+  text-align:center;
+  transition:opacity 200ms var(--curva);
+}
+
+.puerta.viajando .invita { opacity:0; }
+
+.invita h2 {
+  margin:0;
+  font-family:var(--display);
+  font-size:clamp(1.6rem,2.8vw,2.1rem);
+  font-weight:600; line-height:1.08; letter-spacing:-.03em;
+  text-wrap:balance;
+}
+
+.invita p { margin:0; font-size:var(--t-aux); color:rgba(250,243,234,.86); max-width:28ch; }
+
+.invita button {
+  appearance:none; cursor:pointer;
+  margin-top:.35rem;
+  font:inherit; font-size:var(--t-aux); font-weight:600;
+  color:var(--papel);
+  background:transparent;
+  border:1px solid rgba(250,243,234,.65);
+  border-radius:var(--r-pill);
+  padding:.7rem 2rem; min-height:46px;
+  transition:background var(--paso), border-color var(--paso), color var(--paso);
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .invita button:hover { background:var(--papel); border-color:var(--papel); color:var(--tierra-dp); }
+}
+
+
+
+.banda-pie {
+  margin:0;
+  display:flex; gap:.6rem; align-items:flex-start;
+  font-size:var(--t-nota); line-height:1.5;
+  color:rgba(250,243,234,.80);
+  border-left:2px solid var(--salvia);
+  padding-left:.85rem;
+  max-width:36ch;
+}
+
+.banda-pie svg { flex:none; width:15px; height:15px; margin-top:.2rem; color:var(--salvia); }
+
+/* ============ EL FORMULARIO ============ */
+
+.encabezado { display:flex; flex-direction:column; gap:.55rem; }
+
+.encabezado h1 {
+  margin:0;
+  font-family:var(--display);
+  font-size:clamp(1.75rem,3vw,2.15rem);
+  font-weight:600; line-height:1.05; letter-spacing:-.03em;
+  text-wrap:balance;
+}
+
+.encabezado p { margin-top:20px; font-size:var(--t-aux); line-height:1.6; color:var(--txt-tenue); max-width:34ch; }
+
+.campos { display:flex; flex-direction:column; gap:.85rem; }
+
+@keyframes sube { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+.anima > * {
+  opacity:0;
+  animation:sube 260ms var(--curva) forwards;
+  animation-delay:calc(var(--i,0) * 40ms);
+}
+
+.campo { display:flex; flex-direction:column; gap:.32rem; }
+
+.campo > label { font-size:var(--t-nota); font-weight:500; color:var(--txt-tenue); letter-spacing:.01em; }
+
+/* Reducimos la altura mínima y el relleno (padding) de los inputs */
+.campo input, .campo select {
+  font: inherit; font-size: var(--t-base);
+  color: var(--txt); background: var(--blanco);
+  border: 1px solid var(--linea-med); border-radius: var(--r-sm);
+  padding: .55rem .85rem; /* Antes era .7rem */
+  min-height: 42px;       /* Antes era 46px */
+  width: 100%;
+  transition: border-color var(--paso), box-shadow var(--paso);
+}
+
+/* Reducimos también un poco el tamaño del botón */
+
+
+/* Juntamos ligeramente los campos entre sí */
+.campos { 
+  display: flex; 
+  flex-direction: column; 
+  gap: .60rem; /* Antes era .85rem */
+}
+
+/* NUEVA CLASE: Para agrupar dos campos en una sola línea */
+.fila-doble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .60rem;
+}
+
+/* Si la pantalla es muy pequeña (móviles), los volvemos a apilar */
+@media (max-width: 25rem) {
+  .fila-doble { grid-template-columns: 1fr; }
+}
+
+/* El marcador de posicion es un EJEMPLO, no la etiqueta repetida: si dice lo
+   mismo que el rotulo, desaparece al escribir y no ha servido de nada. */
+.campo input::placeholder { color:var(--inerte-txt); opacity:1; }
+
+.campo select {
+  appearance:none; padding-right:2.4rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236B665D' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6.5 8 10.5 12 6.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .85rem center; background-size:16px;
+}
+
+.campo input:focus, .campo select:focus {
+  border-color:var(--salvia);
+  box-shadow:0 0 0 3px var(--salvia-sv);
+}
+
+.tel { display:grid; grid-template-columns:auto 1fr; gap:.5rem; }
+
+.tel .prefijo {
+  width:auto; padding:0 2rem 0 .7rem;
+  background-color:var(--papel);
+  background-position:right .55rem center;
+  font-size:var(--t-aux); font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+
+.clave { position:relative; }
+.clave input { padding-right:3.35rem; }
+
+/* 44x44: el minimo para acertar con el dedo. */
+.ojo {
+  position:absolute; right:3px; top:50%; transform:translateY(-50%);
+  appearance:none; border:0; background:none;
+  width:44px; height:44px; display:grid; place-items:center;
+  border-radius:var(--r-sm); color:var(--txt-tenue); cursor:pointer;
+  transition:color var(--paso), background var(--paso);
+}
+
+.ojo svg { width:19px; height:19px; }
+.ojo .tachado { display:none; }
+.ojo[aria-pressed="true"] .abierto { display:none; }
+.ojo[aria-pressed="true"] .tachado { display:block; }
+
+@media (hover:hover) and (pointer:fine) {
+  .campo input:hover, .campo select:hover { border-color:var(--linea-fuerte); }
+  .ojo:hover { color:var(--txt); background:var(--papel); }
+}
+
+.ayuda { font-size:var(--t-nota); color:var(--txt-tenue); }
+
+.campo.mal input, .campo.mal select { border-color:var(--mal); background:var(--mal-sv); }
+
+/* Sin animacion: un error es una respuesta, y una respuesta instantanea es mas
+   honesta que una que llega tarde. Ademas puede volver a saltar mientras
+   escribes, y unos fotogramas reiniciarian desde cero cada vez. */
+.err { font-size:var(--t-nota); color:var(--mal); }
+.err:empty { display:none; }
+
+.btn {
+  appearance: none; border: 0;
+  font: inherit; font-size: var(--t-base); font-weight: 600;
+  background: var(--tierra-cl); color: var(--papel);
+  border-radius: var(--r-pill);
+  padding: .75rem 1.4rem; /* Antes era .85rem */
+  min-height: 46px;       /* Antes era 50px */
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  box-shadow: var(--elev-1);
+  transition: background var(--paso), box-shadow var(--paso), transform 140ms var(--curva);
+}
+
+/* El movimiento al pasar por encima solo donde hay raton de verdad: en una
+   pantalla tactil un toque dispara un hover falso y el boton se queda
+   animado despues de soltarlo. */
+@media (hover:hover) and (pointer:fine) {
+  .btn:hover { background:var(--tierra-dp); box-shadow:var(--elev-2); }
+  .btn:hover .flecha { transform:translateX(3px); }
+}
+
+.btn:active { transform:translateY(1px); }
+.btn[disabled] { background:var(--inerte); color:var(--inerte-txt); cursor:default; box-shadow:none; }
+
+.btn .flecha { width:17px; height:17px; flex:none; transition:transform var(--paso); }
+
+.rueda {
+  width:17px; height:17px; flex:none;
+  border:2px solid currentColor; border-right-color:transparent;
+  border-radius:var(--r-pill);
+  animation:gira 700ms linear infinite; display:none;
+}
+@keyframes gira { to { transform:rotate(360deg); } }
+
+.btn[data-cargando="1"] .rueda { display:block; }
+.btn[data-cargando="1"] .flecha { display:none; }
+
+.pie-panel { font-size:var(--t-nota); color:var(--txt-tenue); text-align:center; margin:0; }
+.pie-panel a { color:var(--salvia-dp); text-underline-offset:2px; }
+
+/* Menos movimiento: se va el viaje del panel y el dibujado del logo, se queda
+   el desvanecido, que sigue explicando el cambio sin desplazar nada. */
+@media (prefers-reduced-motion: reduce) {
+  .banda { transition:none; }
+  .cara, .invita { transition:opacity 150ms linear; }
+  .logo path, .logo p { animation:none; stroke-dashoffset:0; opacity:1; }
+  .anima > * { opacity:1; animation:none; }
+  .btn, .campo input, .campo select, .ojo, .invita button { transition:none; }
+}
