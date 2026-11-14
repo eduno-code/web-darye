@@ -138,8 +138,11 @@
     vigia.setAttribute('aria-hidden', 'true');
     vigia.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:80px;pointer-events:none';
     document.body.prepend(vigia);
+    var colorBarra = document.querySelector('meta[name="theme-color"]');
     new IntersectionObserver(function (entries) {
-      cabecera.classList.toggle('solida', !entries[0].isIntersecting);
+      var arriba = entries[0].isIntersecting;
+      cabecera.classList.toggle('solida', !arriba);
+      if (colorBarra) colorBarra.setAttribute('content', arriba ? '#B1ADA9' : '#6E4C36');
     }).observe(vigia);
   }
 
