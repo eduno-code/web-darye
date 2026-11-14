@@ -163,3 +163,93 @@
     });
   });
 })();
+
+(function () {
+  var list = document.getElementById('lista-testimonios');
+  if (!list) return;
+  var more = document.querySelector('.quotes-more .btn');
+  var desktop = window.matchMedia('(min-width: 1000px) and (prefers-reduced-motion: no-preference)');
+  var VISIBLE = 6, EVERY = 7500, FADE = 600;
+  var timer = null, hovering = false, onScreen = false, lastSlot = -1;
+
+  list.classList.add('is-collapsed');
+  more.hidden = false;
+  more.addEventListener('click', function () {
+    var open = list.classList.toggle('is-collapsed') === false;
+    more.setAttribute('aria-expanded', String(open));
+    more.textContent = open ? 'Ver menos testimonios' : 'Ver más testimonios';
+    if (!open) document.getElementById('testimonios').scrollIntoView({ block: 'start' });
+  });
+
+  function cards() { return Array.prototype.slice.call(list.querySelectorAll('.quote')); }
+
+  function measure() {
+    list.style.removeProperty('--quote-h');
+    list.classList.remove('is-collapsed');
+    var tallest = cards().reduce(function (max, card) { return Math.max(max, card.offsetHeight); }, 0);
+    list.classList.add('is-collapsed');
+    list.style.setProperty('--quote-h', tallest + 'px');
+  }
+
+  function swap() {
+    var all = cards();
+    var slot;
+    do { slot = Math.floor(Math.random() * VISIBLE); } while (slot === lastSlot);
+    lastSlot = slot;
+    var leaving = all[slot];
+    var entering = all[VISIBLE];
+    leaving.classList.add('is-fading');
+    window.setTimeout(function () {
+      entering.classList.add('is-fading');
+      list.insertBefore(entering, leaving);
+      list.appendChild(leaving);
+      leaving.classList.remove('is-fading');
+      void entering.offsetWidth;
+      entering.classList.remove('is-fading');
+    }, FADE);
+  }
+
+  function update() {
+    var run = list.classList.contains('is-rotating') && onScreen && !hovering && !document.hidden;
+    if (run && !timer) timer = window.setInterval(swap, EVERY);
+    if (!run && timer) { window.clearInterval(timer); timer = null; }
+  }
+
+  function setMode() {
+    var rotate = desktop.matches;
+    list.classList.toggle('is-rotating', rotate);
+    more.hidden = rotate;
+    if (rotate) {
+      list.classList.add('is-collapsed');
+      more.setAttribute('aria-expanded', 'false');
+      more.textContent = 'Ver más testimonios';
+      cards().forEach(function (card) { card.classList.add('is-visible'); });
+      measure();
+    } else {
+      list.style.removeProperty('--quote-h');
+    }
+    update();
+  }
+
+  list.addEventListener('mouseenter', function () { hovering = true; update(); });
+  list.addEventListener('mouseleave', function () { hovering = false; update(); });
+  list.addEventListener('focusin', function () { hovering = true; update(); });
+  list.addEventListener('focusout', function () { hovering = false; update(); });
+  document.addEventListener('visibilitychange', update);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      onScreen = entries[0].isIntersecting;
+      update();
+    }, { threshold: 0.3 }).observe(list);
+  } else {
+    onScreen = true;
+  }
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(function () { if (desktop.matches) measure(); }, 200);
+  });
+  if (desktop.addEventListener) desktop.addEventListener('change', setMode);
+  setMode();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (desktop.matches) measure(); });
+})();
