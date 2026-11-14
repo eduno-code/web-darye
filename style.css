@@ -765,13 +765,17 @@ body[data-menu-open="true"]{overflow:hidden}
   .s3{width:36vw;top:54%;bottom:auto;left:-44px}
 }
 
-.final-grid{display:grid;gap:var(--space-10);justify-items:center}
-.final-foto{width:min(100%,240px)}
-.final-lede{color:var(--text-soft);max-width:46ch;margin:var(--space-6) auto var(--space-8)}
-.final-note{
-  display:block;margin-top:var(--space-6);
-  font-size:var(--text-xs);color:var(--text-soft);
-}
+.final-grid{display:grid;background:var(--primary-darkest);border-radius:28px;overflow:hidden;box-shadow:var(--shadow-lg);padding:0}
+.final .container.final-grid{padding:0;width:calc(100% - 32px);margin-inline:auto}
+.final-foto{margin:0;aspect-ratio:4/3;overflow:hidden}
+.final-foto img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.final-texto{padding:var(--space-10) var(--space-6) var(--space-12)}
+.final h2{color:var(--white)}
+.final h2 .accent{color:#E9C9AA}
+.final .eyebrow{color:#E9C9AA}
+.final .eyebrow::after,.final .eyebrow-center::before{background:rgba(233,201,170,.5)}
+.final-lede{color:rgba(255,255,255,.86);max-width:46ch;margin:var(--space-6) auto var(--space-8)}
+.final .btn-escribe{box-shadow:0 0 0 6px rgba(255,255,255,.16)}
 
 /* ---------- 14. FOOTER ---------- */
 /* Sin margin-top: el bloque final ya trae fondo solido, y ese margen abria una
@@ -933,8 +937,9 @@ html:not(.sin-carga) .hero-grid > div:first-child > :nth-child(5){animation-dela
   .how-grid > .steps{grid-column:1;grid-template-columns:1fr}
   .how-grid > .how-cta{grid-column:1;margin-top:var(--space-10);flex-direction:row;justify-content:space-between;padding:var(--space-8);text-align:left}
 
-  .final-grid{max-width:980px;grid-template-columns:minmax(0,1fr) 340px;gap:var(--space-16);align-items:center;justify-items:stretch;text-align:left}
-  .final-foto{grid-column:2;grid-row:1;width:100%}
+  .final-grid{max-width:1040px;grid-template-columns:minmax(0,1fr) 400px;align-items:stretch;text-align:left}
+  .final-foto{grid-column:2;grid-row:1;aspect-ratio:auto;min-height:440px}
+  .final-texto{align-self:center;padding:var(--space-16)}
   .final-texto{grid-column:1;grid-row:1}
   .final .eyebrow-center{justify-content:flex-start}
   .final .eyebrow-center::before{display:none}
