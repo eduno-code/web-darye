@@ -37,7 +37,7 @@
     <meta property="og:image" content="og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Psicconsciente — Daryeli Romero, psicóloga clínica. Recupera la calma y aprende a vivir sin agobio.">
+    <meta property="og:image:alt" content="Psicconsciente — Daryeli Romero, psicóloga clínica. Hola, soy Daryeli: hablemos de lo que te pesa, desde donde estés.">
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- PENDIENTE AL PUBLICAR: cuando haya dominio, descomenta estas dos líneas
@@ -54,10 +54,11 @@
     <meta name="theme-color" content="#8C6246">
     <meta name="theme-color" content="#8C6246">
 
-    <link rel="preload" as="image" href="hero-640.webp"
-          imagesrcset="hero-640.webp 640w, hero-853.webp 853w"
-          imagesizes="(min-width:900px) 442px, min(402px, calc(100vw - 50px))"
-          fetchpriority="high">
+    <link rel="preload" as="image" href="hero16-720.webp"
+          imagesrcset="hero16-720.webp 720w, hero16-1080.webp 1080w"
+          imagesizes="54vw" media="(min-width:900px)" fetchpriority="high">
+    <link rel="preload" as="image" href="hero16-movil-720.webp"
+          media="(max-width:899px)" fetchpriority="high">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +68,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Figtree:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap" media="print" onload="this.media='all';this.onload=null">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Figtree:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap"></noscript>
 
-    <link rel="stylesheet" href="style.css?v=2026-11-13f">
+    <link rel="stylesheet" href="style.css?v=2026-11-14a">
 </head>
 <body>
 <div class="cargador" aria-hidden="true">
@@ -137,55 +138,28 @@
 <main id="contenido">
 
     <section class="hero" id="inicio" aria-labelledby="hero-title">
-        <div class="container">
-            <div class="hero-grid">
-                <div class="hero-texto">
-                    <p class="hero-kicker">¿Te pesa más de lo que puedes llevar?</p>
-                    <h1 id="hero-title">Recupera la calma y aprende a <span class="accent">vivir sin agobio</span></h1>
-                    <p class="hero-lede">Terapia online para la ansiedad, la autoestima, la pareja o una pérdida. Hablamos con calma y trabajamos con herramientas para tu día a día.</p>
-
-                    <div class="actions">
-                        <a href="https://wa.me/584126724351?text=Hola%20Daryeli%2C%20quiero%20agendar%20una%20cita." class="btn btn-grande btn-agenda" target="_blank" rel="noopener noreferrer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16"/></svg>Agenda tu cita<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
-                        <a href="#historia" class="btn btn-grande btn-secondary">Conoce más</a>
-                    </div>
-
-                    <ul class="credentials">
-                        <li>Psicóloga clínica</li>
-                        <li>Terapia cognitivo-conductual</li>
-                        <li>Sesiones online de 60 min</li>
-                    </ul>
-                </div>
-
-                <figure class="hero-foto">
-                    <img src="hero-640.webp" srcset="hero-640.webp 640w, hero-853.webp 853w"
-                         sizes="(min-width:900px) 442px, min(402px, calc(100vw - 50px))" width="853" height="1280"
-                         fetchpriority="high"
-                         alt="Daryeli Romero, psicóloga clínica, sentada en su estudio">
-                </figure>
-            </div>
+        <figure class="hero-foto">
+            <picture>
+                <source media="(max-width:899px)" srcset="hero16-movil-720.webp" width="720" height="960">
+                <img src="hero16-720.webp" srcset="hero16-720.webp 720w, hero16-1080.webp 1080w"
+                     sizes="(min-width:900px) 54vw, 100vw" width="1080" height="1546"
+                     fetchpriority="high"
+                     alt="Daryeli Romero, psicóloga clínica, sentada en un taburete">
+            </picture>
+        </figure>
+        <div class="hero-texto">
+            <h1 id="hero-title">Hola, soy Daryeli</h1>
+            <p class="hero-lede">Psicóloga clínica. Hablemos de lo que te pesa, desde donde estés.</p>
+            <a href="https://wa.me/584126724351?text=Hola%20Daryeli%2C%20quiero%20agendar%20una%20cita." class="btn btn-grande btn-agenda" target="_blank" rel="noopener noreferrer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16"/></svg>Agenda tu cita<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+            <dl class="hero-cifras">
+                <div><dt>Pacientes acompañados</dt><dd>500+</dd></div>
+                <div><dt>Horas de terapia</dt><dd>3.000+</dd></div>
+                <div><dt>Años de experiencia</dt><dd>6</dd></div>
+            </dl>
         </div>
     </section>
 
-    <section class="section section-tight" aria-label="Trayectoria en cifras">
-        <div class="container">
-            <div class="stats reveal">
-                <div>
-                    <span class="stat-number">500+</span>
-                    <span class="stat-label">Pacientes acompañados</span>
-                </div>
-                <div>
-                    <span class="stat-number">3.000+</span>
-                    <span class="stat-label">Horas de terapia</span>
-                </div>
-                <div>
-                    <span class="stat-number">6</span>
-                    <span class="stat-label">Años de experiencia</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section section-alt" aria-label="Mi propósito">
+    <section class="section section-alt hoja" aria-label="Mi propósito">
         <div class="container purpose">
             <figure class="foto-marco purpose-foto">
                 <img src="proposito-640.webp" srcset="proposito-640.webp 640w, proposito-853.webp 853w"
@@ -757,6 +731,6 @@
 }
 </script>
 
-<script src="main.js" defer></script>
+<script src="main.js?v=2026-11-14a" defer></script>
 </body>
 </html>

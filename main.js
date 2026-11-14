@@ -131,6 +131,18 @@
     watched.forEach(function (section) { spy.observe(section); });
   }
 
+  /* ---------- 2b. BARRA CASI BLANCA AL BAJAR ---------- */
+  var cabecera = document.querySelector('.site-header');
+  if (cabecera && 'IntersectionObserver' in window) {
+    var vigia = document.createElement('div');
+    vigia.setAttribute('aria-hidden', 'true');
+    vigia.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:80px;pointer-events:none';
+    document.body.prepend(vigia);
+    new IntersectionObserver(function (entries) {
+      cabecera.classList.toggle('solida', !entries[0].isIntersecting);
+    }).observe(vigia);
+  }
+
   /* ---------- 3. REVELADO AL SCROLL ---------- */
   var revealables = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
 
