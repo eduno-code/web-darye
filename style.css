@@ -603,11 +603,12 @@ body[data-menu-open="true"]{overflow:hidden}
   --rail-cream:#F3E9DE;
   --rail-shadow:0 14px 30px -18px rgba(44,62,80,.30);
   position:relative;
+  z-index:1;
   isolation:isolate;
   overflow:clip;
   padding:60px 0 40px;
   background:radial-gradient(ellipse at 50% 5%,#E3E9EE 0%,#CADAE6 75%);
-  border-block:1px solid rgba(44,62,80,.12);}
+  border:0;}
 #testimonios>.container{position:relative;z-index:1}
 #testimonios .section-head{max-width:720px;margin-bottom:8px}
 #testimonios .section-head h2{font-size:clamp(34px,3.5vw,49px);line-height:1.12;max-width:23ch;margin-inline:auto}
@@ -715,15 +716,16 @@ body[data-menu-open="true"]{overflow:hidden}
 #testimonios::before,#testimonios::after{opacity:1}
 #testimonios .section-head h2{color:#8C6246;font-size:clamp(34px,3.4vw,46px)}
 #testimonios .eyebrow{color:#6E4C36}
-#testimonios::before,#testimonios::after{width:530px;height:270px;border-radius:0;background:transparent;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 530 270' fill='none'%3E%3Cpath d='M0 0h530v270C350 260 370 90 220 80 115 74 92 30 0 0Z' fill='%23F3E9DE'/%3E%3Cpath d='M145 0h385v155C400 158 365 34 255 36 215 37 180 18 145 0Z' fill='%23FDFAF7'/%3E%3C/svg%3E");
+#testimonios::before,#testimonios::after{
+  /* Ondas completas: el plano claro une todo el borde con la sección vecina. */
+  width:calc(100% + 2px);height:clamp(64px,10vw,144px);
+  left:-1px;right:auto;border-radius:0;background:transparent;opacity:1;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 160' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M0 0h1440v130C1120 130 1020 25 720 25S280 150 0 95Z' fill='%23F3E9DE'/%3E%3Cpath d='M0 0h1440v75C1150 75 1040 8 760 8S260 100 0 45Z' fill='%23FDFAF7'/%3E%3C/svg%3E");
   background-size:100% 100%;background-repeat:no-repeat;}
-#testimonios::before{top:0;right:-165px;transform:none}
-#testimonios::after{bottom:0;left:-200px;transform:rotate(180deg);opacity:.85}
+#testimonios::before{top:-1px;transform:none}
+#testimonios::after{bottom:-1px;transform:rotate(180deg)}
 @media(max-width:600px){
 #testimonios .section-head h2{font-size:34px;line-height:1.15}
-#testimonios::before{width:290px;height:160px;right:-170px;top:0}
-#testimonios::after{width:270px;height:150px;left:-175px;bottom:0}
 }
 @media(prefers-reduced-motion:reduce){#testimonios *,#testimonios *::before,#testimonios *::after{transition:none!important;scroll-behavior:auto!important}}
 
