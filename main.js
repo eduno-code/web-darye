@@ -179,92 +179,102 @@
   });
 })();
 
-(function () {
-  var list = document.getElementById('lista-testimonios');
-  if (!list) return;
-  var more = document.querySelector('.quotes-more .btn');
-  var desktop = window.matchMedia('(min-width: 1000px) and (prefers-reduced-motion: no-preference)');
-  var VISIBLE = 6, EVERY = 7500, FADE = 600;
-  var timer = null, hovering = false, onScreen = false, lastSlot = -1;
-
-  list.classList.add('is-collapsed');
-  more.hidden = false;
-  more.addEventListener('click', function () {
-    var open = list.classList.toggle('is-collapsed') === false;
-    more.setAttribute('aria-expanded', String(open));
-    more.textContent = open ? 'Ver menos testimonios' : 'Ver más testimonios';
-    if (!open) document.getElementById('testimonios').scrollIntoView({ block: 'start' });
+/* Testimonios B — Arena cálida: carrusel aprobado, 56 px/s. */
+(() => {
+  'use strict';
+  const root = document.querySelector('#testimonios [data-rail]');
+  if (!root) return;
+  const viewport = root.querySelector('.rail-viewport');
+  const track = root.querySelector('.rail-track');
+  const originals = [...track.children];
+  const toggle = root.querySelector('.toggle');
+  const position = root.querySelector('.position');
+  const status = root.querySelector('[role=status]');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let paused = reduced.matches, hovered = false, focused = false, visible = false;
+  let cycle = 0, unit = 0, offset = 0, previousTime = 0, frame = 0;
+  originals.forEach((card, i) => {
+    card.tabIndex = 0;
+    card.setAttribute('aria-label', `Testimonio ${i + 1} de ${originals.length}`);
+    const clone = card.cloneNode(true);
+    clone.removeAttribute('tabindex');
+    clone.removeAttribute('aria-label');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.dataset.clone = '';
+    track.append(clone);
   });
-
-  function cards() { return Array.prototype.slice.call(list.querySelectorAll('.quote')); }
-
-  function measure() {
-    list.style.removeProperty('--quote-h');
-    list.classList.remove('is-collapsed');
-    var tallest = cards().reduce(function (max, card) { return Math.max(max, card.offsetHeight); }, 0);
-    list.classList.add('is-collapsed');
-    list.style.setProperty('--quote-h', tallest + 'px');
+  function updatePosition() {
+    const i = unit ? Math.floor((viewport.scrollLeft % cycle) / unit) % originals.length : 0;
+    position.textContent = `${i + 1} / ${originals.length}`;
   }
-
-  function swap() {
-    var all = cards();
-    var slot;
-    do { slot = Math.floor(Math.random() * VISIBLE); } while (slot === lastSlot);
-    lastSlot = slot;
-    var leaving = all[slot];
-    var entering = all[VISIBLE];
-    leaving.classList.add('is-fading');
-    window.setTimeout(function () {
-      entering.classList.add('is-fading');
-      list.insertBefore(entering, leaving);
-      list.appendChild(leaving);
-      leaving.classList.remove('is-fading');
-      void entering.offsetWidth;
-      entering.classList.remove('is-fading');
-    }, FADE);
-  }
-
-  function update() {
-    var run = list.classList.contains('is-rotating') && onScreen && !hovering && !document.hidden;
-    if (run && !timer) timer = window.setInterval(swap, EVERY);
-    if (!run && timer) { window.clearInterval(timer); timer = null; }
-  }
-
-  function setMode() {
-    var rotate = desktop.matches;
-    list.classList.toggle('is-rotating', rotate);
-    more.hidden = rotate;
-    if (rotate) {
-      list.classList.add('is-collapsed');
-      more.setAttribute('aria-expanded', 'false');
-      more.textContent = 'Ver más testimonios';
-      cards().forEach(function (card) { card.classList.add('is-visible'); });
-      measure();
-    } else {
-      list.style.removeProperty('--quote-h');
+  function tick(time) {
+    if (previousTime) {
+      offset = (offset + Math.min(time - previousTime, 64) * .056) % cycle;
+      viewport.scrollLeft = offset;
+      updatePosition();
     }
-    update();
+    previousTime = time;
+    frame = requestAnimationFrame(tick);
   }
-
-  list.addEventListener('mouseenter', function () { hovering = true; update(); });
-  list.addEventListener('mouseleave', function () { hovering = false; update(); });
-  list.addEventListener('focusin', function () { hovering = true; update(); });
-  list.addEventListener('focusout', function () { hovering = false; update(); });
-  document.addEventListener('visibilitychange', update);
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      onScreen = entries[0].isIntersecting;
-      update();
-    }, { threshold: 0.3 }).observe(list);
-  } else {
-    onScreen = true;
+  function sync() {
+    cancelAnimationFrame(frame); previousTime = 0;
+    root.dataset.paused = String(paused);
+    toggle.setAttribute('aria-pressed', String(paused));
+    toggle.setAttribute('aria-label', paused ? 'Reproducir testimonios' : 'Pausar testimonios');
+    toggle.querySelector('span').textContent = paused ? 'Reproducir' : 'Pausar';
+    if (!paused && !hovered && !focused && visible && !document.hidden && cycle) {
+      offset = viewport.scrollLeft % cycle;
+      frame = requestAnimationFrame(tick);
+    }
   }
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(function () { if (desktop.matches) measure(); }, 200);
+  function measure() {
+    unit = originals[1].offsetLeft - originals[0].offsetLeft;
+    cycle = unit * originals.length;
+    viewport.scrollLeft %= cycle;
+    updatePosition(); sync();
+  }
+  function manualPause() { paused = true; sync(); }
+  function move(direction) {
+    manualPause();
+    if (direction < 0 && viewport.scrollLeft < unit) viewport.scrollLeft += cycle;
+    if (direction > 0 && viewport.scrollLeft >= cycle) viewport.scrollLeft -= cycle;
+    const destination = Math.round(viewport.scrollLeft / unit) * unit + direction * unit;
+    viewport.scrollTo({left: Math.max(0, destination), behavior: reduced.matches ? 'instant' : 'smooth'});
+    status.textContent = `Testimonio ${((Math.round(destination / unit) % originals.length) + originals.length) % originals.length + 1} de ${originals.length}`;
+  }
+  root.querySelector('[data-prev]').addEventListener('click', () => move(-1));
+  root.querySelector('[data-next]').addEventListener('click', () => move(1));
+  toggle.addEventListener('click', () => { paused = !paused; focused = false; sync(); });
+  viewport.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { hovered = true; sync(); } });
+  viewport.addEventListener('pointerleave', () => { hovered = false; sync(); });
+  let gesture = null;
+  viewport.addEventListener('pointerdown', e => {
+    if (!e.target.closest('.rail-card') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    gesture = {x:e.clientX, y:e.clientY, paused, moved:false};
+    if (e.pointerType !== 'mouse') manualPause();
   });
-  if (desktop.addEventListener) desktop.addEventListener('change', setMode);
-  setMode();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (desktop.matches) measure(); });
+  viewport.addEventListener('pointermove', e => {
+    if (gesture && Math.hypot(e.clientX - gesture.x, e.clientY - gesture.y) > 10) gesture.moved = true;
+  });
+  viewport.addEventListener('pointerup', e => {
+    if (gesture && !gesture.moved && e.target.closest('.rail-card')) {
+      paused = !gesture.paused; focused = false; sync();
+      status.textContent = paused ? 'Testimonios en pausa.' : 'Testimonios en reproducción.';
+    }
+    gesture = null;
+  });
+  viewport.addEventListener('pointercancel', () => { gesture = null; });
+  viewport.addEventListener('wheel', manualPause, {passive:true});
+  viewport.addEventListener('scroll', updatePosition, {passive:true});
+  viewport.addEventListener('focusin', () => { focused = true; sync(); });
+  viewport.addEventListener('focusout', () => requestAnimationFrame(() => { focused = viewport.contains(document.activeElement); sync(); }));
+  viewport.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); move(e.key === 'ArrowRight' ? 1 : -1); } });
+  reduced.addEventListener('change', () => { if (reduced.matches) paused = true; sync(); });
+  document.addEventListener('visibilitychange', sync);
+  window.addEventListener('resize', measure);
+  if ('IntersectionObserver' in window) new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }, {threshold:.15}).observe(viewport);
+  else visible = true;
+  root.querySelector('.controls').hidden = false;
+  document.fonts.ready.then(measure);
+  measure();
 })();
