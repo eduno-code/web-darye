@@ -142,7 +142,7 @@
     new IntersectionObserver(function (entries) {
       var arriba = entries[0].isIntersecting;
       cabecera.classList.toggle('solida', !arriba);
-      if (colorBarra) colorBarra.setAttribute('content', arriba ? '#B1ADA9' : '#6E4C36');
+      if (colorBarra) colorBarra.setAttribute('content', arriba ? '#B1ADA9' : '#F3E9DE');
     }).observe(vigia);
   }
 
